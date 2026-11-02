@@ -752,7 +752,17 @@ function recordOf(name, w, r) {
   return '';
 }
 function recBadge(kind) { return kind === 'w' ? '🏆 New top weight' : kind === 'r' ? '🏆 Rep record at this weight' : ''; }
+// Daily plan on/off, remembered per phone (Ver 0.1j, user 2026-11-01: Yao picks his own exercises each day)
+const K_PLAN = 'qsapp.plan.v1';
+function planOn() { return store.get(K_PLAN) !== false; }
+function setPlanOn(on) {
+  store.set(K_PLAN, !!on);
+  // an untouched Today follows the switch at once; logged sets are never thrown away
+  if (S.draft && !draftHasWork(S.draft) && S.draft.date === todayIso() && !S.draft.done) { S.draft = { date: todayIso(), items: planFor(todayIso()) }; saveDraft(); }
+  render();
+}
 function planFor(iso) {
+  if (!planOn()) return [];
   const wd = new Date(iso + 'T12:00:00').getDay();
   const digit = DAY_DIGIT[wd];
   if (!digit) return [];
@@ -812,7 +822,8 @@ function dupKey(name, w, r) {
   return String(name).trim() + '|' + wn + '|' + String(r == null ? '' : r).trim().replace(/\//g, '');
 }
 function filledSets(item) {
-  return item.sets.filter(s => isTimed(item.name) ? String(s.w).trim() !== '' : String(s.r).trim() !== '');
+  // a set counts when its weight or its reps are typed (Ver 0.1j: weight-only sets are saved, user 2026-11-01)
+  return item.sets.filter(s => isTimed(item.name) ? String(s.w).trim() !== '' : (String(s.r).trim() !== '' || String(s.w).trim() !== ''));
 }
 function draftHasWork(d) { return !!(d && d.items.some(it => filledSets(it).length && !/warm.?up/i.test(it.name))); }
 
@@ -1319,7 +1330,7 @@ function buildEntries(draft) {
     let row = null;
     sets.forEach(s => {
       const w = String(s.w).trim(); const r = timed ? '' : String(s.r).trim();
-      if (row && row.w === w && !timed) { row.r += r; return; }
+      if (row && row.w === w && !timed && r !== '' && row.r !== '') { row.r += r; return; }   // weight-only sets stay one row each
       row = { name: it.name, w, r }; entries.push(row);
     });
   });
@@ -1478,7 +1489,7 @@ function renderHeader() {
   const d = new Date(iso + 'T12:00:00');
   const wd = d.getDay();
   $('#dayName').textContent = WEEKDAYS[wd];
-  $('#daySub').textContent = usOf(iso) + ' · ' + (DAY_LABEL[wd] || 'No plan today');
+  $('#daySub').textContent = usOf(iso) + (planOn() ? ' · ' + (DAY_LABEL[wd] || 'No plan today') : '');
 }
 function problemBox() {
   if (!S.problem) return '';
@@ -1500,7 +1511,7 @@ function viewToday() {
   if (d.done && !d.items.length) {
     h += '<div class="empty grow">Session saved. Add an exercise below if you want to log more today; it will be added to today\'s blocks in the sheet.</div>';
   } else if (!d.items.length) {
-    h += '<div class="empty grow">No plan for ' + esc(WEEKDAYS[new Date(d.date + 'T12:00:00').getDay()]) + '. Add exercises below to log a session.</div>';
+    h += '<div class="empty grow">' + (planOn() ? 'No plan for ' + esc(WEEKDAYS[new Date(d.date + 'T12:00:00').getDay()]) + '. Add exercises below to log a session.' : 'Add the exercises you are doing today below.') + '</div>';
   }
   d.items.forEach((it, idx) => { h += cardToday(it, idx); });
   if (d.items.length) h += '<div class="today-fill" aria-hidden="true"></div>';   // pushes Add an exercise and Save session to the bottom
@@ -2163,6 +2174,7 @@ async function addExercise() {
 // ---------- settings ----------
 // Version rule (user, 2026-11-01, same as the full app): Ver 0.1 + letter · MMDDYYYY; the user decides when to move to 0.2.
 const APP_VERSIONS = [
+  ['0.1e', '11012026', 'Sets with only a weight (no reps) are saved too. Settings > Today\'s plan: switch off to start each day empty and pick exercises yourself (kept per phone). From the full app Ver 0.1j.'],
   ['0.1d', '11012026', 'One update for both: the Apps Script version now loads this page from GitHub (sqiangqi.github.io/workout-lite/lite.html) each time it opens, falling back to its built-in copy; the GitHub web version gets the same page. Settings > Version shows where the page came from.'],
   ['0.1c', '11012026', 'Library: Add an exercise is now a round gold bubble at the bottom right with a circling halo; it opens a low bottom sheet with tap buttons for category, unit and plan days (same as the full app Ver 0.1i).'],
   ['0.1b', '11012026', 'Library: Add an exercise to the list (name, category, unit, plan number, muscle, notes), same as the full app. Units come from the Unit column (F) of the Exercises tab. The link to the full version was removed (iOS cannot open the Home Screen app from a link).'],
@@ -2175,6 +2187,8 @@ function viewSettings() {
   const dark = document.documentElement.getAttribute('data-theme') === 'dark', chosen = !!store.get(K_THEME);
   h += '<p class="section-h">Appearance</p><div class="panel"><label class="switch"><span>Dark mode</span><input type="checkbox" role="switch" id="themeSw"' + (dark ? ' checked' : '') + '><i aria-hidden="true"></i></label>' +
     '<p class="hint">' + (chosen ? 'Your choice is kept on this phone. <button class="linkbtn" data-act="theme-auto">Follow the phone setting instead</button>' : 'Following your phone’s light / dark setting.') + '</p></div>';
+  h += '<p class="section-h">Today\'s plan</p><div class="panel"><label class="switch"><span>Start each day with the plan</span><input type="checkbox" role="switch" id="planSw"' + (planOn() ? ' checked' : '') + '><i aria-hidden="true"></i></label>' +
+    '<p class="hint">' + (planOn() ? 'Today fills in from the plan numbers in the Exercises tab (1 Mon, 2 Tue, 4 Wed, 3 Fri).' : 'Today starts empty; pick the exercises yourself. Kept on this phone.') + '</p></div>';
   h += '<p class="section-h">Your workout Sheet</p><div class="panel">' +
     (S.email ? '<p>Signed in as <b>' + esc(S.email) + '</b></p>' : '') +
     '<p>Sessions are saved to <b>' + esc(S.sheetTitle || 'your Sheet') + '</b>' + (S.sheetTab ? ' › ' + esc(S.sheetTab) : '') + ' (columns J to M).</p>' +
@@ -2453,6 +2467,7 @@ document.addEventListener('change', e => {
   if (el.dataset && el.dataset.cmp) { S.cmp[+el.dataset.cmp] = el.value; render(); return; }
   if (el.id === 'phDate' && S.pending) { S.pending.date = el.value || todayIso(); return; }
   if (el.id === 'phIn' && el.files && el.files[0]) { S.tab = 'photos'; S.sel = null; S.cmpMode = false; startPending(el.files[0]); window.scrollTo(0, 0); return; }
+  if (el.id === 'planSw') { setPlanOn(el.checked); return; }
   if (el.id === 'themeSw') { store.set(K_THEME, el.checked ? 'dark' : 'light'); applyTheme(); render(); return; }
   if (el.id === 'csvIn' && el.files && el.files[0]) {
     const f = el.files[0]; const rd = new FileReader();
