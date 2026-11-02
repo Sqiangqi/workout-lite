@@ -534,7 +534,7 @@ const ls = {
 // Workout Lite: server part (Google Apps Script web app).
 // Deploy: Execute as "User accessing the web app", Who has access "Anyone with Google account".
 // Each person's settings are kept in their own user properties; it only reaches Sheets that person can open.
-// Workout Lite Ver 0.1c · 11012026 (version rule: Ver 0.1 + letter · MMDDYYYY, user decides when to move to 0.2)
+// Workout Lite Ver 0.1d · 11012026 (version rule: Ver 0.1 + letter · MMDDYYYY, user decides when to move to 0.2)
 
 const APP_NAME = 'Workout Lite';
 const UNITS = ['lbs', 'mins', 'seconds'];
@@ -584,8 +584,19 @@ const STARTER_EXERCISES = [
   ["", "", "No entry", "", "", ""]
 ];
 
+// The page itself is loaded from GitHub on every open, so one push there updates this app too (user, 2026-11-01).
+// If GitHub cannot be reached or sends something unexpected, the built-in copy (the index file in this project) is used.
+const PAGE_URL = 'https://sqiangqi.github.io/workout-lite/lite.html';
 function doGet() {
-  return HtmlService.createHtmlOutputFromFile('index')
+  let page = '', src = 'backup';
+  try {
+    const r = UrlFetchApp.fetch(PAGE_URL + '?t=' + Date.now(), { muteHttpExceptions: true, followRedirects: true });
+    const t = r.getResponseCode() === 200 ? r.getContentText('UTF-8') : '';
+    if (t.indexOf('google.script.run') > 0 && t.indexOf('</html>') > 0) { page = t; src = 'github'; }
+  } catch (e) { /* use the built-in copy */ }
+  if (!page) page = HtmlService.createHtmlOutputFromFile('index').getContent();
+  page = page.replace('</head>', '<script>window.__liteSrc = "' + src + '";<\/script></head>');
+  return HtmlService.createHtmlOutput(page)
     .setTitle(APP_NAME)
     .addMetaTag('viewport', 'width=device-width, initial-scale=1, viewport-fit=cover')
     .addMetaTag('apple-mobile-web-app-capable', 'yes');
@@ -2798,6 +2809,7 @@ async function addExercise() {
 // ---------- settings ----------
 // Version rule (user, 2026-11-01, same as the full app): Ver 0.1 + letter · MMDDYYYY; the user decides when to move to 0.2.
 const APP_VERSIONS = [
+  ['0.1d', '11012026', 'One update for both: the Apps Script version now loads this page from GitHub (sqiangqi.github.io/workout-lite/lite.html) each time it opens, falling back to its built-in copy; the GitHub web version gets the same page. Settings > Version shows where the page came from.'],
   ['0.1c', '11012026', 'Library: Add an exercise is now a round gold bubble at the bottom right with a circling halo; it opens a low bottom sheet with tap buttons for category, unit and plan days (same as the full app Ver 0.1i).'],
   ['0.1b', '11012026', 'Library: Add an exercise to the list (name, category, unit, plan number, muscle, notes), same as the full app. Units come from the Unit column (F) of the Exercises tab. The link to the full version was removed (iOS cannot open the Home Screen app from a link).'],
   ['0.1a', '11012026', 'Bigger tab labels (four tabs now). Owner only: tap the logo or Settings > Full version to open the full claude.ai app (removed in 0.1b).'],
@@ -2818,6 +2830,7 @@ function viewSettings() {
     '<div class="row-acts"><button class="btn' + (S.cfgArmed ? ' danger' : '') + '" data-act="cfg-switch">' + (S.cfgArmed ? 'Tap again to switch Sheet' : 'Use a different Sheet') + '</button></div>' +
     '<p class="hint">Switching only changes where this app saves; nothing in the Sheet is deleted. Unsaved sets are cleared.</p></div>';
   h += '<p class="section-h">Version</p><div class="panel"><p class="ver"><b>Ver ' + esc(v) + '</b> · ' + esc(d) + '</p>' +
+    (window.__liteSrc ? '<p class="hint">' + (window.__liteSrc === 'github' ? 'Page loaded from GitHub (updates on its own).' : 'GitHub could not be reached: using the built-in copy of the page.') + '</p>' : '') +
     '<details class="wk"><summary>Version history</summary><ul class="verlist">' + APP_VERSIONS.map(([a, b, c]) => '<li><b>' + esc(a) + '</b> · ' + esc(b) + ' — ' + esc(c) + '</li>').join('') + '</ul></details></div>';
   return h;
 }
