@@ -296,6 +296,12 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .frow .fn { min-width: 0; }
 .frow .fk { grid-column: 1; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .frow .icon-btn { grid-column: 2; grid-row: 1 / span 2; }
+/* round remove buttons with a drawn cross (Ver 0.1k, user 2026-11-02: the text × sat off-centre) */
+.icon-btn.xbtn { width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: var(--bg); color: var(--muted); justify-self: center; align-self: center; line-height: 0; box-shadow: inset 0 0 0 1px var(--line); transition: background .15s, color .15s; }
+.icon-btn.xbtn svg { display: block; }
+.icon-btn.xbtn:active { background: rgba(179,38,30,.12); color: var(--bad); box-shadow: inset 0 0 0 1px var(--bad); }
+@media (hover: hover) { .icon-btn.xbtn:hover { color: var(--bad); } }
+.icon-btn.xbtn:disabled { opacity: .4; }
 .hist tr.on td { background: var(--accent-soft); font-weight: 600; }
 
 /* Photos */
@@ -472,6 +478,73 @@ body.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + 24px); }
 .toast { bottom: calc(var(--tabbar-h) + 84px); }
 body.no-timer .toast { bottom: calc(var(--tabbar-h) + 12px); }
 
+/* Week plan and favourites (Ver 0.1l) */
+.star { flex: none; width: 36px; height: 36px; border: 0; background: none; font-size: 22px; line-height: 1; color: var(--lighter); padding: 0; }
+.star.on { color: var(--gold); }
+.lib-h { display: flex; gap: 8px; align-items: flex-start; }
+.lib-h .titles { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.namelist li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-block: 4px; }
+.wp-card { border: 1px solid var(--line); border-radius: 10px; padding: 10px; display: grid; gap: 6px; background: var(--bg); }
+.wp-card.act { border-color: var(--gold); box-shadow: inset 3px 0 0 var(--gold); }
+.wp-ch { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+.wp-ch b { font-family: var(--font-display); font-size: 19px; letter-spacing: .02em; color: var(--ink); }
+.wp-sum { font-size: 13px; color: var(--muted); }
+.wp-badge { font-size: 12px; font-weight: 700; color: var(--gold-ink); background: var(--gold); border-radius: 999px; padding: 2px 9px; white-space: nowrap; }
+.wp-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.panel .fld { display: grid; gap: 5px; font-size: 13px; color: var(--muted); }
+.panel .tin { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); font-size: 17px; font-weight: 600; }
+.wp-week { display: grid; gap: 6px; }
+.wp-day { display: flex; align-items: center; gap: 10px; text-align: left; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); min-height: 54px; }
+.wp-day.set { border-style: solid; }
+.wp-day.rest { opacity: .7; }
+.wp-day .wd { flex: none; width: 44px; font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--accent); text-transform: uppercase; }
+.wp-day .wmid { flex: 1; min-width: 0; display: grid; gap: 1px; }
+.wp-day .wt { font-weight: 600; font-size: 15px; }
+.wp-day:not(.set) .wt { color: var(--muted); font-weight: 500; }
+.wp-day .wn { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wp-day .wc { flex: none; font-size: 13px; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+.wpask .wpq { margin: 4px 4px 0; font-size: 17px; font-weight: 600; color: var(--ink); }
+.wpask .hint { margin: 0 4px 4px; }
+.wpsheet { padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+.wptypes { flex-wrap: wrap; gap: 5px; }
+.wptypes .btn { flex: 1 1 30%; padding: 8px 0; font-size: 14px; }
+.wptypes .btn.on, .nxseg .btn.on { background: var(--gold); color: var(--gold-ink); border-color: var(--gold); }
+.wpbody { max-height: calc(72vh - 170px); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; display: grid; gap: 4px; padding: 0 2px 6px; align-content: start; }
+.wp-sel { display: grid; gap: 4px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.wprow { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 10px; background: var(--accent-soft); border: 1px solid var(--line); -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: pan-y; transition: transform .15s ease; }
+.wprow.fixed { background: var(--bg); color: var(--muted); }
+.wprow.holding { transform: scale(.98); transition: transform .9s ease; }
+.wprow.dragging { position: relative; z-index: 3; outline: 2px solid var(--gold); box-shadow: 0 8px 22px rgba(0,0,0,.25); transition: none; }
+.wph { flex: none; width: 22px; text-align: center; font-size: 18px; color: var(--muted); cursor: grab; touch-action: none; }
+.wpn { flex: 1; min-width: 0; font-weight: 600; font-size: 15px; }
+.wpn i { font-weight: 400; color: var(--bad); font-size: 12px; }
+.wpt { font-size: 12px; }
+.wp-empty { padding: 14px 8px; text-align: center; color: var(--muted); font-size: 14px; }
+.wp-empty.sm { padding: 8px; font-size: 13px; }
+.wp-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 0 4px; }
+.wp-chip { border: 1px solid var(--gold); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 7px 12px; font-size: 14px; font-weight: 600; }
+.wp-chip.on { background: var(--gold); color: var(--gold-ink); }
+.wp-li { display: flex; align-items: center; gap: 4px; border-radius: 10px; background: var(--bg); }
+.wp-li.on { background: var(--accent-soft); }
+.wp-pick { flex: 1; min-width: 0; display: flex; gap: 10px; align-items: center; text-align: left; padding: 11px 10px; border: 0; background: none; color: var(--ink); font-size: 15px; font-weight: 600; }
+.wp-pick .ck { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.wp-li.on .ck { background: var(--gold); border-color: var(--gold); color: var(--gold-ink); }
+.nxfav { padding: 2px 0; }
+
+.planpill { justify-self: start; align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; border: 1px solid var(--gold); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 4px 12px 4px 14px; font-size: 14px; }
+.planpill .pp-lab { flex: none; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; background: var(--brand); color: var(--gold); border-radius: 999px; padding: 3px 8px; }
+.planpill b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+.planpill .pp-go { color: var(--muted); font-size: 12px; }
+.planpill b { font-family: var(--font-display); font-size: 17px; letter-spacing: .02em; }
+.pprow { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.pprow .pp-label { flex: none; font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.pprow .planpill { min-width: 0; }
+.pp-acts .btn { flex: 1; padding-block: 12px; }
+.sheet-it .pp-sub { display: block; font-size: 12px; font-weight: 500; opacity: .75; margin-top: 2px; }
+.planpill.off { border-color: var(--line); color: var(--muted); }
+.planpill.off b { font-weight: 500; }
+.planpill.off:not(:has(.pp-lab)) { padding: 6px 12px; }
+
 /* Workout Lite: setup screen */
 body.setup .tabbar, body.setup #timer { display: none !important; }
 body.setup main .wrap { padding-bottom: 40px; }
@@ -534,7 +607,8 @@ const ls = {
 // Workout Lite: server part (Google Apps Script web app).
 // Deploy: Execute as "User accessing the web app", Who has access "Anyone with Google account".
 // Each person's settings are kept in their own user properties; it only reaches Sheets that person can open.
-// Workout Lite Ver 0.1e · 11012026 (version rule: Ver 0.1 + letter · MMDDYYYY, user decides when to move to 0.2)
+// Workout Lite Ver 0.1f · 11032026 (version rule: Ver 0.1 + letter · MMDDYYYY, user decides when to move to 0.2)
+// Ver 0.1f is the LAST update of Workout Lite (user, 2026-11-03): new features go to the full claude.ai app only.
 
 const APP_NAME = 'Workout Lite';
 const UNITS = ['lbs', 'mins', 'seconds'];
@@ -609,6 +683,14 @@ function cfg_() {
 }
 function setCfg_(c) { PropertiesService.getUserProperties().setProperty('cfg', JSON.stringify(c)); }
 function me_() { try { return Session.getActiveUser().getEmail(); } catch (e) { return ''; } }
+// The owner sees the exercise notes (Lite 0.1f). Only a SHA-256 of the owner's email is kept here, because this code is also published on GitHub.
+const OWNER_HASH = '0a341e799ef967f954cbf992684ee78c06c9f9897f3f3fab38a046f7836f66db';
+function owner_() {
+  try {
+    const b = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, String(me_()).trim().toLowerCase(), Utilities.Charset.UTF_8);
+    return b.map(x => ('0' + ((x + 256) % 256).toString(16)).slice(-2)).join('') === OWNER_HASH;
+  } catch (e) { return false; }
+}
 
 function openLog_() {
   const c = cfg_();
@@ -642,7 +724,7 @@ function readExercises_(ss) {
 function api_init() {
   const c = cfg_();
   const email = me_();
-  const out = { email: email, cfg: c, data: null, error: '' };
+  const out = { email: email, owner: owner_(), cfg: c, data: null, error: '' };
   if (c) {
     try { out.data = api_data(); } catch (e) { out.error = e.message; }
   }
@@ -864,6 +946,53 @@ function api_addExercise(row, full) {
   }
 }
 
+// ---------- week plans and stars (Plan tab, Lite 0.1f; same layout as the full app) ----------
+// A:K = Log tab | Kind (plan / day / ex / fav) | Plan ID | Plan name | Active | Warm-up | Day | Day type | Order | Exercise | Updated.
+// Each person's rows are labelled with their log tab, so plans and stars stay separate; only those rows are rewritten.
+const PLAN_TAB = 'Plan';
+const PLAN_HEAD = ['Log tab', 'Kind', 'Plan ID', 'Plan name', 'Active', 'Warm-up', 'Day', 'Day type', 'Order', 'Exercise', 'Updated'];
+function pad11_(r) { const o = []; for (let i = 0; i < 11; i++) o.push(r && r[i] != null ? String(r[i]) : ''); return o; }
+function planRowsOf_(sh) {
+  const n = sh.getLastRow(); if (n < 2) return [];
+  const v = sh.getRange(2, 1, n - 1, 11).getDisplayValues();
+  while (v.length && v[v.length - 1].join('') === '') v.pop();
+  return v;
+}
+function api_plansGet() {
+  const L = openLog_(), sh = L.ss.getSheetByName(PLAN_TAB);
+  return { tab: L.c.tab, rows: sh ? planRowsOf_(sh).filter(r => r[0] === L.c.tab) : [] };
+}
+function api_plansSave(mine) {
+  if (!Array.isArray(mine)) throw new Error('Bad plan data.');
+  const lock = LockService.getUserLock();
+  if (!lock.tryLock(20000)) throw new Error('Another change is still running. Try again in a moment.');
+  try {
+    const L = openLog_(), tab = L.c.tab;
+    let sh = L.ss.getSheetByName(PLAN_TAB);
+    if (!sh) {                                                  // first plan or star in this Sheet: make the Plan tab
+      sh = L.ss.insertSheet(PLAN_TAB);
+      sh.getRange(1, 1, 1, 11).setValues([PLAN_HEAD]).setFontWeight('bold').setBackground('#14284b').setFontColor('#ffffff');
+      sh.setFrozenRows(1);
+      sh.getRange(2, 1, Math.max(sh.getMaxRows() - 1, 1), 11).setNumberFormat('@');
+    }
+    const fresh = planRowsOf_(sh), others = fresh.filter(r => r.join('') !== '' && r[0] !== tab);
+    const rows = mine.map(r => { const o = pad11_(r); o[0] = tab; return o; });
+    const all = others.concat(rows);
+    if (all.length > 2000) throw new Error('The Plan tab is full.');
+    const n = Math.max(fresh.length, all.length);
+    if (n) {
+      const vals = all.concat(Array.from({ length: n - all.length }, () => pad11_([])));
+      const rg = sh.getRange(2, 1, n, 11); rg.setNumberFormat('@'); rg.setValues(vals);
+    }
+    SpreadsheetApp.flush();
+    const back = planRowsOf_(sh).filter(r => r[0] === tab);
+    if (back.length !== rows.length) throw new Error('The Plan tab did not read back as expected.');
+    return { ok: true };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
 
 // ---------- sign-in (OAuth 2.0 token by redirect: works in a Home Screen app, no pop-up) ----------
 function redirectUri() { return location.origin + location.pathname; }
@@ -1004,7 +1133,7 @@ async function readArchW(id, tab, n) { return trimTail(pad(await getVals(id, q1(
 async function api_init() {
   const email = await whoAmI();
   const c = await cfgGet();
-  const out = { email, cfg: c, data: null, error: '' };
+  const out = { email, owner: await ownerW(email), cfg: c, data: null, error: '' };
   if (c) { try { out.data = await api_data(); } catch (e) { if (e.signin) throw e; out.error = e.message; } }
   return out;
 }
@@ -1120,8 +1249,42 @@ async function api_addExercise(row, full) {
   return { row: sheetRow };
 }
 async function api_signOut() { signOut(); return true; }
+// owner check (Lite 0.1f): compares a SHA-256 of the signed-in email with OWNER_HASH from Code.gs
+async function ownerW(email) {
+  try { const d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(String(email || '').trim().toLowerCase()));
+    return [...new Uint8Array(d)].map(x => x.toString(16).padStart(2, '0')).join('') === OWNER_HASH; } catch (e) { return false; }
+}
+// week plans and stars in the Plan tab (Lite 0.1f): same results as Code.gs
+async function readPlanW(id) { return trimTail(pad(await getVals(id, q1(PLAN_TAB) + '!A2:K2000'), 11)); }
+async function api_plansGet() {
+  const L = await openLogW();
+  if (!(PLAN_TAB in L.tabs)) return { tab: L.c.tab, rows: [] };
+  return { tab: L.c.tab, rows: (await readPlanW(L.id)).filter(r => r[0] === L.c.tab) };
+}
+async function api_plansSave(mine) {
+  if (!Array.isArray(mine)) throw new Error('Bad plan data.');
+  const L = await openLogW(), id = L.id, tab = L.c.tab;
+  if (!(PLAN_TAB in L.tabs)) {                                   // first plan or star in this Sheet: make the Plan tab
+    const r = await batch(id, [{ addSheet: { properties: { title: PLAN_TAB, gridProperties: { rowCount: 1000, columnCount: 11, frozenRowCount: 1 } } } }]);
+    const sid = r.replies[0].addSheet.properties.sheetId;
+    await batch(id, [
+      { repeatCell: { range: { sheetId: sid, startRowIndex: 0, endRowIndex: 1000, startColumnIndex: 0, endColumnIndex: 11 }, cell: { userEnteredFormat: { numberFormat: { type: 'TEXT' } } }, fields: 'userEnteredFormat.numberFormat' } },
+      { repeatCell: { range: { sheetId: sid, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: 11 }, cell: { userEnteredFormat: { textFormat: { bold: true, foregroundColor: { red: 1, green: 1, blue: 1 } }, backgroundColor: { red: 20 / 255, green: 40 / 255, blue: 75 / 255 } } }, fields: 'userEnteredFormat(textFormat,backgroundColor)' } }
+    ]);
+    await putVals(id, q1(PLAN_TAB) + '!A1:K1', [PLAN_HEAD]);
+  }
+  const fresh = await readPlanW(id), others = fresh.filter(r => r.join('') !== '' && r[0] !== tab);
+  const rows = mine.map(r => { const o = pad11_(r); o[0] = tab; return o; });
+  const all = others.concat(rows);
+  if (all.length > 2000) throw new Error('The Plan tab is full.');
+  const n = Math.max(fresh.length, all.length);
+  if (n) await putVals(id, q1(PLAN_TAB) + '!A2:K' + (n + 1), all.concat(Array.from({ length: n - all.length }, () => pad11_([]))));
+  const back = (await readPlanW(id)).filter(r => r[0] === tab);
+  if (back.length !== rows.length) throw new Error('The Plan tab did not read back as expected.');
+  return { ok: true };
+}
 
-const API = { api_init, api_data, api_create, api_useExisting, api_forget, api_draftGet, api_draftSet, api_save, api_addExercise, api_signOut };
+const API = { api_init, api_data, api_create, api_useExisting, api_forget, api_draftGet, api_draftSet, api_save, api_addExercise, api_signOut, api_plansGet, api_plansSave };
 
 // google.script.run look-alike, so the page works unchanged
 function runner() {
@@ -1162,11 +1325,14 @@ document.addEventListener('visibilitychange', () => {
 
 </script>
 <script>
+const XICON = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>';   /* drawn cross for the Food tab remove buttons (Ver 0.1k) */
+
 (function () {
 'use strict';
 
 // ---------- constants ----------
 let CFG = null;   // this person's settings {sheetId, tab} (Workout Lite)
+let LOG_TAB = '';  // this person's log tab: their rows in the Plan tab are labelled with it (Lite 0.1f)
 const UPPER = 'Upper Body Day', LOWER = 'Lower Body Day', END = 'End Workout';
 const LINE = '────────────────────';
 const NOT_EX = /^(upper body day|lower body day|end workout|no entry)$/i;
@@ -1250,6 +1416,8 @@ function splitReps(s, farmer) {
 // ---------- state ----------
 const S = {
   tab: 'today',
+  wp: { plans: [], favs: new Set(), state: 'wait', err: '' },   // week plans and stars (Ver 0.1l)
+  wpEdit: null, wpDay: null, wpAsk: false, wpArm: null, wpMsg: '', wpSaving: false,
   exercises: [],          // {cat, name, muscle, notes, kind}
   archive: [],            // raw rows J:M, padded to 4
   history: new Map(),     // name -> [{iso, weight, reps}]
@@ -1404,24 +1572,128 @@ function planOn() { return store.get(K_PLAN) !== false; }
 function setPlanOn(on) {
   store.set(K_PLAN, !!on);
   // an untouched Today follows the switch at once; logged sets are never thrown away
-  if (S.draft && !draftHasWork(S.draft) && S.draft.date === todayIso() && !S.draft.done) { S.draft = { date: todayIso(), items: planFor(todayIso()) }; saveDraft(); }
+  if (S.draft && !draftHasWork(S.draft) && S.draft.date === todayIso() && !S.draft.done) { S.draft = freshDraft(todayIso()); saveDraft(); }
   render();
 }
-function planFor(iso) {
-  if (!planOn()) return [];
+// ---------- week plans (Ver 0.1l, user 2026-11-03) ----------
+// Kept in the Plan tab of the workout Sheet, one set of rows per log tab, so each person has their own plans and stars.
+// Columns A:K = Log tab | Kind (plan / day / ex / fav) | Plan ID | Plan name | Active | Warm-up | Day | Day type | Order | Exercise | Updated.
+// The plan in use decides Today; with no plan in use Today still follows the number prefixes (until the numbers are dropped).
+const PLAN_TAB = 'Plan', PLAN_RANGE = "'Plan'!A2:K500", K_PLANS = 'wlite.plans.v1', MAX_PLANS = 3;
+const WDAYS = [['Mon', 'Monday'], ['Tue', 'Tuesday'], ['Wed', 'Wednesday'], ['Thu', 'Thursday'], ['Fri', 'Friday'], ['Sat', 'Saturday'], ['Sun', 'Sunday']];
+const DAY_TYPES = [['Upper', 'Upper body'], ['Push', 'Push day'], ['Pull', 'Pull day'], ['Lower', 'Lower body'], ['Custom', 'Custom day'], ['Rest', 'Rest day']];
+function dayKeyOf(iso) { return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(iso + 'T12:00:00').getDay()]; }
+function dayFull(k) { const x = WDAYS.find(d => d[0] === k); return x ? x[1] : k; }
+function typeLabel(t) { const x = DAY_TYPES.find(d => d[0] === t); return x ? x[1] : ''; }
+function activePlan() { return S.wp.plans.find(p => p.active) || null; }
+function planById(id) { return S.wp.plans.find(p => p.id === id) || null; }
+function isFav(name) { return S.wp.favs.has(name); }
+function pad11(r) { const o = []; for (let i = 0; i < 11; i++) o.push(r && r[i] != null ? String(r[i]).trim() : ''); return o; }
+function parsePlans(rows) {
+  const plans = [], by = {}, favs = new Set();
+  const mine = (rows || []).map(pad11).filter(r => r[0] === LOG_TAB);
+  mine.forEach(r => { if (r[1] === 'plan' && r[2] && !by[r[2]]) { by[r[2]] = { id: r[2], name: r[3] || 'Untitled', active: r[4] === 'yes', warm: r[5] === 'yes', updated: r[10], days: {} }; plans.push(by[r[2]]); } });
+  mine.forEach(r => {
+    const p = by[r[2]];
+    if (r[1] === 'day' && p && r[6]) p.days[r[6]] = { type: r[7] || 'Custom', items: [], updated: r[10] };
+    if (r[1] === 'fav' && r[9]) favs.add(r[9]);
+  });
+  const ex = mine.filter(r => r[1] === 'ex' && by[r[2]] && by[r[2]].days[r[6]] && r[9]).sort((x, y) => (+x[8] || 0) - (+y[8] || 0));
+  ex.forEach(r => { const d = by[r[2]].days[r[6]]; if (d.items.indexOf(r[9]) < 0) d.items.push(r[9]); });
+  let seen = false; plans.forEach(p => { if (p.active) { if (seen) p.active = false; seen = true; } });   // only one plan in use
+  return { plans: plans.slice(0, MAX_PLANS), favs };
+}
+function stampNow() { return usOf(todayIso()) + ' ' + clock12(Date.now()); }
+function planRows() {
+  const rows = [];
+  S.wp.plans.forEach(p => {
+    rows.push([LOG_TAB, 'plan', p.id, p.name, p.active ? 'yes' : '', p.warm ? 'yes' : 'no', '', '', '', '', p.updated || '']);
+    WDAYS.forEach(([k]) => {
+      const d = p.days[k]; if (!d) return;
+      rows.push([LOG_TAB, 'day', p.id, '', '', '', k, d.type, '', '', d.updated || '']);
+      if (d.type !== 'Rest') d.items.forEach((n, i) => rows.push([LOG_TAB, 'ex', p.id, '', '', '', k, '', String(i + 1), n, '']));
+    });
+  });
+  [...S.wp.favs].forEach(n => rows.push([LOG_TAB, 'fav', '', '', '', '', '', '', '', n, '']));
+  return rows;
+}
+// Google re-reads the Plan tab, keeps other log tabs' rows, writes this person's rows and reads them back (Lite 0.1f)
+async function writePlansRemote() { await gs('api_plansSave', planRows()); }
+// Each change is kept on the phone first, then written; writes run one after another.
+let planQ = Promise.resolve();
+function savePlans(what) {
+  store.set(K_PLANS, { rows: planRows(), dirty: true });
+  S.wpSaving = true;
+  const run = planQ.then(() => withTimeout(writePlansRemote(), 2 * SAVE_TIMEOUT));
+  planQ = run.catch(() => {});
+  return run.then(() => {
+    S.wpMsg = ''; store.set(K_PLANS, { rows: planRows(), dirty: false });
+  }, err => {
+    S.wpMsg = (what || 'Your plan change') + ' is kept on this phone but did not reach the Sheet. ' + codeText(err).text;
+  }).then(() => { S.wpSaving = false; render(); });
+}
+async function readPlans() {
+  const c = store.get(K_PLANS);
+  const mineC = c && Array.isArray(c.rows) && (!c.rows.length || c.rows[0][0] === LOG_TAB);
+  if (c && c.dirty && mineC && c.rows.length) {          // a change that never reached the Sheet: send the phone copy again
+    const p = parsePlans(c.rows); S.wp.plans = p.plans; S.wp.favs = p.favs; S.wp.state = 'ok';
+    todayFollowPlan(); render();
+    await savePlans();
+    return;
+  }
+  try {
+    const r = await withTimeout(gs('api_plansGet'), SAVE_TIMEOUT);
+    const p = parsePlans((r && r.rows) || []); S.wp.plans = p.plans; S.wp.favs = p.favs; S.wp.state = 'ok';
+    store.set(K_PLANS, { rows: planRows(), dirty: false });
+  } catch (err) { S.wp.state = 'err'; S.wp.err = codeText(err).text; }
+  todayFollowPlan(); render();
+}
+function toggleFav(name) {
+  if (S.wp.favs.has(name)) S.wp.favs.delete(name); else S.wp.favs.add(name);
+  render(); savePlans('Your star');
+}
+function starBtn(name) {
+  const on = isFav(name);
+  return '<button class="star' + (on ? ' on' : '') + '" data-act="fav" data-name="' + esc(name) + '" aria-pressed="' + on + '" aria-label="' + (on ? 'Remove from favourites' : 'Add to favourites') + '">' + (on ? '★' : '☆') + '</button>';
+}
+// the old plan from the number prefixes (Mon 1, Tue 2, Wed 4, Fri 3)
+function prefixPlan(iso) {
   const wd = new Date(iso + 'T12:00:00').getDay();
   const digit = DAY_DIGIT[wd];
   if (!digit) return [];
   const names = pickable().filter(e => prefixOf(e.name).includes(digit)).map(e => e.name);
   const warm = pickable().find(e => /warm.?up/i.test(e.name));
-  return (warm ? [warm.name] : []).concat(names).map(newItem);
+  return (warm ? [warm.name] : []).concat(names);
+}
+function planNames(iso) {
+  if (!planOn()) return [];
+  const ap = activePlan();
+  if (!ap) return prefixPlan(iso);
+  const day = ap.days[dayKeyOf(iso)];
+  if (!day || day.type === 'Rest') return [];
+  const have = new Set(pickable().map(e => e.name));
+  let names = day.items.filter((n, i, a) => have.has(n) && a.indexOf(n) === i);
+  const warm = pickable().find(e => /warm.?up/i.test(e.name));
+  if (ap.warm && warm && names.length) names = [warm.name].concat(names.filter(n => !/warm.?up/i.test(n)));
+  return names;
+}
+function planFor(iso) { return planNames(iso).map(newItem); }
+function freshDraft(iso) { const items = planFor(iso); return { date: iso, items, planSig: items.map(i => i.name).join('|') }; }
+// Today follows a new plan only while it is still exactly what a plan put there (no sets, nothing added, removed or moved).
+function todayFollowPlan() {
+  const d = S.draft; if (!d || !S.exercises.length || d.date !== todayIso() || d.done || draftHasWork(d)) return;
+  const now = d.items.map(i => i.name).join('|');
+  const sig = d.planSig != null ? d.planSig : prefixPlan(d.date).join('|');
+  if (now !== sig) return;
+  const want = planNames(todayIso()).join('|');
+  if (want !== now) { S.draft = freshDraft(todayIso()); saveDraft(); }
 }
 function ensureDraft() {
   if (S.draft) return;
   const saved = store.get(K_DRAFT);
   if (saved && saved.items) { S.draft = saved; return; }
   if (!S.exercises.length) return;
-  S.draft = { date: todayIso(), items: planFor(todayIso()) };
+  S.draft = freshDraft(todayIso());
   saveDraft();
 }
 let draftTimer = null, draftRemoteReady = false;
@@ -1655,7 +1927,7 @@ function viewQuick() {
       S.qfEdit.map((q, i) => '<div class="qfe-row"><input class="fname" data-qi="' + i + '" data-qk="name" value="' + esc(q.name) + '" aria-label="Food" placeholder="Food">' +
         '<select data-qi="' + i + '" data-qk="unit" aria-label="Unit"><option value="g"' + (q.unit === 'g' ? ' selected' : '') + '>g</option><option value="each"' + (q.unit === 'each' ? ' selected' : '') + '>each</option></select>' +
         [['per', 'per'], ['kcal', 'kcal'], ['c', 'carbs'], ['p', 'protein'], ['f', 'fat'], ['usual', 'usual'], ['max', 'max suggested']].map(([k, l]) => '<label class="fnum"><input inputmode="decimal" data-qi="' + i + '" data-qk="' + k + '" value="' + esc(q[k] === '' || q[k] == null ? '' : q[k]) + '"><span>' + l + '</span></label>').join('') +
-        '<button class="icon-btn" data-act="qf-rm" data-i="' + i + '" aria-label="Remove ' + esc(q.name) + '">×</button></div>').join('') + '</div>' +
+        '<button class="icon-btn xbtn" data-act="qf-rm" data-i="' + i + '" aria-label="Remove ' + esc(q.name) + '">' + XICON + '</button></div>').join('') + '</div>' +
       '<div class="row-acts"><button class="btn primary" data-act="qf-save"' + (S.qfSaving || !S.mcp ? ' disabled' : '') + '>' + (S.qfSaving ? 'Saving…' : 'Save list') + '</button><button class="btn" data-act="qf-new">+ food</button><button class="btn" data-act="qf-cancel">Cancel</button></div>';
     return h;
   }
@@ -1704,7 +1976,7 @@ async function estimateFood() {
 function qfItemRow(x, i) {
   const q = S.qf.find(f => f.name === x.qf), g = q.unit === 'g';
   return '<div class="qitem"><span class="qn">' + esc(q.name) + '</span>' +
-    '<button class="icon-btn" data-act="f-rm" data-i="' + i + '" aria-label="Remove ' + esc(q.name) + '">×</button>' +
+    '<button class="icon-btn xbtn" data-act="f-rm" data-i="' + i + '" aria-label="Remove ' + esc(q.name) + '">' + XICON + '</button>' +
     '<label class="field"><input inputmode="decimal" data-ai="' + i + '" value="' + esc(x.amt) + '" aria-label="Amount of ' + esc(q.name) + '"><span>' + (g ? 'g' : '×') + '</span></label>' +
     '<button class="qb fit" data-act="amt-fit" data-i="' + i + '" title="Most you can have without going over the day\'s goals">Fit to goal</button>' +
     '<span class="qv"><b>' + x.kcal + '</b> kcal · C ' + fmt2(x.c) + ' · P ' + fmt2(x.p) + ' · F ' + fmt2(x.f) + '</span></div>';
@@ -2084,7 +2356,7 @@ function render() {
     fitFigs();
     return;
   }
-  else if (S.tab === 'settings') v.innerHTML = viewSettings();
+  else if (S.tab === 'settings') { const sb = $('#wpBody'), st = sb ? sb.scrollTop : 0; v.innerHTML = viewSettings(); const nb = $('#wpBody'); if (nb) nb.scrollTop = st; }
   else { const sb = $('#nxBody'), st = sb ? sb.scrollTop : 0; v.innerHTML = viewLibrary() + addExSheet(); const nb = $('#nxBody'); if (nb) nb.scrollTop = st; }
   startGlows();
 }
@@ -2135,15 +2407,32 @@ function renderHeader() {
   const d = new Date(iso + 'T12:00:00');
   const wd = d.getDay();
   $('#dayName').textContent = WEEKDAYS[wd];
-  $('#daySub').textContent = usOf(iso) + (planOn() ? ' · ' + (DAY_LABEL[wd] || 'No plan today') : '');
+  let lab = DAY_LABEL[wd] || 'No plan today';
+  const ap = activePlan(); if (ap) { const dd = ap.days[dayKeyOf(iso)]; lab = dd ? typeLabel(dd.type) : 'No plan today'; }
+  $('#daySub').textContent = usOf(iso) + (planOn() ? ' · ' + lab : '');
 }
 function problemBox() {
   if (!S.problem) return '';
   return '<div class="notice err" role="alert"><div>' + esc(S.problem.text) + '</div>' +
     (S.problem.retry ? '<div class="acts"><button class="btn" data-act="' + (S.problem.act || 'retry') + '">' + esc(S.problem.label || 'Retry') + '</button></div>' : '') + '</div>';
 }
+function planPill() {
+  const ap = planOn() ? activePlan() : null;
+  const txt = !planOn() ? 'Plan off' : ap ? ap.name : 'Choose a plan';
+  let x = '<div class="pprow"><span class="pp-label">Current plan</span><button class="planpill' + (ap ? '' : ' off') + '" data-act="pp-open" aria-haspopup="listbox" aria-label="Week plan: ' + esc(txt) + '. Tap to switch."><b>' + esc(txt) + '</b><span class="pp-go" aria-hidden="true">▾</span></button></div>';
+  if (S.ppOpen) {
+    const it = (act, id, name, sub, on) => '<button class="sheet-it' + (on ? ' on' : '') + '" role="option" aria-selected="' + on + '" data-act="' + act + '"' + (id ? ' data-id="' + esc(id) + '"' : '') + '>' + esc(name) + (sub ? '<span class="pp-sub">' + esc(sub) + '</span>' : '') + '</button>';
+    x += '<div class="sheet-bg" data-act="pp-close"><div class="sheet" role="listbox" aria-label="Switch week plan" data-act="noop"><div class="sheet-h"><b>Week plan</b><button class="btn sm" data-act="pp-close">Close</button></div><div class="sheet-list">' +
+      S.wp.plans.map(p => it('pp-use', p.id, p.name, planSummary(p), planOn() && p.active)).join('') +
+      it('pp-none', '', 'No week plan', 'Today follows the plan numbers', planOn() && !activePlan()) +
+      '</div><div class="row-acts pp-acts"><button class="btn primary" data-act="pp-new"' + (S.wp.plans.length >= MAX_PLANS || !S.mcp ? ' disabled' : '') + '>+ New plan</button><button class="btn" data-act="go-plan">Edit plans</button></div>' +
+      (S.wp.plans.length >= MAX_PLANS ? '<p class="hint">You can keep up to 3 plans; delete one in Settings to make a new one.</p>' : '') + '</div></div>';
+  }
+  return x;
+}
 function viewToday() {
   let h = problemBox();
+  if (S.exercises.length) h += planPill();
   if (!S.exercises.length) {
     return h + '<div class="empty">Loading your exercise list from your Google Sheet…</div>';
   }
@@ -2152,12 +2441,14 @@ function viewToday() {
     h += '<div class="notice"><div>This session from <b>' + esc(usOf(d.date)) + '</b> was not saved yet. Saving it files it under ' + esc(usOf(d.date)) + '.</div>' +
       '<div class="acts"><button class="btn" data-act="discard">Discard it and start today</button></div></div>';
   } else if (d.date !== todayIso()) {
-    S.draft = { date: todayIso(), items: planFor(todayIso()) }; saveDraft(); return viewToday();
+    S.draft = freshDraft(todayIso()); saveDraft(); return viewToday();
   }
   if (d.done && !d.items.length) {
     h += '<div class="empty grow">Session saved. Add an exercise below if you want to log more today; it will be added to today\'s blocks in the sheet.</div>';
   } else if (!d.items.length) {
-    h += '<div class="empty grow">' + (planOn() ? 'No plan for ' + esc(WEEKDAYS[new Date(d.date + 'T12:00:00').getDay()]) + '. Add exercises below to log a session.' : 'Add the exercises you are doing today below.') + '</div>';
+    const apd = activePlan(), dd = apd && apd.days[dayKeyOf(d.date)];
+    if (planOn() && dd && dd.type === 'Rest') h += '<div class="empty grow">Rest day in ' + esc(apd.name) + '. You can still add exercises below.</div>';
+    else h += '<div class="empty grow">' + (planOn() ? 'No plan for ' + esc(WEEKDAYS[new Date(d.date + 'T12:00:00').getDay()]) + '. Add exercises below to log a session.' : 'Add the exercises you are doing today below.') + '</div>';
   }
   d.items.forEach((it, idx) => { h += cardToday(it, idx); });
   if (d.items.length) h += '<div class="today-fill" aria-hidden="true"></div>';   // pushes Add an exercise and Save session to the bottom
@@ -2166,9 +2457,9 @@ function viewToday() {
   if (S.addOpen) {
     const names = pickable().map(e => e.name).filter((n, i, a) => a.indexOf(n) === i);
     const item = n => '<button class="sheet-it" role="option" data-act="add-ex" data-name="' + esc(n) + '">' + esc(n) + '</button>';
-    const plan = names.filter(n => prefixOf(n)), other = names.filter(n => !prefixOf(n));
+    const favs = names.filter(isFav), plan = names.filter(n => prefixOf(n)), other = names.filter(n => !prefixOf(n));
     h += '<div class="sheet-bg" data-act="add-close"><div class="sheet" role="listbox" aria-label="Add an exercise" data-act="noop"><div class="sheet-h"><b>Add an exercise</b><button class="btn sm" data-act="add-close">Close</button></div>' +
-      '<div class="sheet-list" id="sheetList">' + (plan.length ? '<div class="sheet-sep">In the plan</div>' + plan.map(item).join('') : '') + (other.length ? '<div class="sheet-sep">Other exercises</div>' + other.map(item).join('') : '') + '</div></div></div>';
+      '<div class="sheet-list" id="sheetList">' + (favs.length ? '<div class="sheet-sep">★ Favourites</div>' + favs.map(item).join('') : '') + (plan.length ? '<div class="sheet-sep">In the plan</div>' + plan.map(item).join('') : '') + (other.length ? '<div class="sheet-sep">Other exercises</div>' + other.map(item).join('') : '') + '</div></div></div>';
   }
   const n = buildEntries(d).length;
   const LS = S.lastSave && !n ? S.lastSave : null, fresh = LS && Date.now() - LS.at < 2600;
@@ -2187,7 +2478,8 @@ function viewToday() {
   return h;
 }
 function nameBlock(name, hidePrefix) {
-  const e = exByName(name) || { cat: '', muscle: '', notes: '' };
+  const e0 = exByName(name) || { cat: '', muscle: '', notes: '' };
+  const e = S.isOwner ? e0 : Object.assign({}, e0, { notes: '' });   // exercise notes are the owner's only (user, 2026-11-03)
   const pre = hidePrefix ? '' : prefixOf(name);
   const tip = e.notes ? '<span class="tip" role="tooltip">' + esc(e.notes) + '</span>' : '';
   return '<span class="ex-name' + (e.notes ? ' has-tip" tabindex="0' : '') + '">' + (pre ? '<span class="pre">' + esc(pre) + '</span>' : '') + esc(bareName(name)) + tip + '</span>' +
@@ -2283,7 +2575,8 @@ function placeholder(name) {
 // ---------- progress ----------
 function chartNames() {
   // only exercises in the current plan (name starts with a plan number), user 2026-10-31; others stay in the Sheet and the Library
-  const all = pickable().filter(e => !/warm.?up/i.test(e.name) && prefixOf(e.name)).filter((e, i, a) => a.findIndex(x => x.name === e.name) === i);
+  const inPlans = new Set(); S.wp.plans.forEach(p => Object.values(p.days).forEach(d => d.items.forEach(n => inPlans.add(n))));
+  const all = pickable().filter(e => !/warm.?up/i.test(e.name) && (prefixOf(e.name) || isFav(e.name) || inPlans.has(e.name))).filter((e, i, a) => a.findIndex(x => x.name === e.name) === i);
   const withData = all.filter(e => S.history.has(e.name)).map(e => e.name);
   const without = all.filter(e => !S.history.has(e.name)).map(e => e.name);
   return { withData, without };
@@ -2535,7 +2828,7 @@ function pendingHtml() {
   if (E.note) h += '<p class="hint">' + esc(E.note) + '</p>';
   h += '<div class="fitems">' + E.items.map((x, i) => x.qf && S.qf.some(f => f.name === x.qf) ? qfItemRow(x, i) : '<div class="fitem"><input class="fname" data-fi="' + i + '" data-fk="name" value="' + esc(x.name) + '" aria-label="Food">' +
     [['kcal', 'kcal'], ['c', 'carbs g'], ['p', 'protein g'], ['f', 'fat g']].map(([k, l]) => '<label class="fnum"><input inputmode="decimal" data-fi="' + i + '" data-fk="' + k + '" value="' + (x[k] || '') + '"><span>' + l + '</span></label>').join('') +
-    '<button class="icon-btn" data-act="f-rm" data-i="' + i + '" aria-label="Remove item">×</button></div>').join('') + '</div>';
+    '<button class="icon-btn xbtn" data-act="f-rm" data-i="' + i + '" aria-label="Remove item">' + XICON + '</button></div>').join('') + '</div>';
   const tot = E.items.reduce((a, x) => ({ kcal: a.kcal + (+x.kcal || 0), c: a.c + (+x.c || 0), p: a.p + (+x.p || 0), f: a.f + (+x.f || 0) }), { kcal: 0, c: 0, p: 0, f: 0 });
   h += '<div class="row-acts"><button class="btn primary" data-act="f-save"' + (S.foodSaving || !S.mcp || E.status === 'working' ? ' disabled' : '') + '>' + (S.foodSaving ? 'Saving…' : 'Add ' + Math.round(tot.kcal) + ' kcal to ' + (S.foodDay === todayIso() ? 'today' : usOf(S.foodDay))) + '</button>' +
     '<button class="btn" data-act="f-cancel">Cancel</button></div></div>';
@@ -2599,7 +2892,7 @@ function viewFood() {
     h += '<div class="flog">';
     [day].forEach(xs => {
       h += xs.map(x => '<div class="frow"><span class="fn">' + esc(x.name) + '</span><span class="fk"><b>' + Math.round(x.kcal) + '</b> kcal · C ' + fmt2(x.c) + ' · P ' + fmt2(x.p) + ' · F ' + fmt2(x.f) + '</span>' +
-        '<button class="icon-btn" data-act="f-del" data-row="' + x.row + '" aria-label="Remove ' + esc(x.name) + '">×</button></div>').join(''); });
+        '<button class="icon-btn xbtn" data-act="f-del" data-row="' + x.row + '" aria-label="Remove ' + esc(x.name) + '">' + XICON + '</button></div>').join(''); });
     h += '</div>';
   }
   // the week's targets
@@ -2723,13 +3016,13 @@ function viewPhotos() {
 function viewLibrary() {
   let h = problemBox();
   if (!S.exercises.length) return h + '<div class="empty">Waiting for the exercise list from the Google Sheet.</div>';
-  const groups = [['In the plan', pickable().filter(e => prefixOf(e.name))], ['Not in the plan', pickable().filter(e => !prefixOf(e.name) && !/warm.?up/i.test(e.name))]];
-  groups.forEach(([title, list]) => {
-    h += '<div class="lib-group"><h2>' + esc(title) + ' · ' + list.length + '</h2>';
-    if (title === 'In the plan') list.forEach(e => { h += '<section class="card"><div class="titles">' + nameBlock(e.name) + '</div>' + pics(e.name) + lastLine(e.name) + '</section>'; });
-    else h += '<ul class="namelist">' + list.map(e => '<li>' + esc(e.name) + '</li>').join('') + '</ul>';
-    h += '</div>';
-  });
+  const list = pickable().filter((e, i, a) => a.findIndex(x => x.name === e.name) === i);
+  const favs = list.filter(e => isFav(e.name)), plan = list.filter(e => !isFav(e.name) && prefixOf(e.name)), other = list.filter(e => !isFav(e.name) && !prefixOf(e.name) && !/warm.?up/i.test(e.name));
+  const card = e => '<section class="card"><div class="lib-h"><div class="titles">' + nameBlock(e.name) + '</div>' + starBtn(e.name) + '</div>' + pics(e.name) + lastLine(e.name) + '</section>';
+  if (favs.length) h += '<div class="lib-group"><h2>★ Favourites · ' + favs.length + '</h2>' + favs.map(card).join('') + '</div>';
+  if (plan.length) h += '<div class="lib-group"><h2>In the plan · ' + plan.length + '</h2>' + plan.map(card).join('') + '</div>';
+  h += '<div class="lib-group"><h2>Other exercises · ' + other.length + '</h2><ul class="namelist">' + other.map(e => '<li><span>' + esc(e.name) + '</span>' + starBtn(e.name) + '</li>').join('') + '</ul></div>';
+  if (!favs.length) h += '<p class="hint">Tap ☆ to make an exercise a favourite: favourites show first here and as quick picks in the week plan.</p>';
   return h;
 }
 
@@ -2737,7 +3030,7 @@ function viewLibrary() {
 // ---------- add an exercise (Library tab, Ver 0.1h) ----------
 // The new row goes into the Exercises tab: in its plan-number group, or at the end of the exercises without a number.
 const CATS = ['push', 'pull', 'legs', 'core & cardio'];
-function nxBlank() { return { name: '', cat: 'push', unit: 'lbs', days: {}, muscle: '', notes: '' }; }
+function nxBlank() { return { name: '', cat: 'push', unit: 'lbs', days: {}, fav: false, muscle: '', notes: '' }; }
 // plan days as chips; the plan number is their digits in ascending order (Mon 1, Tue 2, Fri 3, Wed 4), e.g. Mon + Fri = 13
 const NX_DAYS = [['1', 'Mon'], ['2', 'Tue'], ['4', 'Wed'], ['3', 'Fri']];
 function nxPre(f) { return ['1', '2', '3', '4'].filter(d => f.days && f.days[d]).join(''); }
@@ -2753,11 +3046,9 @@ function addExSheet() {
     '<label class="fld"><span>Exercise name</span><input id="nx-name" data-nx="name" autocomplete="off" value="' + esc(f.name) + '" placeholder="e.g. Cable Crunch"></label>' +
     '<div class="fld"><span>Category</span>' + chips('nx-cat', CATS.map(c => [c, c]), v => v === f.cat) + '</div>' +
     '<div class="fld"><span>Unit</span>' + chips('nx-unit', UNITS.map(u => [u, u]), v => v === f.unit) + '</div>' +
-    '<div class="fld"><span>Plan days (optional)</span>' + chips('nx-day', NX_DAYS, v => !!f.days[v]) +
-      '<span class="nxpre">' + (pre ? 'Plan number <b>' + esc(pre) + '</b> · ' + esc(dayNames) : 'No day: in the list, not in the plan') + '</span></div>' +
+    '<label class="switch nxfav"><span>★ Favourite</span><input type="checkbox" role="switch" id="nxFav"' + (f.fav ? ' checked' : '') + '><i aria-hidden="true"></i></label>' +
     '<label class="fld"><span>Muscle worked (optional)</span><input id="nx-muscle" data-nx="muscle" autocomplete="off" value="' + esc(f.muscle) + '"></label>' +
-    '<label class="fld"><span>Notes (optional)</span><textarea id="nx-notes" data-nx="notes" rows="2">' + esc(f.notes) + '</textarea></label>' +
-    '<p class="hint">lbs = weight and reps; mins or seconds = one time entry (like Warm-up or Battle Ropes). Category decides Upper or Lower Body Day when saving.</p>' +
+    '<p class="hint">lbs = weight and reps; mins or seconds = one time entry (like Warm-up or Battle Ropes). Category decides Upper or Lower Body Day when saving. Put it on a day in Settings › Week plan.</p>' +
     '</div>' +
     '<div class="nxfoot"><button class="btn primary" data-act="nx-save"' + (busy || !S.mcp ? ' disabled' : '') + '>' + (busy ? 'Adding…' : 'Add to the list') + '</button>' +
     '<button class="btn" data-act="nx-cancel"' + (busy ? ' disabled' : '') + '>Cancel</button></div></div></div>';
@@ -2772,7 +3063,7 @@ function nxCheck(f) {
   const clash = S.exercises.find(e => bareName(e.name).toLowerCase() === name.toLowerCase());
   if (clash) return { err: '"' + bareName(clash.name) + '" is already in the list' + (prefixOf(clash.name) ? ' (as ' + clash.name + ')' : '') + '.' };
   if (!CATS.includes(f.cat) || !UNITS.includes(f.unit)) return { err: 'Choose a category and a unit.' };
-  return { row: ['', f.cat, full, String(f.muscle || '').trim(), String(f.notes || '').trim(), f.unit], full };
+  return { row: ['', f.cat, full, String(f.muscle || '').trim(), '', f.unit], full };
 }
 // rows = Exercises A2:F as read now (index 0 = sheet row 2). Returns the 0-based index in rows where the new row goes.
 function nxInsertAt(rows, full) {
@@ -2807,8 +3098,10 @@ async function addExercise() {
   S.nxBusy = true; S.nxMsg = ''; render();
   try {
     const r = await addExerciseRemote(c.row, c.full);
+    const starIt = !!S.nx.fav;
     S.nx = null; S.nxOpen = false; S.nxBusy = false;
     await readSheet();
+    if (starIt) { S.wp.favs.add(c.full); savePlans('The star'); }
     toast(c.full + ' added to the list' + (r ? ' (row ' + r + ' of the Exercises tab)' : '') + '.');
   } catch (err) {
     S.nxBusy = false;
@@ -2820,6 +3113,7 @@ async function addExercise() {
 // ---------- settings ----------
 // Version rule (user, 2026-11-01, same as the full app): Ver 0.1 + letter · MMDDYYYY; the user decides when to move to 0.2.
 const APP_VERSIONS = [
+  ['0.1f', '11032026', 'From the full app Ver 0.1m: Settings › Week plan (up to 3 named plans kept in a Plan tab of your Sheet; day types Upper, Push, Pull, Lower, Custom, Rest; pick and drag exercises; saved day by day), Today shows the current plan and switches plans, ★ favourites per person, exercise notes shown only to the owner, no Notes field when adding an exercise. LAST UPDATE of Workout Lite: it will not be updated after this version; new features go to the full app only.'],
   ['0.1e', '11012026', 'Sets with only a weight (no reps) are saved too. Settings > Today\'s plan: switch off to start each day empty and pick exercises yourself (kept per phone). From the full app Ver 0.1j.'],
   ['0.1d', '11012026', 'One update for both: the Apps Script version now loads this page from GitHub (sqiangqi.github.io/workout-lite/lite.html) each time it opens, falling back to its built-in copy; the GitHub web version gets the same page. Settings > Version shows where the page came from.'],
   ['0.1c', '11012026', 'Library: Add an exercise is now a round gold bubble at the bottom right with a circling halo; it opens a low bottom sheet with tap buttons for category, unit and plan days (same as the full app Ver 0.1i).'],
@@ -2828,22 +3122,25 @@ const APP_VERSIONS = [
   ['0.1', '11012026', 'First version of Workout Lite: runs on Google Apps Script without Claude. Today, Progress, Library and Settings from QS Workout Ver 0.1g; each person signs in with Google and saves to their own Sheet.']
 ];
 function viewSettings() {
+  if (S.wpEdit) return viewPlanEdit();
   let h = problemBox();
+  h += weekPlansPanel();
   const [v, d] = APP_VERSIONS[0];
   const dark = document.documentElement.getAttribute('data-theme') === 'dark', chosen = !!store.get(K_THEME);
   h += '<p class="section-h">Appearance</p><div class="panel"><label class="switch"><span>Dark mode</span><input type="checkbox" role="switch" id="themeSw"' + (dark ? ' checked' : '') + '><i aria-hidden="true"></i></label>' +
     '<p class="hint">' + (chosen ? 'Your choice is kept on this phone. <button class="linkbtn" data-act="theme-auto">Follow the phone setting instead</button>' : 'Following your phone’s light / dark setting.') + '</p></div>';
   h += '<p class="section-h">Today\'s plan</p><div class="panel"><label class="switch"><span>Start each day with the plan</span><input type="checkbox" role="switch" id="planSw"' + (planOn() ? ' checked' : '') + '><i aria-hidden="true"></i></label>' +
-    '<p class="hint">' + (planOn() ? 'Today fills in from the plan numbers in the Exercises tab (1 Mon, 2 Tue, 4 Wed, 3 Fri).' : 'Today starts empty; pick the exercises yourself. Kept on this phone.') + '</p></div>';
+    '<p class="hint">' + (planOn() ? (activePlan() ? 'Today fills in from your week plan ' + esc(activePlan().name) + '.' : 'Today fills in from the plan numbers in the Exercises tab (1 Mon, 2 Tue, 4 Wed, 3 Fri).') : 'Today starts empty; pick the exercises yourself. Kept on this phone.') + '</p></div>';
   h += '<p class="section-h">Your workout Sheet</p><div class="panel">' +
     (S.email ? '<p>Signed in as <b>' + esc(S.email) + '</b></p>' : '') +
     '<p>Sessions are saved to <b>' + esc(S.sheetTitle || 'your Sheet') + '</b>' + (S.sheetTab ? ' › ' + esc(S.sheetTab) : '') + ' (columns J to M).</p>' +
     '<div class="row-acts">' + (S.sheetUrl ? '<a class="btn" href="' + esc(S.sheetUrl) + '" target="_blank" rel="noopener">Open the Sheet</a>' : '') +
     '<button class="btn" data-act="retry"' + (S.mcp ? '' : ' disabled') + '>Reload from the Sheet</button></div>' +
-    '<p class="hint">To change the exercise list, the plan numbers or the order, edit the Exercises tab in the Sheet, then tap Reload.</p>' +
+    '<p class="hint">To change the exercise list or the order, edit the Exercises tab in the Sheet, then tap Reload. Week plans and stars are kept in the Plan tab of the same Sheet.</p>' +
     '<div class="row-acts"><button class="btn' + (S.cfgArmed ? ' danger' : '') + '" data-act="cfg-switch">' + (S.cfgArmed ? 'Tap again to switch Sheet' : 'Use a different Sheet') + '</button></div>' +
     '<p class="hint">Switching only changes where this app saves; nothing in the Sheet is deleted. Unsaved sets are cleared.</p></div>';
   h += '<p class="section-h">Version</p><div class="panel"><p class="ver"><b>Ver ' + esc(v) + '</b> · ' + esc(d) + '</p>' +
+    '<p class="hint">This is the last version of Workout Lite; it will not get new features.</p>' +
     (window.__liteSrc ? '<p class="hint">' + (window.__liteSrc === 'github' ? 'Page loaded from GitHub (updates on its own).' : 'GitHub could not be reached: using the built-in copy of the page.') + '</p>' : '') +
     '<details class="wk"><summary>Version history</summary><ul class="verlist">' + APP_VERSIONS.map(([a, b, c]) => '<li><b>' + esc(a) + '</b> · ' + esc(b) + ' — ' + esc(c) + '</li>').join('') + '</ul></details></div>';
   return h;
@@ -2861,7 +3158,7 @@ function viewSetup() {
     '<p>Paste the link of a workout Sheet you can edit. It needs an Exercises tab and a log tab with the sessions in columns J to M (like QS time log).</p>' +
     '<input class="tin" id="cfgLink" type="url" inputmode="url" autocomplete="off" placeholder="https://docs.google.com/spreadsheets/d/…" value="' + esc(S.setupLink || '') + '">';
   if (S.setupTabs) {
-    h += '<p>Which tab is your log?</p><div class="row-acts">' + S.setupTabs.map(t => '<button class="btn" data-act="cfg-tab" data-tab="' + esc(t) + '"' + (busy ? ' disabled' : '') + '>' + esc(t) + '</button>').join('') + '</div>';
+    h += '<p>Which tab is your log?</p><div class="row-acts">' + S.setupTabs.filter(t => t !== 'Plan').map(t => '<button class="btn" data-act="cfg-tab" data-tab="' + esc(t) + '"' + (busy ? ' disabled' : '') + '>' + esc(t) + '</button>').join('') + '</div>';
   } else {
     h += '<div class="row-acts"><button class="btn" data-act="cfg-use"' + (busy ? ' disabled' : '') + '>' + (S.setupBusy === 'use' ? 'Checking…' : 'Use this Sheet') + '</button></div>';
   }
@@ -2871,17 +3168,21 @@ function viewSetup() {
 function startWith(r) {
   // r = result of api_init after setup or on open
   S.email = r.email || S.email;
+  S.isOwner = !!r.owner;                 // exercise notes show only to the owner (Lite 0.1f)
   store.del('wlite.full.v1');
   if (!r.cfg) { CFG = null; S.mcp = null; S.tab = 'setup'; S.initState = 'ready'; setSync('busy', 'Not set up'); render(); return; }
   const changed = !CFG || CFG.sheetId !== r.cfg.sheetId || CFG.tab !== r.cfg.tab;
   CFG = r.cfg; S.mcp = true; S.initState = 'ready';
+  if (LOG_TAB !== CFG.tab) { S.wp = { plans: [], favs: new Set(), state: 'wait', err: '' }; S.wpEdit = null; S.wpDay = null; }
+  LOG_TAB = CFG.tab;
   const cache = store.get(K_CACHE);
-  if (cache && (cache.sheet !== CFG.sheetId || cache.tab !== CFG.tab)) { store.del(K_CACHE); store.del(K_DRAFT); S.draft = null; S.exercises = []; S.history = new Map(); S.loadedAt = null; }
+  if (cache && (cache.sheet !== CFG.sheetId || cache.tab !== CFG.tab)) { store.del(K_CACHE); store.del(K_DRAFT); store.del(K_PLANS); S.draft = null; S.exercises = []; S.history = new Map(); S.loadedAt = null; }
   if (r.data) { applyData(r.data); S.problem = null; setSync('ok', 'Synced ' + timeShort(S.loadedAt)); }
   else if (r.error) { S.problem = { text: r.error, retry: true }; setSync('err', S.loadedAt ? 'Offline copy' : 'Not synced'); }
   if (S.tab === 'setup') S.tab = 'today';
   ensureDraft(); render();
   if (changed || !draftRemoteReady) readDraftRemote();
+  if (changed || S.wp.state !== 'ok') readPlans();
 }
 async function setupRun(kind, fn) {
   S.setupBusy = kind; S.setupMsg = ''; render();
@@ -2889,6 +3190,98 @@ async function setupRun(kind, fn) {
     if (r && r.needTab) { S.setupTabs = r.tabs; S.setupMsg = r.tabs.length ? '' : 'That Sheet has no log tab.'; render(); return; }
     S.setupTabs = null; startWith(r); toast('Ready. Sessions save to your Sheet.');
   } catch (e) { S.setupBusy = null; S.setupMsg = codeText(e).text; render(); }
+}
+
+// ---------- week plan screens (Settings, Ver 0.1l) ----------
+function wpMsgBox() {
+  return S.wpMsg ? '<div class="notice err" role="alert"><div>' + esc(S.wpMsg) + '</div><div class="acts"><button class="btn" data-act="wp-retry"' + (S.wpSaving ? ' disabled' : '') + '>' + (S.wpSaving ? 'Saving…' : 'Save again') + '</button></div></div>' : '';
+}
+function planSummary(p) {
+  const set = WDAYS.filter(([k]) => p.days[k]);
+  if (!set.length) return 'No days set yet';
+  const work = set.filter(([k]) => p.days[k].type !== 'Rest').length, rest = set.length - work, open = 7 - set.length;
+  return work + ' workout day' + (work === 1 ? '' : 's') + (rest ? ' · ' + rest + ' rest' : '') + (open ? ' · ' + open + ' not set' : '');
+}
+function weekPlansPanel() {
+  const n = S.wp.plans.length, ap = activePlan();
+  let h = '<div class="sec-row"><p class="section-h">Week plan</p><span class="sec-side">' + n + ' of ' + MAX_PLANS + ' plans</span></div>' + wpMsgBox() + '<div class="panel">';
+  if (S.wp.state === 'wait' && !n) h += '<p>Reading your plans…</p>';
+  if (S.wp.state === 'err' && !n) h += '<p>Could not read the Plan tab. ' + esc(S.wp.err || '') + '</p>';
+  S.wp.plans.forEach(p => {
+    const arm = S.wpArm === p.id;
+    h += '<div class="wp-card' + (p.active ? ' act' : '') + '"><div class="wp-ch"><b>' + esc(p.name) + '</b>' + (p.active ? '<span class="wp-badge">★ In use</span>' : '') + '</div>' +
+      '<div class="wp-sum">' + esc(planSummary(p)) + (p.warm ? ' · warm-up first' : '') + '</div>' +
+      '<div class="row-acts"><button class="btn sm" data-act="wp-edit" data-id="' + esc(p.id) + '">Edit</button>' +
+      (p.active ? '<button class="btn sm" data-act="wp-stop">Stop using</button>' : '<button class="btn sm" data-act="wp-use" data-id="' + esc(p.id) + '">Use this plan</button>') +
+      '<button class="btn sm' + (arm ? ' danger' : '') + '" data-act="wp-del" data-id="' + esc(p.id) + '">' + (arm ? 'Tap again to delete' : 'Delete') + '</button></div></div>';
+  });
+  h += '<div class="row-acts"><button class="btn primary" data-act="wp-new"' + (n >= MAX_PLANS || !S.mcp || S.wp.state === 'wait' ? ' disabled' : '') + '>+ New plan</button></div>' +
+    '<p class="hint">' + (ap ? 'Today follows ' + esc(ap.name) + '. Stop using it to go back to the plan numbers.' : n ? 'No plan in use: Today follows the plan numbers in the Exercises tab. Tap Use this plan when a plan is ready.' : 'Make a plan for your week: pick a day type and exercises for each day.') +
+    (n >= MAX_PLANS ? ' You can keep up to 3 plans; delete one to make a new one.' : '') + '</p></div>';
+  if (S.wpAsk) h += '<div class="sheet-bg" data-act="wp-ask-cancel"><div class="sheet wpask" role="dialog" aria-label="New week plan" data-act="noop">' +
+    '<div class="sheet-h"><b>New week plan</b><button class="btn sm" data-act="wp-ask-cancel">Cancel</button></div>' +
+    '<p class="wpq">Add a warm-up to every workout day in this schedule?</p>' +
+    '<p class="hint">If you choose No, you can still pick Warm-up from the list on any day.</p>' +
+    '<div class="nxfoot"><button class="btn primary" data-act="wp-ask" data-v="yes">Yes, add warm-up</button><button class="btn" data-act="wp-ask" data-v="no">No</button></div></div></div>';
+  return h;
+}
+function viewPlanEdit() {
+  const p = planById(S.wpEdit);
+  if (!p) { S.wpEdit = null; S.wpDay = null; return viewSettings(); }
+  let h = wpMsgBox();
+  h += '<div class="wp-top"><button class="btn sm" data-act="wp-back">‹ Week plans</button>' + (p.active ? '<span class="wp-badge">★ In use</span>' : '<button class="btn sm" data-act="wp-use" data-id="' + esc(p.id) + '">Use this plan</button>') + '</div>';
+  h += '<div class="panel"><label class="fld"><span>Plan name</span><input id="wpName" class="tin" value="' + esc(p.name) + '" autocomplete="off" maxlength="40" enterkeyhint="done"></label>' +
+    '<label class="switch"><span>Warm-up first on every workout day</span><input type="checkbox" role="switch" id="wpWarm"' + (p.warm ? ' checked' : '') + '><i aria-hidden="true"></i></label></div>';
+  h += '<p class="section-h">Your week · tap a day</p><div class="wp-week">';
+  WDAYS.forEach(([k]) => {
+    const d = p.days[k], rest = d && d.type === 'Rest';
+    const names = d && !rest ? d.items.map(bareName) : [];
+    h += '<button class="wp-day' + (d ? ' set' : '') + (rest ? ' rest' : '') + '" data-act="wp-day" data-k="' + k + '">' +
+      '<span class="wd">' + k + '</span><span class="wmid"><span class="wt">' + (d ? esc(typeLabel(d.type)) : 'Not set') + '</span>' +
+      (d && !rest ? '<span class="wn">' + (names.length ? esc(names.join(' · ')) : 'No exercises yet') + '</span>' : '') + '</span>' +
+      '<span class="wc">' + (d && !rest ? names.length + (p.warm && names.length ? '+W' : '') : '›') + '</span></button>';
+  });
+  h += '</div><p class="hint">Each day is saved to the Plan tab of the Sheet when you tap Done. A plan you have not finished keeps the days you saved' + (p.name === 'Untitled' ? ' and stays named Untitled until you rename it' : '') + '.</p>';
+  if (S.wpDay) h += daySheet(p);
+  return h;
+}
+function wpLists(type) {
+  const ex = pickable().filter((e, i, a) => a.findIndex(x => x.name === e.name) === i), c = e => catClass(e.cat);
+  const core = ex.filter(e => !['push', 'pull', 'legs'].includes(c(e)));
+  const main = {
+    Upper: ['Upper body · push & pull', ex.filter(e => c(e) === 'push' || c(e) === 'pull')],
+    Push: ['Push', ex.filter(e => c(e) === 'push')],
+    Pull: ['Pull', ex.filter(e => c(e) === 'pull')],
+    Lower: ['Lower body · legs', ex.filter(e => c(e) === 'legs')],
+    Custom: ['Push, pull & legs', ex.filter(e => ['push', 'pull', 'legs'].includes(c(e)))]
+  }[type];
+  return main ? [main, ['Core & cardio', core]] : [];
+}
+function daySheet(p) {
+  const D = S.wpDay, busy = S.wpSaving;
+  let h = '<div class="sheet-bg" data-act="noop"><div class="sheet wpsheet" role="dialog" aria-label="' + esc(dayFull(D.k)) + '" data-act="noop">' +
+    '<div class="sheet-h"><b>' + esc(dayFull(D.k)) + (D.type ? ' · ' + esc(typeLabel(D.type)) : '') + '</b><button class="btn sm" data-act="wp-cancel">Cancel</button></div>' +
+    '<div class="seg wptypes">' + DAY_TYPES.map(([v, lab]) => '<button class="btn' + (D.type === v ? ' on' : '') + '" data-act="wp-type" data-v="' + v + '" aria-pressed="' + (D.type === v) + '">' + esc(v) + '</button>').join('') + '</div>' +
+    '<div class="wpbody" id="wpBody">';
+  if (!D.type) h += '<div class="wp-empty">Choose the day type above: Upper, Push, Pull, Lower, Custom or Rest.</div>';
+  else if (D.type === 'Rest') h += '<div class="wp-empty">Rest day: no exercises in the plan. On Today you can still add any exercise.</div>';
+  else {
+    h += '<div class="wp-sel"><div class="sheet-sep">Selected · ' + D.items.length + '</div>';
+    if (p.warm) h += '<div class="wprow fixed"><span class="wph" aria-hidden="true"></span><span class="wpn">Warm-up</span><span class="wpt">first</span></div>';
+    if (!D.items.length) h += '<div class="wp-empty sm">Pick exercises from the list below.</div>';
+    D.items.forEach((n, i) => { h += '<div class="wprow" data-wi="' + i + '"><span class="wph" aria-hidden="true">≡</span><span class="wpn">' + esc(bareName(n)) + (exByName(n) ? '' : ' <i>(not in the list)</i>') + '</span><button class="xbtn" data-act="wp-rm" data-i="' + i + '" aria-label="Remove ' + esc(bareName(n)) + '">' + XICON + '</button></div>'; });
+    if (D.items.length > 1) h += '<p class="hint">Hold an exercise for 1 second (or drag ≡), then move it up or down.</p>';
+    h += '</div>';
+    const favs = pickable().map(e => e.name).filter((n, i, a) => a.indexOf(n) === i && isFav(n));
+    if (favs.length) h += '<div class="sheet-sep">★ Favourites</div><div class="wp-chips">' + favs.map(n => '<button class="wp-chip' + (D.items.includes(n) ? ' on' : '') + '" data-act="wp-add" data-name="' + esc(n) + '">' + (D.items.includes(n) ? '✓ ' : '') + esc(bareName(n)) + '</button>').join('') + '</div>';
+    wpLists(D.type).forEach(([title, list]) => {
+      if (!list.length) return;
+      h += '<div class="sheet-sep">' + esc(title) + '</div>' + list.map(e => { const on = D.items.includes(e.name);
+        return '<div class="wp-li' + (on ? ' on' : '') + '"><button class="wp-pick" data-act="wp-add" data-name="' + esc(e.name) + '"><span class="ck">' + (on ? '✓' : '+') + '</span>' + esc(bareName(e.name)) + '</button>' + starBtn(e.name) + '</div>'; }).join('');
+    });
+  }
+  h += '</div><div class="nxfoot"><button class="btn primary" data-act="wp-done"' + (!D.type || busy ? ' disabled' : '') + '>' + (busy ? 'Saving…' : 'Done · save ' + esc(D.k)) + '</button><button class="btn" data-act="wp-cancel">Cancel</button></div></div></div>';
+  return h;
 }
 
 // ---------- rest timer ----------
@@ -2989,7 +3382,7 @@ document.addEventListener('click', e => {
     case 'save': S.confirm = true; render(); break;
     case 'save-no': S.confirm = false; render(); break;
     case 'save-yes': saveSession(); break;
-    case 'discard': S.draft = { date: todayIso(), items: planFor(todayIso()) }; saveDraft(); render(); break;
+    case 'discard': S.draft = freshDraft(todayIso()); saveDraft(); render(); break;
     case 'nx-open': if (!S.nx) S.nx = nxBlank(); S.nxOpen = true; S.nxMsg = ''; render(); break;
     case 'nx-hide': if (!S.nxBusy) { S.nxOpen = false; render(); } break;                 // typed values are kept until Cancel or Add
     case 'nx-cancel': S.nx = null; S.nxOpen = false; S.nxMsg = ''; render(); break;
@@ -3003,10 +3396,10 @@ document.addEventListener('click', e => {
     case 'cfg-switch':
       if (!S.cfgArmed) { S.cfgArmed = true; render(); setTimeout(() => { if (S.cfgArmed) { S.cfgArmed = false; render(); } }, 4000); break; }
       S.cfgArmed = false;
-      gs('api_forget').then(() => { CFG = null; S.mcp = null; store.del(K_CACHE); store.del(K_DRAFT); S.draft = null; S.exercises = []; S.history = new Map(); S.loadedAt = null; S.sheetUrl = S.sheetTitle = S.sheetTab = null; S.setupTabs = null; S.setupLink = ''; S.tab = 'setup'; setSync('busy', 'Not set up'); render(); })
+      gs('api_forget').then(() => { CFG = null; S.mcp = null; store.del(K_CACHE); store.del(K_DRAFT); store.del(K_PLANS); S.draft = null; S.exercises = []; S.history = new Map(); S.loadedAt = null; S.sheetUrl = S.sheetTitle = S.sheetTab = null; S.setupTabs = null; S.setupLink = ''; LOG_TAB = ''; S.wp = { plans: [], favs: new Set(), state: 'wait', err: '' }; S.wpEdit = null; S.wpDay = null; S.tab = 'setup'; setSync('busy', 'Not set up'); render(); })
         .catch(e => toast(codeText(e).text));
       break;
-    case 'retry': S.problem = null; readSheet(); break;
+    case 'retry': S.problem = null; readSheet(); if (S.wp.state === 'err') readPlans(); break;
     case 'retry-save': S.problem = null; saveSession(); break;
     case 'pic': openPic(b.dataset.name); break;
     case 'close-pic': $('#lightbox').hidden = true; S.lbId = null; break;
@@ -3033,6 +3426,50 @@ document.addEventListener('click', e => {
     case 'pick-close': S.pickOpen = false; render(); break;
     case 'pick-set': S.pick = b.dataset.name; S.pickOpen = false; render(); break;
     case 'noop': break;
+    case 'fav': toggleFav(b.dataset.name); break;
+    case 'pp-open': S.ppOpen = true; render(); break;
+    case 'pp-close': S.ppOpen = false; render(); break;
+    case 'pp-use': case 'pp-none': {
+      S.ppOpen = false; const p = act === 'pp-use' ? planById(b.dataset.id) : null;
+      if (!planOn()) store.set(K_PLAN, true);
+      const same = p ? p.active : !activePlan();
+      S.wp.plans.forEach(x => { x.active = x === p; });
+      todayFollowPlan(); render();
+      if (!same) { toast(p ? p.name + ' is in use. Today follows it.' : 'No week plan: Today follows the plan numbers.'); savePlans('The plan change'); }
+      if (draftHasWork(S.draft) && !same) toast('Plan switched. Today already has logged sets, so it was left as it is.');
+      break; }
+    case 'pp-new': S.ppOpen = false; S.tab = 'settings'; S.wpEdit = null; S.wpDay = null; S.wpAsk = true; render(); window.scrollTo(0, 0); break;
+    case 'go-plan': S.ppOpen = false; S.tab = 'settings'; S.wpEdit = null; S.wpDay = null; render(); window.scrollTo(0, 0); break;
+    case 'wp-new': S.wpAsk = true; S.wpArm = null; render(); break;
+    case 'wp-ask-cancel': S.wpAsk = false; render(); break;
+    case 'wp-ask': {
+      S.wpAsk = false;
+      if (S.wp.plans.length >= MAX_PLANS) { toast('You already have 3 plans.'); render(); break; }
+      const p = { id: 'p' + Date.now().toString(36), name: 'Untitled', active: false, warm: b.dataset.v === 'yes', updated: stampNow(), days: {} };
+      S.wp.plans.push(p); S.wpEdit = p.id; S.wpDay = null; render(); window.scrollTo(0, 0);
+      savePlans('The new plan'); break; }
+    case 'wp-edit': S.wpEdit = b.dataset.id; S.wpDay = null; S.wpArm = null; render(); window.scrollTo(0, 0); break;
+    case 'wp-back': S.wpEdit = null; S.wpDay = null; render(); window.scrollTo(0, 0); break;
+    case 'wp-use': { const p = planById(b.dataset.id); if (!p) break; S.wp.plans.forEach(x => { x.active = x === p; }); todayFollowPlan(); render(); toast(p.name + ' is in use. Today follows it.'); savePlans('The plan in use'); break; }
+    case 'wp-stop': S.wp.plans.forEach(x => { x.active = false; }); todayFollowPlan(); render(); toast('No plan in use: Today follows the plan numbers.'); savePlans('The plan change'); break;
+    case 'wp-del': {
+      const id = b.dataset.id;
+      if (S.wpArm !== id) { S.wpArm = id; render(); setTimeout(() => { if (S.wpArm === id) { S.wpArm = null; render(); } }, 4000); break; }
+      S.wpArm = null; const p = planById(id); if (!p) break;
+      S.wp.plans = S.wp.plans.filter(x => x !== p); if (S.wpEdit === id) { S.wpEdit = null; S.wpDay = null; }
+      todayFollowPlan(); render(); toast(p.name + ' deleted.'); savePlans('The delete'); break; }
+    case 'wp-day': { const p = planById(S.wpEdit); if (!p) break; const d = p.days[b.dataset.k];
+      S.wpDay = { k: b.dataset.k, type: d ? d.type : null, items: d ? d.items.slice() : [] }; render(); break; }
+    case 'wp-type': if (S.wpDay) { S.wpDay.type = b.dataset.v; render(); } break;
+    case 'wp-add': if (S.wpDay) { const n = b.dataset.name, i = S.wpDay.items.indexOf(n); if (i >= 0) S.wpDay.items.splice(i, 1); else S.wpDay.items.push(n); render(); } break;
+    case 'wp-rm': if (S.wpDay) { S.wpDay.items.splice(+b.dataset.i, 1); render(); } break;
+    case 'wp-cancel': S.wpDay = null; render(); break;
+    case 'wp-done': {
+      const p = planById(S.wpEdit), D = S.wpDay; if (!p || !D || !D.type) break;
+      p.days[D.k] = { type: D.type, items: D.type === 'Rest' ? [] : D.items.slice(), updated: stampNow() }; p.updated = stampNow();
+      S.wpDay = null; if (p.active) todayFollowPlan(); render();
+      const k = D.k; savePlans(dayFull(k)).then(() => { if (!S.wpMsg) toast(dayFull(k) + ' saved to the plan.'); }); break; }
+    case 'wp-retry': savePlans(); render(); break;
     case 'tbl-more': S.tableAll = S.tableAll === b.dataset.k ? null : b.dataset.k; render(); break;
     case 'range': S.range = b.dataset.r; store.set(K_RANGE, S.range); render(); break;
     case 'backup': backupToDrive(); break;
@@ -3114,6 +3551,9 @@ document.addEventListener('change', e => {
   if (el.id === 'phDate' && S.pending) { S.pending.date = el.value || todayIso(); return; }
   if (el.id === 'phIn' && el.files && el.files[0]) { S.tab = 'photos'; S.sel = null; S.cmpMode = false; startPending(el.files[0]); window.scrollTo(0, 0); return; }
   if (el.id === 'planSw') { setPlanOn(el.checked); return; }
+  if (el.id === 'wpName') { const p = planById(S.wpEdit); if (!p) return; const v = el.value.trim().replace(/\s+/g, ' ').slice(0, 40) || 'Untitled'; if (v === p.name) return; p.name = v; p.updated = stampNow(); render(); savePlans('The plan name'); return; }
+  if (el.id === 'wpWarm') { const p = planById(S.wpEdit); if (!p) return; p.warm = el.checked; p.updated = stampNow(); if (p.active) todayFollowPlan(); render(); savePlans('The warm-up setting'); return; }
+  if (el.id === 'nxFav') { if (S.nx) S.nx.fav = el.checked; return; }
   if (el.id === 'themeSw') { store.set(K_THEME, el.checked ? 'dark' : 'light'); applyTheme(); render(); return; }
   if (el.id === 'csvIn' && el.files && el.files[0]) {
     const f = el.files[0]; const rd = new FileReader();
@@ -3130,6 +3570,7 @@ document.addEventListener('change', e => {
     rd.readAsText(f);
   }
 });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'wpName') { e.target.blur(); return; } });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && (S.pickOpen || S.metricOpen || S.addOpen)) { S.pickOpen = false; S.metricOpen = false; S.addOpen = false; render(); return; } if (e.key === 'Escape') { $('#lightbox').hidden = true; document.querySelectorAll('.ex-name.open').forEach(x => x.classList.remove('open')); } });
 function openPic(name) {
   const lb = $('#lightbox'); const u = exImg(name);
@@ -3212,6 +3653,40 @@ function endDrag() {
   render();
 }
 document.addEventListener('pointerup', endDrag);
+// Reorder the picked exercises in the week-plan day sheet (Ver 0.1l): hold a row 1 s, or drag its ≡ handle.
+let wdrag = null, wpress = null;
+function wStart(row, y) {
+  const rows = [...document.querySelectorAll('.wprow[data-wi]')];
+  const mids = rows.map(r => { const q = r.getBoundingClientRect(); return q.top + q.height / 2; });
+  wdrag = { row, rows, y0: y, from: rows.indexOf(row), mids, step: rows.length > 1 ? mids[1] - mids[0] : row.offsetHeight, to: null };
+  row.classList.add('dragging');
+}
+function wMove(y) {
+  const d = wdrag, dy = y - d.y0; d.row.style.transform = 'translateY(' + dy + 'px)';
+  const cy = d.mids[d.from] + dy; let to = 0; d.mids.forEach((m, k) => { if (k !== d.from && cy > m) to++; }); d.to = to;
+  d.rows.forEach((r, k) => { if (r === d.row) return; let sh = 0; if (k > d.from && k <= to) sh = -d.step; else if (k < d.from && k >= to) sh = d.step; r.style.transform = sh ? 'translateY(' + sh + 'px)' : ''; });
+}
+function wEnd() {
+  const d = wdrag; wdrag = null; if (!d) return;
+  d.rows.forEach(r => { r.style.transform = ''; r.classList.remove('dragging'); });
+  justDragged = true; setTimeout(() => { justDragged = false; }, 400);
+  if (d.to != null && d.to !== d.from && S.wpDay) { const it = S.wpDay.items, [m] = it.splice(d.from, 1); it.splice(d.to, 0, m); }
+  render();
+}
+function wCancelPress() { if (wpress) { clearTimeout(wpress.t); wpress.row.classList.remove('holding'); wpress = null; } }
+document.addEventListener('pointerdown', e => {
+  const row = e.target.closest('.wprow[data-wi]'); if (!row) return;
+  const ab = e.target.closest('[data-act]'); if (ab && row.contains(ab)) return;   // the remove button
+  if (e.target.closest('.wph')) { e.preventDefault(); wStart(row, e.clientY); return; }
+  row.classList.add('holding');
+  const y = e.clientY;
+  wpress = { x: e.clientX, y, row, t: setTimeout(() => { if (!wpress) return; row.classList.remove('holding'); wpress = null; wStart(row, y); }, HOLD_MS) };
+});
+document.addEventListener('pointermove', e => { if (wpress && Math.hypot(e.clientX - wpress.x, e.clientY - wpress.y) > 10) wCancelPress(); if (wdrag) wMove(e.clientY); }, true);
+document.addEventListener('touchmove', e => { if (wdrag) { e.preventDefault(); wMove(e.touches[0].clientY); } }, { passive: false });
+['pointerup', 'pointercancel'].forEach(t => document.addEventListener(t, () => { wCancelPress(); if (wdrag) wEnd(); }, true));
+document.addEventListener('touchend', () => { if (wdrag) wEnd(); });
+document.addEventListener('contextmenu', e => { if (wdrag || wpress || e.target.closest('.wprow')) e.preventDefault(); });
 document.addEventListener('pointercancel', endDrag);
 // Keep a copy of each exercise picture in Drive (Workout app > exercise images), uploaded once from the app.
 const EX_FOLDER = '1L15CB7MAypQbgdBDFK74O79PSkwpb51a';
@@ -3274,11 +3749,11 @@ let tabSw = null;
 function sideScroller(el) { for (let n = el; n && n !== document.body; n = n.parentElement) { if (n.scrollWidth > n.clientWidth + 2 && /(auto|scroll)/.test(getComputedStyle(n).overflowX)) return true; } return false; }
 document.addEventListener('touchstart', e => {
   const t = e.target; tabSw = null;
-  if (e.touches.length !== 1 || drag || t.closest('#bigPh, #lightbox, input, textarea, select, .slider-box, nav.tabs') || sideScroller(t)) return;
+  if (e.touches.length !== 1 || drag || wdrag || t.closest('#bigPh, #lightbox, input, textarea, select, .slider-box, nav.tabs, .sheet-bg') || sideScroller(t)) return;
   tabSw = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() };
 }, { passive: true });
 document.addEventListener('touchend', e => {
-  if (!tabSw || drag || press) { tabSw = null; return; }
+  if (!tabSw || drag || press || wdrag || wpress) { tabSw = null; return; }
   const dx = e.changedTouches[0].clientX - tabSw.x, dy = e.changedTouches[0].clientY - tabSw.y, dt = Date.now() - tabSw.t; tabSw = null;
   if (Math.abs(dx) < 70 || Math.abs(dx) < 2 * Math.abs(dy) || dt > 800) return;
   const tabs = [...document.querySelectorAll('nav.tabs button')].map(b => b.dataset.tab); const i = tabs.indexOf(S.tab);
@@ -3320,6 +3795,8 @@ S.initState = 'wait';
 const cache = store.get(K_CACHE);
 if (cache && cache.ex) {
   setData(cache.ex, cache.ar); S.loadedAt = cache.at; S.sheetUrl = cache.url; S.sheetTitle = cache.title; S.sheetTab = cache.tab;
+  LOG_TAB = cache.tab || '';
+  { const pc = store.get(K_PLANS); if (pc && Array.isArray(pc.rows)) { const p = parsePlans(pc.rows); S.wp.plans = p.plans; S.wp.favs = p.favs; } }
   setSync('busy', 'Copy from ' + timeShort(cache.at));
   ensureDraft();
 } else { S.tab = 'setup'; setSync('busy', 'Connecting…'); }
