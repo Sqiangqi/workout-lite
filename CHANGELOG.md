@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update. Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.2c · 11/08/2026
+
+Matches the full app Ver 0.2c. Plan numbers are gone from exercise names (hidden too if your Sheet still has them); with no week plan in use Today starts empty. Exercises tab and Add an exercise: Favourites first, then the rest A to Z. New people get Dead Hang (stopwatch: Start, then Stop records the seconds; a small box for a typed time) and Pull Up (count only, + set for more; the Progress chart adds up each day; start and end drawing); anyone can add such exercises with the new reps unit or the seconds unit. Bottom sheets keep their last option above the iPhone home bar and away from the rounded corners. The Remove? confirmation on a Today card is a full-size red button.
+
 ## 0.2b · 11/07/2026
 
 Matches the full app Ver 0.2b. Food tab: changing the Carb day is for that day only; Carb day › Plan my week sets the weekly high / mid / low pattern (one switch per weekday, with Standard 2-3-2, Match my workouts and All mid). The Weight box no longer shows Auto (7-day Renpho average) to anyone but the owner; everyone else types their weight. Week plan, one-day changes, typed weight, body type and unit are kept in a Food settings tab of the food Sheet, so they follow you to a new phone. Everything on the Food tab shows before a weight is set; the Weight box glows gold until then.

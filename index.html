@@ -642,6 +642,31 @@ a.btn { text-decoration: none; color: inherit; display: inline-block; }
 .tabbar nav.tabs button.gear { padding-inline: 14px; }
 .tabbar nav.tabs button.gear svg { width: 26px; height: 26px; }
 .fullbtn:active { background: var(--gold); color: var(--brand); }
+/* Bottom sheets on iPhone (Ver 0.2c, user 2026-11-08): the screen corners are rounded and the home bar sits at the bottom edge,
+   and inside the app the safe-area inset can read as 0, so every sheet keeps at least 34px below its last option and 18px at the sides. */
+.sheet, .sheet.nxsheet, .sheet.wpsheet { padding-left: max(18px, calc(env(safe-area-inset-left, 0px) + 8px)); padding-right: max(18px, calc(env(safe-area-inset-right, 0px) + 8px)); padding-bottom: max(34px, calc(env(safe-area-inset-bottom, 0px) + 20px)); }
+.sheet-list { padding-bottom: 8px; }
+/* Remove? confirmation on a Today card (Ver 0.2c, user 2026-11-08): the compact 30px rule squeezed it; now a red button sized to its text */
+#view .card[data-id] .icon-btn.armed, .icon-btn.armed { width: auto; min-width: 92px; height: 36px; padding: 0 14px; font-size: 15px; font-weight: 700; white-space: nowrap; background: var(--bad); color: #fff; border-color: var(--bad); border-radius: 10px; }
+/* Photos (Ver 0.2c): Done comparing at the top; Left / Right tags; hold the big photo for full screen */
+.cmp-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--gold); border-radius: var(--r); padding: 8px 8px 8px 12px; }
+.cmp-t { display: grid; gap: 1px; min-width: 0; }
+.cmp-t b { font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: .04em; text-transform: uppercase; line-height: 1.1; }
+.cmp-t span { font-size: 12px; color: var(--muted); }
+.btn.cmp-done { flex: none; padding: 10px 22px; border-radius: 10px; font-size: 15px; }
+.btn.phadd { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.btn.phadd svg { flex: none; display: block; }
+#bigPh img { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; cursor: pointer; }
+.phbig.small[data-act] { cursor: pointer; }
+/* Stopwatch sets (Dead Hang), Ver 0.2c */
+#view .card[data-id] .set.swset, .set.swset { grid-template-columns: 24px 1fr; row-gap: 4px; }
+.sw { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.sw b { font-family: var(--font-display); font-weight: 700; font-size: 32px; line-height: 1; font-variant-numeric: tabular-nums; }
+.sw-btn { border: 0; border-radius: 10px; padding: 10px 22px; font-weight: 700; font-size: 16px; background: var(--brand); color: var(--gold); }
+.sw-btn.stop { background: var(--bad); color: #fff; }
+.swman { grid-column: 2; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.swman input { width: 6.5em; font-size: 13px; padding: 4px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
+.swman input::placeholder { color: var(--lighter); font-style: italic; }
 </style>
 
 <header class="top">
@@ -697,7 +722,7 @@ const ls = {
 // Ver 0.1f is the LAST update of Workout Lite (user, 2026-11-03): new features go to the full claude.ai app only.
 
 const APP_NAME = 'Workout Lite';
-const UNITS = ['lbs', 'mins', 'seconds'];
+const UNITS = ['lbs', 'mins', 'seconds', 'reps'];
 const CATS = ['push', 'pull', 'legs', 'core & cardio'];
 const EX_TAB = 'Exercises';
 const NEW_LOG_TAB = 'Workout log';
@@ -710,22 +735,22 @@ const NOT_EX = /^(upper body day|lower body day|end workout|no entry)$/i;
 const STARTER_EXERCISES = [
   ["", "", "Upper Body Day", "", "", ""],
   ["", "", "Warm-up", "", "GPT建议增加空手手臂圈转及扩胸 5分钟。向前慢速画大圈 15 次，向后慢速画大圈 15 次；双手水平张开向后振动扩胸，做 20 次；双手举过头顶成 Y 字，然后向下收回、手肘夹紧腰部成 W 字（去挤压后背），做 15 次", "mins"],
-  ["", "push", "1 Bench Press", "chest", "杠铃卧推。第三组力竭为重量标准。要点，屁股绝对不能离开板凳，很容易受伤。大臂与身体呈 45 度角，保护肩膀。脚踝正好处于膝盖的垂直下方，或者稍微偏后一点点，将杠铃下放到胸口，准备拼命往上推起的瞬间，你的双脚向前蹬；", "lbs"],
-  ["", "push", "1 Cable Overhead Triceps Extension", "triceps (long head)", "", "lbs"],
-  ["", "push", "13 Incline bench press", "chest", "", "lbs"],
-  ["", "push", "13 cable lateral raises", "shoulder", "", "lbs"],
-  ["", "core & cardio", "134 Core trainer", "Abdomina", "", "lbs"],
-  ["", "pull", "23 Lat Pulldown", "back", "高位下拉。身体微后仰。用意念引导手肘向下夹，不要单纯靠手臂拉。", "lbs"],
-  ["", "pull", "23 Cable face pull", "rear shoulder, upper back", "", "lbs"],
-  ["", "pull", "2 Seated Cable Row", "back", "", "lbs"],
-  ["", "pull", "2 Cable Hammer Curl", "biceps (brachialis), forearms", "", "lbs"],
-  ["", "pull", "2 Dumbbell Pullover", "lats, serratus anterior", "", "lbs"],
+  ["", "push", "Bench Press", "chest", "杠铃卧推。第三组力竭为重量标准。要点，屁股绝对不能离开板凳，很容易受伤。大臂与身体呈 45 度角，保护肩膀。脚踝正好处于膝盖的垂直下方，或者稍微偏后一点点，将杠铃下放到胸口，准备拼命往上推起的瞬间，你的双脚向前蹬；", "lbs"],
+  ["", "push", "Cable Overhead Triceps Extension", "triceps (long head)", "", "lbs"],
+  ["", "push", "Incline bench press", "chest", "", "lbs"],
+  ["", "push", "cable lateral raises", "shoulder", "", "lbs"],
+  ["", "core & cardio", "Core trainer", "Abdomina", "", "lbs"],
+  ["", "pull", "Lat Pulldown", "back", "高位下拉。身体微后仰。用意念引导手肘向下夹，不要单纯靠手臂拉。", "lbs"],
+  ["", "pull", "Cable face pull", "rear shoulder, upper back", "", "lbs"],
+  ["", "pull", "Seated Cable Row", "back", "", "lbs"],
+  ["", "pull", "Cable Hammer Curl", "biceps (brachialis), forearms", "", "lbs"],
+  ["", "pull", "Dumbbell Pullover", "lats, serratus anterior", "", "lbs"],
   ["", "", "Lower Body Day", "", "", ""],
   ["", "", "Warm-up", "", "", "mins"],
-  ["", "legs", "4 Bulgarian Split Squat", "quads, glutes", "保加利亚剪蹲", "lbs"],
-  ["", "legs", "4 Seated Leg Curl", "hamstrings", "俯卧腿弯举。GPT建议增加。你在之前的菜单里安排了杠铃深蹲和Leg Press（器械倒蹬），这两个动作在向下蹲和推起时，大腿前侧（股四头肌）会吃掉 70% 以上的力量。如果不做 Leg Curl：大腿前侧肌肉会越来越强壮、越来越紧，而大腿后侧却原地踏步。这会导致你的骨盆前倾，并且在深蹲时，膝关节由于前后受力不均，会产生慢性的髌骨软化、膝盖前侧疼痛。", "lbs"],
-  ["", "legs", "4 Leg Press", "quads, glutes", "器械倒蹬-功能重复，与杠铃深蹲作为起始和结束即可。下蹲时下背部和屁股必须紧贴靠垫。", "lbs"],
-  ["", "legs", "4 Farmer Walk (weight per hand)", "grip, traps, core", "", "lbs"],
+  ["", "legs", "Bulgarian Split Squat", "quads, glutes", "保加利亚剪蹲", "lbs"],
+  ["", "legs", "Seated Leg Curl", "hamstrings", "俯卧腿弯举。GPT建议增加。你在之前的菜单里安排了杠铃深蹲和Leg Press（器械倒蹬），这两个动作在向下蹲和推起时，大腿前侧（股四头肌）会吃掉 70% 以上的力量。如果不做 Leg Curl：大腿前侧肌肉会越来越强壮、越来越紧，而大腿后侧却原地踏步。这会导致你的骨盆前倾，并且在深蹲时，膝关节由于前后受力不均，会产生慢性的髌骨软化、膝盖前侧疼痛。", "lbs"],
+  ["", "legs", "Leg Press", "quads, glutes", "器械倒蹬-功能重复，与杠铃深蹲作为起始和结束即可。下蹲时下背部和屁股必须紧贴靠垫。", "lbs"],
+  ["", "legs", "Farmer Walk (weight per hand)", "grip, traps, core", "", "lbs"],
   ["", "legs", "Barbell Back Squat", "quads, glutes", "杠铃深蹲-功能重复。起始阶段建议杠铃架在斜方肌上肉垫作为保护", "lbs"],
   ["", "push", "Chest fly", "chest", "", "lbs"],
   ["", "pull", "Incline Bench Rear Delt Raise (face down)", "shoulder", "", "lbs"],
@@ -740,6 +765,8 @@ const STARTER_EXERCISES = [
   ["", "pull", "Cable Straight-Arm Pulldown", "back", "绳索直臂下压。建议改成前后弓步站姿以抗衡拉力。手肘微弯锁死。", "lbs"],
   ["", "push", "Low-to-High Cable Chest Flye", "chest", "", "lbs"],
   ["", "push", "Cable Serratus Punch", "serratus anterior", "", "lbs"],
+  ["", "pull", "Dead Hang", "grip, forearms, lats, shoulders", "", "seconds"],
+  ["", "pull", "Pull Up", "lats, biceps, upper back, grip", "", "reps"],
   ["", "", "End Workout", "", "", ""],
   ["", "", "No entry", "", "", ""]
 ];
@@ -885,18 +912,18 @@ function unitOf_(name, units) {
 }
 function units_(exRows) {
   const map = {};
-  exRows.forEach(r => { const name = String(r[2]).trim(), u = String(r[5] || '').trim().toLowerCase(); if (name && UNITS.indexOf(u) >= 0 && !map[name]) map[name] = u; });
+  exRows.forEach(r => { const name = String(r[2]).trim().replace(/^\d+ /, ''), u = String(r[5] || '').trim().toLowerCase(); if (name && UNITS.indexOf(u) >= 0 && !map[name]) map[name] = u; });
   return map;
 }
 function dupKey_(name, w, r) {
   const ws = String(w == null ? '' : w).trim();
   const wn = ws !== '' && !isNaN(+ws) ? String(+ws) : ws;
-  return String(name).trim() + '|' + wn + '|' + String(r == null ? '' : r).trim().replace(/\//g, '');
+  return String(name).trim().replace(/^\d+ /, '') + '|' + wn + '|' + String(r == null ? '' : r).trim().replace(/\//g, '');
 }
 function kinds_(exRows) {
   const map = {};
   exRows.forEach(r => {
-    const cat = String(r[1]), name = String(r[2]).trim(); if (!name) return;
+    const cat = String(r[1]), name = String(r[2]).trim().replace(/^\d+ /, ''); if (!name) return;   // 0.2c: names without plan numbers
     let k = 'N'; if (/push|pull/i.test(cat)) k = 'U'; else if (/legs/i.test(cat)) k = 'L';
     if (!map[name] || map[name] === 'N') map[name] = k;
   });
@@ -1655,13 +1682,23 @@ function parseUS(s) {
 function prefixOf(name) { const m = /^(\d+) /.exec(name); return m ? m[1] : ''; }
 function bareName(name) { return name.replace(/^\d+ /, ''); }
 // Unit: the exercise's Unit in Exercises column F (Ver 0.1h); otherwise guessed from the name as before.
-const UNITS = ['lbs', 'mins', 'seconds'];
+const UNITS = ['lbs', 'mins', 'seconds', 'reps'];   // reps = count only, e.g. Pull Up (Ver 0.2c)
 function unitOf(name) {
   let ex = null; try { ex = S.exercises.find(e => e.name === name && e.unit); } catch (e) { /* list not loaded yet */ }
   if (ex && UNITS.includes(ex.unit)) return ex.unit;
   if (/warm.?up/i.test(name)) return 'mins'; if (/battle ropes/i.test(name)) return 'seconds'; return 'lbs';
 }
 function isTimed(name) { return unitOf(name) !== 'lbs'; }
+function isCount(name) { return unitOf(name) === 'reps'; }
+// Stopwatch exercises (Ver 0.2c, user 2026-11-08): Start / Stop records the seconds; a small box takes a typed time instead
+function isStopwatch(name) { return /dead.?hang/i.test(name); }
+function fmtSw(ms, tenths) { const t = Math.max(0, ms) / 1000, m = Math.floor(t / 60), sec = Math.floor(t % 60); return m + ':' + pad2(sec) + (tenths ? '.' + Math.floor((Math.max(0, ms) % 1000) / 100) : ''); }
+function swText(st) { return st.t0 ? fmtSw(Date.now() - st.t0, true) : fmtSw((parseFloat(st.w) || 0) * 1000); }
+function swStop(st) { if (!st || !st.t0) return false; st.w = String(Math.max(1, Math.round((Date.now() - st.t0) / 1000))); delete st.t0; return true; }
+setInterval(() => {
+  const els = document.querySelectorAll('[data-sw]'); if (!els.length || !S.draft) return;
+  els.forEach(el => { const [id, i] = el.dataset.sw.split('|'); const it = S.draft.items.find(x => x.id === id); const st = it && it.sets[+i]; if (st) el.textContent = swText(st); });
+}, 200);
 function isFarmer(name) { return /farmer walk/i.test(name); }
 function isBench(name) { return /^(\d+ )?Bench Press/.test(name); }
 // Bench Press sets of 10 lbs or less are warm-ups (user, 2026-10-30; before that only 0 was skipped): left out of the chart and records.
@@ -1706,7 +1743,7 @@ const S = {
   body: [],               // [{iso, time, key, v: {col: number|null}}] newest first
   bodyState: 'wait',      // wait | ok | err
   bodyMsg: '',
-  metric: 'Weight(kg)',
+  metric: 'Muscle Mass(kg)',   // Body chart starts on muscle mass (user, 2026-11-08, Ver 0.2c)
   imp: null,              // CSV import preview {fresh, dup, file}
   bodySaving: false,
   isOwner: false,
@@ -1742,14 +1779,14 @@ function todayIso() { return isoOf(new Date()); }
 function setData(exRows, archRows) {
   const ex = [];
   (exRows || []).forEach(r => {
-    const cat = (r[1] || '').trim(), name = (r[2] || '').trim();
+    const cat = (r[1] || '').trim(), name = bareName((r[2] || '').trim());
     if (!name) return;
     let kind = 'N';
     if (/push|pull/i.test(cat)) kind = 'U'; else if (/legs/i.test(cat)) kind = 'L';
     ex.push({ cat, name, muscle: (r[3] || '').trim(), notes: (r[4] || '').trim(), unit: String(r[5] || '').trim().toLowerCase(), kind });
   });
   S.exercises = ex;
-  S.archive = (archRows || []).map(r => [0, 1, 2, 3].map(i => r[i] == null ? '' : String(r[i])));
+  S.archive = (archRows || []).map(r => [0, 1, 2, 3].map(i => r[i] == null ? '' : i === 0 ? bareName(String(r[i])) : String(r[i])));
   // trim trailing empty rows
   while (S.archive.length && S.archive[S.archive.length - 1].join('') === '') S.archive.pop();
   const hist = new Map(); let cur = null;
@@ -1872,10 +1909,10 @@ function parsePlans(rows) {
   mine.forEach(r => {
     const p = by[r[2]];
     if (r[1] === 'day' && p && r[6]) p.days[r[6]] = { type: r[7] || 'Custom', items: [], updated: r[10] };
-    if (r[1] === 'fav' && r[9]) favs.add(r[9]);
+    if (r[1] === 'fav' && r[9]) favs.add(bareName(r[9]));
   });
   const ex = mine.filter(r => r[1] === 'ex' && by[r[2]] && by[r[2]].days[r[6]] && r[9]).sort((x, y) => (+x[8] || 0) - (+y[8] || 0));
-  ex.forEach(r => { const d = by[r[2]].days[r[6]]; if (d.items.indexOf(r[9]) < 0) d.items.push(r[9]); });
+  ex.forEach(r => { const d = by[r[2]].days[r[6]], n = bareName(r[9]); if (d.items.indexOf(n) < 0) d.items.push(n); });
   let seen = false; plans.forEach(p => { if (p.active) { if (seen) p.active = false; seen = true; } });   // only one plan in use
   return { plans: plans.slice(0, MAX_PLANS), favs };
 }
@@ -1934,6 +1971,7 @@ function starBtn(name) {
 }
 // the old plan from the number prefixes (Mon 1, Tue 2, Wed 4, Fri 3)
 function prefixPlan(iso) {
+  return [];   // Ver 0.2c: plan numbers removed from the Sheet; week plans decide Today
   const wd = new Date(iso + 'T12:00:00').getDay();
   const digit = DAY_DIGIT[wd];
   if (!digit) return [];
@@ -1964,10 +2002,15 @@ function todayFollowPlan() {
   const want = planNames(todayIso()).join('|');
   if (want !== now) { S.draft = freshDraft(todayIso()); saveDraft(); }
 }
+function normDraft(d) {
+  if (d && Array.isArray(d.items)) d.items.forEach(it => { if (it && it.name) it.name = bareName(it.name); });
+  if (d && typeof d.planSig === 'string') d.planSig = d.planSig.split('|').map(bareName).join('|');
+  return d;
+}
 function ensureDraft() {
   if (S.draft) return;
   const saved = store.get(K_DRAFT);
-  if (saved && saved.items) { S.draft = saved; return; }
+  if (saved && saved.items) { S.draft = normDraft(saved); return; }
   if (!S.exercises.length) return;
   S.draft = freshDraft(todayIso());
   saveDraft();
@@ -1992,7 +2035,7 @@ async function readDraftRemote() {
   try {
     const raw = await withTimeout(gs('api_draftGet'), SAVE_TIMEOUT);
     if (raw) {
-      const rd = JSON.parse(raw);
+      const rd = normDraft(JSON.parse(raw));
       const ld = S.draft;
       if (rd && Array.isArray(rd.items) && draftHasWork(rd) && (!draftHasWork(ld) || (+rd.at || 0) > (+(ld && ld.at) || 0))) {
         S.draft = rd; store.set(K_DRAFT, rd);
@@ -2013,7 +2056,7 @@ function withTimeout(p, ms) {
 function dupKey(name, w, r) {
   const ws = String(w == null ? '' : w).trim();
   const wn = ws !== '' && !isNaN(+ws) ? String(+ws) : ws;
-  return String(name).trim() + '|' + wn + '|' + String(r == null ? '' : r).trim().replace(/\//g, '');
+  return String(name).trim().replace(/^\d+ /, '') + '|' + wn + '|' + String(r == null ? '' : r).trim().replace(/\//g, '');
 }
 function filledSets(item) {
   // a set counts when its weight or its reps are typed (Ver 0.1j: weight-only sets are saved, user 2026-11-01)
@@ -2147,6 +2190,55 @@ function parseCSV(text) {
   }
   if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
   return rows.filter(r => r.some(x => x.trim() !== ''));
+}
+// Renpho import from text (file picked on the phone or downloaded from Drive)
+function importRenphoText(text, name) {
+  try {
+    const all = parseRenpho(String(text));
+    const have = new Set(S.body.map(r => r.key));
+    const fresh = all.filter(r => !have.has(r.key));
+    S.imp = { all, fresh, dup: all.length - fresh.length, file: name };
+  } catch (err) { S.problem = { text: 'The CSV could not be read. ' + err.message, retry: false }; }
+}
+// Ver 0.2c: the iPhone Files browser comes up black inside the Claude app, so the CSV can also come from Google Drive.
+function textFromResult(res) {
+  const b64 = d => { const bin = atob(String(d).replace(/^data:[^,]*,/, '').replace(/\s+/g, '')); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new TextDecoder('utf-8').decode(u); };
+  const looksCsv = v => /,/.test(v) && /\n/.test(v);
+  const fromObj = o => { if (!o || typeof o !== 'object') return null; for (const k of ['text', 'content', 'data', 'base64Content', 'blob']) { const v = o[k]; if (typeof v === 'string') return looksCsv(v) || k === 'text' ? v : b64(v); } return null; };
+  for (const c of (res && res.content) || []) {
+    if (c.resource) { if (typeof c.resource.text === 'string') return c.resource.text; if (c.resource.blob) return b64(c.resource.blob); }
+    if (c.blob) return b64(c.blob);
+    if (c.type === 'text' && typeof c.text === 'string') { try { const t = fromObj(JSON.parse(c.text)); if (t != null) return t; } catch (e) {} return c.text; }
+  }
+  let p = res && res.payload;
+  if (typeof p === 'string') { try { p = JSON.parse(p); } catch (e) { return looksCsv(p) ? p : b64(p); } }
+  return fromObj(p);
+}
+async function csvDriveList() {
+  S.csvDrive = { busy: true, files: [] }; render();
+  try {
+    const files = await driveList("(mimeType = 'text/csv' or mimeType = 'text/comma-separated-values' or title contains '.csv')");
+    const t = f => Date.parse(f.modifiedTime || f.modifiedDate || f.createdTime || f.createdDate || '') || 0;
+    S.csvDrive = { busy: false, files: files.filter(f => /\.csv$/i.test(f.title || f.name || '') || /csv/i.test(f.mimeType || '')).sort((a, b) => t(b) - t(a)).slice(0, 15) };
+  } catch (err) { S.csvDrive = null; S.problem = { text: 'Drive could not be searched. ' + codeText(err).text, retry: false }; }
+  render();
+}
+async function csvDriveGet(id, name) {
+  S.csvDrive = { busy: true, files: [], loading: name }; render();
+  try {
+    const res = await S.mcp.callTool(DRIVE, 'download_file_content', { fileId: id }, { cache: false });
+    const text = textFromResult(res); if (!text) throw new Error('No text came back from Drive.');
+    S.csvDrive = null; importRenphoText(text, name);
+  } catch (err) { S.csvDrive = null; S.problem = { text: 'The CSV could not be downloaded from Drive. ' + (err.message || codeText(err).text), retry: false }; }
+  render();
+}
+function csvDriveSheet() {
+  const D = S.csvDrive; if (!D) return '';
+  const when = f => { const d = new Date(f.modifiedTime || f.modifiedDate || f.createdTime || f.createdDate || ''); return isNaN(d) ? '' : usOf(isoOf(d)); };
+  const body = D.busy ? '<p class="hint fsh-note">' + (D.loading ? 'Reading ' + esc(D.loading) + '…' : 'Looking for CSV files in your Drive…') + '</p>'
+    : D.files.length ? '<div class="sheet-list">' + D.files.map(f => { const n = f.title || f.name || 'file.csv'; return '<button class="sheet-it" data-act="csv-drive-pick" data-id="' + esc(idOf(f)) + '" data-name="' + esc(n) + '">' + esc(n) + (when(f) ? '<span class="pp-sub">' + esc(when(f)) + '</span>' : '') + '</button>'; }).join('') + '</div>'
+    : '<p class="hint fsh-note">No CSV files found in your Google Drive. In the Renpho app, export the data and save the file to Google Drive, then try again.</p>';
+  return '<div class="sheet-bg" data-act="csv-drive-close"><div class="sheet" role="listbox" aria-label="Renpho CSV in Drive" data-act="noop"><div class="sheet-h"><b>CSV files in Drive</b><button class="btn sm" data-act="csv-drive-close">Close</button></div>' + body + '</div></div>';
 }
 function parseRenpho(text) {
   const rows = parseCSV(text.replace(/^﻿/, ''));
@@ -2903,7 +2995,7 @@ function planPill() {
     const it = (act, id, name, sub, on) => '<button class="sheet-it' + (on ? ' on' : '') + '" role="option" aria-selected="' + on + '" data-act="' + act + '"' + (id ? ' data-id="' + esc(id) + '"' : '') + '>' + esc(name) + (sub ? '<span class="pp-sub">' + esc(sub) + '</span>' : '') + '</button>';
     x += '<div class="sheet-bg" data-act="pp-close"><div class="sheet" role="listbox" aria-label="Switch week plan" data-act="noop"><div class="sheet-h"><b>Week plan</b><button class="btn sm" data-act="pp-close">Close</button></div><div class="sheet-list">' +
       S.wp.plans.map(p => it('pp-use', p.id, p.name, planSummary(p), planOn() && p.active)).join('') +
-      it('pp-none', '', 'No week plan', 'Today follows the plan numbers', planOn() && !activePlan()) +
+      it('pp-none', '', 'No week plan', 'Today starts empty', planOn() && !activePlan()) +
       '</div><div class="row-acts pp-acts"><button class="btn primary" data-act="pp-new"' + (S.wp.plans.length >= MAX_PLANS || !S.mcp ? ' disabled' : '') + '>+ New plan</button><button class="btn" data-act="go-plan">Edit plans</button></div>' +
       (S.wp.plans.length >= MAX_PLANS ? '<p class="hint">You can keep up to 3 plans; delete one in Settings to make a new one.</p>' : '') + '</div></div>';
   }
@@ -2935,10 +3027,10 @@ function viewToday() {
   h += '<div class="ctlcard"><span class="ctl-lab">Add an exercise</span><button class="pickbtn" data-act="add-open" aria-haspopup="listbox">Choose exercise…</button></div>';
   if (S.addOpen) {
     const names = pickable().map(e => e.name).filter((n, i, a) => a.indexOf(n) === i);
-    const item = n => '<button class="sheet-it" role="option" data-act="add-ex" data-name="' + esc(n) + '">' + esc(n) + '</button>';
-    const favs = names.filter(isFav), plan = names.filter(n => prefixOf(n)), other = names.filter(n => !prefixOf(n));
+    const item = n => '<button class="sheet-it" role="option" data-act="add-ex" data-name="' + esc(n) + '">' + esc(bareName(n)) + '</button>';
+    const favs = names.filter(isFav).sort((a, b) => bareName(a).localeCompare(bareName(b))), plan = [], other = names.filter(n => !isFav(n)).sort((a, b) => bareName(a).localeCompare(bareName(b)));
     h += '<div class="sheet-bg" data-act="add-close"><div class="sheet" role="listbox" aria-label="Add an exercise" data-act="noop"><div class="sheet-h"><b>Add an exercise</b><button class="btn sm" data-act="add-close">Close</button></div>' +
-      '<div class="sheet-list" id="sheetList">' + (favs.length ? '<div class="sheet-sep">★ Favourites</div>' + favs.map(item).join('') : '') + (plan.length ? '<div class="sheet-sep">In the plan</div>' + plan.map(item).join('') : '') + (other.length ? '<div class="sheet-sep">Other exercises</div>' + other.map(item).join('') : '') + '</div></div></div>';
+      '<div class="sheet-list" id="sheetList">' + (favs.length ? '<div class="sheet-sep">★ Favourites</div>' + favs.map(item).join('') : '') + (other.length ? '<div class="sheet-sep">' + (favs.length ? 'Other exercises' : 'Exercises') + '</div>' + other.map(item).join('') : '') + '</div></div></div>';
   }
   const n = buildEntries(d).length;
   const LS = S.lastSave && !n ? S.lastSave : null, fresh = LS && Date.now() - LS.at < 2600;
@@ -2959,7 +3051,7 @@ function viewToday() {
 function nameBlock(name, hidePrefix) {
   const e0 = exByName(name) || { cat: '', muscle: '', notes: '' };
   const e = S.isOwner ? e0 : Object.assign({}, e0, { notes: '' });   // exercise notes are the owner's only (user, 2026-11-03)
-  const pre = hidePrefix ? '' : prefixOf(name);
+  const pre = '';   // plan-number badge removed in Ver 0.2c (favourites took its place); numbers stay in the Sheet names
   const tip = e.notes ? '<span class="tip" role="tooltip">' + esc(e.notes) + '</span>' : '';
   return '<span class="ex-name' + (e.notes ? ' has-tip" tabindex="0' : '') + '">' + (pre ? '<span class="pre">' + esc(pre) + '</span>' : '') + esc(bareName(name)) + tip + '</span>' +
     '<span class="meta">' + (e.cat ? '<span class="chip ' + catClass(e.cat) + '">' + esc(catLabel(e.cat)) + '</span>' : '') + (e.muscle ? '<span>' + esc(e.muscle) + '</span>' : '') + '</span>';
@@ -2986,6 +3078,7 @@ const EX_SCHEM = {
   "Leg Press": 'data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20606%20400%22%20role%3D%22img%22%20aria-label%3D%22Leg%20Press%3A%20start%20and%20end%20position%22%3E%3Crect%20width%3D%22606%22%20height%3D%22400%22%20fill%3D%22%23ffffff%22/%3E%3Cg%20transform%3D%22translate%280%200%29%22%3E%3Crect%20width%3D%22300%22%20height%3D%22400%22%20fill%3D%22%23f7f9fd%22/%3E%3Crect%20y%3D%22330%22%20width%3D%22300%22%20height%3D%2270%22%20fill%3D%22%23e9edf5%22/%3E%3Crect%20x%3D%2256%22%20y%3D%22276%22%20width%3D%2272%22%20height%3D%2214%22%20rx%3D%224%22%20fill%3D%22%233b4252%22/%3E%3Cline%20x1%3D%2286.7%22%20y1%3D%22281.7%22%20x2%3D%2254.5%22%20y2%3D%22202.0%22%20stroke%3D%22%233b4252%22%20stroke-width%3D%2212%22%20stroke-linecap%3D%22round%22/%3E%3Crect%20x%3D%2284%22%20y%3D%22290%22%20width%3D%2210%22%20height%3D%2240%22%20rx%3D%224%22%20fill%3D%22%235b6476%22/%3E%3Cline%20x1%3D%2240.0%22%20y1%3D%22324.0%22%20x2%3D%22290.0%22%20y2%3D%22324.0%22%20stroke%3D%22%239aa4b5%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2292.0%22%20y1%3D%22276.0%22%20x2%3D%22110.0%22%20y2%3D%22247.2%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22110.0%22%20y1%3D%22247.2%22%20x2%3D%22140.6%22%20y2%3D%22259.5%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22140.6%22%20y1%3D%22259.5%22%20x2%3D%22140.6%22%20y2%3D%22248.5%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2272.5%22%20y1%3D%22227.8%22%20x2%3D%2286.5%22%20y2%3D%22252.0%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2286.5%22%20y1%3D%22252.0%22%20x2%3D%22112.1%22%20y2%3D%22256.6%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2292.0%22%20y1%3D%22276.0%22%20x2%3D%2272.5%22%20y2%3D%22227.8%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%2266.5%22%20cy%3D%22213.0%22%20r%3D%2211%22%20fill%3D%22%2300274c%22%20/%3E%3Cline%20x1%3D%2292.0%22%20y1%3D%22276.0%22%20x2%3D%22110.0%22%20y2%3D%22247.2%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22110.0%22%20y1%3D%22247.2%22%20x2%3D%22140.6%22%20y2%3D%22259.5%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22140.6%22%20y1%3D%22259.5%22%20x2%3D%22140.6%22%20y2%3D%22248.5%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2272.5%22%20y1%3D%22227.8%22%20x2%3D%2286.5%22%20y2%3D%22252.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2286.5%22%20y1%3D%22252.0%22%20x2%3D%22112.1%22%20y2%3D%22256.6%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%22112.1%22%20cy%3D%22256.6%22%20r%3D%223.5%22%20fill%3D%22%2300274c%22%20/%3E%3Cline%20x1%3D%22146.6%22%20y1%3D%22275.5%22%20x2%3D%22146.6%22%20y2%3D%22227.5%22%20stroke%3D%22%233b4252%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22146.6%22%20y1%3D%22275.5%22%20x2%3D%22146.6%22%20y2%3D%22324.0%22%20stroke%3D%22%235b6476%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22120.0%22%20y1%3D%22288.0%22%20x2%3D%22150.0%22%20y2%3D%22300.0%22%20stroke%3D%22%235b6476%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%2258%22%20height%3D%2222%22%20rx%3D%2211%22%20fill%3D%22%2300274c%22/%3E%3Ctext%20x%3D%2241.0%22%20y%3D%2227.5%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22700%22%20fill%3D%22%23ffcb05%22%20letter-spacing%3D%221%22%3ESTART%3C/text%3E%3C/g%3E%3Cg%20transform%3D%22translate%28306%200%29%22%3E%3Crect%20width%3D%22300%22%20height%3D%22400%22%20fill%3D%22%23f7f9fd%22/%3E%3Crect%20y%3D%22330%22%20width%3D%22300%22%20height%3D%2270%22%20fill%3D%22%23e9edf5%22/%3E%3Crect%20x%3D%2256%22%20y%3D%22276%22%20width%3D%2272%22%20height%3D%2214%22%20rx%3D%224%22%20fill%3D%22%233b4252%22/%3E%3Cline%20x1%3D%2286.7%22%20y1%3D%22281.7%22%20x2%3D%2254.5%22%20y2%3D%22202.0%22%20stroke%3D%22%233b4252%22%20stroke-width%3D%2212%22%20stroke-linecap%3D%22round%22/%3E%3Crect%20x%3D%2284%22%20y%3D%22290%22%20width%3D%2210%22%20height%3D%2240%22%20rx%3D%224%22%20fill%3D%22%235b6476%22/%3E%3Cline%20x1%3D%2240.0%22%20y1%3D%22324.0%22%20x2%3D%22290.0%22%20y2%3D%22324.0%22%20stroke%3D%22%239aa4b5%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2292.0%22%20y1%3D%22276.0%22%20x2%3D%22125.8%22%20y2%3D%22272.4%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22125.8%22%20y1%3D%22272.4%22%20x2%3D%22158.6%22%20y2%3D%22269.0%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22158.6%22%20y1%3D%22269.0%22%20x2%3D%22158.6%22%20y2%3D%22258.0%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2272.5%22%20y1%3D%22227.8%22%20x2%3D%2286.5%22%20y2%3D%22252.0%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2286.5%22%20y1%3D%22252.0%22%20x2%3D%22112.1%22%20y2%3D%22256.6%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2292.0%22%20y1%3D%22276.0%22%20x2%3D%2272.5%22%20y2%3D%22227.8%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%2266.5%22%20cy%3D%22213.0%22%20r%3D%2211%22%20fill%3D%22%2300274c%22%20/%3E%3Cline%20x1%3D%2292.0%22%20y1%3D%22276.0%22%20x2%3D%22125.8%22%20y2%3D%22272.4%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22125.8%22%20y1%3D%22272.4%22%20x2%3D%22158.6%22%20y2%3D%22269.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22158.6%22%20y1%3D%22269.0%22%20x2%3D%22158.6%22%20y2%3D%22258.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2272.5%22%20y1%3D%22227.8%22%20x2%3D%2286.5%22%20y2%3D%22252.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2286.5%22%20y1%3D%22252.0%22%20x2%3D%22112.1%22%20y2%3D%22256.6%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%22112.1%22%20cy%3D%22256.6%22%20r%3D%223.5%22%20fill%3D%22%2300274c%22%20/%3E%3Cline%20x1%3D%22164.6%22%20y1%3D%22285.0%22%20x2%3D%22164.6%22%20y2%3D%22237.0%22%20stroke%3D%22%233b4252%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22164.6%22%20y1%3D%22285.0%22%20x2%3D%22164.6%22%20y2%3D%22324.0%22%20stroke%3D%22%235b6476%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22120.0%22%20y1%3D%22288.0%22%20x2%3D%22150.0%22%20y2%3D%22300.0%22%20stroke%3D%22%235b6476%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M170.0%2C176.0%20L250.0%2C176.0%22%20stroke%3D%22%23e0a800%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%221%208%22%20fill%3D%22none%22/%3E%3Cpath%20d%3D%22M250.0%2C176.0%20L240.5%2C181.5%20L240.5%2C170.5%20Z%22%20fill%3D%22%23e0a800%22/%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%2244%22%20height%3D%2222%22%20rx%3D%2211%22%20fill%3D%22%2300274c%22/%3E%3Ctext%20x%3D%2234.0%22%20y%3D%2227.5%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22700%22%20fill%3D%22%23ffcb05%22%20letter-spacing%3D%221%22%3EEND%3C/text%3E%3C/g%3E%3Ctext%20x%3D%22303%22%20y%3D%22388%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2213%22%20fill%3D%22%235b6476%22%3ELeg%20Press%3C/text%3E%3C/svg%3E',
   "Farmer Walk": 'data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20606%20400%22%20role%3D%22img%22%20aria-label%3D%22Farmer%20Walk%3A%20start%20and%20end%20position%22%3E%3Crect%20width%3D%22606%22%20height%3D%22400%22%20fill%3D%22%23ffffff%22%2F%3E%3Cg%20transform%3D%22translate%280%200%29%22%3E%3Crect%20width%3D%22300%22%20height%3D%22400%22%20fill%3D%22%23f7f9fd%22%2F%3E%3Crect%20y%3D%22330%22%20width%3D%22300%22%20height%3D%2270%22%20fill%3D%22%23e9edf5%22%2F%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22262.0%22%20x2%3D%22150.0%22%20y2%3D%22296.0%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22296.0%22%20x2%3D%22150.0%22%20y2%3D%22329.0%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22329.0%22%20x2%3D%22161.0%22%20y2%3D%22329.0%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22210.0%22%20x2%3D%22149.0%22%20y2%3D%22238.0%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22149.0%22%20y1%3D%22238.0%22%20x2%3D%22149.0%22%20y2%3D%22264.0%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22262.0%22%20x2%3D%22150.0%22%20y2%3D%22210.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%22150.0%22%20cy%3D%22194.0%22%20r%3D%2211%22%20fill%3D%22%2300274c%22%20%2F%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22262.0%22%20x2%3D%22150.0%22%20y2%3D%22296.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22296.0%22%20x2%3D%22150.0%22%20y2%3D%22329.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22329.0%22%20x2%3D%22161.0%22%20y2%3D%22329.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22210.0%22%20x2%3D%22149.0%22%20y2%3D%22238.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22149.0%22%20y1%3D%22238.0%22%20x2%3D%22149.0%22%20y2%3D%22264.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%22149.0%22%20cy%3D%22264.0%22%20r%3D%223.5%22%20fill%3D%22%2300274c%22%20%2F%3E%3Cline%20x1%3D%22138.0%22%20y1%3D%22264.0%22%20x2%3D%22160.0%22%20y2%3D%22264.0%22%20stroke%3D%22%233b4252%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%2F%3E%3Crect%20x%3D%22134.02281409232998%22%20y%3D%22256.9829431565347%22%20width%3D%226%22%20height%3D%2214%22%20rx%3D%222%22%20fill%3D%22%233b4252%22%2F%3E%3Crect%20x%3D%22158.02281409232998%22%20y%3D%22256.9829431565347%22%20width%3D%226%22%20height%3D%2214%22%20rx%3D%222%22%20fill%3D%22%233b4252%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%2258%22%20height%3D%2222%22%20rx%3D%2211%22%20fill%3D%22%2300274c%22%2F%3E%3Ctext%20x%3D%2241.0%22%20y%3D%2227.5%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22700%22%20fill%3D%22%23ffcb05%22%20letter-spacing%3D%221%22%3ESTART%3C%2Ftext%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%28306%200%29%22%3E%3Crect%20width%3D%22300%22%20height%3D%22400%22%20fill%3D%22%23f7f9fd%22%2F%3E%3Crect%20y%3D%22330%22%20width%3D%22300%22%20height%3D%2270%22%20fill%3D%22%23e9edf5%22%2F%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22262.0%22%20x2%3D%22138.4%22%20y2%3D%22293.9%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22138.4%22%20y1%3D%22293.9%22%20x2%3D%22144.1%22%20y2%3D%22326.4%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22144.1%22%20y1%3D%22326.4%22%20x2%3D%22154.4%22%20y2%3D%22322.7%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22210.0%22%20x2%3D%22149.0%22%20y2%3D%22238.0%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22149.0%22%20y1%3D%22238.0%22%20x2%3D%22149.0%22%20y2%3D%22264.0%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22262.0%22%20x2%3D%22150.0%22%20y2%3D%22210.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%22150.0%22%20cy%3D%22194.0%22%20r%3D%2211%22%20fill%3D%22%2300274c%22%20%2F%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22262.0%22%20x2%3D%22161.6%22%20y2%3D%22293.9%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22161.6%22%20y1%3D%22293.9%22%20x2%3D%22155.9%22%20y2%3D%22326.4%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22155.9%22%20y1%3D%22326.4%22%20x2%3D%22166.9%22%20y2%3D%22326.4%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22210.0%22%20x2%3D%22149.0%22%20y2%3D%22238.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22149.0%22%20y1%3D%22238.0%22%20x2%3D%22149.0%22%20y2%3D%22264.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%22149.0%22%20cy%3D%22264.0%22%20r%3D%223.5%22%20fill%3D%22%2300274c%22%20%2F%3E%3Cline%20x1%3D%22138.0%22%20y1%3D%22264.0%22%20x2%3D%22160.0%22%20y2%3D%22264.0%22%20stroke%3D%22%233b4252%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%2F%3E%3Crect%20x%3D%22134.02281409232998%22%20y%3D%22256.9829431565347%22%20width%3D%226%22%20height%3D%2214%22%20rx%3D%222%22%20fill%3D%22%233b4252%22%2F%3E%3Crect%20x%3D%22158.02281409232998%22%20y%3D%22256.9829431565347%22%20width%3D%226%22%20height%3D%2214%22%20rx%3D%222%22%20fill%3D%22%233b4252%22%2F%3E%3Cpath%20d%3D%22M180.0%2C140.0%20L262.0%2C140.0%22%20stroke%3D%22%23e0a800%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%221%208%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M262.0%2C140.0%20L252.5%2C145.5%20L252.5%2C134.5%20Z%22%20fill%3D%22%23e0a800%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%2244%22%20height%3D%2222%22%20rx%3D%2211%22%20fill%3D%22%2300274c%22%2F%3E%3Ctext%20x%3D%2234.0%22%20y%3D%2227.5%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22700%22%20fill%3D%22%23ffcb05%22%20letter-spacing%3D%221%22%3EEND%3C%2Ftext%3E%3C%2Fg%3E%3Ctext%20x%3D%22303%22%20y%3D%22388%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2213%22%20fill%3D%22%235b6476%22%3EFarmer%20Walk%3C%2Ftext%3E%3C%2Fsvg%3E'
 };
+EX_SCHEM['Pull Up'] = 'data:image/svg+xml;charset=utf-8,' + "%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20606%20400%22%20role%3D%22img%22%20aria-label%3D%22Pull%20Up%3A%20start%20and%20end%20position%22%3E%3Crect%20width%3D%22606%22%20height%3D%22400%22%20fill%3D%22%23ffffff%22%2F%3E%3Cg%20transform%3D%22translate(0%200)%22%3E%3Crect%20width%3D%22300%22%20height%3D%22400%22%20fill%3D%22%23f7f9fd%22%2F%3E%3Crect%20y%3D%22330%22%20width%3D%22300%22%20height%3D%2270%22%20fill%3D%22%23e9edf5%22%2F%3E%3Cline%20x1%3D%2246%22%20y1%3D%22330%22%20x2%3D%2246%22%20y2%3D%2264%22%20stroke%3D%22%233b4252%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2246%22%20y1%3D%2270%22%20x2%3D%22178%22%20y2%3D%2270%22%20stroke%3D%22%233b4252%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%22168%22%20cy%3D%2270%22%20r%3D%227%22%20fill%3D%22%233b4252%22%2F%3E%3Cline%20x1%3D%22166%22%20y1%3D%22146%22%20x2%3D%22161%22%20y2%3D%22110%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22161%22%20y1%3D%22110%22%20x2%3D%22168%22%20y2%3D%2274%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22162%22%20y1%3D%22226%22%20x2%3D%22164%22%20y2%3D%22270%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22164%22%20y1%3D%22270%22%20x2%3D%22138%22%20y2%3D%22288%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22162%22%20y1%3D%22226%22%20x2%3D%22170%22%20y2%3D%22268%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%227.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22170%22%20y1%3D%22268%22%20x2%3D%22144%22%20y2%3D%22290%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22166%22%20y1%3D%22146%22%20x2%3D%22162%22%20y2%3D%22226%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22166%22%20y1%3D%22146%22%20x2%3D%22178%22%20y2%3D%22124%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%22178%22%20cy%3D%22124%22%20r%3D%2212%22%20fill%3D%22%2300274c%22%2F%3E%3Cline%20x1%3D%22178%22%20y1%3D%22124%22%20x2%3D%22191%22%20y2%3D%22126%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22166%22%20y1%3D%22146%22%20x2%3D%22167%22%20y2%3D%22110%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22167%22%20y1%3D%22110%22%20x2%3D%22168%22%20y2%3D%2274%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%22168%22%20cy%3D%2274%22%20r%3D%224.5%22%20fill%3D%22%2300274c%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%2258%22%20height%3D%2222%22%20rx%3D%2211%22%20fill%3D%22%2300274c%22%2F%3E%3Ctext%20x%3D%2241%22%20y%3D%2227.5%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22700%22%20fill%3D%22%23ffcb05%22%20letter-spacing%3D%221%22%3ESTART%3C%2Ftext%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate(306%200)%22%3E%3Crect%20width%3D%22300%22%20height%3D%22400%22%20fill%3D%22%23f7f9fd%22%2F%3E%3Crect%20y%3D%22330%22%20width%3D%22300%22%20height%3D%2270%22%20fill%3D%22%23e9edf5%22%2F%3E%3Cline%20x1%3D%2246%22%20y1%3D%22330%22%20x2%3D%2246%22%20y2%3D%2264%22%20stroke%3D%22%233b4252%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2246%22%20y1%3D%2270%22%20x2%3D%22178%22%20y2%3D%2270%22%20stroke%3D%22%233b4252%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%22168%22%20cy%3D%2270%22%20r%3D%227%22%20fill%3D%22%233b4252%22%2F%3E%3Cline%20x1%3D%22150%22%20y1%3D%2260%22%20x2%3D%22161%22%20y2%3D%2298%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22161%22%20y1%3D%2298%22%20x2%3D%22168%22%20y2%3D%2272%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22158%22%20y1%3D%22138%22%20x2%3D%22166%22%20y2%3D%22180%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22166%22%20y1%3D%22180%22%20x2%3D%22140%22%20y2%3D%22200%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22158%22%20y1%3D%22138%22%20x2%3D%22172%22%20y2%3D%22178%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%227.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22172%22%20y1%3D%22178%22%20x2%3D%22146%22%20y2%3D%22202%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22150%22%20y1%3D%2260%22%20x2%3D%22158%22%20y2%3D%22138%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%2210%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22150%22%20y1%3D%2260%22%20x2%3D%22143%22%20y2%3D%2235%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%227%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%22143%22%20cy%3D%2235%22%20r%3D%2212%22%20fill%3D%22%2300274c%22%2F%3E%3Cline%20x1%3D%22143%22%20y1%3D%2235%22%20x2%3D%22152%22%20y2%3D%2225%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22150%22%20y1%3D%2260%22%20x2%3D%22167%22%20y2%3D%2299%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22167%22%20y1%3D%2299%22%20x2%3D%22168%22%20y2%3D%2272%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%22168%22%20cy%3D%2272%22%20r%3D%224.5%22%20fill%3D%22%2300274c%22%2F%3E%3Cpath%20d%3D%22M236%2C250%20Q252%2C180%20236%2C112%22%20stroke%3D%22%23e0a800%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%221%208%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M236%2C104%20L229%2C117%20L243%2C117%20Z%22%20fill%3D%22%23e0a800%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%2244%22%20height%3D%2222%22%20rx%3D%2211%22%20fill%3D%22%2300274c%22%2F%3E%3Ctext%20x%3D%2234%22%20y%3D%2227.5%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22700%22%20fill%3D%22%23ffcb05%22%20letter-spacing%3D%221%22%3EEND%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fsvg%3E";   // Ver 0.2c, drawn 2026-11-08
 EX_SCHEM['Warm-up'] = 'data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20606%20400%22%20role%3D%22img%22%20aria-label%3D%22Warm-up%20%C2%B7%20treadmill%20walk%20to%20jog%3A%20start%20and%20end%20position%22%3E%3Crect%20width%3D%22606%22%20height%3D%22400%22%20fill%3D%22%23ffffff%22/%3E%3Cg%20transform%3D%22translate%280%200%29%22%3E%3Crect%20width%3D%22300%22%20height%3D%22400%22%20fill%3D%22%23f7f9fd%22/%3E%3Crect%20y%3D%22330%22%20width%3D%22300%22%20height%3D%2270%22%20fill%3D%22%23e9edf5%22/%3E%3Crect%20x%3D%2236%22%20y%3D%22310%22%20width%3D%22226%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%233b4252%22/%3E%3Ccircle%20cx%3D%2246.0%22%20cy%3D%22316.0%22%20r%3D%227%22%20fill%3D%22%239aa4b5%22%20/%3E%3Ccircle%20cx%3D%22252.0%22%20cy%3D%22316.0%22%20r%3D%227%22%20fill%3D%22%239aa4b5%22%20/%3E%3Crect%20x%3D%2240%22%20y%3D%22322%22%20width%3D%22218%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%235b6476%22/%3E%3Cline%20x1%3D%2260.0%22%20y1%3D%22330.0%22%20x2%3D%2260.0%22%20y2%3D%22330.0%22%20stroke%3D%22%235b6476%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22240.0%22%20y1%3D%22330.0%22%20x2%3D%22240.0%22%20y2%3D%22330.0%22%20stroke%3D%22%235b6476%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22250.0%22%20y1%3D%22310.0%22%20x2%3D%22236.0%22%20y2%3D%22196.0%22%20stroke%3D%22%235b6476%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22/%3E%3Crect%20x%3D%22206%22%20y%3D%22176%22%20width%3D%2256%22%20height%3D%2224%22%20rx%3D%226%22%20fill%3D%22%233b4252%22/%3E%3Crect%20x%3D%22214%22%20y%3D%22182%22%20width%3D%2240%22%20height%3D%2210%22%20rx%3D%223%22%20fill%3D%22%237fa7d9%22/%3E%3Cline%20x1%3D%22236.0%22%20y1%3D%22214.0%22%20x2%3D%22196.0%22%20y2%3D%22214.0%22%20stroke%3D%22%235b6476%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22245.0%22%20x2%3D%22138.4%22%20y2%3D%22276.9%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22138.4%22%20y1%3D%22276.9%22%20x2%3D%22131.5%22%20y2%3D%22309.2%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22131.5%22%20y1%3D%22309.2%22%20x2%3D%22141.8%22%20y2%3D%22313.0%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22193.0%22%20x2%3D%22156.8%22%20y2%3D%22220.2%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22156.8%22%20y1%3D%22220.2%22%20x2%3D%22159.5%22%20y2%3D%22246.0%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22245.0%22%20x2%3D%22150.0%22%20y2%3D%22193.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%22150.0%22%20cy%3D%22177.0%22%20r%3D%2211%22%20fill%3D%22%2300274c%22%20/%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22245.0%22%20x2%3D%22160.5%22%20y2%3D%22277.3%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22160.5%22%20y1%3D%22277.3%22%20x2%3D%22157.1%22%20y2%3D%22310.2%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22157.1%22%20y1%3D%22310.2%22%20x2%3D%22168.1%22%20y2%3D%22310.2%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22193.0%22%20x2%3D%22143.2%22%20y2%3D%22220.2%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22143.2%22%20y1%3D%22220.2%22%20x2%3D%22140.5%22%20y2%3D%22246.0%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%22140.5%22%20cy%3D%22246.0%22%20r%3D%223.5%22%20fill%3D%22%2300274c%22%20/%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%2258%22%20height%3D%2222%22%20rx%3D%2211%22%20fill%3D%22%2300274c%22/%3E%3Ctext%20x%3D%2241.0%22%20y%3D%2227.5%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22700%22%20fill%3D%22%23ffcb05%22%20letter-spacing%3D%221%22%3ESTART%3C/text%3E%3C/g%3E%3Cg%20transform%3D%22translate%28306%200%29%22%3E%3Crect%20width%3D%22300%22%20height%3D%22400%22%20fill%3D%22%23f7f9fd%22/%3E%3Crect%20y%3D%22330%22%20width%3D%22300%22%20height%3D%2270%22%20fill%3D%22%23e9edf5%22/%3E%3Crect%20x%3D%2236%22%20y%3D%22310%22%20width%3D%22226%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%233b4252%22/%3E%3Ccircle%20cx%3D%2246.0%22%20cy%3D%22316.0%22%20r%3D%227%22%20fill%3D%22%239aa4b5%22%20/%3E%3Ccircle%20cx%3D%22252.0%22%20cy%3D%22316.0%22%20r%3D%227%22%20fill%3D%22%239aa4b5%22%20/%3E%3Crect%20x%3D%2240%22%20y%3D%22322%22%20width%3D%22218%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%235b6476%22/%3E%3Cline%20x1%3D%2260.0%22%20y1%3D%22330.0%22%20x2%3D%2260.0%22%20y2%3D%22330.0%22%20stroke%3D%22%235b6476%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22240.0%22%20y1%3D%22330.0%22%20x2%3D%22240.0%22%20y2%3D%22330.0%22%20stroke%3D%22%235b6476%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22250.0%22%20y1%3D%22310.0%22%20x2%3D%22236.0%22%20y2%3D%22196.0%22%20stroke%3D%22%235b6476%22%20stroke-width%3D%229%22%20stroke-linecap%3D%22round%22/%3E%3Crect%20x%3D%22206%22%20y%3D%22176%22%20width%3D%2256%22%20height%3D%2224%22%20rx%3D%226%22%20fill%3D%22%233b4252%22/%3E%3Crect%20x%3D%22214%22%20y%3D%22182%22%20width%3D%2240%22%20height%3D%2210%22%20rx%3D%223%22%20fill%3D%22%237fa7d9%22/%3E%3Cline%20x1%3D%22236.0%22%20y1%3D%22214.0%22%20x2%3D%22196.0%22%20y2%3D%22214.0%22%20stroke%3D%22%235b6476%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22247.0%22%20x2%3D%22132.0%22%20y2%3D%22275.8%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22132.0%22%20y1%3D%22275.8%22%20x2%3D%22101.0%22%20y2%3D%22264.5%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22101.0%22%20y1%3D%22264.5%22%20x2%3D%2298.1%22%20y2%3D%22275.2%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22159.0%22%20y1%3D%22195.8%22%20x2%3D%22172.2%22%20y2%3D%22220.5%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22172.2%22%20y1%3D%22220.5%22%20x2%3D%22192.1%22%20y2%3D%22203.8%22%20stroke%3D%22%237d8fa8%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22247.0%22%20x2%3D%22159.0%22%20y2%3D%22195.8%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%228%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%22161.8%22%20cy%3D%22180.0%22%20r%3D%2211%22%20fill%3D%22%2300274c%22%20/%3E%3Cline%20x1%3D%22150.0%22%20y1%3D%22247.0%22%20x2%3D%22161.6%22%20y2%3D%22278.9%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22161.6%22%20y1%3D%22278.9%22%20x2%3D%22155.9%22%20y2%3D%22311.4%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22155.9%22%20y1%3D%22311.4%22%20x2%3D%22166.9%22%20y2%3D%22311.4%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22159.0%22%20y1%3D%22195.8%22%20x2%3D%22141.8%22%20y2%3D%22217.9%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%22141.8%22%20y1%3D%22217.9%22%20x2%3D%22161.7%22%20y2%3D%22234.6%22%20stroke%3D%22%2300274c%22%20stroke-width%3D%225.5%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%22161.7%22%20cy%3D%22234.6%22%20r%3D%223.5%22%20fill%3D%22%2300274c%22%20/%3E%3Crect%20x%3D%2212%22%20y%3D%2212%22%20width%3D%2244%22%20height%3D%2222%22%20rx%3D%2211%22%20fill%3D%22%2300274c%22/%3E%3Ctext%20x%3D%2234.0%22%20y%3D%2227.5%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22700%22%20fill%3D%22%23ffcb05%22%20letter-spacing%3D%221%22%3EEND%3C/text%3E%3C/g%3E%3Ctext%20x%3D%22303%22%20y%3D%22388%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2213%22%20fill%3D%22%235b6476%22%3EWarm-up%20%C2%B7%20treadmill%20walk%20to%20jog%3C/text%3E%3C/svg%3E';   // treadmill walk to jog (2026-10-30)
 function exKey(name) { return bareName(name).replace(/\s*\(.*\)$/, '').trim(); }
 function exImg(name) { const k = exKey(name); return EX_IMG[k] || EX_SCHEM[k] || ''; }
@@ -3016,17 +3109,25 @@ function cardToday(it, idx) {
   if (!open) {
     // Start / Edit on the LEFT, so it is not under the thumb where Finished appears on the right (user, 2026-10-31)
     return h + '<div class="run-row"><button class="run-btn" data-act="start">' + (done || n ? 'Edit' : 'Start') + '</button>' +
-      (done ? '<span class="done-tag">✓ Finished' + (n ? ' · ' + n + (timed ? '' : ' set' + (n > 1 ? 's' : '')) : '') + '</span>' : (n ? '<span class="done-tag part">' + n + (timed ? ' entered' : ' set' + (n > 1 ? 's' : '') + ' entered') + '</span>' : '<span></span>')) +
+      (done ? '<span class="done-tag">✓ Finished' + (n ? ' · ' + (unit === 'reps' ? filledSets(it).reduce((a, x) => a + (parseFloat(x.w) || 0), 0) + ' reps' : n + (timed ? '' : ' set' + (n > 1 ? 's' : ''))) : '') + '</span>' : (n ? '<span class="done-tag part">' + n + (timed ? ' entered' : ' set' + (n > 1 ? 's' : '') + ' entered') + '</span>' : '<span></span>')) +
       '</div></section>';
   }
   h += '<div class="sets">';
   if (!timed) { const t = topSet(it.name); it.sets.forEach(s => { s.pw = t.w; s.pr = t.r; }); }
-  it.sets.forEach((s, i) => {
+  const sw = isStopwatch(it.name);
+  if (sw) it.sets.forEach((s, i) => {
+    const run = !!s.t0, lt = i === 0 ? lastTime(it.name) : '';
+    h += '<div class="set swset" data-i="' + i + '"><span class="n">' + (i + 1) + '</span>' +
+      '<div class="sw"><b data-sw="' + it.id + '|' + i + '" aria-live="off">' + swText(s) + '</b>' +
+      '<button class="sw-btn' + (run ? ' stop' : '') + '" data-act="sw" data-i="' + i + '">' + (run ? 'Stop' : s.w !== '' ? 'Restart' : 'Start') + '</button></div>' +
+      '<label class="swman"><span>or type</span><input id="' + it.id + '-w' + i + '" data-k="w" data-i="' + i + '" inputmode="decimal" placeholder="' + esc(lt ? 'last ' + lt : 'seconds') + '" value="' + esc(s.w) + '"' + (run ? ' disabled' : '') + '><span>sec</span></label></div>';
+  });
+  else it.sets.forEach((s, i) => {
     const hasLast = !!(s.pw || s.pr);
     const act = S.active && S.active.id === it.id && S.active.i === i;
     const rec = recordOf(it.name, s.w, s.r);
     h += '<div class="set' + (act ? ' act' : '') + '" data-i="' + i + '">' + (hasLast ? '<button class="n fill" data-act="fill-set" data-i="' + i + '" aria-label="Set ' + (i + 1) + ': use ' + (timed ? 'last session\'s time' : 'top weight and its reps') + '" title="' + (timed ? 'Use last session\'s time' : 'Use top weight and its reps') + '">' + (i + 1) + '</button>' : '<span class="n">' + (i + 1) + '</span>') +
-      '<label class="field' + (s.w === '' ? ' ghost' : '') + '"><input id="' + it.id + '-w' + i + '" data-k="w" data-i="' + i + '" inputmode="decimal" placeholder="' + esc(timed ? ((i === 0 && lastTime(it.name)) ? 'last workout time ' + lastTime(it.name) : 'time') : (s.pw ? 'top weight ' + s.pw : 'weight')) + '" value="' + esc(s.w) + '"><span>' + unit + '</span></label>' +
+      '<label class="field' + (s.w === '' ? ' ghost' : '') + '"><input id="' + it.id + '-w' + i + '" data-k="w" data-i="' + i + '" inputmode="decimal" placeholder="' + esc(timed ? ((i === 0 && lastTime(it.name)) ? (unit === 'reps' ? 'last workout ' : 'last workout time ') + lastTime(it.name) : (unit === 'reps' ? 'reps' : 'time')) : (s.pw ? 'top weight ' + s.pw : 'weight')) + '" value="' + esc(s.w) + '"><span>' + unit + '</span></label>' +
       (timed ? '<span></span>' : '<label class="field' + (s.r === '' ? ' ghost' : '') + '"><input id="' + it.id + '-r' + i + '" data-k="r" data-i="' + i + '" inputmode="numeric" placeholder="' + esc(s.pr ? 'reps at top ' + s.pr : 'reps') + '" value="' + esc(s.r) + '"><span>reps</span></label>') +
       '<span class="rec" id="' + it.id + '-rec' + i + '">' + recBadge(rec) + '</span></div>';
   });
@@ -3036,7 +3137,7 @@ function cardToday(it, idx) {
     h += '<div class="qbar"><span class="qlab">' + (ai != null ? 'Set ' + (ai + 1) : 'Next set') + '</span>' +
       [-5, -2.5, 2.5, 5].map(d => '<button class="qb" data-act="qw" data-d="' + d + '">' + (d > 0 ? '+' : '−') + Math.abs(d) + '</button>').join('') + '</div>';
   }
-  if (!timed) h += '<div class="set-btns"><button class="add-set" data-act="add-set">+ set</button>' +
+  if (!timed || sw || unit === 'reps') h += '<div class="set-btns"><button class="add-set" data-act="add-set">+ set</button>' +
     '<button class="add-set" data-act="rem-set"' + (it.sets.length < 2 ? ' disabled' : '') + '>− set</button></div>';
   return h + '<div class="run-row"><span></span><button class="run-btn fin" data-act="finish">Finished</button></div></section>';
 }
@@ -3069,11 +3170,11 @@ function viewProgress() {
   // chart options sit between the chart and the session table, within thumb reach (user, 2026-10-31);
   // the exercise picker doubles as the chart title; gold left edge marks the card as interactive
   // exercise picker: a button that opens a scrollable list sheet at the bottom of the screen (user, 2026-10-31: the phone's own list was hard to reach)
-  const ctl = '<div class="ctlcard glow"><span class="ctl-lab">Exercise</span><button class="pickbtn" data-act="pick-open" aria-haspopup="listbox" aria-expanded="' + !!S.pickOpen + '">' + esc(S.pick) + '</button>' +
+  const ctl = '<div class="ctlcard glow"><span class="ctl-lab">Exercise</span><button class="pickbtn" data-act="pick-open" aria-haspopup="listbox" aria-expanded="' + !!S.pickOpen + '">' + esc(bareName(S.pick || '')) + '</button>' +
     (S.body.length ? '<label class="switch"><span>Show body weight on the chart</span><input type="checkbox" role="switch" id="bwToggle"' + (S.showBW ? ' checked' : '') + '><i aria-hidden="true"></i></label>' : '') + rangeSeg() + '</div>';
   h += chart(S.pick, ctl);
   if (S.pickOpen) {
-    const item = n => '<button class="sheet-it' + (n === S.pick ? ' on' : '') + '" role="option" aria-selected="' + (n === S.pick) + '" data-act="pick-set" data-name="' + esc(n) + '">' + esc(n) + '</button>';
+    const item = n => '<button class="sheet-it' + (n === S.pick ? ' on' : '') + '" role="option" aria-selected="' + (n === S.pick) + '" data-act="pick-set" data-name="' + esc(n) + '">' + esc(bareName(n)) + '</button>';
     h += '<div class="sheet-bg" data-act="pick-close"><div class="sheet" role="listbox" aria-label="Exercise to chart" data-act="noop"><div class="sheet-h"><b>Choose exercise</b><button class="btn sm" data-act="pick-close">Close</button></div>' +
       '<div class="sheet-list" id="sheetList">' + withData.map(item).join('') + (without.length ? '<div class="sheet-sep">No entries yet</div>' + without.map(item).join('') : '') + '</div></div></div>';
   }
@@ -3084,6 +3185,8 @@ function seriesFor(name) {
   const byDay = new Map();
   h.forEach(x => { if (!byDay.has(x.iso)) byDay.set(x.iso, []); byDay.get(x.iso).push(x); });
   const days = [...byDay.keys()].sort();
+  if (isCount(name)) return days.map(iso => { const rows = byDay.get(iso); const tot = rows.reduce((a, r) => a + r.weight, 0);
+    return { iso, top: { iso, weight: tot, reps: rows.map(r => fmt(r.weight)).join(' + '), count: rows.length }, lighter: [] }; });
   return days.map(iso => {
     const rows = byDay.get(iso);
     let top = rows[0]; rows.forEach(r => { if (r.weight > top.weight) top = r; });
@@ -3108,7 +3211,7 @@ function chart(name, ctl) {
   const step = niceStep((y1 - y0) / 4); y0 = Math.floor(y0 / step) * step; y1 = Math.ceil(y1 / step) * step;
   const X = v => L + (v - t0) / (t1 - t0) * (W - L - R);
   const Y = v => T + (1 - (v - y0) / (y1 - y0)) * (H - T - B);
-  let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(bareName(name)) + ' heaviest set per day">';
+  let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(bareName(name)) + (isCount(name) ? ' total reps per day' : ' heaviest set per day') + '">';
   for (let v = y0; v <= y1 + 1e-9; v += step) {
     svg += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="var(--line)" stroke-width="1"/>' +
       '<text x="' + (L - 8) + '" y="' + (Y(v) + 4) + '" text-anchor="end" font-size="12" fill="var(--muted)">' + fmt(v) + '</text>';
@@ -3149,14 +3252,15 @@ function chart(name, ctl) {
     if (reps) svg += '<text x="' + x + '" y="' + (up ? y - 10 : y + 18) + '" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--ink)">' + esc(reps) + '</text>';
   });
   svg += '</svg>';
-  h += '<div class="legend"><span><i style="background:var(--gold);box-shadow:0 0 0 2px var(--accent)"></i>Heaviest set (' + unit + ')</span><span><i style="background:var(--lighter)"></i>Lighter sets</span>' +
+  h += '<div class="legend">' + (isCount(name) ? '<span><i style="background:var(--gold);box-shadow:0 0 0 2px var(--accent)"></i>Total reps that day (all sets added up)</span>' : '<span><i style="background:var(--gold);box-shadow:0 0 0 2px var(--accent)"></i>Heaviest set (' + unit + ')</span><span><i style="background:var(--lighter)"></i>Lighter sets</span>') +
     (bwOn ? '<span><i style="background:var(--muted)"></i>Body weight, 7-day avg (kg, right scale)</span>' : '') + bwNote +
     (isBench(name) ? '<span>Warm-up sets of ' + BENCH_WARMUP_MAX + ' lbs or less are left out</span>' : '') + '</div>';
   h += '<div style="overflow-x:auto">' + svg + '</div></div>' + ctl + '<div class="chartbox">';
   // table, newest first
-  h += '<div style="overflow-x:auto"><table class="hist"><thead><tr><th>Date</th><th>Weight</th><th>Reps</th></tr></thead><tbody>';
+  h += '<div style="overflow-x:auto"><table class="hist"><thead><tr><th>Date</th><th>' + (isCount(name) ? 'Total reps' : 'Weight') + '</th><th>' + (isCount(name) ? 'Sets' : 'Reps') + '</th></tr></thead><tbody>';
   const tKey = 'p|' + name + '|' + S.range, showAll = S.tableAll === tKey, rowsAll = ser.slice().reverse();
   (showAll ? rowsAll : rowsAll.slice(0, TABLE_N)).forEach(d => {
+    if (isCount(name)) { h += '<tr><td>' + esc(usOf(d.iso)) + '</td><td>' + fmt(d.top.weight) + '</td><td>' + esc(d.top.reps) + '</td></tr>'; return; }
     h += '<tr><td>' + esc(usOf(d.iso)) + '</td><td>' + fmt(d.top.weight) + ' ' + unit + '</td><td>' + esc(splitReps(d.top.reps, farmer).join('/')) + '</td></tr>';
     d.lighter.forEach(l => { h += '<tr class="lt"><td></td><td>' + fmt(l.weight) + ' ' + unit + '</td><td>' + esc(splitReps(l.reps, farmer).join('/')) + '</td></tr>'; });
   });
@@ -3538,12 +3642,15 @@ function viewPhotos() {
   let bottom = '<div class="ph-bottom">';
   const tools = () => {
     if (S.pending) return '';   // finish or cancel the photo being added first
+    if (S.cmpMode) return '';   // Done comparing sits at the top while comparing (Ver 0.2c)
     let t = '<div class="row-acts ph-acts">';
-    t += (S.photos && S.photos.length > 1 ? '<button class="btn' + (S.cmpMode ? ' on' : '') + '" data-act="cmp-toggle" aria-pressed="' + S.cmpMode + '">' + (S.cmpMode ? 'Done comparing' : 'Compare') + '</button>' : '') + '';
+    t += '<label class="btn primary phadd" for="phIn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="9.5" r="1.8"/><path d="M21 16l-5.5-5.5L5 20"/></svg><span>Add photo</span></label><input type="file" id="phIn" accept="image/*" hidden>';
+    t += (S.photos && S.photos.length > 1 ? '<button class="btn" data-act="cmp-toggle" aria-pressed="false">Compare</button>' : '');
     return t + '</div>';
   };
   if (S.photos === null) return h + '<div class="empty">Loading photos…</div>' + bottom + tools() + '</div>';
-  if (!S.photos.length) return h + '<div class="empty">No photos yet. Add your first one in Settings (the gear tab).</div>' + bottom + tools() + '</div>';
+  if (!S.photos.length) return h + '<div class="empty">No photos yet. Add your first one with Add progress photo below.</div>' + bottom + tools() + '</div>';
+  if (S.cmpMode && !S.pending) h += '<div class="cmp-top"><div class="cmp-t"><b>Comparing</b><span>Left is the earlier photo, Right the later one</span></div><button class="btn primary cmp-done" data-act="cmp-toggle" aria-pressed="true">Done</button></div>';
   if (S.cmpMode) {
     // A and B are filled when Compare is turned on; tapping A or B again clears it (Ver 0.1u, user 2026-11-06), so a slot can be empty
     if (S.cmpFill) { S.cmp[0] = S.photos[0].id; S.cmp[1] = S.photos[S.photos.length - 1].id; S.cmpFill = false; }
@@ -3554,35 +3661,29 @@ function viewPhotos() {
     const mon = f.iso.slice(0, 7);
     if (mon !== lastMonth) { lastMonth = mon; strip += '<span class="mon">' + new Date(f.iso + 'T12:00:00').toLocaleString('en-US', { month: 'short' }) + (mon.slice(0, 4) !== String(new Date().getFullYear()) ? ' ' + mon.slice(0, 4) : '') + '</span>'; }
     const u = S.thumbUrls.get(f.id);
-    const mark = S.cmpMode ? (S.cmp[0] === f.id ? 'A' : S.cmp[1] === f.id ? 'B' : '') : '';
+    const mark = S.cmpMode ? (S.cmp[0] === f.id ? 'Left' : S.cmp[1] === f.id ? 'Right' : '') : '';
     const on = S.cmpMode ? !!mark : S.sel === f.id;
     strip += '<button class="th' + (on ? ' on' : '') + '" data-act="th" data-fid="' + esc(f.id) + '" aria-label="Photo ' + esc(usOf(f.iso)) + '">' +
       (u ? '<img src="' + u + '" alt="">' : '<i>' + (u === '' ? '!' : '…') + '</i>') + (mark ? '<em>' + mark + '</em>' : '') +
       '<span>' + esc(usOf(f.iso).replace(/\/\d{4}$/, '')) + '</span></button>';
   });
-  if (S.cmpMode) bottom += '<p class="hint">Tap a photo to set ' + (S.cmpNext ? 'B' : 'A') + '. Tap A or B again to clear it. A is the earlier one you compare against.</p>';
+  if (S.cmpMode) bottom += '<p class="hint">Tap a photo to set the ' + (S.cmpNext ? 'Right' : 'Left') + ' one. Tap a big photo (or its thumbnail) to clear it and pick another. Left is the earlier one you compare against.</p>';
   bottom += '<div class="strip" id="strip">' + strip + '</div>' + tools() + '</div>';
   if (S.cmpMode) {
     const A = S.photos.find(f => f.id === S.cmp[0]), B = S.photos.find(f => f.id === S.cmp[1]);
     if (!A || !B) {   // one or both cleared: show what is set and an empty slot to fill
       [A, B].forEach(f => { if (f) ensureFull(f.id); });
-      h += '<div class="compare">' + [A, B].map((f, i) => '<div class="cmp-col">' + (f ? '<div class="pinfo above">' + bodyLine(f.iso, true) + '</div><div class="phbig small">' + (photoSrc(f.id) ? '<img src="' + photoSrc(f.id) + '" alt="Photo ' + esc(usOf(f.iso)) + '">' : '<i>Loading…</i>') + '<em>' + (i ? 'B' : 'A') + '</em></div><div class="pinfo"><span><b>' + esc(usOf(f.iso)) + '</b></span></div>'
-        : '<div class="phbig small cmp-empty"><i>Tap a photo below to set ' + (i ? 'B' : 'A') + '</i></div>') + '</div>').join('') + '</div>';
+      h += '<div class="compare">' + [A, B].map((f, i) => '<div class="cmp-col">' + (f ? '<div class="pinfo above">' + bodyLine(f.iso, true) + '</div><div class="phbig small" data-act="cmp-clear" data-k="' + i + '" title="Tap to clear">' + (photoSrc(f.id) ? '<img src="' + photoSrc(f.id) + '" alt="Photo ' + esc(usOf(f.iso)) + '">' : '<i>Loading…</i>') + '<em>' + (i ? 'Right' : 'Left') + '</em></div><div class="pinfo"><span><b>' + esc(usOf(f.iso)) + '</b></span></div>'
+        : '<div class="phbig small cmp-empty"><i>Tap a photo below to set the ' + (i ? 'Right' : 'Left') + ' one</i></div>') + '</div>').join('') + '</div>';
       return h + bottom;
     }
     [A, B].forEach(f => { if (f) ensureFull(f.id); });
-    h += '<div class="seg"><button class="btn' + (S.cmpView === 'side' ? ' on' : '') + '" data-act="cmp-side">Side by side</button><button class="btn' + (S.cmpView === 'slider' ? ' on' : '') + '" data-act="cmp-slider">Slider</button></div>';
-    if (S.cmpView === 'side') {
-      h += '<div class="compare">' + [A, B].map((f, i) => '<div class="cmp-col"><div class="pinfo above">' + bodyLine(f.iso, true) + '</div><div class="phbig small">' + (photoSrc(f.id) ? '<img src="' + photoSrc(f.id) + '" alt="Photo ' + esc(usOf(f.iso)) + '">' : '<i>Loading…</i>') + '<em>' + (i ? 'B' : 'A') + '</em></div>' +
+    {   // side by side only (Ver 0.2c, user 2026-11-08: the slider view was removed)
+      h += '<div class="compare">' + [A, B].map((f, i) => '<div class="cmp-col"><div class="pinfo above">' + bodyLine(f.iso, true) + '</div><div class="phbig small" data-act="cmp-clear" data-k="' + i + '" title="Tap to clear">' + (photoSrc(f.id) ? '<img src="' + photoSrc(f.id) + '" alt="Photo ' + esc(usOf(f.iso)) + '">' : '<i>Loading…</i>') + '<em>' + (i ? 'Right' : 'Left') + '</em></div>' +
         '<div class="pinfo"><span><b>' + esc(usOf(f.iso)) + '</b></span></div></div>').join('') + '</div>';
-    } else {
-      h += '<div class="slider-box"><img src="' + photoSrc(B.id) + '" alt="B ' + esc(usOf(B.iso)) + '"><img id="slA" src="' + photoSrc(A.id) + '" alt="A ' + esc(usOf(A.iso)) + '" style="clip-path: inset(0 ' + (100 - S.slider) + '% 0 0)">' +
-        '<i id="slLine" style="left:' + S.slider + '%"></i><em class="la">A ' + esc(usOf(A.iso).replace(/\/\d{4}$/, '')) + '</em><em class="lb">B ' + esc(usOf(B.iso).replace(/\/\d{4}$/, '')) + '</em></div>' +
-        '<label for="slider" hidden>Slide between A and B</label><input type="range" id="slider" min="0" max="100" value="' + S.slider + '">';
-      h += '<div class="compare"><div class="pinfo"><span><b>A · ' + esc(usOf(A.iso)) + '</b></span>' + bodyLine(A.iso) + '</div><div class="pinfo"><span><b>B · ' + esc(usOf(B.iso)) + '</b></span>' + bodyLine(B.iso) + '</div></div>';
     }
     const days = Math.round((new Date(B.iso) - new Date(A.iso)) / 864e5);
-    h += '<p class="hint">' + Math.abs(days) + ' days between A and B.</p>';
+    h += '<p class="hint">' + Math.abs(days) + ' days between Left and Right.</p>';
     return h + bottom;
   }
   // single photo below the timeline
@@ -3594,12 +3695,13 @@ function viewPhotos() {
   const src = R && R.preview ? R.preview : photoSrc(f.id);
   const prev = S.photos[i - 1];
   h += '<div class="phfig"><div class="pinfo above">' + bodyLine(f.iso) + '</div>';
-  h += '<div class="phbig" id="bigPh">' + (src ? '<img src="' + src + '" alt="Photo ' + esc(usOf(f.iso)) + '" data-act="ph-full" data-fid="' + esc(f.id) + '">' : '<i>Loading…</i>') +
+  h += '<div class="phbig" id="bigPh">' + (src ? '<img src="' + src + '" alt="Photo ' + esc(usOf(f.iso)) + '" data-act="ph-tap" data-fid="' + esc(f.id) + '">' : '<i>Loading…</i>') +
     (i > 0 ? '<button class="nav l" data-act="ph-step" data-d="-1" aria-label="Earlier photo">‹</button>' : '') +
     (i < S.photos.length - 1 ? '<button class="nav r" data-act="ph-step" data-d="1" aria-label="Later photo">›</button>' : '') +
     '</div>';
   h += '<div class="pinfo"><span><b>' + esc(usOf(f.iso)) + '</b>' + (R && R.preview ? ' · cropped preview' : '') + '</span>' +
-    (prev ? '<span>' + Math.round((new Date(f.iso) - new Date(prev.iso)) / 864e5) + ' days after the previous photo</span>' : '<span>First photo</span>') + '</div></div>';
+    (prev ? '<span>' + Math.round((new Date(f.iso) - new Date(prev.iso)) / 864e5) + ' days after the previous photo</span>' : '<span>First photo</span>') + '</div>' +
+    '<p class="hint">Tap the photo to close it and pick another · hold it to see it full screen.</p></div>';
   let acts = '';
   if (!R) acts = S.canCrop ? '<button class="btn" data-act="ph-crop" data-fid="' + esc(f.id) + '">Auto-crop</button>' : '';
   else if (R.status === 'working') acts = '<span class="toggle">Finding you in the photo…</span>';
@@ -3614,11 +3716,11 @@ function viewLibrary() {
   let h = problemBox();
   if (!S.exercises.length) return h + '<div class="empty">Waiting for the exercise list from the Google Sheet.</div>';
   const list = pickable().filter((e, i, a) => a.findIndex(x => x.name === e.name) === i);
-  const favs = list.filter(e => isFav(e.name)), plan = list.filter(e => !isFav(e.name) && prefixOf(e.name)), other = list.filter(e => !isFav(e.name) && !prefixOf(e.name) && !/warm.?up/i.test(e.name));
+  const nmSort = (a, b) => bareName(a.name).localeCompare(bareName(b.name));
+  const favs = list.filter(e => isFav(e.name)).sort(nmSort), other = list.filter(e => !isFav(e.name) && !/warm.?up/i.test(e.name)).sort(nmSort);
   const card = e => '<section class="card"><div class="lib-h"><div class="titles">' + nameBlock(e.name) + '</div>' + starBtn(e.name) + '</div>' + pics(e.name) + lastLine(e.name) + '</section>';
   if (favs.length) h += '<div class="lib-group"><h2>★ Favourites · ' + favs.length + '</h2>' + favs.map(card).join('') + '</div>';
-  if (plan.length) h += '<div class="lib-group"><h2>In the plan · ' + plan.length + '</h2>' + plan.map(card).join('') + '</div>';
-  h += '<div class="lib-group"><h2>Other exercises · ' + other.length + '</h2><ul class="namelist">' + other.map(e => '<li><span>' + esc(e.name) + '</span>' + starBtn(e.name) + '</li>').join('') + '</ul></div>';
+  h += '<div class="lib-group"><h2>Other exercises · ' + other.length + '</h2><ul class="namelist">' + other.map(e => '<li><span>' + esc(bareName(e.name)) + '</span>' + starBtn(e.name) + '</li>').join('') + '</ul></div>';
   if (!favs.length) h += '<p class="hint">Tap ☆ to make an exercise a favourite: favourites show first here and as quick picks in the week plan.</p>';
   return h;
 }
@@ -3630,7 +3732,7 @@ const CATS = ['push', 'pull', 'legs', 'core & cardio'];
 function nxBlank() { return { name: '', cat: 'push', unit: 'lbs', days: {}, fav: false, muscle: '', notes: '' }; }
 // plan days as chips; the plan number is their digits in ascending order (Mon 1, Tue 2, Fri 3, Wed 4), e.g. Mon + Fri = 13
 const NX_DAYS = [['1', 'Mon'], ['2', 'Tue'], ['4', 'Wed'], ['3', 'Fri']];
-function nxPre(f) { return ['1', '2', '3', '4'].filter(d => f.days && f.days[d]).join(''); }
+function nxPre(f) { return ''; }   // Ver 0.2c: no plan numbers in names
 function addExSheet() {
   if (!S.nx || !S.nxOpen) return '';
   const f = S.nx, busy = !!S.nxBusy, pre = nxPre(f);
@@ -3645,7 +3747,7 @@ function addExSheet() {
     '<div class="fld"><span>Unit</span>' + chips('nx-unit', UNITS.map(u => [u, u]), v => v === f.unit) + '</div>' +
     '<label class="switch nxfav"><span>★ Favourite</span><input type="checkbox" role="switch" id="nxFav"' + (f.fav ? ' checked' : '') + '><i aria-hidden="true"></i></label>' +
     '<label class="fld"><span>Muscle worked (optional)</span><input id="nx-muscle" data-nx="muscle" autocomplete="off" value="' + esc(f.muscle) + '"></label>' +
-    '<p class="hint">lbs = weight and reps; mins or seconds = one time entry (like Warm-up or Battle Ropes). Category decides Upper or Lower Body Day when saving. Put it on a day in Settings › Week plan.</p>' +
+    '<p class="hint">lbs = weight and reps; mins or seconds = one time entry (like Warm-up or Battle Ropes); reps = count only (like Pull Up), the chart adds up the day. Category decides Upper or Lower Body Day when saving. Put it on a day in Settings › Week plan.</p>' +
     '</div>' +
     '<div class="nxfoot"><button class="btn primary" data-act="nx-save"' + (busy || !S.mcp ? ' disabled' : '') + '>' + (busy ? 'Adding…' : 'Add to the list') + '</button>' +
     '<button class="btn" data-act="nx-cancel"' + (busy ? ' disabled' : '') + '>Cancel</button></div></div></div>';
@@ -3654,7 +3756,7 @@ function nxCheck(f) {
   const name = String(f.name || '').trim().replace(/\s+/g, ' ');
   const pre = nxPre(f);
   if (!name) return { err: 'Type the exercise name.' };
-  if (/^\d+ /.test(name)) return { err: 'Put the plan number in its own box, not at the start of the name.' };
+  if (/^\d+ /.test(name)) return { err: 'Don\'t start the name with a number.' };
   if (NOT_EX.test(name) || /^warm.?up$/i.test(name)) return { err: 'That name is reserved. Choose another name.' };
   const full = (pre ? pre + ' ' : '') + name;
   const clash = S.exercises.find(e => bareName(e.name).toLowerCase() === name.toLowerCase());
@@ -3712,6 +3814,7 @@ async function addExercise() {
 // (Ver <major.minor><letter> · MMDDYYYY). Each push to GitHub takes the artifact's top APP_VERSIONS entry as its version.
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.2c', '11082026', 'Matches the full app Ver 0.2c. Plan numbers are gone from exercise names (hidden too if your Sheet still has them); with no week plan in use Today starts empty. Exercises tab and Add an exercise: Favourites first, then the rest A to Z. New people get Dead Hang (stopwatch: Start, then Stop records the seconds; a small box for a typed time) and Pull Up (count only, + set for more; the Progress chart adds up each day; start and end drawing); anyone can add such exercises with the new reps unit or the seconds unit. Bottom sheets keep their last option above the iPhone home bar and away from the rounded corners. The Remove? confirmation on a Today card is a full-size red button.'],
   ['0.2b', '11072026', 'Matches the full app Ver 0.2b. Food tab: changing the Carb day is for that day only; Carb day › Plan my week sets the weekly high / mid / low pattern (one switch per weekday, with Standard 2-3-2, Match my workouts and All mid). The Weight box no longer shows Auto (7-day Renpho average) to anyone but the owner; everyone else types their weight. Week plan, one-day changes, typed weight, body type and unit are kept in a Food settings tab of the food Sheet, so they follow you to a new phone. Everything on the Food tab shows before a weight is set; the Weight box glows gold until then.'],
   ['0.2a', '11072026', 'Matches the full app Ver 0.2a. New person: the first-open screen makes a folder named Workout Lite in your My Drive with two Google Sheets, Workout Lite log (exercises, sessions, week plans) and Workout Lite food (food log, quick foods, body weight), in one tap. If the folder is already there it is reused and finished. Creating a food Sheet later also puts it in that folder. Sign-in now asks only for your email and for the files the app made itself, so Google shows no "unverified app" warning; the app settings and unsaved sets are kept in the Workout Lite folder. Using a Sheet the app did not make (Use a Sheet I already have) asks once for the full Google Sheets permission. Settings › Google account: Sign out / switch account (clears your data from this phone; the next sign-in lets you pick the account). Food tab: everything shows from the start; until a weight is set, the Weight box glows gold and a card with Enter my weight takes the place of the targets.'],
   ['0.2', '11072026', 'Matches the full app Ver 0.2 (its 0.1v to 0.2; this update was first listed here as 0.1h). Food tab: one row with Weight (Auto = average of your Body metrics days in the past 7 days, or Manual; kg or lbs; the typed weight is kept on this phone), Body type (Ectomorph 3 g/kg carbs, Mesomorph 2.5, Endomorph 2; Mesomorph is the default) and Carb day, each opening a list at the bottom; Manual adjustment under Suggested (add or take away grams of carbs, protein, fat or fiber, saved as their own rows); legend for the week dots. The + bubble is replaced by Add food › Enter myself.'],
@@ -3830,7 +3933,7 @@ function weekPlansPanel() {
       '<button class="btn sm' + (arm ? ' danger' : '') + '" data-act="wp-del" data-id="' + esc(p.id) + '">' + (arm ? 'Tap again to delete' : 'Delete') + '</button></div></div>';
   });
   h += '<div class="row-acts"><button class="btn primary" data-act="wp-new"' + (n >= MAX_PLANS || !S.mcp || S.wp.state === 'wait' ? ' disabled' : '') + '>+ New plan</button></div>' +
-    '<p class="hint">' + (ap ? 'Today follows ' + esc(ap.name) + '. Stop using it to go back to the plan numbers.' : n ? 'No plan in use: Today follows the plan numbers in the Exercises tab. Tap Use this plan when a plan is ready.' : 'Make a plan for your week: pick a day type and exercises for each day.') +
+    '<p class="hint">' + (ap ? 'Today follows ' + esc(ap.name) + '. Stop using it to start Today empty.' : n ? 'No plan in use: Today starts empty. Tap Use this plan when a plan is ready.' : 'Make a plan for your week: pick a day type and exercises for each day.') +
     (n >= MAX_PLANS ? ' You can keep up to 3 plans; delete one to make a new one.' : '') + '</p></div>';
   if (S.wpAsk) h += '<div class="sheet-bg" data-act="wp-ask-cancel"><div class="sheet wpask" role="dialog" aria-label="New week plan" data-act="noop">' +
     '<div class="sheet-h"><b>New week plan</b><button class="btn sm" data-act="wp-ask-cancel">Cancel</button></div>' +
@@ -3970,7 +4073,10 @@ document.addEventListener('click', e => {
   switch (act) {
     case 'start': if (it) { S.draft.items.forEach(x => { if (x !== it && x.open) { x.open = false; if (filledSets(x).length) x.done = true; } }); it.open = true;
       { const items = S.draft.items, done = items.filter(x => x.done && !x.open); if (done.length) { const rest = items.filter(x => !(x.done && !x.open)); items.splice(0, items.length, ...rest, ...done); } } saveDraft(); render(); revealCard(it.id); } break;
-    case 'finish': if (it) { it.open = false; it.done = true; if (S.active && S.active.id === it.id) S.active = null;
+    case 'sw': if (it) { const st = it.sets[+b.dataset.i]; if (!st) break;
+      if (!swStop(st)) { it.sets.forEach(swStop); st.t0 = Date.now(); }
+      saveDraft(); render(); } break;
+    case 'finish': if (it) { it.sets.forEach(swStop); it.open = false; it.done = true; if (S.active && S.active.id === it.id) S.active = null;
       const items = S.draft.items; items.splice(items.indexOf(it), 1); items.push(it);   // finished cards sink to the bottom
       saveDraft(); render(); } break;
     case 'add-set': {
@@ -4035,6 +4141,9 @@ document.addEventListener('click', e => {
     case 'close-pic': $('#lightbox').hidden = true; S.lbId = null; break;
     case 'imp-save': saveBody(); break;
     case 'imp-cancel': S.imp = null; render(); break;
+    case 'csv-drive': csvDriveList(); break;
+    case 'csv-drive-pick': csvDriveGet(b.dataset.id, b.dataset.name); break;
+    case 'csv-drive-close': if (!(S.csvDrive && S.csvDrive.loading)) { S.csvDrive = null; render(); } break;
     case 'ph-up-crop': uploadPhoto(true); break;
     case 'ph-up-full': uploadPhoto(false); break;
     case 'ph-crop': startRecrop(b.dataset.fid); break;
@@ -4096,7 +4205,7 @@ document.addEventListener('click', e => {
       const same = p ? p.active : !activePlan();
       S.wp.plans.forEach(x => { x.active = x === p; });
       todayFollowPlan(); render();
-      if (!same) { toast(p ? p.name + ' is in use. Today follows it.' : 'No week plan: Today follows the plan numbers.'); savePlans('The plan change'); }
+      if (!same) { toast(p ? p.name + ' is in use. Today follows it.' : 'No week plan: Today starts empty.'); savePlans('The plan change'); }
       if (draftHasWork(S.draft) && !same) toast('Plan switched. Today already has logged sets, so it was left as it is.');
       break; }
     case 'pp-new': S.ppOpen = false; S.tab = 'settings'; S.wpEdit = null; S.wpDay = null; S.wpAsk = true; render(); window.scrollTo(0, 0); break;
@@ -4112,7 +4221,7 @@ document.addEventListener('click', e => {
     case 'wp-edit': S.wpEdit = b.dataset.id; S.wpDay = null; S.wpArm = null; render(); window.scrollTo(0, 0); break;
     case 'wp-back': S.wpEdit = null; S.wpDay = null; render(); window.scrollTo(0, 0); break;
     case 'wp-use': { const p = planById(b.dataset.id); if (!p) break; S.wp.plans.forEach(x => { x.active = x === p; }); todayFollowPlan(); render(); toast(p.name + ' is in use. Today follows it.'); savePlans('The plan in use'); break; }
-    case 'wp-stop': S.wp.plans.forEach(x => { x.active = false; }); todayFollowPlan(); render(); toast('No plan in use: Today follows the plan numbers.'); savePlans('The plan change'); break;
+    case 'wp-stop': S.wp.plans.forEach(x => { x.active = false; }); todayFollowPlan(); render(); toast('No plan in use: Today starts empty.'); savePlans('The plan change'); break;
     case 'wp-del': {
       const id = b.dataset.id;
       if (S.wpArm !== id) { S.wpArm = id; render(); setTimeout(() => { if (S.wpArm === id) { S.wpArm = null; render(); } }, 4000); break; }
@@ -4160,6 +4269,8 @@ document.addEventListener('click', e => {
       render(); break;
     case 'ph-step': stepPhoto(+b.dataset.d); break;
     case 'ph-full': openPhoto(b.dataset.fid); break;
+    case 'ph-tap': if (phHeld) { phHeld = false; break; } S.sel = null; S.recrop = null; render(); break;
+    case 'cmp-clear': S.cmp[+b.dataset.k] = null; S.cmpNext = +b.dataset.k; render(); break;
     case 'cmp-toggle': S.cmpMode = !S.cmpMode; S.cmpNext = 0; S.recrop = null; if (S.cmpMode) S.cmpFill = true; render(); break;
     case 'cmp-side': S.cmpView = 'side'; render(); break;
     case 'cmp-slider': S.cmpView = 'slider'; render(); break;
@@ -4239,10 +4350,7 @@ document.addEventListener('change', e => {
     const f = el.files[0]; const rd = new FileReader();
     rd.onload = () => {
       try {
-        const all = parseRenpho(String(rd.result));
-        const have = new Set(S.body.map(r => r.key));
-        const fresh = all.filter(r => !have.has(r.key));
-        S.imp = { all, fresh, dup: all.length - fresh.length, file: f.name };
+        importRenphoText(rd.result, f.name);
       } catch (err) { S.problem = { text: 'The CSV could not be read. ' + err.message, retry: false }; }
       render();
     };
@@ -4441,7 +4549,10 @@ document.addEventListener('touchend', e => {
   S.tab = tabs[j]; if (S.tab === 'photos') S.stripToEnd = true; render(); window.scrollTo(0, 0);
   const v = $('#view'); v.classList.remove('sl-l', 'sl-r'); void v.offsetWidth; v.classList.add(dx < 0 ? 'sl-l' : 'sl-r');
 }, { passive: true });
-let swX = null;
+let swX = null, phHold = null, phHeld = false, phXY = null;   // big photo: a short tap closes it, holding 0.5 s opens it full screen
+document.addEventListener('pointerdown', e => { clearTimeout(phHold); phHeld = false; const im = e.target.closest('#bigPh img[data-fid]'); if (!im) return; phXY = [e.clientX, e.clientY]; phHold = setTimeout(() => { phHeld = true; openPhoto(im.dataset.fid); }, 500); }, true);
+document.addEventListener('pointermove', e => { if (phXY && Math.hypot(e.clientX - phXY[0], e.clientY - phXY[1]) > 10) { clearTimeout(phHold); phXY = null; } }, true);
+['pointerup', 'pointercancel'].forEach(t => document.addEventListener(t, () => { clearTimeout(phHold); phXY = null; }, true));
 document.addEventListener('touchstart', e => { swX = e.target.closest('#bigPh') ? e.touches[0].clientX : null; }, { passive: true });
 document.addEventListener('touchend', e => { if (swX == null) return; const dx = e.changedTouches[0].clientX - swX; swX = null; if (Math.abs(dx) > 50) stepPhoto(dx < 0 ? 1 : -1); }, { passive: true });
 document.addEventListener('input', e => {
