@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update. Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.2b · 11/07/2026
+
+Matches the full app Ver 0.2b. Food tab: changing the Carb day is for that day only; Carb day › Plan my week sets the weekly high / mid / low pattern (one switch per weekday, with Standard 2-3-2, Match my workouts and All mid). The Weight box no longer shows Auto (7-day Renpho average) to anyone but the owner; everyone else types their weight. Week plan, one-day changes, typed weight, body type and unit are kept in a Food settings tab of the food Sheet, so they follow you to a new phone. Everything on the Food tab shows before a weight is set; the Weight box glows gold until then.
+
 ## 0.2a · 11/07/2026
 
 Matches the full app Ver 0.2a. New person: the first-open screen makes a folder named Workout Lite in your My Drive with two Google Sheets, Workout Lite log (exercises, sessions, week plans) and Workout Lite food (food log, quick foods, body weight), in one tap. If the folder is already there it is reused and finished. Creating a food Sheet later also puts it in that folder. Sign-in now asks only for your email and for the files the app made itself, so Google shows no "unverified app" warning; the app settings and unsaved sets are kept in the Workout Lite folder. Using a Sheet the app did not make (Use a Sheet I already have) asks once for the full Google Sheets permission. Settings › Google account: Sign out / switch account (clears your data from this phone; the next sign-in lets you pick the account). Food tab: everything shows from the start; until a weight is set, the Weight box glows gold and a card with Enter my weight takes the place of the targets.

@@ -359,6 +359,16 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .fset-s { font-size: 11px; color: var(--muted); }
 .fsh-note { padding: 0 2px 6px; }
 .fkgrow { align-items: center; flex-wrap: nowrap; margin-top: 8px; }
+/* Plan my week sheet (Ver 0.2b) */
+.wkbody { max-height: calc(70vh - 120px); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; display: grid; gap: 6px; padding: 2px 4px 6px; }
+.wkrow { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; }
+.wkd { font-weight: 600; }
+.wkseg { gap: 4px; }
+.wkseg .btn { min-width: 58px; padding: 7px 6px; }
+.wkcount { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+.wkcount b { color: var(--ink); }
+.wkpre { flex-wrap: wrap; }
+.wkopen { padding: 8px 4px 0; border-top: 1px solid var(--line); margin-top: 6px; }
 .fkgrow .tin { width: 6.5em; flex: 0 0 auto; }
 .btn.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .hint { margin: 0; font-size: 13px; color: var(--muted); }
@@ -1541,6 +1551,7 @@ async function sheetsCall(tool, input) {
   if (tool === 'update_values') return putVals(id, input.range, input.values);
   if (tool === 'append_values') return gfetch(SHEETS + id + '/values/' + encodeURIComponent(input.range) + ':append?valueInputOption=USER_ENTERED&insertDataOption=OVERWRITE',
     { method: 'POST', body: JSON.stringify({ range: input.range, majorDimension: 'ROWS', values: input.values }) });
+  if (tool === 'update_spreadsheet') return batch(id, input.requests || []);   // web 0.2b: adds the Food settings tab
   if (tool === 'batch_clear_values') return gfetch(SHEETS + id + '/values:batchClear', { method: 'POST', body: JSON.stringify({ ranges: input.ranges || [] }) });
   throw new Error('Not available in the web version: ' + tool);
 }
@@ -2068,7 +2079,7 @@ function foodStart(f) {
   S.foodSetup = S.foodSetup || {};
   if (!PRIV_ID) { S.bodyState = 'none'; render(); return; }
   S.bodyState = 'wait'; render();
-  Promise.allSettled([readBody(), readFood(), readQuick()]).then(() => render());
+  Promise.allSettled([readBody(), readFood(), readQuick(), readFoodSet()]).then(() => render());
 }
 async function foodSetupRun(kind, fn) {
   S.foodSetup = Object.assign(S.foodSetup || {}, { busy: kind, msg: '' }); render();
@@ -2198,7 +2209,9 @@ async function saveBody() {
 const SOMA = { ecto: { zh: '外胚型', en: 'Ectomorph', carb: 3, fat: 1.0 }, meso: { zh: '中胚型', en: 'Mesomorph', carb: 2.5, fat: 1.0 }, endo: { zh: '内胚型', en: 'Endomorph', carb: 2, fat: 1.0 } };
 const K_SOMA = 'wlite.soma.v1', K_MKG = 'wlite.manualkg.v1', K_WMODE = 'wlite.wmode.v1', K_WUNIT = 'wlite.wunit.v1';   /* Ver 0.1y: weight mode auto/manual and display unit kg/lbs */
 const LB = 2.20462;
-function wMode() { return store.get(K_WMODE) === 'manual' ? 'manual' : 'auto'; }
+// Auto (7-day Renpho average) is the owner's only (Ver 0.2b, user 2026-11-07): other people have no Renpho readings, so they just type their weight.
+function autoW() { return S.ownerKnown ? !!S.isOwner : true; }
+function wMode() { return !autoW() || store.get(K_WMODE) === 'manual' ? 'manual' : 'auto'; }
 function wUnit() { return store.get(K_WUNIT) === 'lbs' ? 'lbs' : 'kg'; }
 function wShow(kg) { return wUnit() === 'lbs' ? (Math.round(kg * LB * 10) / 10).toFixed(1) + ' lbs' : fmt1(kg) + ' kg'; }
 function somaKey() { const k = store.get(K_SOMA); return SOMA[k] ? k : 'meso'; }
@@ -2211,6 +2224,70 @@ const DRAFT_TAB = 'App draft';   // private spreadsheet: backup of unsaved sets 
 const SAVE_TIMEOUT = 30000;      // ms; a save call that takes longer is reported instead of hanging
 const MEALS = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
 function weekPlan() { const w = store.get(K_WEEK); return Object.assign({}, DEFAULT_WEEK, w || {}); }
+// Carb day (Ver 0.2b, user 2026-11-07): the week plan (K_WEEK) gives each weekday high / mid / low; changing the Carb day on the
+// Food tab changes that one date only (K_CDAY {iso: kind}); the week plan is set in Carb day › Plan my week.
+const K_CDAY = K_WEEK.replace('carbweek', 'carbday'), WK_ORDER = [1, 2, 3, 4, 5, 6, 0];
+function dayKind(iso) { const o = store.get(K_CDAY) || {}; return DAYTYPE[o[iso]] ? o[iso] : weekPlan()[new Date(iso + 'T12:00:00').getDay()]; }
+function weekIsos(iso) {   // weekday -> date of the Mon..Sun week holding iso
+  const d0 = new Date(iso + 'T12:00:00'), mon = new Date(d0); mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7));
+  const o = {}; for (let k = 0; k < 7; k++) { const d = new Date(mon); d.setDate(mon.getDate() + k); o[d.getDay()] = isoOf(d); } return o;
+}
+// "Match my workouts": high on workout days, mid on Custom days, low on Rest days of the week plan in use (days not set: mid)
+function workoutWeek() {
+  const p = activePlan(); if (!p) return null;
+  const m = {}; let any = false;
+  WDAYS.forEach(([k], i) => { const d = p.days[k]; if (!d) return; any = true; m[(i + 1) % 7] = d.type === 'Rest' ? 'low' : d.type === 'Custom' ? 'mid' : 'high'; });
+  return any ? m : null;
+}
+function weekPlanBody() {
+  const w = weekPlan(), c = { high: 0, mid: 0, low: 0 }, ww = workoutWeek(), ap = activePlan();
+  WK_ORDER.forEach(d => { c[w[d]]++; });
+  return '<div class="wkbody">' + WK_ORDER.map(d => '<div class="wkrow"><span class="wkd">' + WEEKDAYS[d] + '</span><div class="seg wkseg">' +
+      Object.keys(DAYTYPE).map(k => '<button class="btn sm' + (w[d] === k ? ' on' : '') + '" data-act="wk-set" data-d="' + d + '" data-k="' + k + '" aria-pressed="' + (w[d] === k) + '" aria-label="' + WEEKDAYS[d] + ': ' + DAYTYPE[k].name + '">' + DAYTYPE[k].zh.replace(' carb', '') + '</button>').join('') +
+      '</div></div>').join('') +
+    '<p class="wkcount"><b>' + c.high + '</b> high · <b>' + c.mid + '</b> mid · <b>' + c.low + '</b> low' + (c.high === 2 && c.mid === 3 && c.low === 2 ? ' ✓ the method’s 2-3-2' : ' · the method plans 2 high, 3 mid, 2 low') + '</p>' +
+    '<p class="section-sub">Quick set</p><div class="row-acts wkpre"><button class="btn sm" data-act="wk-pre" data-k="std">Standard 2-3-2</button>' +
+      '<button class="btn sm" data-act="wk-pre" data-k="gym"' + (ww ? '' : ' disabled') + '>Match my workouts</button><button class="btn sm" data-act="wk-pre" data-k="mid">All mid</button></div>' +
+    '<p class="hint">' + (ww ? 'Match my workouts: high on workout days, mid on custom days, low on rest days of ' + esc(ap.name) + '.' : 'Match my workouts needs a week plan (Settings › Week plan).') +
+      ' Days you changed one at a time keep their change.</p></div>' +
+    '<div class="nxfoot"><button class="btn primary" data-act="fs-close">Done</button></div>';
+}
+// Food settings tab in the food Sheet (Ver 0.2b): week plan, one-day changes, typed weight, body type and unit follow the person
+// to a new phone. Rows: Setting | Day | Value. Read when the food Sheet is read; written a moment after each change.
+const FS_TAB = 'Food settings', FS_RANGE = "'Food settings'!A1:C300";
+let fsTab = null, fsTimer = 0;
+async function readFoodSet() {
+  if (!S.mcp || !PRIV_ID) return;
+  let v; try { v = valuesOf(await call('get_values', { spreadsheetId: PRIV_ID, range: FS_RANGE })); fsTab = true; } catch (e) { fsTab = false; return; }
+  const week = {}, days = {}; let any = false;
+  v.slice(1).forEach(r => {
+    const k = String(r[0] || '').trim(), key = String(r[1] == null ? '' : r[1]).trim().replace(/^'/, ''), val = String(r[2] == null ? '' : r[2]).trim();
+    if (k === 'week' && DAYTYPE[val] && WEEKDAYS.indexOf(key) >= 0) { week[WEEKDAYS.indexOf(key)] = val; any = true; }
+    else if (k === 'day' && DAYTYPE[val] && /^\d{4}-\d{2}-\d{2}$/.test(key)) { days[key] = val; any = true; }
+    else if (k === 'weight' && +val > 0) { const m = store.get(K_MKG); if (!m || !m.at || !(m.at > key)) store.set(K_MKG, { kg: +val, at: /^\d{4}-\d{2}-\d{2}$/.test(key) ? key : todayIso() }); }
+    else if (k === 'body type' && SOMA[val]) store.set(K_SOMA, val);
+    else if (k === 'unit' && (val === 'kg' || val === 'lbs')) store.set(K_WUNIT, val);
+  });
+  if (any) { store.set(K_WEEK, week); store.set(K_CDAY, days); }
+  if (S.tab === 'food') render();
+}
+function saveFoodSet() { clearTimeout(fsTimer); fsTimer = setTimeout(() => { writeFoodSet().catch(e => toast('Food settings were not saved to your Sheet: ' + codeText(e).text)); }, 800); }
+async function writeFoodSet() {
+  if (!S.mcp || !PRIV_ID) return;
+  const w = weekPlan(), o = store.get(K_CDAY) || {}, m = store.get(K_MKG), lo = isoOf(new Date(Date.now() - 60 * 864e5));
+  Object.keys(o).forEach(k => { if (k < lo) delete o[k]; }); store.set(K_CDAY, o);   // one-day changes older than 60 days are dropped
+  const rows = [['Setting', 'Day', 'Value']].concat(WK_ORDER.map(d => ['week', WEEKDAYS[d], w[d]]), Object.keys(o).sort().map(k => ['day', "'" + k, o[k]]));
+  if (m && m.kg) rows.push(['weight', "'" + (m.at || todayIso()), m.kg]);
+  if (store.get(K_SOMA)) rows.push(['body type', '', somaKey()]);
+  if (store.get(K_WUNIT)) rows.push(['unit', '', wUnit()]);
+  if (fsTab !== true) {
+    try { await call('update_spreadsheet', { spreadsheetId: PRIV_ID, requests: [{ addSheet: { properties: { title: FS_TAB, gridProperties: { rowCount: 300, columnCount: 3, frozenRowCount: 1 } } } }] }); }
+    catch (e) { if (e && e.signin) throw e; }   // already there
+    fsTab = true;
+  }
+  await call('update_values', { spreadsheetId: PRIV_ID, range: "'" + FS_TAB + "'!A1:C" + rows.length, values: rows });
+  await call('batch_clear_values', { spreadsheetId: PRIV_ID, ranges: ["'" + FS_TAB + "'!A" + (rows.length + 1) + ':C300'] });
+}
 function latestWeight() { const r = S.body.find(x => x.v['Weight(kg)'] != null); return r ? { kg: r.v['Weight(kg)'], iso: r.iso } : null; }
 // Weight for the Food targets (Ver 0.1x): average of the Renpho days in the past 7 days (each day averaged first);
 // if there are none, the weight typed on the Food tab (wlite.manualkg.v1); if none either, the last Renpho reading (marked old).
@@ -2220,6 +2297,7 @@ function foodWeight() {
   const days = {};
   S.body.forEach(x => { const kg = x.v['Weight(kg)']; if (kg == null || !(kg > 0) || x.iso < loIso || x.iso > hiIso) return; (days[x.iso] = days[x.iso] || []).push(kg); });
   const ks = Object.keys(days).sort(), m = store.get(K_MKG), hasM = m && m.kg > 0;
+  if (!autoW()) return hasM ? { kg: +m.kg, src: 'manual', at: m.at } : null;   /* Ver 0.2b */
   if (wMode() === 'manual' && hasM) return { kg: +m.kg, src: 'manual', at: m.at };   /* Ver 0.1y: Manual mode always uses the typed weight */
   if (ks.length) { const kg = ks.reduce((a, k) => a + days[k].reduce((p, q) => p + q, 0) / days[k].length, 0) / ks.length; return { kg, src: 'avg', n: ks.length, from: ks[0], to: ks[ks.length - 1] }; }
   if (hasM) return { kg: +m.kg, src: 'manual', at: m.at, fallback: true };
@@ -3294,7 +3372,7 @@ function weekStrip(plan, iso) {
   const d0 = new Date(iso + 'T12:00:00'); const mon = new Date(d0); mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7));
   const L = { high: 'H', mid: 'M', low: 'L' }; const lw0 = foodWeight(), lwKg = lw0 && lw0.kg;
   let h = '<div class="wstrip">';
-  for (let k = 0; k < 7; k++) { const d = new Date(mon); d.setDate(mon.getDate() + k); const di = isoOf(d), wd = d.getDay(), t = plan[wd];
+  for (let k = 0; k < 7; k++) { const d = new Date(mon); d.setDate(mon.getDate() + k); const di = isoOf(d), wd = d.getDay(), t = dayKind(di);
     const eaten = S.food.filter(x => x.iso === di).reduce((a, x) => a + x.kcal, 0); let dot = '', dl = '';
     if (eaten > 0 && lwKg) { const tk = targetsFor(t, lwKg).kcal, r = eaten / tk; dot = r > 1.1 ? 'over' : r >= 0.9 ? 'ok' : 'under'; dl = ', ' + Math.round(eaten) + ' of ' + Math.round(tk) + ' kcal'; }
     h += '<button class="wd ' + t + (di === iso ? ' on' : '') + (di === todayIso() ? ' today' : '') + '" data-act="fd-go" data-iso="' + di + '" aria-label="' + WEEKDAYS[wd] + ', ' + DAYTYPE[t].name + dl + '"><span>' + 'SMTWTFS'[wd] + '</span><b>' + L[t] + '</b><i class="dot ' + dot + '"></i></button>'; }
@@ -3312,10 +3390,10 @@ function foodWeekBar() {
   if (fwObs) { fwObs.disconnect(); fwObs = null; }
   const lw = foodWeight(), top = S.tab === 'food' && document.querySelector('#view .wstrip');
   if (S.tab !== 'food' || !lw || !S.foodDay || !top) { fwShow(false); return; }
-  const plan = weekPlan(), wd = new Date(S.foodDay + 'T12:00:00').getDay(), T = targetsFor(plan[wd], lw.kg);
+  const plan = weekPlan(), wd = new Date(S.foodDay + 'T12:00:00').getDay(), T = targetsFor(dayKind(S.foodDay), lw.kg);
   const eaten = S.food.filter(x => x.iso === S.foodDay).reduce((a, x) => a + x.kcal, 0);
   bar.querySelector('.wrap').innerHTML = '<div class="fwk-line"><button class="btn fwk-arr" data-act="fd-step" data-d="-1" aria-label="Previous day">‹</button>' +
-    '<span class="fwk-mid"><span><b>' + (S.foodDay === todayIso() ? 'Today' : esc(WEEKDAYS[wd])) + '</b> · ' + esc(usOf(S.foodDay).replace(/\/\d{4}$/, '')) + ' · ' + DAYTYPE[plan[wd]].zh + '</span>' +
+    '<span class="fwk-mid"><span><b>' + (S.foodDay === todayIso() ? 'Today' : esc(WEEKDAYS[wd])) + '</b> · ' + esc(usOf(S.foodDay).replace(/\/\d{4}$/, '')) + ' · ' + DAYTYPE[dayKind(S.foodDay)].zh + '</span>' +
     '<span><b>' + Math.round(eaten) + '</b> of ' + Math.round(T.kcal) + ' kcal</span></span><button class="btn fwk-arr" data-act="fd-step" data-d="1" aria-label="Next day">›</button></div>' + weekStrip(plan, S.foodDay);
   if (!('IntersectionObserver' in window)) { fwShow(true); return; }
   const hh = (document.querySelector('header.top') || {}).offsetHeight || 0;
@@ -3330,7 +3408,7 @@ function viewFood() {
   if (!PRIV_ID) return h + (S.foodSheet === undefined ? '<div class="empty">Opening your food Sheet…</div>' : foodSetupView());
   if (!lw && S.bodyState === 'wait') return h + '<div class="empty">Reading your food Sheet…</div>';
   if (S.bodyState === 'err') h += '<div class="notice err"><div>The Body metrics tab could not be read. ' + esc(S.bodyMsg || '') + '</div></div>';
-  const plan = weekPlan(); const wd = new Date(S.foodDay + 'T12:00:00').getDay(); const kind = plan[wd];
+  const plan = weekPlan(); const wd = new Date(S.foodDay + 'T12:00:00').getDay(); const kind = dayKind(S.foodDay), wIso = weekIsos(S.foodDay);
   const dayHead = '<div class="row-acts fday"><button class="btn" data-act="fd-step" data-d="-1" aria-label="Previous day">‹</button>' +
     '<b>' + (S.foodDay === todayIso() ? 'Today' : esc(WEEKDAYS[wd])) + ' · ' + esc(usOf(S.foodDay)) + '</b>' +
     '<button class="btn" data-act="fd-step" data-d="1" aria-label="Next day">›</button></div>' + weekStrip(plan, S.foodDay) +
@@ -3363,10 +3441,10 @@ function viewFood() {
   // the week's targets
   if (!lw) return h;
   h += '<details class="wk"' + (S.wkOpen ? ' open' : '') + '><summary>This week’s targets · ' + SOMA[somaKey()].en + ' · ' + wShow(lw.kg) + ' (' + wSrc(lw) + ')</summary><div style="overflow-x:auto"><table class="hist"><thead><tr><th>Day</th><th>Type</th><th>Carbs</th><th>Protein</th><th>Fat</th><th>Fiber</th><th>kcal</th></tr></thead><tbody>' +
-    [1, 2, 3, 4, 5, 6, 0].map(d => { const k = plan[d], t = targetsFor(k, lw.kg); return '<tr' + (d === wd ? ' class="on"' : '') + '><td>' + WEEKDAYS[d].slice(0, 3) + '</td><td>' + DAYTYPE[k].zh + '</td><td>' + Math.round(t.c) + '</td><td>' + Math.round(t.p) + '</td><td>' + Math.round(t.f) + '</td><td>' + Math.round(t.fib) + '</td><td>' + Math.round(t.kcal) + '</td></tr>'; }).join('') +
+    WK_ORDER.map(d => { const k = dayKind(wIso[d]), t = targetsFor(k, lw.kg); return '<tr' + (wIso[d] === S.foodDay ? ' class="on"' : '') + '><td>' + WEEKDAYS[d].slice(0, 3) + ' ' + shortUs(wIso[d]) + '</td><td>' + DAYTYPE[k].zh + '</td><td>' + Math.round(t.c) + '</td><td>' + Math.round(t.p) + '</td><td>' + Math.round(t.f) + '</td><td>' + Math.round(t.fib) + '</td><td>' + Math.round(t.kcal) + '</td></tr>'; }).join('') +
     '</tbody></table></div>';
-  const counts = Object.values(plan).reduce((a, k) => (a[k] = (a[k] || 0) + 1, a), {});
-  if (counts.high !== 2 || counts.mid !== 3 || counts.low !== 2) h += '<p class="hint">The tool plans 2 high, 3 mid and 2 low days a week; your week now has ' + (counts.high || 0) + ' / ' + (counts.mid || 0) + ' / ' + (counts.low || 0) + '.</p>';
+  const counts = WK_ORDER.map(d => dayKind(wIso[d])).reduce((a, k) => (a[k] = (a[k] || 0) + 1, a), {});
+  if (counts.high !== 2 || counts.mid !== 3 || counts.low !== 2) h += '<p class="hint">The method plans 2 high, 3 mid and 2 low days a week (Carb day › Plan my week); this week has ' + (counts.high || 0) + ' / ' + (counts.mid || 0) + ' / ' + (counts.low || 0) + '.</p>';
   { const so = SOMA[somaKey()]; h += '<p class="hint">' + so.en + ': carbs ' + so.carb + ' g/kg and fat ' + so.fat.toFixed(1) + ' g/kg a day over the week, protein ' + CYC.prot + ' g/kg. Reference numbers from the carb-cycling method, not medical or dietitian advice.</p></details>'; }
   return h;
 }
@@ -3375,6 +3453,7 @@ function fmt1(v) { return (Math.round(v * 10) / 10).toFixed(1); }
 function shortUs(iso) { return esc(usOf(iso).replace(/\/\d{4}$/, '')); }
 function wSrc(lw) {
   if (lw.src === 'avg') return '7-day avg';
+  if (!autoW()) return 'Typed ' + shortUs(lw.at || todayIso());
   if (lw.src === 'manual') return lw.fallback ? 'Manual, no recent Renpho' : 'Manual';
   return 'Last Renpho ' + shortUs(lw.iso);
 }
@@ -3384,7 +3463,7 @@ function foodSetRow(lw, kind, wd) {
   return '<div class="fset">' +
     it('w', 'Weight', lw ? wShow(lw.kg) : 'Not set', lw ? esc(wSrc(lw)) : 'Tap to enter', !lw) +
     it('b', 'Body type', SOMA[somaKey()].en, '') +
-    it('c', 'Carb day', DAYTYPE[kind].zh, (S.foodDay === todayIso() ? 'Today' : WEEKDAYS[wd].slice(0, 3)) + '’s plan') + '</div>';
+    it('c', 'Carb day', DAYTYPE[kind].zh, '') + '</div>';
 }
 function foodSetSheet(lw, kind, wd) {
   if (!S.fsh) return '';
@@ -3394,19 +3473,24 @@ function foodSetSheet(lw, kind, wd) {
   if (S.fsh === 'w') {
     const m = store.get(K_MKG), u = wUnit(), auto = !lw || lw.src !== 'manual' || lw.fallback;
     const avg = (() => { const md = store.get(K_WMODE); store.set(K_WMODE, 'auto'); const r = foodWeight(); if (md) store.set(K_WMODE, md); else store.del(K_WMODE); return r && r.src === 'avg' ? r : null; })();
-    x = head('Weight') + '<div class="sheet-list">' +
+    x = head('Weight') + (autoW() ? '<div class="sheet-list">' +
       it('fw-auto', '', 'Auto', avg ? wShow(avg.kg) + ' · average of ' + avg.n + ' Renpho day' + (avg.n === 1 ? '' : 's') + ' in the past 7 days' : 'No Renpho readings in the past 7 days; the manual weight is used meanwhile', wMode() === 'auto') +
       it('fw-manual', '', 'Manual', m && m.kg ? wShow(m.kg) + ' · typed ' + usOf(m.at || todayIso()).replace(/\/\d{4}$/, '') : 'Type your weight below', wMode() === 'manual') +
-      '</div><div class="row-acts fkgrow"><input id="fkg" class="tin" inputmode="decimal" autocomplete="off" value="' + esc(S.fkgDraft || '') + '" placeholder="' + (m && m.kg ? (u === 'lbs' ? (Math.round(m.kg * LB * 10) / 10).toFixed(1) : fmt1(m.kg)) : (u === 'lbs' ? 'e.g. 153' : 'e.g. 69.5')) + '" aria-label="Weight in ' + u + '">' +
+      '</div>' : '<p class="hint fsh-note">Type your weight. Your daily targets are worked out from it.</p>') +
+      '<div class="row-acts fkgrow"><input id="fkg" class="tin" inputmode="decimal" autocomplete="off" value="' + esc(S.fkgDraft || '') + '" placeholder="' + (m && m.kg ? (u === 'lbs' ? (Math.round(m.kg * LB * 10) / 10).toFixed(1) : fmt1(m.kg)) : (u === 'lbs' ? 'e.g. 153' : 'e.g. 69.5')) + '" aria-label="Weight in ' + u + '">' +
       '<div class="seg">' + ['kg', 'lbs'].map(v => '<button class="btn sm' + (v === u ? ' on' : '') + '" data-act="fu" data-k="' + v + '">' + v + '</button>').join('') + '</div>' +
-      '<button class="btn primary" data-act="fkg-save">Save</button></div><p class="hint">Saving switches to Manual. Saved on this phone only.</p></div></div>';
+      '<button class="btn primary" data-act="fkg-save">Save</button></div><p class="hint">' + (autoW() ? 'Saving switches to Manual. ' : '') + 'Kept in your food Sheet, so it follows you to a new phone.</p></div></div>';
   } else if (S.fsh === 'b') {
     const sk = somaKey();
     x = head('Body type') + '<div class="sheet-list">' + Object.keys(SOMA).map(k => it('soma', k, SOMA[k].en, '', k === sk)).join('') + '</div></div></div>';
   } else if (S.fsh === 'c') {
-    const dn = S.foodDay === todayIso() ? 'Today (' + WEEKDAYS[wd] + ')' : WEEKDAYS[wd];
-    x = head('Carb day') + '<p class="hint fsh-note">' + esc(dn) + ' is planned as a ' + esc(DAYTYPE[kind].name) + '. A change here applies to every ' + esc(WEEKDAYS[wd]) + '.</p><div class="sheet-list">' +
-      Object.keys(DAYTYPE).map(k => it('dtype', k, DAYTYPE[k].name, '', k === kind)).join('') + '</div></div></div>';
+    const wk = weekPlan()[wd], one = kind !== wk;
+    const dn = (S.foodDay === todayIso() ? 'Today' : WEEKDAYS[wd]) + ', ' + shortUs(S.foodDay);
+    x = head('Carb day') + '<p class="hint fsh-note">' + dn + (one ? ': changed for this day only. Your week plan has it as ' + esc(DAYTYPE[wk].name) + '.' : ': from your week plan. A change here is for this day only.') + '</p><div class="sheet-list">' +
+      Object.keys(DAYTYPE).map(k => it('dtype', k, DAYTYPE[k].name, one && k === wk ? 'Week plan' : '', k === kind)).join('') + '</div>' +
+      '<div class="row-acts wkopen"><button class="btn" data-act="fs-open" data-k="wk">Plan my week ›</button>' + (one ? '<button class="btn" data-act="dtype" data-k="' + wk + '">Back to week plan</button>' : '') + '</div></div></div>';
+  } else if (S.fsh === 'wk') {
+    x = head('Plan my week') + weekPlanBody() + '</div></div>';
   }
   return x;
 }
@@ -3628,6 +3712,7 @@ async function addExercise() {
 // (Ver <major.minor><letter> · MMDDYYYY). Each push to GitHub takes the artifact's top APP_VERSIONS entry as its version.
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.2b', '11072026', 'Matches the full app Ver 0.2b. Food tab: changing the Carb day is for that day only; Carb day › Plan my week sets the weekly high / mid / low pattern (one switch per weekday, with Standard 2-3-2, Match my workouts and All mid). The Weight box no longer shows Auto (7-day Renpho average) to anyone but the owner; everyone else types their weight. Week plan, one-day changes, typed weight, body type and unit are kept in a Food settings tab of the food Sheet, so they follow you to a new phone. Everything on the Food tab shows before a weight is set; the Weight box glows gold until then.'],
   ['0.2a', '11072026', 'Matches the full app Ver 0.2a. New person: the first-open screen makes a folder named Workout Lite in your My Drive with two Google Sheets, Workout Lite log (exercises, sessions, week plans) and Workout Lite food (food log, quick foods, body weight), in one tap. If the folder is already there it is reused and finished. Creating a food Sheet later also puts it in that folder. Sign-in now asks only for your email and for the files the app made itself, so Google shows no "unverified app" warning; the app settings and unsaved sets are kept in the Workout Lite folder. Using a Sheet the app did not make (Use a Sheet I already have) asks once for the full Google Sheets permission. Settings › Google account: Sign out / switch account (clears your data from this phone; the next sign-in lets you pick the account). Food tab: everything shows from the start; until a weight is set, the Weight box glows gold and a card with Enter my weight takes the place of the targets.'],
   ['0.2', '11072026', 'Matches the full app Ver 0.2 (its 0.1v to 0.2; this update was first listed here as 0.1h). Food tab: one row with Weight (Auto = average of your Body metrics days in the past 7 days, or Manual; kg or lbs; the typed weight is kept on this phone), Body type (Ectomorph 3 g/kg carbs, Mesomorph 2.5, Endomorph 2; Mesomorph is the default) and Carb day, each opening a list at the bottom; Manual adjustment under Suggested (add or take away grams of carbs, protein, fat or fiber, saved as their own rows); legend for the week dots. The + bubble is replaced by Add food › Enter myself.'],
   ['0.1g', '11062026', 'Web version (GitHub): Food tab from the full app Ver 0.1u, without Claude calorie estimates: carb-cycling targets from your weight, Quick add, suggestions (3), Add a food (+ bubble), fiber, week bar with arrows. Food is kept in your own food Sheet (create one, or use one you have); type your weight if the Sheet has no Renpho readings. Also from the full app: the top weight and its reps as the hint in every set box. The Apps Script version is unchanged.'],
@@ -3696,7 +3781,7 @@ function viewSetup() {
 function startWith(r) {
   // r = result of api_init after setup or on open
   S.email = r.email || S.email;
-  S.isOwner = !!r.owner;                 // exercise notes show only to the owner (Lite 0.1f)
+  S.isOwner = !!r.owner; S.ownerKnown = true;                 // exercise notes show only to the owner (Lite 0.1f)
   store.del('wlite.full.v1');
   if (!r.cfg) { CFG = null; S.mcp = null; S.tab = 'setup'; S.initState = 'ready'; setSync('busy', 'Not set up'); render(); return; }
   const changed = !CFG || CFG.sheetId !== r.cfg.sheetId || CFG.tab !== r.cfg.tab;
@@ -3959,15 +4044,25 @@ document.addEventListener('click', e => {
     case 'fd-step': { const d = new Date(S.foodDay + 'T12:00:00'); d.setDate(d.getDate() + +b.dataset.d); S.foodDay = isoOf(d); render(); break; }
     case 'fs-open': S.fsh = b.dataset.k; S.fkgDraft = ''; render(); if (S.fsh === 'w' && !(store.get(K_MKG) || {}).kg) setTimeout(() => { const i = $('#fkg'); if (i) i.focus(); }, 50); break;
     case 'fs-close': S.fsh = null; render(); break;
-    case 'soma': store.set(K_SOMA, b.dataset.k); S.fsh = null; render(); toast('Body type: ' + SOMA[b.dataset.k].en + '. Targets updated.'); break;
+    case 'soma': store.set(K_SOMA, b.dataset.k); S.fsh = null; render(); saveFoodSet(); toast('Body type: ' + SOMA[b.dataset.k].en + '. Targets updated.'); break;
     case 'fw-auto': store.set(K_WMODE, 'auto'); S.fsh = null; render(); toast('Weight: Auto (7-day Renpho average).'); break;
     case 'fw-manual': if ((store.get(K_MKG) || {}).kg) { store.set(K_WMODE, 'manual'); S.fsh = null; render(); toast('Weight: Manual.'); } else { const i = $('#fkg'); if (i) i.focus(); } break;
-    case 'fu': { const i = $('#fkg'); S.fkgDraft = i ? i.value : ''; store.set(K_WUNIT, b.dataset.k); render(); break; }
+    case 'fu': { const i = $('#fkg'); S.fkgDraft = i ? i.value : ''; store.set(K_WUNIT, b.dataset.k); render(); saveFoodSet(); break; }
     case 'fkg-save': { const i = $('#fkg'); let v = parseFloat(String(i ? i.value : '').replace(',', '.')); const u = wUnit();
       if (u === 'lbs') v = v / LB;
       if (!(v >= 30 && v <= 250)) { toast('Type your weight in ' + u + (u === 'lbs' ? ', e.g. 153.' : ', e.g. 69.5.')); break; }
-      store.set(K_MKG, { kg: Math.round(v * 100) / 100, at: todayIso() }); store.set(K_WMODE, 'manual'); S.fkgDraft = ''; S.fsh = null; render(); toast('Weight saved: ' + wShow(v) + ' (Manual).'); break; }
-    case 'dtype': { const w = store.get(K_WEEK) || {}; w[new Date(S.foodDay + 'T12:00:00').getDay()] = b.dataset.k; store.set(K_WEEK, w); S.fsh = null; render(); break; }
+      store.set(K_MKG, { kg: Math.round(v * 100) / 100, at: todayIso() }); store.set(K_WMODE, 'manual'); S.fkgDraft = ''; S.fsh = null; render(); saveFoodSet(); toast('Weight saved: ' + wShow(v) + ' (Manual).'); break; }
+    case 'dtype': {   // Ver 0.2b: this date only; picking the week plan's own type removes the one-day change
+      const o = store.get(K_CDAY) || {}, k = b.dataset.k, wk = weekPlan()[new Date(S.foodDay + 'T12:00:00').getDay()];
+      if (k === wk) delete o[S.foodDay]; else o[S.foodDay] = k;
+      store.set(K_CDAY, o); S.fsh = null; render(); saveFoodSet();
+      toast(DAYTYPE[k].name + (k === wk ? ' (week plan).' : ' for this day only.')); break; }
+    case 'wk-set': { const w = store.get(K_WEEK) || Object.assign({}, DEFAULT_WEEK); w[b.dataset.d] = b.dataset.k; store.set(K_WEEK, w); render(); saveFoodSet(); break; }
+    case 'wk-pre': {
+      const k = b.dataset.k, ww = workoutWeek(), w = {};
+      WK_ORDER.forEach(d => { w[d] = k === 'std' ? DEFAULT_WEEK[d] : k === 'gym' && ww ? (ww[d] || 'mid') : 'mid'; });
+      store.set(K_WEEK, w); render(); saveFoodSet();
+      toast(k === 'std' ? 'Week plan: standard 2-3-2.' : k === 'gym' ? 'Week plan matches your workouts.' : 'Week plan: all mid.'); break; }
     case 'f-est': { const t = $('#foodText'); if (t) S.foodText = t.value; estimateFood(); break; }
     case 'fa-open': if (!S.fa) S.fa = faBlank(); S.faOpen = true; S.faMsg = ''; S.faFocus = S.fa.name ? 'fa-kcal' : 'fa-name'; render(); break;
     case 'fa-hide': if (!S.faBusy) { S.faOpen = false; render(); } break;                 // typed values are kept until Cancel or Add
