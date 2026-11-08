@@ -402,6 +402,8 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .linkbtn { border: 0; background: none; padding: 0; color: var(--accent); text-decoration: underline; font: inherit; cursor: pointer; }
 .ver { font-size: 17px; color: var(--ink) !important; }
 .verlist { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
+.verlist.recent { margin: 0; padding-left: 0; list-style: none; gap: 6px; }
+.verlist.recent li { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
 .seg.rng .btn { padding: 7px 0; font-size: 14px; }
 /* saved indicator (Ver 0.1e): gold check badge on the Save card with a short pop and a green edge glow; header badge in green */
 .savebox { position: relative; }
@@ -3609,6 +3611,7 @@ async function addExercise() {
 // ---------- settings ----------
 // Version rule (user, 2026-11-07): the GitHub version number is always the SAME as the full claude.ai artifact app's current version
 // (Ver <major.minor><letter> · MMDDYYYY). Each push to GitHub takes the artifact's top APP_VERSIONS entry as its version.
+// CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
   ['0.2a', '11072026', 'Matches the full app Ver 0.2a. New person: the first-open screen makes a folder named Workout Lite in your My Drive with two Google Sheets, Workout Lite log (exercises, sessions, week plans) and Workout Lite food (food log, quick foods, body weight), in one tap. If the folder is already there it is reused and finished. Creating a food Sheet later also puts it in that folder. Sign-in now asks only for your email and for the files the app made itself, so Google shows no "unverified app" warning; the app settings and unsaved sets are kept in the Workout Lite folder. Using a Sheet the app did not make (Use a Sheet I already have) asks once for the full Google Sheets permission. Settings › Google account: Sign out / switch account (clears your data from this phone; the next sign-in lets you pick the account).'],
   ['0.2', '11072026', 'Matches the full app Ver 0.2 (its 0.1v to 0.2; this update was first listed here as 0.1h). Food tab: one row with Weight (Auto = average of your Body metrics days in the past 7 days, or Manual; kg or lbs; the typed weight is kept on this phone), Body type (Ectomorph 3 g/kg carbs, Mesomorph 2.5, Endomorph 2; Mesomorph is the default) and Carb day, each opening a list at the bottom; Manual adjustment under Suggested (add or take away grams of carbs, protein, fat or fiber, saved as their own rows); legend for the week dots. The + bubble is replaced by Add food › Enter myself.'],
@@ -3631,10 +3634,6 @@ function viewSettings() {
     '<p class="hint">' + (chosen ? 'Your choice is kept on this phone. <button class="linkbtn" data-act="theme-auto">Follow the phone setting instead</button>' : 'Following your phone’s light / dark setting.') + '</p></div>';
   h += '<p class="section-h">Today\'s plan</p><div class="panel"><label class="switch"><span>Start each day with the plan</span><input type="checkbox" role="switch" id="planSw"' + (planOn() ? ' checked' : '') + '><i aria-hidden="true"></i></label>' +
     '<p class="hint">' + (planOn() ? (activePlan() ? 'Today fills in from your week plan ' + esc(activePlan().name) + '.' : 'Today fills in from the plan numbers in the Exercises tab (1 Mon, 2 Tue, 4 Wed, 3 Fri).') : 'Today starts empty; pick the exercises yourself. Kept on this phone.') + '</p></div>';
-  h += '<p class="section-h">Google account</p><div class="panel">' +
-    '<p>' + (S.email ? 'Signed in as <b>' + esc(S.email) + '</b>' : 'Signed in with Google') + '</p>' +
-    '<div class="row-acts"><button class="btn' + (S.outArmed ? ' danger' : '') + '" data-act="sign-out">' + (S.outArmed ? 'Tap again to sign out' : 'Sign out / switch account') + '</button></div>' +
-    '<p class="hint">Signing out removes your data from this phone only; everything stays in your Google Drive. Save your session first: unsaved sets are cleared.</p></div>';
   h += '<p class="section-h">Your workout Sheet</p><div class="panel">' +
     '<p>Sessions are saved to <b>' + esc(S.sheetTitle || 'your Sheet') + '</b>' + (S.sheetTab ? ' › ' + esc(S.sheetTab) : '') + ' (columns J to M).</p>' +
     '<div class="row-acts">' + (S.sheetUrl ? '<a class="btn" href="' + esc(S.sheetUrl) + '" target="_blank" rel="noopener">Open the Sheet</a>' : '') +
@@ -3646,9 +3645,15 @@ function viewSettings() {
     (S.foodSheet.url ? '<a class="btn" href="' + esc(S.foodSheet.url) + '" target="_blank" rel="noopener">Open the food Sheet</a>' : '') +
     '<button class="btn' + (S.foodArmed ? ' danger' : '') + '" data-act="food-forget">' + (S.foodArmed ? 'Tap again to switch' : 'Use a different food Sheet') + '</button></div><p class="hint">Switching only changes where the Food tab saves; nothing in the Sheet is deleted.</p>'
     : '<p>Not set up yet: open the Food tab to create one or use one you have.</p>') + '</div>';
+  h += '<p class="section-h">Google account</p><div class="panel">' +
+    '<p>' + (S.email ? 'Signed in as <b>' + esc(S.email) + '</b>' : 'Signed in with Google') + '</p>' +
+    '<div class="row-acts"><button class="btn' + (S.outArmed ? ' danger' : '') + '" data-act="sign-out">' + (S.outArmed ? 'Tap again to sign out' : 'Sign out / switch account') + '</button></div>' +
+    '<p class="hint">Signing out removes your data from this phone only; everything stays in your Google Drive. Save your session first: unsaved sets are cleared.</p></div>';
   h += '<p class="section-h">Version</p><div class="panel"><p class="ver"><b>Ver ' + esc(v) + '</b> · ' + esc(d) + '</p>' +
     (window.__liteSrc ? '<p class="hint">' + (window.__liteSrc === 'github' ? 'Page loaded from GitHub (updates on its own).' : 'GitHub could not be reached: using the built-in copy of the page.') + '</p>' : '') +
-    '<details class="wk"><summary>Version history</summary><ul class="verlist">' + APP_VERSIONS.map(([a, b, c]) => '<li><b>' + esc(a) + '</b> · ' + esc(b) + ' — ' + esc(c) + '</li>').join('') + '</ul></details></div>';
+    // only the latest two updates here, a few lines each; the full list is CHANGELOG.md on GitHub (user, 2026-11-07)
+    '<p class="hint">Latest updates</p><ul class="verlist recent">' + APP_VERSIONS.slice(0, 2).map(([a, b, c]) => '<li><b>' + esc(a) + '</b> · ' + esc(b) + ' — ' + esc(c) + '</li>').join('') + '</ul>' +
+    '<div class="row-acts"><a class="btn" href="https://github.com/Sqiangqi/workout-lite/blob/main/CHANGELOG.md" target="_blank" rel="noopener">View full version history</a></div></div>';
   return h;
 }
 // First open: make a Sheet, or point the app at one that already exists.
