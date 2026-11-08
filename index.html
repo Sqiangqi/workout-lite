@@ -669,7 +669,7 @@ const ls = {
 // Workout Lite: server part (Google Apps Script web app).
 // Deploy: Execute as "User accessing the web app", Who has access "Anyone with Google account".
 // Each person's settings are kept in their own user properties; it only reaches Sheets that person can open.
-// Workout Lite Ver 0.1f · 11032026 (version rule: Ver 0.1 + letter · MMDDYYYY, user decides when to move to 0.2)
+// Workout Lite: version shown in Settings = the full claude.ai artifact app's version at the time of the push (rule, user 2026-11-07)
 // Ver 0.1f is the LAST update of Workout Lite (user, 2026-11-03): new features go to the full claude.ai app only.
 
 const APP_NAME = 'Workout Lite';
@@ -3506,9 +3506,10 @@ async function addExercise() {
 }
 
 // ---------- settings ----------
-// Version rule (user, 2026-11-01, same as the full app): Ver 0.1 + letter · MMDDYYYY; the user decides when to move to 0.2.
+// Version rule (user, 2026-11-07): the GitHub version number is always the SAME as the full claude.ai artifact app's current version
+// (Ver <major.minor><letter> · MMDDYYYY). Each push to GitHub takes the artifact's top APP_VERSIONS entry as its version.
 const APP_VERSIONS = [
-  ['0.1h', '11072026', 'From the full app Ver 0.2 (0.1v to 0.1z), Food tab: one row with Weight (Auto = average of your Body metrics days in the past 7 days, or Manual; kg or lbs; the typed weight is kept on this phone), Body type (Ectomorph 3 g/kg carbs, Mesomorph 2.5, Endomorph 2; Mesomorph is the default) and Carb day, each opening a list at the bottom; Manual adjustment under Suggested (add or take away grams of carbs, protein, fat or fiber, saved as their own rows); legend for the week dots. The + bubble is replaced by Add food › Enter myself.'],
+  ['0.2', '11072026', 'Matches the full app Ver 0.2 (its 0.1v to 0.2; this update was first listed here as 0.1h). Food tab: one row with Weight (Auto = average of your Body metrics days in the past 7 days, or Manual; kg or lbs; the typed weight is kept on this phone), Body type (Ectomorph 3 g/kg carbs, Mesomorph 2.5, Endomorph 2; Mesomorph is the default) and Carb day, each opening a list at the bottom; Manual adjustment under Suggested (add or take away grams of carbs, protein, fat or fiber, saved as their own rows); legend for the week dots. The + bubble is replaced by Add food › Enter myself.'],
   ['0.1g', '11062026', 'Web version (GitHub): Food tab from the full app Ver 0.1u, without Claude calorie estimates: carb-cycling targets from your weight, Quick add, suggestions (3), Add a food (+ bubble), fiber, week bar with arrows. Food is kept in your own food Sheet (create one, or use one you have); type your weight if the Sheet has no Renpho readings. Also from the full app: the top weight and its reps as the hint in every set box. The Apps Script version is unchanged.'],
   ['0.1f', '11032026', 'From the full app Ver 0.1m: Settings › Week plan (up to 3 named plans kept in a Plan tab of your Sheet; day types Upper, Push, Pull, Lower, Custom, Rest; pick and drag exercises; saved day by day), Today shows the current plan and switches plans, ★ favourites per person, exercise notes shown only to the owner, no Notes field when adding an exercise. LAST UPDATE of Workout Lite: it will not be updated after this version; new features go to the full app only.'],
   ['0.1e', '11012026', 'Sets with only a weight (no reps) are saved too. Settings > Today\'s plan: switch off to start each day empty and pick exercises yourself (kept per phone). From the full app Ver 0.1j.'],
