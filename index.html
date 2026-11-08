@@ -347,6 +347,14 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .fset-it > * { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .fset-l { font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
 .fset-it b { font-size: 14.5px; letter-spacing: -.01em; }
+/* Weight not set yet: gold box that pulses so the first step is obvious (web 0.2a, user 2026-11-07) */
+.fset-it.need { border: 2px solid var(--gold); background: rgba(216,176,114,.2); animation: needPulse 1.8s ease-in-out infinite; }
+.fset-it.need b { color: var(--accent); }
+.fset-it.need .fset-s { color: var(--ink); font-weight: 600; }
+@keyframes needPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(216,176,114,.55); } 50% { box-shadow: 0 0 0 6px rgba(216,176,114,0); } }
+@media (prefers-reduced-motion: reduce) { .fset-it.need { animation: none; } }
+.needw { border: 1px dashed var(--gold); border-radius: 10px; padding: 10px 12px; display: grid; gap: 8px; margin-top: 8px; background: rgba(216,176,114,.08); }
+.needw p { margin: 0; font-size: 14px; color: var(--ink); }
 .fset-go { font-size: 10px; color: var(--muted); margin-left: 4px; }
 .fset-s { font-size: 11px; color: var(--muted); }
 .fsh-note { padding: 0 2px 6px; }
@@ -3327,12 +3335,18 @@ function viewFood() {
     '<b>' + (S.foodDay === todayIso() ? 'Today' : esc(WEEKDAYS[wd])) + ' · ' + esc(usOf(S.foodDay)) + '</b>' +
     '<button class="btn" data-act="fd-step" data-d="1" aria-label="Next day">›</button></div>' + weekStrip(plan, S.foodDay) +
     '<p class="wlegend"><i class="wl ok"></i>on target ±10% <i class="wl over"></i>over <i class="wl under"></i>under <span class="wl-note">(calories)</span></p>' + foodSetRow(lw, kind, wd);
-  if (!lw) return h + '<div class="panel">' + dayHead + '<p class="hint">Tap Weight to enter your weight. Your targets appear here once there is a weight (Renpho readings from the past 7 days are used automatically).</p></div>' + foodSetSheet(lw, kind, wd);
-  const T = targetsFor(kind, lw.kg);
   const day = S.food.filter(x => x.iso === S.foodDay);
   const got = day.reduce((a, x) => ({ kcal: a.kcal + x.kcal, c: a.c + x.c, p: a.p + x.p, f: a.f + x.f, fib: a.fib + (x.fib || 0) }), { kcal: 0, c: 0, p: 0, f: 0, fib: 0 });
   // day header with date stepping and the day type
-  h += '<div class="panel">' + dayHead + viewPlan(T, got, pendingHtml()) + madjButton() + '</div>' + foodSetSheet(lw, kind, wd) + manualAdjSheet();
+  if (lw) h += '<div class="panel">' + dayHead + viewPlan(targetsFor(kind, lw.kg), got, pendingHtml()) + madjButton() + '</div>' + foodSetSheet(lw, kind, wd) + manualAdjSheet();
+  else {
+    // no weight yet (web 0.2a, user 2026-11-07): everything below still shows; this card says why there are no targets
+    h += '<div class="panel">' + dayHead + '<div class="needw"><p><b>Enter your weight to see your daily targets.</b> Carbs, protein, fat and calories for each day are worked out from your body weight. ' +
+      'You can already log food below; the targets fill in as soon as a weight is set.</p>' +
+      '<div class="row-acts"><button class="btn primary" data-act="fs-open" data-k="w">Enter my weight</button>' +
+      (day.length ? '<span class="hint">' + Math.round(got.kcal) + ' kcal logged so far</span>' : '') + '</div></div>' +
+      pendingHtml() + madjButton() + '</div>' + foodSetSheet(lw, kind, wd) + manualAdjSheet();
+  }
   h += '<p class="section-h">Quick add</p><div class="panel">' + viewQuick() + '</div>';
   h += '<p class="section-h">Add food</p><div class="panel"><div class="row-acts"><button class="btn glowbtn" data-act="fa-manual">Enter myself</button><span class="hint">Type the name, calories and macros of a food</span></div></div>';   // web: no Claude estimates, so only Enter myself (full app Ver 0.1v)
   // the day's log
@@ -3347,6 +3361,7 @@ function viewFood() {
     h += '</div>';
   }
   // the week's targets
+  if (!lw) return h;
   h += '<details class="wk"' + (S.wkOpen ? ' open' : '') + '><summary>This week’s targets · ' + SOMA[somaKey()].en + ' · ' + wShow(lw.kg) + ' (' + wSrc(lw) + ')</summary><div style="overflow-x:auto"><table class="hist"><thead><tr><th>Day</th><th>Type</th><th>Carbs</th><th>Protein</th><th>Fat</th><th>Fiber</th><th>kcal</th></tr></thead><tbody>' +
     [1, 2, 3, 4, 5, 6, 0].map(d => { const k = plan[d], t = targetsFor(k, lw.kg); return '<tr' + (d === wd ? ' class="on"' : '') + '><td>' + WEEKDAYS[d].slice(0, 3) + '</td><td>' + DAYTYPE[k].zh + '</td><td>' + Math.round(t.c) + '</td><td>' + Math.round(t.p) + '</td><td>' + Math.round(t.f) + '</td><td>' + Math.round(t.fib) + '</td><td>' + Math.round(t.kcal) + '</td></tr>'; }).join('') +
     '</tbody></table></div>';
@@ -3365,9 +3380,9 @@ function wSrc(lw) {
 }
 // Food tab top row (Ver 0.1y, user 2026-11-07): Weight | Body type | Carb day, each opens a bottom sheet
 function foodSetRow(lw, kind, wd) {
-  const it = (k, lab, val, sub) => '<button class="fset-it" data-act="fs-open" data-k="' + k + '" aria-haspopup="listbox"><span class="fset-l">' + lab + '<span class="fset-go" aria-hidden="true">▾</span></span><b>' + val + '</b><span class="fset-s">' + (sub || '&nbsp;') + '</span></button>';
+  const it = (k, lab, val, sub, need) => '<button class="fset-it' + (need ? ' need' : '') + '" data-act="fs-open" data-k="' + k + '" aria-haspopup="listbox"><span class="fset-l">' + lab + '<span class="fset-go" aria-hidden="true">▾</span></span><b>' + val + '</b><span class="fset-s">' + (sub || '&nbsp;') + '</span></button>';
   return '<div class="fset">' +
-    it('w', 'Weight', lw ? wShow(lw.kg) : 'Not set', lw ? esc(wSrc(lw)) : 'Tap to enter') +
+    it('w', 'Weight', lw ? wShow(lw.kg) : 'Not set', lw ? esc(wSrc(lw)) : 'Tap to enter', !lw) +
     it('b', 'Body type', SOMA[somaKey()].en, '') +
     it('c', 'Carb day', DAYTYPE[kind].zh, (S.foodDay === todayIso() ? 'Today' : WEEKDAYS[wd].slice(0, 3)) + '’s plan') + '</div>';
 }
@@ -3613,7 +3628,7 @@ async function addExercise() {
 // (Ver <major.minor><letter> · MMDDYYYY). Each push to GitHub takes the artifact's top APP_VERSIONS entry as its version.
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
-  ['0.2a', '11072026', 'Matches the full app Ver 0.2a. New person: the first-open screen makes a folder named Workout Lite in your My Drive with two Google Sheets, Workout Lite log (exercises, sessions, week plans) and Workout Lite food (food log, quick foods, body weight), in one tap. If the folder is already there it is reused and finished. Creating a food Sheet later also puts it in that folder. Sign-in now asks only for your email and for the files the app made itself, so Google shows no "unverified app" warning; the app settings and unsaved sets are kept in the Workout Lite folder. Using a Sheet the app did not make (Use a Sheet I already have) asks once for the full Google Sheets permission. Settings › Google account: Sign out / switch account (clears your data from this phone; the next sign-in lets you pick the account).'],
+  ['0.2a', '11072026', 'Matches the full app Ver 0.2a. New person: the first-open screen makes a folder named Workout Lite in your My Drive with two Google Sheets, Workout Lite log (exercises, sessions, week plans) and Workout Lite food (food log, quick foods, body weight), in one tap. If the folder is already there it is reused and finished. Creating a food Sheet later also puts it in that folder. Sign-in now asks only for your email and for the files the app made itself, so Google shows no "unverified app" warning; the app settings and unsaved sets are kept in the Workout Lite folder. Using a Sheet the app did not make (Use a Sheet I already have) asks once for the full Google Sheets permission. Settings › Google account: Sign out / switch account (clears your data from this phone; the next sign-in lets you pick the account). Food tab: everything shows from the start; until a weight is set, the Weight box glows gold and a card with Enter my weight takes the place of the targets.'],
   ['0.2', '11072026', 'Matches the full app Ver 0.2 (its 0.1v to 0.2; this update was first listed here as 0.1h). Food tab: one row with Weight (Auto = average of your Body metrics days in the past 7 days, or Manual; kg or lbs; the typed weight is kept on this phone), Body type (Ectomorph 3 g/kg carbs, Mesomorph 2.5, Endomorph 2; Mesomorph is the default) and Carb day, each opening a list at the bottom; Manual adjustment under Suggested (add or take away grams of carbs, protein, fat or fiber, saved as their own rows); legend for the week dots. The + bubble is replaced by Add food › Enter myself.'],
   ['0.1g', '11062026', 'Web version (GitHub): Food tab from the full app Ver 0.1u, without Claude calorie estimates: carb-cycling targets from your weight, Quick add, suggestions (3), Add a food (+ bubble), fiber, week bar with arrows. Food is kept in your own food Sheet (create one, or use one you have); type your weight if the Sheet has no Renpho readings. Also from the full app: the top weight and its reps as the hint in every set box. The Apps Script version is unchanged.'],
   ['0.1f', '11032026', 'From the full app Ver 0.1m: Settings › Week plan (up to 3 named plans kept in a Plan tab of your Sheet; day types Upper, Push, Pull, Lower, Custom, Rest; pick and drag exercises; saved day by day), Today shows the current plan and switches plans, ★ favourites per person, exercise notes shown only to the owner, no Notes field when adding an exercise. LAST UPDATE of Workout Lite: it will not be updated after this version; new features go to the full app only.'],
