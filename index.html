@@ -607,6 +607,7 @@ body.setup .tabbar, body.setup #timer { display: none !important; }
 body.setup main .wrap { padding-bottom: 40px; }
 .setup-hero h1 { font-family: var(--font-display); font-size: 30px; margin: 6px 0 4px; letter-spacing: .02em; text-transform: uppercase; }
 .setup-hero p { margin: 0; color: var(--muted); }
+.setup-list { margin: 6px 0 10px; padding-left: 20px; line-height: 1.5; }
 details.panel summary { cursor: pointer; font-size: 15px; }
 .tin { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font-size: 16px; }
 .btn.danger { color: var(--bad); border-color: var(--bad); }
@@ -657,7 +658,7 @@ a.btn { text-decoration: none; color: inherit; display: inline-block; }
 (function () {
 'use strict';
 const CLIENT_ID = '204009939710-8pkq8j1fhmiegsq4u1t3inu3g6gbl106.apps.googleusercontent.com';
-const SCOPES = 'openid email https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.appdata';
+const SCOPES = 'openid email https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file';   // drive.file: the Workout Lite folder (web 0.2a)
 const K_TOK = 'wweb.token.v1', K_EMAIL = 'wweb.email.v1', K_CFG = 'wweb.cfg.v1', K_BOUNCE = 'wweb.bounce.v1', K_STATE = 'wweb.state.v1';
 const ls = {
   get(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } },
@@ -1066,7 +1067,7 @@ function takeTokenFromUrl() {
   const want = ls.get(K_STATE); ls.del(K_STATE);
   if (p.get('error')) return { error: p.get('error') };
   if (!want || p.get('state') !== want) return { error: 'state_mismatch' };
-  const tok = { t: p.get('access_token'), exp: Date.now() + (Number(p.get('expires_in')) || 3600) * 1000 };
+  const tok = { t: p.get('access_token'), exp: Date.now() + (Number(p.get('expires_in')) || 3600) * 1000, sc: p.get('scope') || '' };
   ls.set(K_TOK, tok);
   return tok;
 }
@@ -1204,28 +1205,95 @@ async function api_data() {
   const [ex, ar] = await Promise.all([readExW(L.id), readArchW(L.id, L.c.tab, 0)]);
   return { ex, ar, url: L.m.spreadsheetUrl, title: L.m.properties.title, tab: L.c.tab };
 }
-async function api_create(tz) {
-  const email = await whoAmI();
-  const name = APP_NAME + ' log' + (email ? ' (' + email.split('@')[0] + ')' : '');
-  const ss = await gfetch(SHEETS.slice(0, -1), { method: 'POST', body: JSON.stringify({
-    properties: { title: name, locale: 'en_US', timeZone: tz || 'America/New_York' },
-    sheets: [{ properties: { title: EX_TAB, gridProperties: { frozenRowCount: 1, rowCount: 200, columnCount: 8 } } },
-             { properties: { title: NEW_LOG_TAB, gridProperties: { rowCount: 1000, columnCount: 14 } } }] }) });
-  const id = ss.spreadsheetId, exId = ss.sheets[0].properties.sheetId, logId = ss.sheets[1].properties.sheetId;
-  await putVals(id, q1(EX_TAB) + '!A1:F' + (STARTER_EXERCISES.length + 1), [['', 'Category', 'Exercise', 'Muscle worked', 'Notes', 'Unit']].concat(STARTER_EXERCISES));
-  await putVals(id, q1(NEW_LOG_TAB) + '!J1:M1', [['Exercise', 'Weight', 'Unit / Date', 'Reps']]);
-  await putVals(id, q1(NEW_LOG_TAB) + '!A1', [['Written by the Workout Lite app: all sessions are in columns J to M, newest date on top. To remove a block, select only its cells in J:M and use Delete cells > Shift up.']]);
-  const col = (sid, i, px) => ({ updateDimensionProperties: { range: { sheetId: sid, dimension: 'COLUMNS', startIndex: i, endIndex: i + 1 }, properties: { pixelSize: px }, fields: 'pixelSize' } });
+// ---------- new person: a "Workout Lite" folder in My Drive with two Sheets (web 0.2a, from the full app Ver 0.2a, user 2026-11-07) ----------
+// "Workout Lite log" (Exercises, Workout log, Plan) and "Workout Lite food" (Food log, Quick foods, Body metrics).
+// Needs the drive.file scope: the app only sees the files it made itself. A half-made Sheet from an earlier try is
+// trashed and made again; finished ones are reused, so tapping the button again always finishes the job.
+const WL_FOLDER = APP_NAME, WL_LOG = APP_NAME + ' log', WL_FOOD = APP_NAME + ' food', WL_LOG_SID = 101, WL_PLAN_SID = 20261103;
+const MIME_FOLDER = 'application/vnd.google-apps.folder', MIME_SHEET = 'application/vnd.google-apps.spreadsheet';
+const WL_NAVY = { red: 20 / 255, green: 40 / 255, blue: 75 / 255 };
+const WL_BODY_COLS = ['Date','Time','Weight(kg)','BMI','Body Fat Percentage(%)','Body Fat Mass(kg)','Muscle Percentage(%)','Muscle Mass(kg)','Skeletal Muscle Percentage(%)','Skeletal Muscle Mass(kg)','Bone Percentage(%)','Bone Mass(kg)','Protein Percentage(%)','Protein Mass(kg)','Body Water Percentage(%)','Body Water Mass(kg)','Fat-Free Mass(kg)','Subcutaneous Fat(%)','Visceral Fat','BMR(kcal)','Metabolic Age'];
+function needDriveScope() {
+  const t = ls.get(K_TOK);
+  if (t && String(t.sc || '').indexOf('drive.file') >= 0) return;
+  setTimeout(() => signIn(false), 1500);
+  throw new Error('Google needs to allow this app to make its folder in your Drive. Opening Google sign-in… then tap the button again.');
+}
+async function driveList(q) {
+  const j = await gfetch(DRIVE + '?fields=files(id,name)&pageSize=50&q=' + encodeURIComponent(q + ' and trashed = false'));
+  return j.files || [];
+}
+async function driveMake(name, mime, parent) {
+  const j = await gfetch(DRIVE + '?fields=id', { method: 'POST', body: JSON.stringify({ name, mimeType: mime, parents: [parent || 'root'] }) });
+  if (!j || !j.id) throw new Error('Google Drive did not return the new ' + (mime === MIME_FOLDER ? 'folder' : 'Sheet') + '.');
+  return j.id;
+}
+async function cellIs(id, a1, want) { try { const v = await getVals(id, a1); return !!(v[0] && String(v[0][0]).trim() === want); } catch (e) { if (e.signin) throw e; return false; } }
+async function findAcct() {
+  const folders = await driveList("name = '" + WL_FOLDER + "' and mimeType = '" + MIME_FOLDER + "' and 'root' in parents");
+  const out = { folder: '', sheet: '', food: '', logOk: false, foodOk: false };
+  for (const fo of folders) {
+    const files = await driveList("'" + fo.id + "' in parents and mimeType = '" + MIME_SHEET + "'");
+    const lg = files.find(f => f.name === WL_LOG), fd = files.find(f => f.name === WL_FOOD);
+    if (!out.folder || lg || fd) { out.folder = fo.id; out.sheet = lg ? lg.id : ''; out.food = fd ? fd.id : ''; }
+    if (lg && fd) break;
+  }
+  if (out.sheet) out.logOk = await cellIs(out.sheet, q1(NEW_LOG_TAB) + '!J1', 'Exercise');   // written last by initLogW
+  if (out.food) out.foodOk = await cellIs(out.food, q1('Body metrics') + '!A1', 'Date');     // written last by initFoodW
+  return out;
+}
+const wlHead = (sid, cols) => ({ repeatCell: { range: { sheetId: sid, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: cols },
+  cell: { userEnteredFormat: { textFormat: { bold: true, foregroundColor: { red: 1, green: 1, blue: 1 } }, backgroundColor: WL_NAVY } }, fields: 'userEnteredFormat(textFormat,backgroundColor)' } });
+const wlText = (sid, r0, r1, c0, c1) => ({ repeatCell: { range: { sheetId: sid, startRowIndex: r0, endRowIndex: r1, startColumnIndex: c0, endColumnIndex: c1 }, cell: { userEnteredFormat: { numberFormat: { type: 'TEXT' } } }, fields: 'userEnteredFormat.numberFormat' } });
+const wlCol = (sid, i, px) => ({ updateDimensionProperties: { range: { sheetId: sid, dimension: 'COLUMNS', startIndex: i, endIndex: i + 1 }, properties: { pixelSize: px }, fields: 'pixelSize' } });
+const wlProps = tz => ({ updateSpreadsheetProperties: { properties: { locale: 'en_US', timeZone: tz || 'America/New_York' }, fields: 'locale,timeZone' } });
+async function initLogW(id, tz) {
   await batch(id, [
-    { repeatCell: { range: { sheetId: exId, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: 6 }, cell: { userEnteredFormat: { textFormat: { bold: true, foregroundColor: { red: 1, green: 1, blue: 1 } }, backgroundColor: { red: 20 / 255, green: 40 / 255, blue: 75 / 255 } } }, fields: 'userEnteredFormat(textFormat,backgroundColor)' } },
-    { setDataValidation: { range: { sheetId: exId, startRowIndex: 1, endRowIndex: 200, startColumnIndex: 5, endColumnIndex: 6 }, rule: { condition: { type: 'ONE_OF_LIST', values: UNITS.map(u => ({ userEnteredValue: u })) }, showCustomUi: true, strict: true } } },
-    { updateCells: { range: { sheetId: exId, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: 1 }, rows: [{ values: [{ note: 'Category (column B) must contain push, pull or legs for the upper/lower sorting; anything else counts as core & cardio. A number at the start of the name puts the exercise in the plan: 1 = Monday, 2 = Tuesday, 4 = Wednesday, 3 = Friday (e.g. 13 = Monday and Friday). Row order = order in the app. Unit (column F): lbs, mins or seconds.' }] }], fields: 'note' } },
-    col(exId, 0, 30), col(exId, 1, 110), col(exId, 2, 280), col(exId, 3, 180), col(exId, 4, 420), col(exId, 5, 80),
-    { repeatCell: { range: { sheetId: logId, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 9, endColumnIndex: 13 }, cell: { userEnteredFormat: { textFormat: { bold: true } } }, fields: 'userEnteredFormat.textFormat.bold' } },
-    { repeatCell: { range: { sheetId: logId, startColumnIndex: 12, endColumnIndex: 13 }, cell: { userEnteredFormat: { numberFormat: { type: 'TEXT' } } }, fields: 'userEnteredFormat.numberFormat' } },
-    col(logId, 9, 220)
+    wlProps(tz),
+    { updateSheetProperties: { properties: { sheetId: 0, title: EX_TAB, gridProperties: { frozenRowCount: 1 } }, fields: 'title,gridProperties.frozenRowCount' } },
+    { addSheet: { properties: { sheetId: WL_LOG_SID, title: NEW_LOG_TAB, gridProperties: { rowCount: 1000, columnCount: 14 } } } },
+    { addSheet: { properties: { sheetId: WL_PLAN_SID, title: PLAN_TAB, gridProperties: { rowCount: 500, columnCount: 11, frozenRowCount: 1 } } } },
+    wlHead(0, 6), wlHead(WL_PLAN_SID, 11), wlText(WL_PLAN_SID, 1, 500, 0, 11), wlText(WL_LOG_SID, 1, 1000, 12, 13),
+    { setDataValidation: { range: { sheetId: 0, startRowIndex: 1, endRowIndex: 200, startColumnIndex: 5, endColumnIndex: 6 }, rule: { condition: { type: 'ONE_OF_LIST', values: UNITS.map(u => ({ userEnteredValue: u })) }, showCustomUi: true, strict: true } } },
+    wlCol(0, 0, 30), wlCol(0, 1, 110), wlCol(0, 2, 280), wlCol(0, 3, 180), wlCol(0, 4, 300), wlCol(0, 5, 80), wlCol(WL_LOG_SID, 9, 220)
   ]);
-  await cfgSet({ sheetId: id, tab: NEW_LOG_TAB, created: new Date().toISOString() });
+  await putVals(id, q1(EX_TAB) + '!A1:F' + (STARTER_EXERCISES.length + 1), [['', 'Category', 'Exercise', 'Muscle worked', 'Notes', 'Unit']].concat(STARTER_EXERCISES));
+  await putVals(id, q1(PLAN_TAB) + '!A1:K1', [['Log tab', 'Kind', 'Plan ID', 'Plan name', 'Active', 'Warm-up', 'Day', 'Day type', 'Order', 'Exercise', 'Updated']]);
+  await putVals(id, q1(NEW_LOG_TAB) + '!A1', [['Written by the Workout Lite app: all sessions are in columns J to M, newest date on top.']]);
+  await putVals(id, q1(NEW_LOG_TAB) + '!J1:M1', [['Exercise', 'Weight', 'Unit / Date', 'Reps']]);   // last: marks the Sheet as ready
+}
+async function initFoodW(id, tz) {
+  await batch(id, [
+    wlProps(tz),
+    { updateSheetProperties: { properties: { sheetId: 0, title: 'Food log', gridProperties: { frozenRowCount: 1 } }, fields: 'title,gridProperties.frozenRowCount' } },
+    { addSheet: { properties: { sheetId: 2, title: 'Quick foods', gridProperties: { rowCount: 200, columnCount: 12, frozenRowCount: 1 } } } },
+    { addSheet: { properties: { sheetId: 3, title: 'Body metrics', gridProperties: { rowCount: 1000, columnCount: 21, frozenRowCount: 1 } } } },
+    wlHead(0, 10), wlHead(2, 11), wlHead(3, 21), wlText(3, 1, 1000, 1, 2)
+  ]);
+  await putVals(id, q1('Food log') + '!A1:J1', [FOOD_TABS[0][1]]);
+  await putVals(id, q1('Quick foods') + '!A1:K' + (STARTER_FOODS.length + 1), [FOOD_TABS[1][1]].concat(STARTER_FOODS));
+  await putVals(id, q1('Body metrics') + '!A1:U1', [WL_BODY_COLS]);   // last: marks the Sheet as ready
+}
+// finds or makes the folder and whichever of the two Sheets is wanted; returns their IDs
+async function makeAcct(tz, wantLog, wantFood) {
+  needDriveScope();
+  const f = await findAcct();
+  const folder = f.folder || await driveMake(WL_FOLDER, MIME_FOLDER, 'root');
+  let sheet = f.logOk ? f.sheet : '', food = f.foodOk ? f.food : '';
+  if (wantLog && !sheet) {
+    if (f.sheet) { try { await gfetch(DRIVE + '/' + f.sheet, { method: 'PATCH', body: JSON.stringify({ trashed: true }) }); } catch (e) { if (e.signin) throw e; } }
+    sheet = await driveMake(WL_LOG, MIME_SHEET, folder); await initLogW(sheet, tz);
+  }
+  if (wantFood && !food) {
+    if (f.food) { try { await gfetch(DRIVE + '/' + f.food, { method: 'PATCH', body: JSON.stringify({ trashed: true }) }); } catch (e) { if (e.signin) throw e; } }
+    food = await driveMake(WL_FOOD, MIME_SHEET, folder); await initFoodW(food, tz);
+  }
+  return { folder, sheet, food };
+}
+async function api_create(tz) {
+  const a = await makeAcct(tz, true, !(await foodIdGet()));
+  await cfgSet({ sheetId: a.sheet, tab: NEW_LOG_TAB, folder: a.folder, created: new Date().toISOString() });
+  if (a.food) await foodIdSet(a.food);
   return api_init();
 }
 async function api_useExisting(link, tab) {
@@ -1399,18 +1467,10 @@ async function api_foodGet() {
   catch (e) { if (e.signin) throw e; return { id, error: e.message }; }
 }
 async function api_foodCreate(tz) {
-  const email = await whoAmI();
-  const name = APP_NAME + ' food' + (email ? ' (' + email.split('@')[0] + ')' : '');
-  const ss = await gfetch(SHEETS.slice(0, -1), { method: 'POST', body: JSON.stringify({
-    properties: { title: name, locale: 'en_US', timeZone: tz || 'America/New_York' },
-    sheets: FOOD_TABS.map(([t, , cols]) => ({ properties: { title: t, gridProperties: { rowCount: 1000, columnCount: cols, frozenRowCount: 1 } } })) }) });
-  const id = ss.spreadsheetId;
-  for (const [t, headRow] of FOOD_TABS) await putVals(id, q1(t) + '!A1', [headRow]);
-  await putVals(id, q1('Quick foods') + '!A2:K' + (STARTER_FOODS.length + 1), STARTER_FOODS);
-  await batch(id, ss.sheets.map(x => ({ repeatCell: { range: { sheetId: x.properties.sheetId, startRowIndex: 0, endRowIndex: 1 },
-    cell: { userEnteredFormat: { textFormat: { bold: true, foregroundColor: { red: 1, green: 1, blue: 1 } }, backgroundColor: { red: 20 / 255, green: 40 / 255, blue: 75 / 255 } } }, fields: 'userEnteredFormat(textFormat,backgroundColor)' } })));
-  await foodIdSet(id);
-  return { id, title: name, url: ss.spreadsheetUrl };
+  // web 0.2a: the food Sheet goes into the Workout Lite folder in My Drive
+  const a = await makeAcct(tz, false, true);
+  await foodIdSet(a.food);
+  return api_foodGet();
 }
 async function api_foodUse(link) {
   const mm = /\/d\/([a-zA-Z0-9_-]{20,})/.exec(String(link)) || /^([a-zA-Z0-9_-]{20,})$/.exec(String(link).trim());
@@ -1961,7 +2021,7 @@ function foodStart(f) {
 }
 async function foodSetupRun(kind, fn) {
   S.foodSetup = Object.assign(S.foodSetup || {}, { busy: kind, msg: '' }); render();
-  try { const f = await withTimeout(fn(), 60000); S.foodSetup.busy = null; S.foodSetup.link = ''; foodStart(f); toast('Food Sheet ready.'); }
+  try { const f = await withTimeout(fn(), 120000); S.foodSetup.busy = null; S.foodSetup.link = ''; foodStart(f); toast('Food Sheet ready.'); }
   catch (e) { S.foodSetup.busy = null; S.foodSetup.msg = codeText(e).text; render(); }
 }
 function foodSetupView() {
@@ -1969,7 +2029,7 @@ function foodSetupView() {
   let h = '<div class="panel"><p><b>Food needs a Google Sheet.</b> It keeps what you eat, your Quick add foods and your body weight. Only you can see it unless you share it.</p>' +
     (F.msg ? '<div class="notice err" role="alert"><div>' + esc(F.msg) + '</div></div>' : '') +
     (S.foodSheet && S.foodSheet.error ? '<div class="notice err"><div>Your food Sheet could not be opened: ' + esc(S.foodSheet.error) + '</div></div>' : '') +
-    '<div class="row-acts"><button class="btn primary" data-act="food-new"' + (busy ? ' disabled' : '') + '>' + (F.busy === 'new' ? 'Creating…' : 'Create my food Sheet') + '</button></div></div>';
+    '<div class="row-acts"><button class="btn primary" data-act="food-new"' + (busy ? ' disabled' : '') + '>' + (F.busy === 'new' ? 'Creating…' : 'Create my food Sheet in the Workout Lite folder') + '</button></div></div>';
   h += '<details class="panel"' + (F.open ? ' open' : '') + '><summary><b>Use a food Sheet I already have</b></summary>' +
     '<p>Paste the link of a Sheet you can edit. Tabs that are missing (Food log, Quick foods, Body metrics) are added.</p>' +
     '<input class="tin" id="foodLink" type="url" inputmode="url" autocomplete="off" placeholder="https://docs.google.com/spreadsheets/d/…" value="' + esc(F.link || '') + '">' +
@@ -3509,6 +3569,7 @@ async function addExercise() {
 // Version rule (user, 2026-11-07): the GitHub version number is always the SAME as the full claude.ai artifact app's current version
 // (Ver <major.minor><letter> · MMDDYYYY). Each push to GitHub takes the artifact's top APP_VERSIONS entry as its version.
 const APP_VERSIONS = [
+  ['0.2a', '11072026', 'Matches the full app Ver 0.2a. New person: the first-open screen makes a folder named Workout Lite in your My Drive with two Google Sheets, Workout Lite log (exercises, sessions, week plans) and Workout Lite food (food log, quick foods, body weight), in one tap. If the folder is already there it is reused and finished. Creating a food Sheet later also puts it in that folder. Google asks once more for permission to make the folder (only files the app made itself). Using a Sheet you already have still works.'],
   ['0.2', '11072026', 'Matches the full app Ver 0.2 (its 0.1v to 0.2; this update was first listed here as 0.1h). Food tab: one row with Weight (Auto = average of your Body metrics days in the past 7 days, or Manual; kg or lbs; the typed weight is kept on this phone), Body type (Ectomorph 3 g/kg carbs, Mesomorph 2.5, Endomorph 2; Mesomorph is the default) and Carb day, each opening a list at the bottom; Manual adjustment under Suggested (add or take away grams of carbs, protein, fat or fiber, saved as their own rows); legend for the week dots. The + bubble is replaced by Add food › Enter myself.'],
   ['0.1g', '11062026', 'Web version (GitHub): Food tab from the full app Ver 0.1u, without Claude calorie estimates: carb-cycling targets from your weight, Quick add, suggestions (3), Add a food (+ bubble), fiber, week bar with arrows. Food is kept in your own food Sheet (create one, or use one you have); type your weight if the Sheet has no Renpho readings. Also from the full app: the top weight and its reps as the hint in every set box. The Apps Script version is unchanged.'],
   ['0.1f', '11032026', 'From the full app Ver 0.1m: Settings › Week plan (up to 3 named plans kept in a Plan tab of your Sheet; day types Upper, Push, Pull, Lower, Custom, Rest; pick and drag exercises; saved day by day), Today shows the current plan and switches plans, ★ favourites per person, exercise notes shown only to the owner, no Notes field when adding an exercise. LAST UPDATE of Workout Lite: it will not be updated after this version; new features go to the full app only.'],
@@ -3553,8 +3614,10 @@ function viewSetup() {
   if (S.setupMsg) h += '<div class="notice err" role="alert"><div>' + esc(S.setupMsg) + '</div></div>';
   if (S.initState === 'wait') return h + '<div class="empty">Connecting to Google…</div>';
   h += '<div class="panel">' + (S.email ? '<p>Signed in as <b>' + esc(S.email) + '</b></p>' : '') +
-    '<p>Start with a new Sheet: it gets the exercise list and an empty log. Only you can see it unless you share it.</p>' +
-    '<div class="row-acts"><button class="btn primary" data-act="cfg-new"' + (busy ? ' disabled' : '') + '>' + (S.setupBusy === 'new' ? 'Creating…' : 'Create my workout Sheet') + '</button></div></div>';
+    '<p>Tap the button to make a folder named <b>Workout Lite</b> in your My Drive, with two Google Sheets:</p>' +
+    '<ul class="setup-list"><li><b>Workout Lite log</b>: exercises, your sessions and week plans</li><li><b>Workout Lite food</b>: food log, quick foods and body weight</li></ul>' +
+    '<p class="hint">Only you can see them unless you share them. If the folder is already there (from another phone or an earlier try), it is used and finished.</p>' +
+    '<div class="row-acts"><button class="btn primary" data-act="cfg-new"' + (busy ? ' disabled' : '') + '>' + (S.setupBusy === 'new' ? 'Setting up your folder…' : 'Create my Workout Lite folder') + '</button></div></div>';
   h += '<details class="panel"' + (S.setupTabs || S.setupOpen ? ' open' : '') + '><summary><b>Use a Sheet I already have</b></summary>' +
     '<p>Paste the link of a workout Sheet you can edit. It needs an Exercises tab and a log tab with the sessions in columns J to M (like QS time log).</p>' +
     '<input class="tin" id="cfgLink" type="url" inputmode="url" autocomplete="off" placeholder="https://docs.google.com/spreadsheets/d/…" value="' + esc(S.setupLink || '') + '">';
@@ -3588,7 +3651,7 @@ function startWith(r) {
 }
 async function setupRun(kind, fn) {
   S.setupBusy = kind; S.setupMsg = ''; render();
-  try { const r = await withTimeout(fn(), 60000); S.setupBusy = null;
+  try { const r = await withTimeout(fn(), 120000); S.setupBusy = null;
     if (r && r.needTab) { S.setupTabs = r.tabs; S.setupMsg = r.tabs.length ? '' : 'That Sheet has no log tab.'; render(); return; }
     S.setupTabs = null; startWith(r); toast('Ready. Sessions save to your Sheet.');
   } catch (e) { S.setupBusy = null; S.setupMsg = codeText(e).text; render(); }
