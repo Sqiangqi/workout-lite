@@ -658,7 +658,10 @@ a.btn { text-decoration: none; color: inherit; display: inline-block; }
 (function () {
 'use strict';
 const CLIENT_ID = '204009939710-8pkq8j1fhmiegsq4u1t3inu3g6gbl106.apps.googleusercontent.com';
-const SCOPES = 'openid email https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file';   // drive.file: the Workout Lite folder (web 0.2a)
+// web 0.2a: sign-in asks only for non-sensitive permissions (email + files this app made), so the app can be published without
+// Google's verification. The full Sheets permission is asked for only by people who use a Sheet the app did not make (K_FULL).
+const SCOPES = 'openid email https://www.googleapis.com/auth/drive.file';
+const SCOPE_SHEETS = 'https://www.googleapis.com/auth/spreadsheets', K_FULL = 'wweb.full.v1';
 const K_TOK = 'wweb.token.v1', K_EMAIL = 'wweb.email.v1', K_CFG = 'wweb.cfg.v1', K_BOUNCE = 'wweb.bounce.v1', K_STATE = 'wweb.state.v1';
 const ls = {
   get(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } },
@@ -1076,13 +1079,19 @@ function minutesLeft() { const t = ls.get(K_TOK); return t ? (t.exp - Date.now()
 function signIn(silent) {
   const state = Math.random().toString(36).slice(2) + Date.now().toString(36);
   ls.set(K_STATE, state);
-  const q = new URLSearchParams({ client_id: CLIENT_ID, redirect_uri: redirectUri(), response_type: 'token', scope: SCOPES,
+  const q = new URLSearchParams({ client_id: CLIENT_ID, redirect_uri: redirectUri(), response_type: 'token', scope: SCOPES + (ls.get(K_FULL) ? ' ' + SCOPE_SHEETS : ''),
     include_granted_scopes: 'true', state: state });
   const email = ls.get(K_EMAIL); if (email) q.set('login_hint', email);
   if (silent) ls.set(K_BOUNCE, Date.now());
   location.assign('https://accounts.google.com/o/oauth2/v2/auth?' + q.toString());
 }
-function signOut() { ls.del(K_TOK); ls.del(K_EMAIL); ls.del(K_CFG); ls.del('wweb.food.v1'); }
+function signOut() { ls.del(K_TOK); ls.del(K_EMAIL); ls.del(K_CFG); ls.del('wweb.food.v1'); ls.del(K_FULL); ls.del(K_FOLDER); }
+function hasScope(part) { const t = ls.get(K_TOK); return !!(t && String(t.sc || '').indexOf(part) >= 0); }
+// a Sheet the app did not make needs the full Sheets permission: sign in again asking for it (Google shows its "not verified" page once)
+function needFull() {
+  ls.set(K_FULL, 1);
+  return needSignIn('Your Sheet was not made by this app, so Google needs to allow the app to open your Google Sheets. Sign in again; if Google says the app is not verified, tap Advanced, then Go to Workout Lite.');
+}
 const SIGNED_OUT = 'Sign in with Google to continue. Your unsaved sets are kept.';
 function needSignIn(why) {
   showGate(why);
@@ -1147,19 +1156,29 @@ async function meta(id) { return gfetch(SHEETS + id + '?fields=properties.title,
 const pad = (rows, n) => rows.map(r => { const o = []; for (let i = 0; i < n; i++) o.push(r[i] == null ? '' : String(r[i])); return o; });
 function trimTail(v) { while (v.length && v[v.length - 1].join('') === '') v.pop(); return v; }
 
-// private app folder in Drive (hidden; only this app can see it): config.json and draft.json
-const fileIds = {};
-async function appFind(name) {
+// app files (config.json, food.json, draft.json) in the Workout Lite folder in My Drive (web 0.2a; before that the hidden
+// hidden appDataFolder; dropped so sign-in needs only drive.file). drive.file: the app only sees what it made.
+const fileIds = {}, K_FOLDER = 'wweb.folder.v1';
+async function wlFolder(create) {
+  const c = ls.get(K_FOLDER); if (c) return c;
+  const fs = await gfetch(DRIVE + '?fields=files(id)&orderBy=createdTime&pageSize=10&q=' + encodeURIComponent("name = '" + APP_NAME + "' and mimeType = 'application/vnd.google-apps.folder' and 'root' in parents and trashed = false"));
+  let id = ((fs.files || [])[0] || {}).id || '';
+  if (!id && create) id = (await gfetch(DRIVE + '?fields=id', { method: 'POST', body: JSON.stringify({ name: APP_NAME, mimeType: 'application/vnd.google-apps.folder', parents: ['root'] }) })).id;
+  if (id) ls.set(K_FOLDER, id);
+  return id;
+}
+async function appFind(name, create) {
   if (fileIds[name]) return fileIds[name];
-  const j = await gfetch(DRIVE + '?spaces=appDataFolder&fields=files(id,name)&pageSize=10&q=' + encodeURIComponent("name='" + name + "' and trashed=false"));
+  const folder = await wlFolder(create); if (!folder) return null;
+  const j = await gfetch(DRIVE + '?fields=files(id,name)&pageSize=10&q=' + encodeURIComponent("name='" + name + "' and '" + folder + "' in parents and trashed=false"));
   const f = (j.files || [])[0]; if (f) fileIds[name] = f.id; return f ? f.id : null;
 }
 async function appRead(name) { const id = await appFind(name); return id ? gfetch(DRIVE + '/' + id + '?alt=media', {}, true) : ''; }
 async function appWrite(name, text) {
-  const id = await appFind(name);
+  const id = await appFind(name, true);
   if (id) return gfetch(UPLOAD + '/' + id + '?uploadType=media', { method: 'PATCH', body: text, headers: { 'Content-Type': 'application/json' }, multipart: true });
   const b = 'wweb' + Date.now();
-  const body = '--' + b + '\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n' + JSON.stringify({ name, parents: ['appDataFolder'] }) +
+  const body = '--' + b + '\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n' + JSON.stringify({ name, parents: [await wlFolder(true)] }) +
     '\r\n--' + b + '\r\nContent-Type: application/json\r\n\r\n' + text + '\r\n--' + b + '--';
   const j = await gfetch(UPLOAD + '?uploadType=multipart&fields=id', { method: 'POST', body, multipart: true, headers: { 'Content-Type': 'multipart/related; boundary=' + b } });
   fileIds[name] = j.id; return j;
@@ -1169,8 +1188,10 @@ async function appDelete(name) { const id = await appFind(name); if (id) { await
 // ---------- per-person settings ----------
 async function cfgGet() {
   const c = ls.get(K_CFG); if (c) return c;
-  const txt = await appRead('config.json'); if (!txt) return null;
-  try { const v = JSON.parse(txt); if (v && v.sheetId) { ls.set(K_CFG, v); return v; } } catch (e) {}
+  const txt = await appRead('config.json');
+  try { const v = txt && JSON.parse(txt); if (v && v.sheetId) { ls.set(K_CFG, v); return v; } } catch (e) {}
+  const f = await findAcct();   // e.g. config.json removed by hand: the folder's own log Sheet is enough
+  if (f.logOk) { const v = { sheetId: f.sheet, tab: NEW_LOG_TAB, folder: f.folder }; await cfgSet(v); return v; }
   return null;
 }
 async function cfgSet(c) { ls.set(K_CFG, c); await appWrite('config.json', JSON.stringify(c)); }
@@ -1181,6 +1202,7 @@ async function whoAmI() {
 async function openLogW() {
   const c = await cfgGet();
   if (!c) throw new Error('No workout Sheet is set up yet.');
+  if (!c.folder && !hasScope(SCOPE_SHEETS)) throw needFull();   // web 0.2a: own Sheet, not made by the app
   let m;
   try { m = await meta(c.sheetId); }
   catch (e) { if (e.signin) throw e; throw new Error('Could not open your workout Sheet (' + e.message + ').'); }
@@ -1278,7 +1300,8 @@ async function initFoodW(id, tz) {
 async function makeAcct(tz, wantLog, wantFood) {
   needDriveScope();
   const f = await findAcct();
-  const folder = f.folder || await driveMake(WL_FOLDER, MIME_FOLDER, 'root');
+  const folder = f.folder || await wlFolder(true);
+  ls.set(K_FOLDER, folder);
   let sheet = f.logOk ? f.sheet : '', food = f.foodOk ? f.food : '';
   if (wantLog && !sheet) {
     if (f.sheet) { try { await gfetch(DRIVE + '/' + f.sheet, { method: 'PATCH', body: JSON.stringify({ trashed: true }) }); } catch (e) { if (e.signin) throw e; } }
@@ -1293,12 +1316,13 @@ async function makeAcct(tz, wantLog, wantFood) {
 async function api_create(tz) {
   const a = await makeAcct(tz, true, !(await foodIdGet()));
   await cfgSet({ sheetId: a.sheet, tab: NEW_LOG_TAB, folder: a.folder, created: new Date().toISOString() });
-  if (a.food) await foodIdSet(a.food);
+  if (a.food) await foodIdSet(a.food, true);
   return api_init();
 }
 async function api_useExisting(link, tab) {
   const mm = /\/d\/([a-zA-Z0-9_-]{20,})/.exec(String(link)) || /^([a-zA-Z0-9_-]{20,})$/.exec(String(link).trim());
   if (!mm) throw new Error('That does not look like a Google Sheets link.');
+  if (!hasScope(SCOPE_SHEETS)) throw needFull();
   let m;
   try { m = await meta(mm[1]); }
   catch (e) { if (e.signin) throw e; throw new Error('Could not open that Sheet with your Google account (' + e.message + '). If it is someone else\'s, ask them to share it with you (Editor).'); }
@@ -1435,13 +1459,17 @@ const STARTER_FOODS = [
   ['Vegetables (starchy)', 'g', 100, 85, 18, 2.5, 0.4, 150, 'Potato, corn, peas, pumpkin, taro…', 200, 2.5]
 ];
 async function foodMeta(id) { return gfetch(SHEETS + id + '?fields=properties.title,spreadsheetUrl,sheets.properties(sheetId,title,gridProperties(columnCount))'); }
-async function foodIdGet() {
-  const c = ls.get(K_FOOD); if (c && c.id) return c.id;
-  const txt = await appRead('food.json'); if (!txt) return '';
-  try { const v = JSON.parse(txt); if (v && v.id) { ls.set(K_FOOD, v); return v.id; } } catch (e) {}
-  return '';
+async function foodRec() {
+  const c = ls.get(K_FOOD); if (c && c.id) return c;
+  const txt = await appRead('food.json');
+  try { const v = txt && JSON.parse(txt); if (v && v.id) { ls.set(K_FOOD, v); return v; } } catch (e) {}
+  const f = await findAcct();
+  if (f.foodOk) { await foodIdSet(f.food, true); return ls.get(K_FOOD); }
+  return null;
 }
-async function foodIdSet(id) { ls.set(K_FOOD, { id }); await appWrite('food.json', JSON.stringify({ id, at: new Date().toISOString() })); }
+async function foodIdGet() { const r = await foodRec(); return r ? r.id : ''; }
+// own = made by the app (in the Workout Lite folder); otherwise it needs the full Sheets permission (web 0.2a)
+async function foodIdSet(id, own) { const v = { id, own: !!own }; ls.set(K_FOOD, v); await appWrite('food.json', JSON.stringify(Object.assign({ at: new Date().toISOString() }, v))); }
 // adds any missing tab with its header, and missing columns (e.g. Fiber) to tabs that are too narrow
 async function foodEnsure(id) {
   const m = await foodMeta(id), have = {};
@@ -1462,23 +1490,26 @@ async function foodEnsure(id) {
   return m;
 }
 async function api_foodGet() {
-  const id = await foodIdGet(); if (!id) return null;
+  const r = await foodRec(); if (!r) return null;
+  const id = r.id;
+  if (!r.own && !hasScope(SCOPE_SHEETS)) throw needFull();
   try { const m = await foodMeta(id); return { id, title: m.properties.title, url: m.spreadsheetUrl }; }
   catch (e) { if (e.signin) throw e; return { id, error: e.message }; }
 }
 async function api_foodCreate(tz) {
   // web 0.2a: the food Sheet goes into the Workout Lite folder in My Drive
   const a = await makeAcct(tz, false, true);
-  await foodIdSet(a.food);
+  await foodIdSet(a.food, true);
   return api_foodGet();
 }
 async function api_foodUse(link) {
   const mm = /\/d\/([a-zA-Z0-9_-]{20,})/.exec(String(link)) || /^([a-zA-Z0-9_-]{20,})$/.exec(String(link).trim());
   if (!mm) throw new Error('That does not look like a Google Sheets link.');
+  if (!hasScope(SCOPE_SHEETS)) throw needFull();
   let m;
   try { m = await foodEnsure(mm[1]); }
   catch (e) { if (e.signin) throw e; throw new Error('Could not open or set up that Sheet with your Google account (' + e.message + '). It must be a Sheet you can edit.'); }
-  await foodIdSet(mm[1]);
+  await foodIdSet(mm[1], false);
   return { id: mm[1], title: m.properties.title, url: m.spreadsheetUrl };
 }
 async function api_foodForget() { ls.del(K_FOOD); await appDelete('food.json'); return true; }
@@ -1517,6 +1548,7 @@ window.__wweb = { signIn, signOut, token, minutesLeft, sheets: sheetsCall };
 
 // ---------- start ----------
 const got = takeTokenFromUrl();
+if (token() && !hasScope('drive.file')) ls.del(K_TOK);   // web 0.2a: older sign-ins lack the folder permission
 const bounced = Date.now() - (ls.get(K_BOUNCE) || 0) < 30000;
 if (got && got.error) {
   ls.del(K_BOUNCE);
@@ -3569,7 +3601,7 @@ async function addExercise() {
 // Version rule (user, 2026-11-07): the GitHub version number is always the SAME as the full claude.ai artifact app's current version
 // (Ver <major.minor><letter> · MMDDYYYY). Each push to GitHub takes the artifact's top APP_VERSIONS entry as its version.
 const APP_VERSIONS = [
-  ['0.2a', '11072026', 'Matches the full app Ver 0.2a. New person: the first-open screen makes a folder named Workout Lite in your My Drive with two Google Sheets, Workout Lite log (exercises, sessions, week plans) and Workout Lite food (food log, quick foods, body weight), in one tap. If the folder is already there it is reused and finished. Creating a food Sheet later also puts it in that folder. Google asks once more for permission to make the folder (only files the app made itself). Using a Sheet you already have still works.'],
+  ['0.2a', '11072026', 'Matches the full app Ver 0.2a. New person: the first-open screen makes a folder named Workout Lite in your My Drive with two Google Sheets, Workout Lite log (exercises, sessions, week plans) and Workout Lite food (food log, quick foods, body weight), in one tap. If the folder is already there it is reused and finished. Creating a food Sheet later also puts it in that folder. Sign-in now asks only for your email and for the files the app made itself, so Google shows no "unverified app" warning; the app settings and unsaved sets are kept in the Workout Lite folder. Using a Sheet the app did not make (Use a Sheet I already have) asks once for the full Google Sheets permission.'],
   ['0.2', '11072026', 'Matches the full app Ver 0.2 (its 0.1v to 0.2; this update was first listed here as 0.1h). Food tab: one row with Weight (Auto = average of your Body metrics days in the past 7 days, or Manual; kg or lbs; the typed weight is kept on this phone), Body type (Ectomorph 3 g/kg carbs, Mesomorph 2.5, Endomorph 2; Mesomorph is the default) and Carb day, each opening a list at the bottom; Manual adjustment under Suggested (add or take away grams of carbs, protein, fat or fiber, saved as their own rows); legend for the week dots. The + bubble is replaced by Add food › Enter myself.'],
   ['0.1g', '11062026', 'Web version (GitHub): Food tab from the full app Ver 0.1u, without Claude calorie estimates: carb-cycling targets from your weight, Quick add, suggestions (3), Add a food (+ bubble), fiber, week bar with arrows. Food is kept in your own food Sheet (create one, or use one you have); type your weight if the Sheet has no Renpho readings. Also from the full app: the top weight and its reps as the hint in every set box. The Apps Script version is unchanged.'],
   ['0.1f', '11032026', 'From the full app Ver 0.1m: Settings › Week plan (up to 3 named plans kept in a Plan tab of your Sheet; day types Upper, Push, Pull, Lower, Custom, Rest; pick and drag exercises; saved day by day), Today shows the current plan and switches plans, ★ favourites per person, exercise notes shown only to the owner, no Notes field when adding an exercise. LAST UPDATE of Workout Lite: it will not be updated after this version; new features go to the full app only.'],
