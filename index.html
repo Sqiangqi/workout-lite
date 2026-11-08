@@ -1081,11 +1081,20 @@ function signIn(silent) {
   ls.set(K_STATE, state);
   const q = new URLSearchParams({ client_id: CLIENT_ID, redirect_uri: redirectUri(), response_type: 'token', scope: SCOPES + (ls.get(K_FULL) ? ' ' + SCOPE_SHEETS : ''),
     include_granted_scopes: 'true', state: state });
-  const email = ls.get(K_EMAIL); if (email) q.set('login_hint', email);
+  const email = ls.get(K_EMAIL); if (email) q.set('login_hint', email); else if (!silent) q.set('prompt', 'select_account');   // after sign-out: pick an account
   if (silent) ls.set(K_BOUNCE, Date.now());
   location.assign('https://accounts.google.com/o/oauth2/v2/auth?' + q.toString());
 }
-function signOut() { ls.del(K_TOK); ls.del(K_EMAIL); ls.del(K_CFG); ls.del('wweb.food.v1'); ls.del(K_FULL); ls.del(K_FOLDER); }
+// Sign out / switch account (web 0.2a, user 2026-11-07): removes this person's sign-in and every cached copy of their data from
+// the phone, so the next Google account starts clean. Phone preferences (theme, chart range, plan switch, timer) are kept.
+const KEEP_ON_SIGNOUT = ['wlite.theme.v1', 'wlite.range.v1', 'wlite.showbw.v1', 'wlite.timer.v1', 'qsapp.plan.v1'];
+function signOut() {
+  try {
+    const ks = []; for (let i = 0; i < localStorage.length; i++) ks.push(localStorage.key(i));
+    ks.forEach(k => { if (/^(wweb|wlite|qsapp)\./.test(k) && KEEP_ON_SIGNOUT.indexOf(k) < 0) localStorage.removeItem(k); });
+  } catch (e) {}
+  ls.del(K_TOK); ls.del(K_EMAIL); ls.del(K_CFG); ls.del(K_FOOD); ls.del(K_FULL); ls.del(K_FOLDER);
+}
 function hasScope(part) { const t = ls.get(K_TOK); return !!(t && String(t.sc || '').indexOf(part) >= 0); }
 // a Sheet the app did not make needs the full Sheets permission: sign in again asking for it (Google shows its "not verified" page once)
 function needFull() {
@@ -1402,7 +1411,7 @@ async function api_addExercise(row, full) {
   if (!back[0] || String(back[0][0]).trim() !== full) throw new Error('The new row did not read back as expected. Please look at the Exercises tab.');
   return { row: sheetRow };
 }
-async function api_signOut() { signOut(); return true; }
+async function api_signOut() { signOut(); setTimeout(() => location.reload(), 50); return true; }
 // owner check (Lite 0.1f): compares a SHA-256 of the signed-in email with OWNER_HASH from Code.gs
 async function ownerW(email) {
   try { const d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(String(email || '').trim().toLowerCase()));
@@ -3601,7 +3610,7 @@ async function addExercise() {
 // Version rule (user, 2026-11-07): the GitHub version number is always the SAME as the full claude.ai artifact app's current version
 // (Ver <major.minor><letter> · MMDDYYYY). Each push to GitHub takes the artifact's top APP_VERSIONS entry as its version.
 const APP_VERSIONS = [
-  ['0.2a', '11072026', 'Matches the full app Ver 0.2a. New person: the first-open screen makes a folder named Workout Lite in your My Drive with two Google Sheets, Workout Lite log (exercises, sessions, week plans) and Workout Lite food (food log, quick foods, body weight), in one tap. If the folder is already there it is reused and finished. Creating a food Sheet later also puts it in that folder. Sign-in now asks only for your email and for the files the app made itself, so Google shows no "unverified app" warning; the app settings and unsaved sets are kept in the Workout Lite folder. Using a Sheet the app did not make (Use a Sheet I already have) asks once for the full Google Sheets permission.'],
+  ['0.2a', '11072026', 'Matches the full app Ver 0.2a. New person: the first-open screen makes a folder named Workout Lite in your My Drive with two Google Sheets, Workout Lite log (exercises, sessions, week plans) and Workout Lite food (food log, quick foods, body weight), in one tap. If the folder is already there it is reused and finished. Creating a food Sheet later also puts it in that folder. Sign-in now asks only for your email and for the files the app made itself, so Google shows no "unverified app" warning; the app settings and unsaved sets are kept in the Workout Lite folder. Using a Sheet the app did not make (Use a Sheet I already have) asks once for the full Google Sheets permission. Settings › Google account: Sign out / switch account (clears your data from this phone; the next sign-in lets you pick the account).'],
   ['0.2', '11072026', 'Matches the full app Ver 0.2 (its 0.1v to 0.2; this update was first listed here as 0.1h). Food tab: one row with Weight (Auto = average of your Body metrics days in the past 7 days, or Manual; kg or lbs; the typed weight is kept on this phone), Body type (Ectomorph 3 g/kg carbs, Mesomorph 2.5, Endomorph 2; Mesomorph is the default) and Carb day, each opening a list at the bottom; Manual adjustment under Suggested (add or take away grams of carbs, protein, fat or fiber, saved as their own rows); legend for the week dots. The + bubble is replaced by Add food › Enter myself.'],
   ['0.1g', '11062026', 'Web version (GitHub): Food tab from the full app Ver 0.1u, without Claude calorie estimates: carb-cycling targets from your weight, Quick add, suggestions (3), Add a food (+ bubble), fiber, week bar with arrows. Food is kept in your own food Sheet (create one, or use one you have); type your weight if the Sheet has no Renpho readings. Also from the full app: the top weight and its reps as the hint in every set box. The Apps Script version is unchanged.'],
   ['0.1f', '11032026', 'From the full app Ver 0.1m: Settings › Week plan (up to 3 named plans kept in a Plan tab of your Sheet; day types Upper, Push, Pull, Lower, Custom, Rest; pick and drag exercises; saved day by day), Today shows the current plan and switches plans, ★ favourites per person, exercise notes shown only to the owner, no Notes field when adding an exercise. LAST UPDATE of Workout Lite: it will not be updated after this version; new features go to the full app only.'],
@@ -3622,8 +3631,11 @@ function viewSettings() {
     '<p class="hint">' + (chosen ? 'Your choice is kept on this phone. <button class="linkbtn" data-act="theme-auto">Follow the phone setting instead</button>' : 'Following your phone’s light / dark setting.') + '</p></div>';
   h += '<p class="section-h">Today\'s plan</p><div class="panel"><label class="switch"><span>Start each day with the plan</span><input type="checkbox" role="switch" id="planSw"' + (planOn() ? ' checked' : '') + '><i aria-hidden="true"></i></label>' +
     '<p class="hint">' + (planOn() ? (activePlan() ? 'Today fills in from your week plan ' + esc(activePlan().name) + '.' : 'Today fills in from the plan numbers in the Exercises tab (1 Mon, 2 Tue, 4 Wed, 3 Fri).') : 'Today starts empty; pick the exercises yourself. Kept on this phone.') + '</p></div>';
+  h += '<p class="section-h">Google account</p><div class="panel">' +
+    '<p>' + (S.email ? 'Signed in as <b>' + esc(S.email) + '</b>' : 'Signed in with Google') + '</p>' +
+    '<div class="row-acts"><button class="btn' + (S.outArmed ? ' danger' : '') + '" data-act="sign-out">' + (S.outArmed ? 'Tap again to sign out' : 'Sign out / switch account') + '</button></div>' +
+    '<p class="hint">Signing out removes your data from this phone only; everything stays in your Google Drive. Save your session first: unsaved sets are cleared.</p></div>';
   h += '<p class="section-h">Your workout Sheet</p><div class="panel">' +
-    (S.email ? '<p>Signed in as <b>' + esc(S.email) + '</b></p>' : '') +
     '<p>Sessions are saved to <b>' + esc(S.sheetTitle || 'your Sheet') + '</b>' + (S.sheetTab ? ' › ' + esc(S.sheetTab) : '') + ' (columns J to M).</p>' +
     '<div class="row-acts">' + (S.sheetUrl ? '<a class="btn" href="' + esc(S.sheetUrl) + '" target="_blank" rel="noopener">Open the Sheet</a>' : '') +
     '<button class="btn" data-act="retry"' + (S.mcp ? '' : ' disabled') + '>Reload from the Sheet</button></div>' +
@@ -3645,7 +3657,7 @@ function viewSetup() {
   let h = '<div class="setup-hero"><h1>Workout Lite</h1><p>Log your sets, see your progress, and keep everything in a Google Sheet in your own Drive.</p></div>';
   if (S.setupMsg) h += '<div class="notice err" role="alert"><div>' + esc(S.setupMsg) + '</div></div>';
   if (S.initState === 'wait') return h + '<div class="empty">Connecting to Google…</div>';
-  h += '<div class="panel">' + (S.email ? '<p>Signed in as <b>' + esc(S.email) + '</b></p>' : '') +
+  h += '<div class="panel">' + (S.email ? '<p>Signed in as <b>' + esc(S.email) + '</b> · <button class="linkbtn" data-act="sign-out-now">Use a different account</button></p>' : '') +
     '<p>Tap the button to make a folder named <b>Workout Lite</b> in your My Drive, with two Google Sheets:</p>' +
     '<ul class="setup-list"><li><b>Workout Lite log</b>: exercises, your sessions and week plans</li><li><b>Workout Lite food</b>: food log, quick foods and body weight</li></ul>' +
     '<p class="hint">Only you can see them unless you share them. If the folder is already there (from another phone or an earlier try), it is used and finished.</p>' +
@@ -3890,6 +3902,13 @@ document.addEventListener('click', e => {
     case 'cfg-new': setupRun('new', () => gs('api_create', (Intl.DateTimeFormat().resolvedOptions() || {}).timeZone || '')); break;
     case 'cfg-use': { const l = ($('#cfgLink') || {}).value || ''; S.setupLink = l; S.setupOpen = true; if (!l.trim()) { S.setupMsg = 'Paste the link of the Sheet first.'; render(); break; } setupRun('use', () => gs('api_useExisting', l, '')); break; }
     case 'cfg-tab': { const l = S.setupLink || (($('#cfgLink') || {}).value || ''); setupRun('use', () => gs('api_useExisting', l, b.dataset.tab)); break; }
+    case 'sign-out':
+      if (!S.outArmed) { S.outArmed = true; render(); setTimeout(() => { if (S.outArmed) { S.outArmed = false; render(); } }, 4000); break; }
+      S.outArmed = false;
+    // falls through
+    case 'sign-out-now':
+      gs('api_signOut').catch(e => toast(codeText(e).text));
+      break;
     case 'cfg-switch':
       if (!S.cfgArmed) { S.cfgArmed = true; render(); setTimeout(() => { if (S.cfgArmed) { S.cfgArmed = false; render(); } }, 4000); break; }
       S.cfgArmed = false;
