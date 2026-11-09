@@ -10,6 +10,7 @@
   --brand: #14284b;        /* logo navy (user, 2026-10-31; Michigan navy was #00274C): header band, both themes */
   --gold: #d8b072;         /* champagne gold from the logo (user, 2026-10-31 trial; maize was #ffcb05): primary buttons, chart points */
   --gold-ink: #14284b;
+  --gold-rgb: 216,176,114; --brand-rgb: 20,40,75; --gold-hi: #f6e3b8;   /* Ver 0.2d: colour themes swap these */
   --on-brand: #ffffff;
   --on-brand-muted: #b8c4d3;
   --on-brand-warn: #f0d6a2;
@@ -89,7 +90,6 @@ body.no-timer main .wrap { padding-bottom: 40px; }
 .chead { display: flex; gap: 10px; align-items: flex-start; }
 .chead .titles { flex: 1; min-width: 0; display: grid; gap: 2px; }
 .ex-name { position: relative; display: inline-block; font-family: var(--font-display); font-weight: 600; font-size: 21px; line-height: 1.1; }
-.ex-name .pre { display: inline-block; min-width: 1.6em; padding: 0 5px; margin-right: 6px; border-radius: 4px; background: var(--brand); color: var(--gold); font-size: 15px; text-align: center; vertical-align: 2px; font-variant-numeric: tabular-nums; }
 .ex-name.has-tip { cursor: help; text-decoration: underline dotted var(--muted); text-underline-offset: 4px; text-decoration-thickness: 1px; }
 .tip { display: none; position: absolute; left: 0; top: calc(100% + 6px); z-index: 4; width: min(340px, 80vw); background: var(--ink); color: var(--surface); font-family: var(--font-body); font-size: 14px; font-weight: 400; line-height: 1.5; padding: 10px 12px; border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.25); white-space: normal; }
 @media (hover: hover) { .ex-name.has-tip:hover .tip { display: block; } }
@@ -194,9 +194,9 @@ body.no-timer main .wrap { padding-bottom: 40px; }
 .card.holding { transform: scale(.985); transition: transform .9s ease; }
 
 #edgeZones { position: fixed; inset: 0; pointer-events: none; z-index: 50; }
-#edgeZones .ez { position: absolute; top: 0; bottom: 0; width: 12%; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 12px; font-weight: 700; color: var(--brand); background: rgba(216,176,114,.18); }
+#edgeZones .ez { position: absolute; top: 0; bottom: 0; width: 12%; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 12px; font-weight: 700; color: var(--brand); background: rgba(var(--gold-rgb),.18); }
 #edgeZones .ez.l { left: 0; } #edgeZones .ez.r { right: 0; }
-#edgeZones .ez.on { background: rgba(216,176,114,.6); }
+#edgeZones .ez.on { background: rgba(var(--gold-rgb),.6); }
 .room { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; }
 .room .over { color: var(--bad, #c0392b); }
 .section-sub { font-size: 13px; font-weight: 600; color: var(--muted); margin: 10px 0 4px; }
@@ -222,7 +222,7 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .wstrip .wd { display: grid; gap: 1px; justify-items: center; padding: 3px 0; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); font-size: 11px; color: var(--muted); line-height: 1.15; }
 .wstrip .wd b { font-size: 13px; }
 .wstrip .wd.high b { color: var(--brand); } .wstrip .wd.mid b { color: var(--accent); } .wstrip .wd.low b { color: var(--muted); }
-.wstrip .wd.high { background: rgba(216,176,114,.22); }
+.wstrip .wd.high { background: rgba(var(--gold-rgb),.22); }
 .wstrip .wd.today span { font-weight: 700; color: var(--ink); }
 .wstrip .wd.on { outline: 2px solid var(--brand); outline-offset: -1px; }
 .pend { border-top: 1px solid var(--line); padding-top: 6px; display: grid; gap: 8px; }
@@ -267,7 +267,7 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .ph { border: 0; padding: 0; background: var(--bg); border-radius: 8px; overflow: hidden; aspect-ratio: 3 / 4; max-width: 100%; position: relative; }
 .ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.ph span { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(20,40,75,.78); color: #fff; font-size: 12px; padding: 3px 6px; text-align: left; font-variant-numeric: tabular-nums; }
+.ph span { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(var(--brand-rgb),.78); color: #fff; font-size: 12px; padding: 3px 6px; text-align: left; font-variant-numeric: tabular-nums; }
 .ph .wait { position: static; background: none; color: var(--muted); display: grid; place-items: center; height: 100%; }
 .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .compare select { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); }
@@ -332,7 +332,7 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .phbig i { color: var(--muted); font-style: normal; padding: 40px; }
 .phbig.small { min-height: 160px; justify-content: flex-start; }
 .phbig.small img { width: 100%; height: auto; max-height: none; }
-.phbig .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 52px; border: 0; border-radius: 8px; background: rgba(20,40,75,.55); color: #fff; font-size: 26px; line-height: 1; }
+.phbig .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 52px; border: 0; border-radius: 8px; background: rgba(var(--brand-rgb),.55); color: #fff; font-size: 26px; line-height: 1; }
 .phbig .nav.l { left: 6px; } .phbig .nav.r { right: 6px; }
 .pinfo.above { gap: 2px 14px; }
 .phfig { margin: 0 auto; max-width: 100%; display: grid; gap: 6px; }
@@ -347,19 +347,22 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .fset-it > * { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .fset-l { font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
 .fset-it b { font-size: 14.5px; letter-spacing: -.01em; }
-/* Weight not set yet: gold box that pulses so the first step is obvious (web 0.2a, user 2026-11-07) */
-.fset-it.need { border: 2px solid var(--gold); background: rgba(216,176,114,.2); animation: needPulse 1.8s ease-in-out infinite; }
+/* Weight not set yet: gold box that pulses so the first step is obvious (Ver 0.2b, user 2026-11-07) */
+.fset-it.need { border: 2px solid var(--gold); background: rgba(var(--gold-rgb),.2); animation: needPulse 1.8s ease-in-out infinite; }
 .fset-it.need b { color: var(--accent); }
 .fset-it.need .fset-s { color: var(--ink); font-weight: 600; }
-@keyframes needPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(216,176,114,.55); } 50% { box-shadow: 0 0 0 6px rgba(216,176,114,0); } }
+@keyframes needPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(var(--gold-rgb),.55); } 50% { box-shadow: 0 0 0 6px rgba(var(--gold-rgb),0); } }
 @media (prefers-reduced-motion: reduce) { .fset-it.need { animation: none; } }
-.needw { border: 1px dashed var(--gold); border-radius: 10px; padding: 10px 12px; display: grid; gap: 8px; margin-top: 8px; background: rgba(216,176,114,.08); }
+.needw { border: 1px dashed var(--gold); border-radius: 10px; padding: 10px 12px; display: grid; gap: 8px; margin-top: 8px; background: rgba(var(--gold-rgb),.08); }
 .needw p { margin: 0; font-size: 14px; color: var(--ink); }
 .fset-go { font-size: 10px; color: var(--muted); margin-left: 4px; }
 .fset-s { font-size: 11px; color: var(--muted); }
 .fsh-note { padding: 0 2px 6px; }
 .fkgrow { align-items: center; flex-wrap: nowrap; margin-top: 8px; }
 /* Plan my week sheet (Ver 0.2b) */
+.wkset .wkbody { max-height: none; overflow: visible; padding: 0; }
+.wkw { padding-bottom: 10px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+.wp-today { border-top: 1px solid var(--line); padding-top: 10px; display: grid; gap: 4px; }
 .wkbody { max-height: calc(70vh - 120px); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; display: grid; gap: 6px; padding: 2px 4px 6px; }
 .wkrow { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; }
 .wkd { font-weight: 600; }
@@ -404,11 +407,6 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .switch input:checked + i::after { transform: translateX(20px); }
 .switch input:focus-visible + i { outline: 2px solid var(--accent); outline-offset: 2px; }
 .hrow { align-items: center; flex-wrap: nowrap; }
-.themebtn { flex: none; align-self: center; display: flex; flex-direction: column; align-items: center; gap: 3px; border: 0; background: none; padding: 0; color: var(--gold); }
-.themebtn .tlab { font-family: var(--font-display); font-weight: 600; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; line-height: 1.05; width: 46px; text-align: center; }
-.themebtn .tcirc { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--gold); display: grid; place-items: center; line-height: 0; }
-.themebtn svg { display: block; }
-.themebtn:active .tcirc { background: rgba(216,176,114,.2); }
 #view.today-view { display: flex; flex-direction: column; min-height: calc(100dvh - var(--hdr-h, 92px) - env(safe-area-inset-top, 0px) - 14px - var(--tabbar-h) - 110px); }
 #view.today-view > * { flex: none; }
 /* with the placeholder showing, the two bottom cards sit a little lower, closer to the rest timer (user, 2026-10-31) */
@@ -462,7 +460,7 @@ header.top .sync.saved { color: #8fe0ad; border-color: #8fe0ad; font-weight: 600
 .fab span { font-family: var(--font-display); font-size: 36px; font-weight: 600; line-height: 1; margin-top: -3px; }
 .fab:active { background: var(--gold); color: var(--brand); }
 .fab::before, .fab::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; padding: 3px; pointer-events: none;
-  background: conic-gradient(from 0deg, transparent 0deg, transparent 220deg, rgba(216,176,114,.5) 285deg, #d8b072 332deg, #f6e3b8 352deg, transparent 360deg);
+  background: conic-gradient(from 0deg, transparent 0deg, transparent 220deg, rgba(var(--gold-rgb),.5) 285deg, var(--gold) 332deg, var(--gold-hi) 352deg, transparent 360deg);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
   animation: fabHalo 2.4s linear infinite; }
 .fab::after { filter: blur(6px); padding: 5px; }
@@ -488,7 +486,6 @@ body.lib main .wrap { padding-bottom: calc(var(--tabbar-h) + 96px); }
 .fwk-mid { flex: 1; min-width: 0; display: flex; justify-content: space-between; gap: 8px; white-space: nowrap; }
 .fwk-arr { flex: none; width: 44px; padding: 4px 0; font-size: 20px; line-height: 1.1; }
 .fwk-line b { color: var(--ink); }
-body.food.fwk-on #fabFood { bottom: calc(var(--tabbar-h) + var(--fwk-h, 76px) + 14px); }
 body.food.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + var(--fwk-h, 76px) + 96px); }
 body.food.fwk-on .toast { bottom: calc(var(--tabbar-h) + var(--fwk-h, 76px) + 12px); }
 .namelist { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
@@ -528,7 +525,7 @@ body.food.fwk-on .toast { bottom: calc(var(--tabbar-h) + var(--fwk-h, 76px) + 12
 .ctlcard.glow { position: relative; }
 /* a gold light that travels clockwise around the card border (user, 2026-10-31); ::before = crisp line, ::after = soft glow */
 .ctlcard.glow::before, .ctlcard.glow::after { content: ""; position: absolute; inset: -2px -2px -2px -6px; border-radius: calc(var(--r) + 2px); padding: 2px; pointer-events: none;
-  background: conic-gradient(from var(--glowA), transparent 0deg, transparent 240deg, rgba(216,176,114,.5) 290deg, #d8b072 335deg, #f6e3b8 352deg, transparent 360deg);
+  background: conic-gradient(from var(--glowA), transparent 0deg, transparent 240deg, rgba(var(--gold-rgb),.5) 290deg, var(--gold) 335deg, var(--gold-hi) 352deg, transparent 360deg);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
   animation: glowSpin 5s linear infinite; }
 /* when the script drives the angle (steady speed), the pseudo-elements just inherit it */
@@ -539,7 +536,7 @@ body.food.fwk-on .toast { bottom: calc(var(--tabbar-h) + var(--fwk-h, 76px) + 12
 /* Enter myself (Food tab) gets the travelling gold border light of the picker cards (Ver 0.1v, user 2026-11-06) */
 .btn.glowbtn { position: relative; border-color: var(--gold); }
 .btn.glowbtn::before, .btn.glowbtn::after { content: ""; position: absolute; inset: -3px; border-radius: 11px; padding: 2px; pointer-events: none;
-  background: conic-gradient(from var(--glowA), transparent 0deg, transparent 240deg, rgba(216,176,114,.5) 290deg, #d8b072 335deg, #f6e3b8 352deg, transparent 360deg);
+  background: conic-gradient(from var(--glowA), transparent 0deg, transparent 240deg, rgba(var(--gold-rgb),.5) 290deg, var(--gold) 335deg, var(--gold-hi) 352deg, transparent 360deg);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
   animation: glowSpin 5s linear infinite; }
 .btn.glowbtn.js-glow::before, .btn.glowbtn.js-glow::after { animation: none; }
@@ -667,12 +664,70 @@ a.btn { text-decoration: none; color: inherit; display: inline-block; }
 .swman { grid-column: 2; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
 .swman input { width: 6.5em; font-size: 13px; padding: 4px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); }
 .swman input::placeholder { color: var(--lighter); font-style: italic; }
+
+/* Ver 0.2d (user, 2026-11-08): colour themes. Navy + Gold is the default (no data-pal rule);
+   Soft ember and Blush replace every navy and gold, in light and dark mode. Chosen in Settings > Appearance, kept on this phone (qsapp.pal.v1). */
+:root[data-pal="ember"] {
+  --brand: #222222; --gold: #d9774f; --gold-ink: #222222; --gold-rgb: 217,119,79; --brand-rgb: 34,34,34; --gold-hi: #f3b99e;
+  --on-brand-muted: #c9c0b9; --on-brand-warn: #f0c9a2;
+  --bg: #f5f2ef; --ink: #1e1b19; --muted: #6a625c; --line: #ddd5ce;
+  --accent: #222222; --accent-ink: #ffffff; --accent-soft: #f4e5dc; --lighter: #a39b95; }
+:root[data-pal="ember"][data-theme="dark"] {
+  --bg: #121110; --surface: #1d1b1a; --ink: #efeae6; --muted: #aaa29b; --line: #35302d;
+  --accent: #d9774f; --accent-ink: #222222; --accent-soft: #3a2519; --lighter: #7d7671; }
+:root[data-pal="blush"] {
+  --brand: #b85c7a; --gold: #f7cfd8; --gold-ink: #7a3550; --gold-rgb: 247,207,216; --brand-rgb: 184,92,122; --gold-hi: #fff0f3;
+  --on-brand-muted: #f6dce4; --on-brand-warn: #ffe3c4;
+  --bg: #fdf5f6; --ink: #3a1f29; --muted: #85606c; --line: #efd8de;
+  --accent: #b85c7a; --accent-ink: #ffffff; --accent-soft: #fbe6eb; --lighter: #c7a9b2; }
+:root[data-pal="blush"][data-theme="dark"] {
+  --bg: #1a1114; --surface: #26191e; --ink: #f6e9ed; --muted: #c2a3ad; --line: #3f2a32;
+  --accent: #f7cfd8; --accent-ink: #7a3550; --accent-soft: #3d2129; --lighter: #8a7078; }
+/* Library favourite cards fold to the name row (Ver 0.2d) */
+.libcard .lib-h { cursor: pointer; align-items: center; }
+.libcard .lib-h .setchev { margin-left: 4px; }
+.libcard.on .lib-h .setchev { transform: rotate(45deg) translate(-2px, -2px); }
+.libcard:not(.on) { padding-block: 10px; }
+.lib-gh { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.lib-gh h2 { margin: 0; }
+/* Settings as one grouped list, iPhone style (Ver 0.2d) */
+.setgroup { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; margin-top: 10px; }
+.setrow { position: relative; display: flex; align-items: center; gap: 14px; min-height: 54px; padding: 8px 14px; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; }
+.setgroup > .setsec + .setsec > .setrow::before { content: ""; position: absolute; top: 0; left: 60px; right: 0; border-top: 1px solid var(--line); }
+.setrow:active { background: var(--accent-soft); }
+.setgroup > .setsec:first-child > .setrow { border-radius: 14px 14px 0 0; }
+.setsec.on { border: 2px solid var(--gold); border-radius: 12px; margin: 4px; }
+.setsec.on > .setrow { padding-left: 10px; padding-right: 10px; border-radius: 10px 10px 0 0; }
+.setsec.on > .setrow::before, .setsec.on + .setsec > .setrow::before { display: none; }
+.seticon { flex: none; width: 32px; height: 32px; border-radius: 8px; background: var(--brand); color: var(--gold); display: grid; place-items: center; }
+.settitle { flex: 1; min-width: 0; font-size: 17px; font-weight: 500; color: var(--ink); }
+.setside { flex: 0 1 auto; max-width: 45%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.setchev { flex: none; width: 9px; height: 9px; margin: 0 4px 0 2px; border-right: 2.5px solid var(--muted); border-bottom: 2.5px solid var(--muted); transform: rotate(-45deg); transition: transform .2s; }
+.setrow.on .setchev { transform: rotate(45deg) translate(-2px, -2px); }
+.setsec > .panel.setpanel { border: 0; border-radius: 0; background: none; margin: 0; padding: 4px 14px 14px; }
+.setsec > .notice { margin: 0 14px 8px; }
+/* Ver 0.2d: the logo opens the App icon sheet; a picture of your own shows as a circle */
+img.logo { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+img.logo.custom { border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); box-sizing: border-box; }
+.palrow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.palbtn { display: grid; justify-items: center; gap: 6px; padding: 10px 4px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--ink); font-size: 13px; font-weight: 600; }
+.palbtn.on { border: 2px solid var(--accent); padding: 9px 3px; }
+.palbtn .sw2 { display: flex; } .palbtn .sw2 i { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,.12); }
+.palbtn .sw2 i + i { margin-left: -6px; }
+.setlab { font-size: 15px; font-weight: 600; margin: 4px 0 0; }
+.icrow { display: flex; align-items: center; gap: 12px; }
+.icrow img, .icprev img { width: 48px; height: 48px; flex: none; border-radius: 50%; object-fit: cover; background: var(--brand); }
+.icrow .ict { flex: 1; min-width: 0; display: grid; gap: 2px; } .icrow .ict span { font-size: 12px; color: var(--muted); }
+.icprev { display: flex; justify-content: center; padding: 4px 0 6px; } .icprev img { width: 84px; height: 84px; border: 2px solid var(--gold); }
+label.sheet-it { display: block; cursor: pointer; }
+.sheet-it[aria-disabled="true"] { opacity: .5; pointer-events: none; }
+.switch.dis { opacity: .45; pointer-events: none; }   /* Ver 0.2d: Dark mode greyed out while Follow the phone setting is on */
 </style>
 
 <header class="top">
   <div class="wrap">
     <div class="hrow">
-      <div class="brand"><img class="logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAwIiBoZWlnaHQ9IjIwMDAiIHZpZXdCb3g9Ii0xNCAxOCAzNDYgMzQ2IiByb2xlPSJpbWciIGFyaWEtbGFiZWw9Ik5hdnkgY2lyY3VsYXIgZW1ibGVtIHdpdGggYSBnb2xkIHJpbTogYSBjaGFtcGFnbmUtZ29sZCBEYW8gZmxpY2sgYW5kIFEgbWFnbmlmaWVyIG9uIHRoZSBsZWZ0LCBhIHJvc2UtZ29sZCBTIHdpdGggYSBuZWVkbGUgdGFpbCBvbiB0aGUgcmlnaHQ7IHJpbmcgdGV4dCBRaWFuZ3FpYW5nIFNoYW8sIEhlbWF0b2xvZ3kgT25jb2xvZ3kiPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJzaGFvUm9zZSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIyMjAiIHkxPSIxMTAiIHgyPSIyMjAiIHkyPSIzMjAiPgo8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNDNzlCNUUiPjwvc3RvcD4KPHN0b3Agb2Zmc2V0PSIwLjEyIiBzdG9wLWNvbG9yPSIjRjBENkEyIj48L3N0b3A+CjxzdG9wIG9mZnNldD0iMC4yNiIgc3RvcC1jb2xvcj0iI0QyQTg2NyI+PC9zdG9wPgo8c3RvcCBvZmZzZXQ9IjAuNTUiIHN0b3AtY29sb3I9IiNEOTk4NzIiPjwvc3RvcD4KPHN0b3Agb2Zmc2V0PSIwLjc4IiBzdG9wLWNvbG9yPSIjQjI2RTRDIj48L3N0b3A+CjxzdG9wIG9mZnNldD0iMC45IiBzdG9wLWNvbG9yPSIjRTJBNDdFIj48L3N0b3A+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzlFNUEzQyI+PC9zdG9wPgo8L2xpbmVhckdyYWRpZW50Pgo8bGluZWFyR3JhZGllbnQgaWQ9InNoYW9DaGFtcCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIwIiB5MT0iNDAiIHgyPSIzMTgiIHkyPSIzNDAiPgo8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNCOThENTIiPjwvc3RvcD4KPHN0b3Agb2Zmc2V0PSIwLjMiIHN0b3AtY29sb3I9IiNFQkNCOTIiPjwvc3RvcD4KPHN0b3Agb2Zmc2V0PSIwLjU1IiBzdG9wLWNvbG9yPSIjQzc5QjVFIj48L3N0b3A+CjxzdG9wIG9mZnNldD0iMC44IiBzdG9wLWNvbG9yPSIjRjBENkEyIj48L3N0b3A+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0JFOTI1NiI+PC9zdG9wPgo8L2xpbmVhckdyYWRpZW50Pgo8ZmlsdGVyIGlkPSJzaGFvR3JhaW4iIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTE0IiB5PSIxOCIgd2lkdGg9IjM0NiIgaGVpZ2h0PSIzNDYiPgo8ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMS40IiBudW1PY3RhdmVzPSIyIiBzZWVkPSI3IiByZXN1bHQ9Im5vaXNlIj48L2ZlVHVyYnVsZW5jZT4KPGZlQ29sb3JNYXRyaXggaW49Im5vaXNlIiB0eXBlPSJzYXR1cmF0ZSIgdmFsdWVzPSIwIiByZXN1bHQ9ImdyZXkiPjwvZmVDb2xvck1hdHJpeD4KPGZlQ29tcG9zaXRlIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImdyZXkiIG9wZXJhdG9yPSJhcml0aG1ldGljIiBrMT0iMCIgazI9IjEiIGszPSIwLjEyIiBrND0iLTAuMDYiIHJlc3VsdD0ibGl0Ij48L2ZlQ29tcG9zaXRlPgo8ZmVDb21wb3NpdGUgaW49ImxpdCIgaW4yPSJTb3VyY2VHcmFwaGljIiBvcGVyYXRvcj0iaW4iPjwvZmVDb21wb3NpdGU+CjwvZmlsdGVyPgo8Y2xpcFBhdGggaWQ9InNoYW9MZW5zIj48Y2lyY2xlIGN4PSIxMjIiIGN5PSIyMDAiIHI9IjI2Ij48L2NpcmNsZT48L2NsaXBQYXRoPgo8cGF0aCBpZD0ic2hhb0xlZnQiIGQ9Ik0gNzcgMzA3LjEgQSAxNDMgMTQzIDAgMCAxIDc3IDcyLjkiPjwvcGF0aD4KPHBhdGggaWQ9InNoYW9SaWdodCIgZD0iTSAyNDEgNzIuOSBBIDE0MyAxNDMgMCAwIDEgMjQxIDMwNy4xIj48L3BhdGg+CjwvZGVmcz4KPGNpcmNsZSBjeD0iMTU5IiBjeT0iMTkwIiByPSIxNjgiIGZpbGw9IiMxNDI4NEIiPjwvY2lyY2xlPgo8Zz4KPGNpcmNsZSBjeD0iMTU5IiBjeT0iMTkwIiByPSIxNjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNzaGFvQ2hhbXApIiBzdHJva2Utd2lkdGg9IjgiPjwvY2lyY2xlPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTYgMCkiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMzEuNTMgLTYxLjEwKSBzY2FsZSgxLjI1NTUpIj4KPHBhdGggZD0iTSAxMTkuOCAxNDMuNSAxMjAuOSAxNDIuOSAxMjUuMSAxNDIuNSAxMjYuNyAxNDEuOCAxMzAuMiAxNDEgMTMzLjkgMTQwLjggMTM3LjkgMTQxLjIgMTM3IDE0MC44IDEzNiAxMzkuNyAxMzcgMTQyLjMgMTM3LjMgMTQzLjYgMTM3LjMgMTQ1LjUgMTM2LjQgMTQ5LjEgMTM1LjggMTUwLjcgMTM0LjcgMTUyLjYgMTMzLjYgMTUzLjggMTM0LjggMTU1LjEgMTM4LjEgMTUyLjUgMTM5LjYgMTUxIDE0MS4yIDE0OC44IDE0Mi4xIDE0Ni4yIDE0Mi43IDE0MiAxNDIuNSAxMzkuNSAxNDEuOCAxMzcuMyAxNDAuNSAxMzUuNiAxMzguOCAxMzUgMTM0LjIgMTM0LjcgMTI5LjUgMTM1LjIgMTI1LjIgMTM2LjQgMTIzLjIgMTM3LjIgMTIyLjIgMTM3LjggMTIwLjcgMTM5LjUgMTE5LjcgMTQxLjEgMTE4LjcgMTQyIFoiIGZpbGw9InVybCgjc2hhb0NoYW1wKSI+PC9wYXRoPgo8bGluZSB4MT0iMTQzLjkiIHkxPSIyMjEuOSIgeDI9IjE2MCIgeTI9IjIzOCIgc3Ryb2tlPSJ1cmwoI3NoYW9DaGFtcCkiIHN0cm9rZS13aWR0aD0iOSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiPjwvbGluZT4KPGNpcmNsZSBjeD0iMTYwIiBjeT0iMjM4IiByPSI0LjUiIGZpbGw9InVybCgjc2hhb0NoYW1wKSI+PC9jaXJjbGU+CjxjaXJjbGUgY3g9IjEyMiIgY3k9IjIwMCIgcj0iMzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNzaGFvQ2hhbXApIiBzdHJva2Utd2lkdGg9IjguNSI+PC9jaXJjbGU+CjwvZz4KPHBhdGggZD0iTSAyNjYuNCAxMzQuOSAyNjUuNiAxMzIuMyAyNjMuNyAxMjguMyAyNjAuOCAxMjMuOSAyNTcuMyAxMjAuMiAyNTMuNCAxMTcuMiAyNDkuMSAxMTQuOCAyNDQuNiAxMTMgMjQyLjIgMTEyLjMgMjM4LjIgMTExLjQgMjM0LjkgMTEwLjkgMjI5LjggMTEwLjUgMjIyIDExMC42IDIxNS42IDExMS41IDIxMS42IDExMi40IDIwOC44IDExMy4zIDIwNiAxMTQuNCAyMDMuNCAxMTUuNyAxOTcuOSAxMTkuMyAxOTUuMSAxMjEuOCAxOTIuNiAxMjQuNiAxOTAuNSAxMjcuNiAxODkuNiAxMjkuMiAxODcuNSAxMzQuNCAxODYuNiAxMzguMSAxODYuMSAxNDIuOCAxODYuNCAxNDguMiAxODcgMTUxLjMgMTg4LjMgMTU1LjIgMTg5LjYgMTU3LjkgMTkxLjcgMTYxLjMgMTk0LjIgMTY0LjMgMTk3IDE2Ny4xIDE5OS4yIDE2OC45IDIwMy4yIDE3MS44IDIwNy40IDE3NC4zIDIxMi43IDE3NyAyMTkuOSAxODAuMiAyMjguMyAxODMuNSAyMzYuNSAxODcuMSAyNDAuNiAxODkuMiAyNDUuOCAxOTIuMyAyNDguNCAxOTQuMSAyNTEuNyAxOTYuOSAyNTMuNSAxOTguOCAyNTUuNCAyMDEuMiAyNTYuNSAyMDMuMiAyNTcuNSAyMDUuNiAyNTguMSAyMDguMiAyNTguMiAyMTEuNiAyNTcuNyAyMTMuNSAyNTYuNCAyMTUuNyAyNTUuMiAyMTcuMSAyNTIuNiAyMTkuMiAyNDcuOCAyMjIgMjQyLjYgMjI0LjQgMjMyLjkgMjI4IDIyNC45IDIzMC40IDIyMC40IDIzMiAyMTUuMiAyMzQuNSAyMTEuNiAyMzYuOSAyMDguOSAyMzkuMyAyMDYuMiAyNDIuNiAyMDQuNCAyNDUuOCAyMDMuMyAyNDguOCAyMDIuNyAyNTEuMiAyMDIuMiAyNTUuMSAyMDIuMiAyNjQuMSAyMDIuNiAyNzcuNiAyMDIuNiAyODUgMjA2LjkgMzE5LjYgMjA3LjEgMzIwLjggMjA3LjUgMzIwLjggMjExLjkgMjg1LjYgMjEyLjQgMjU1LjcgMjEzLjEgMjUxLjcgMjE0LjUgMjQ4LjYgMjE1LjcgMjQ3IDIxNy45IDI0NSAyMjAuMyAyNDMuNCAyMjIuOCAyNDIuMSAyMjcuOSAyNDAuMiAyMzkuOCAyMzYuOSAyNDguMyAyMzQuMyAyNTUuMiAyMzEuNSAyNTguNCAyMjkuOSAyNjEuNCAyMjggMjYzLjUgMjI2LjUgMjY1LjQgMjI0LjcgMjY3LjcgMjIxLjkgMjY5LjEgMjE5LjYgMjcwLjIgMjE3IDI3MC45IDIxNC4zIDI3MS4yIDIxMi40IDI3MS4yIDIwOC40IDI3MSAyMDYuNSAyNzAuMiAyMDIuNiAyNjkuMyAxOTkuOSAyNjcuMiAxOTUuNiAyNjUuNyAxOTMuMiAyNjIuNyAxODkuNiAyNjAuNyAxODcuNSAyNTcuOCAxODUgMjUzLjggMTgyIDI1MC40IDE3OS44IDI0NC4xIDE3Ni4zIDIzNC4yIDE3MS44IDIyMi4zIDE2Ny4xIDIxNC40IDE2My4zIDIxMC45IDE2MS4zIDIwOC40IDE1OS42IDIwNC43IDE1Ni41IDIwMi4zIDE1My43IDIwMC44IDE1MS4yIDE5OS44IDE0OC43IDE5OS4yIDE0NS4xIDE5OS4yIDE0MiAxOTkuOCAxMzguNyAyMDEuNCAxMzQuOCAyMDMuMiAxMzIuMiAyMDYgMTI5LjUgMjA3LjkgMTI4LjEgMjA5LjUgMTI3LjIgMjEyLjUgMTI1LjggMjE0LjUgMTI1LjEgMjE4LjEgMTI0LjIgMjIzIDEyMy42IDIyOS4zIDEyMy41IDIzNC42IDEyNCAyMzcuNyAxMjQuNiAyNDEuMSAxMjUuNiAyNDQuMSAxMjYuOCAyNDUuOSAxMjcuOCAyNDkgMTMwLjIgMjUxLjUgMTMzLjIgMjUzIDEzNiAyNTQgMTM4LjggWiIgZmlsbD0idXJsKCNzaGFvUm9zZSkiPjwvcGF0aD4KPGNpcmNsZSBjeD0iMjYwLjIiIGN5PSIxMzYuOSIgcj0iNi41MSIgZmlsbD0idXJsKCNzaGFvUm9zZSkiPjwvY2lyY2xlPgo8L2c+Cjx0ZXh0IGZvbnQtZmFtaWx5PSJJQk0gUGxleCBTYW5zLCBJbnRlciwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjYwMCIgZm9udC1zaXplPSIxNCIgbGV0dGVyLXNwYWNpbmc9IjMuNSIgZmlsbD0idXJsKCNzaGFvQ2hhbXApIj48dGV4dFBhdGggaHJlZj0iI3NoYW9MZWZ0IiBzdGFydE9mZnNldD0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RSUFOR1FJQU5HIFNIQU88L3RleHRQYXRoPjwvdGV4dD4KPHRleHQgZm9udC1mYW1pbHk9IklCTSBQbGV4IFNhbnMsIEludGVyLCBzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iNjAwIiBmb250LXNpemU9IjE0IiBsZXR0ZXItc3BhY2luZz0iMy41IiBmaWxsPSJ1cmwoI3NoYW9DaGFtcCkiPjx0ZXh0UGF0aCBocmVmPSIjc2hhb1JpZ2h0IiBzdGFydE9mZnNldD0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5IRU1BVE9MT0dZIMK3IE9OQ09MT0dZPC90ZXh0UGF0aD48L3RleHQ+CjwvZz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE2IDApIj4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTMxLjUzIC02MS4xMCkgc2NhbGUoMS4yNTU1KSI+CjxjaXJjbGUgY3g9IjEyMiIgY3k9IjIwMCIgcj0iMjYiIGZpbGw9IiNGRkZGRkYiIGZpbGwtb3BhY2l0eT0iMC4wNiI+PC9jaXJjbGU+CjxnIGNsaXAtcGF0aD0idXJsKCNzaGFvTGVucykiPgo8cGF0aCBkPSJNIDEwMi4zIDE5Mi44IEEgMjEgMjEgMCAwIDEgMTE0LjggMTgwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0YwRDZBMiIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLW9wYWNpdHk9IjAuODUiPjwvcGF0aD4KPC9nPgo8L2c+CjwvZz4KPC9zdmc+Cg==" alt="Workout Lite logo" width="54" height="54">
+      <div class="brand"><img class="logo" data-act="icon-open" role="button" tabindex="0" alt="App icon" title="Change the app icon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAwIiBoZWlnaHQ9IjIwMDAiIHZpZXdCb3g9Ii0xNCAxOCAzNDYgMzQ2IiByb2xlPSJpbWciIGFyaWEtbGFiZWw9Ik5hdnkgY2lyY3VsYXIgZW1ibGVtIHdpdGggYSBnb2xkIHJpbTogYSBjaGFtcGFnbmUtZ29sZCBEYW8gZmxpY2sgYW5kIFEgbWFnbmlmaWVyIG9uIHRoZSBsZWZ0LCBhIHJvc2UtZ29sZCBTIHdpdGggYSBuZWVkbGUgdGFpbCBvbiB0aGUgcmlnaHQ7IHJpbmcgdGV4dCBRaWFuZ3FpYW5nIFNoYW8sIEhlbWF0b2xvZ3kgT25jb2xvZ3kiPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJzaGFvUm9zZSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIyMjAiIHkxPSIxMTAiIHgyPSIyMjAiIHkyPSIzMjAiPgo8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNDNzlCNUUiPjwvc3RvcD4KPHN0b3Agb2Zmc2V0PSIwLjEyIiBzdG9wLWNvbG9yPSIjRjBENkEyIj48L3N0b3A+CjxzdG9wIG9mZnNldD0iMC4yNiIgc3RvcC1jb2xvcj0iI0QyQTg2NyI+PC9zdG9wPgo8c3RvcCBvZmZzZXQ9IjAuNTUiIHN0b3AtY29sb3I9IiNEOTk4NzIiPjwvc3RvcD4KPHN0b3Agb2Zmc2V0PSIwLjc4IiBzdG9wLWNvbG9yPSIjQjI2RTRDIj48L3N0b3A+CjxzdG9wIG9mZnNldD0iMC45IiBzdG9wLWNvbG9yPSIjRTJBNDdFIj48L3N0b3A+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzlFNUEzQyI+PC9zdG9wPgo8L2xpbmVhckdyYWRpZW50Pgo8bGluZWFyR3JhZGllbnQgaWQ9InNoYW9DaGFtcCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIwIiB5MT0iNDAiIHgyPSIzMTgiIHkyPSIzNDAiPgo8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNCOThENTIiPjwvc3RvcD4KPHN0b3Agb2Zmc2V0PSIwLjMiIHN0b3AtY29sb3I9IiNFQkNCOTIiPjwvc3RvcD4KPHN0b3Agb2Zmc2V0PSIwLjU1IiBzdG9wLWNvbG9yPSIjQzc5QjVFIj48L3N0b3A+CjxzdG9wIG9mZnNldD0iMC44IiBzdG9wLWNvbG9yPSIjRjBENkEyIj48L3N0b3A+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0JFOTI1NiI+PC9zdG9wPgo8L2xpbmVhckdyYWRpZW50Pgo8ZmlsdGVyIGlkPSJzaGFvR3JhaW4iIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iLTE0IiB5PSIxOCIgd2lkdGg9IjM0NiIgaGVpZ2h0PSIzNDYiPgo8ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMS40IiBudW1PY3RhdmVzPSIyIiBzZWVkPSI3IiByZXN1bHQ9Im5vaXNlIj48L2ZlVHVyYnVsZW5jZT4KPGZlQ29sb3JNYXRyaXggaW49Im5vaXNlIiB0eXBlPSJzYXR1cmF0ZSIgdmFsdWVzPSIwIiByZXN1bHQ9ImdyZXkiPjwvZmVDb2xvck1hdHJpeD4KPGZlQ29tcG9zaXRlIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImdyZXkiIG9wZXJhdG9yPSJhcml0aG1ldGljIiBrMT0iMCIgazI9IjEiIGszPSIwLjEyIiBrND0iLTAuMDYiIHJlc3VsdD0ibGl0Ij48L2ZlQ29tcG9zaXRlPgo8ZmVDb21wb3NpdGUgaW49ImxpdCIgaW4yPSJTb3VyY2VHcmFwaGljIiBvcGVyYXRvcj0iaW4iPjwvZmVDb21wb3NpdGU+CjwvZmlsdGVyPgo8Y2xpcFBhdGggaWQ9InNoYW9MZW5zIj48Y2lyY2xlIGN4PSIxMjIiIGN5PSIyMDAiIHI9IjI2Ij48L2NpcmNsZT48L2NsaXBQYXRoPgo8cGF0aCBpZD0ic2hhb0xlZnQiIGQ9Ik0gNzcgMzA3LjEgQSAxNDMgMTQzIDAgMCAxIDc3IDcyLjkiPjwvcGF0aD4KPHBhdGggaWQ9InNoYW9SaWdodCIgZD0iTSAyNDEgNzIuOSBBIDE0MyAxNDMgMCAwIDEgMjQxIDMwNy4xIj48L3BhdGg+CjwvZGVmcz4KPGNpcmNsZSBjeD0iMTU5IiBjeT0iMTkwIiByPSIxNjgiIGZpbGw9IiMxNDI4NEIiPjwvY2lyY2xlPgo8Zz4KPGNpcmNsZSBjeD0iMTU5IiBjeT0iMTkwIiByPSIxNjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNzaGFvQ2hhbXApIiBzdHJva2Utd2lkdGg9IjgiPjwvY2lyY2xlPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTYgMCkiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMzEuNTMgLTYxLjEwKSBzY2FsZSgxLjI1NTUpIj4KPHBhdGggZD0iTSAxMTkuOCAxNDMuNSAxMjAuOSAxNDIuOSAxMjUuMSAxNDIuNSAxMjYuNyAxNDEuOCAxMzAuMiAxNDEgMTMzLjkgMTQwLjggMTM3LjkgMTQxLjIgMTM3IDE0MC44IDEzNiAxMzkuNyAxMzcgMTQyLjMgMTM3LjMgMTQzLjYgMTM3LjMgMTQ1LjUgMTM2LjQgMTQ5LjEgMTM1LjggMTUwLjcgMTM0LjcgMTUyLjYgMTMzLjYgMTUzLjggMTM0LjggMTU1LjEgMTM4LjEgMTUyLjUgMTM5LjYgMTUxIDE0MS4yIDE0OC44IDE0Mi4xIDE0Ni4yIDE0Mi43IDE0MiAxNDIuNSAxMzkuNSAxNDEuOCAxMzcuMyAxNDAuNSAxMzUuNiAxMzguOCAxMzUgMTM0LjIgMTM0LjcgMTI5LjUgMTM1LjIgMTI1LjIgMTM2LjQgMTIzLjIgMTM3LjIgMTIyLjIgMTM3LjggMTIwLjcgMTM5LjUgMTE5LjcgMTQxLjEgMTE4LjcgMTQyIFoiIGZpbGw9InVybCgjc2hhb0NoYW1wKSI+PC9wYXRoPgo8bGluZSB4MT0iMTQzLjkiIHkxPSIyMjEuOSIgeDI9IjE2MCIgeTI9IjIzOCIgc3Ryb2tlPSJ1cmwoI3NoYW9DaGFtcCkiIHN0cm9rZS13aWR0aD0iOSIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiPjwvbGluZT4KPGNpcmNsZSBjeD0iMTYwIiBjeT0iMjM4IiByPSI0LjUiIGZpbGw9InVybCgjc2hhb0NoYW1wKSI+PC9jaXJjbGU+CjxjaXJjbGUgY3g9IjEyMiIgY3k9IjIwMCIgcj0iMzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNzaGFvQ2hhbXApIiBzdHJva2Utd2lkdGg9IjguNSI+PC9jaXJjbGU+CjwvZz4KPHBhdGggZD0iTSAyNjYuNCAxMzQuOSAyNjUuNiAxMzIuMyAyNjMuNyAxMjguMyAyNjAuOCAxMjMuOSAyNTcuMyAxMjAuMiAyNTMuNCAxMTcuMiAyNDkuMSAxMTQuOCAyNDQuNiAxMTMgMjQyLjIgMTEyLjMgMjM4LjIgMTExLjQgMjM0LjkgMTEwLjkgMjI5LjggMTEwLjUgMjIyIDExMC42IDIxNS42IDExMS41IDIxMS42IDExMi40IDIwOC44IDExMy4zIDIwNiAxMTQuNCAyMDMuNCAxMTUuNyAxOTcuOSAxMTkuMyAxOTUuMSAxMjEuOCAxOTIuNiAxMjQuNiAxOTAuNSAxMjcuNiAxODkuNiAxMjkuMiAxODcuNSAxMzQuNCAxODYuNiAxMzguMSAxODYuMSAxNDIuOCAxODYuNCAxNDguMiAxODcgMTUxLjMgMTg4LjMgMTU1LjIgMTg5LjYgMTU3LjkgMTkxLjcgMTYxLjMgMTk0LjIgMTY0LjMgMTk3IDE2Ny4xIDE5OS4yIDE2OC45IDIwMy4yIDE3MS44IDIwNy40IDE3NC4zIDIxMi43IDE3NyAyMTkuOSAxODAuMiAyMjguMyAxODMuNSAyMzYuNSAxODcuMSAyNDAuNiAxODkuMiAyNDUuOCAxOTIuMyAyNDguNCAxOTQuMSAyNTEuNyAxOTYuOSAyNTMuNSAxOTguOCAyNTUuNCAyMDEuMiAyNTYuNSAyMDMuMiAyNTcuNSAyMDUuNiAyNTguMSAyMDguMiAyNTguMiAyMTEuNiAyNTcuNyAyMTMuNSAyNTYuNCAyMTUuNyAyNTUuMiAyMTcuMSAyNTIuNiAyMTkuMiAyNDcuOCAyMjIgMjQyLjYgMjI0LjQgMjMyLjkgMjI4IDIyNC45IDIzMC40IDIyMC40IDIzMiAyMTUuMiAyMzQuNSAyMTEuNiAyMzYuOSAyMDguOSAyMzkuMyAyMDYuMiAyNDIuNiAyMDQuNCAyNDUuOCAyMDMuMyAyNDguOCAyMDIuNyAyNTEuMiAyMDIuMiAyNTUuMSAyMDIuMiAyNjQuMSAyMDIuNiAyNzcuNiAyMDIuNiAyODUgMjA2LjkgMzE5LjYgMjA3LjEgMzIwLjggMjA3LjUgMzIwLjggMjExLjkgMjg1LjYgMjEyLjQgMjU1LjcgMjEzLjEgMjUxLjcgMjE0LjUgMjQ4LjYgMjE1LjcgMjQ3IDIxNy45IDI0NSAyMjAuMyAyNDMuNCAyMjIuOCAyNDIuMSAyMjcuOSAyNDAuMiAyMzkuOCAyMzYuOSAyNDguMyAyMzQuMyAyNTUuMiAyMzEuNSAyNTguNCAyMjkuOSAyNjEuNCAyMjggMjYzLjUgMjI2LjUgMjY1LjQgMjI0LjcgMjY3LjcgMjIxLjkgMjY5LjEgMjE5LjYgMjcwLjIgMjE3IDI3MC45IDIxNC4zIDI3MS4yIDIxMi40IDI3MS4yIDIwOC40IDI3MSAyMDYuNSAyNzAuMiAyMDIuNiAyNjkuMyAxOTkuOSAyNjcuMiAxOTUuNiAyNjUuNyAxOTMuMiAyNjIuNyAxODkuNiAyNjAuNyAxODcuNSAyNTcuOCAxODUgMjUzLjggMTgyIDI1MC40IDE3OS44IDI0NC4xIDE3Ni4zIDIzNC4yIDE3MS44IDIyMi4zIDE2Ny4xIDIxNC40IDE2My4zIDIxMC45IDE2MS4zIDIwOC40IDE1OS42IDIwNC43IDE1Ni41IDIwMi4zIDE1My43IDIwMC44IDE1MS4yIDE5OS44IDE0OC43IDE5OS4yIDE0NS4xIDE5OS4yIDE0MiAxOTkuOCAxMzguNyAyMDEuNCAxMzQuOCAyMDMuMiAxMzIuMiAyMDYgMTI5LjUgMjA3LjkgMTI4LjEgMjA5LjUgMTI3LjIgMjEyLjUgMTI1LjggMjE0LjUgMTI1LjEgMjE4LjEgMTI0LjIgMjIzIDEyMy42IDIyOS4zIDEyMy41IDIzNC42IDEyNCAyMzcuNyAxMjQuNiAyNDEuMSAxMjUuNiAyNDQuMSAxMjYuOCAyNDUuOSAxMjcuOCAyNDkgMTMwLjIgMjUxLjUgMTMzLjIgMjUzIDEzNiAyNTQgMTM4LjggWiIgZmlsbD0idXJsKCNzaGFvUm9zZSkiPjwvcGF0aD4KPGNpcmNsZSBjeD0iMjYwLjIiIGN5PSIxMzYuOSIgcj0iNi41MSIgZmlsbD0idXJsKCNzaGFvUm9zZSkiPjwvY2lyY2xlPgo8L2c+Cjx0ZXh0IGZvbnQtZmFtaWx5PSJJQk0gUGxleCBTYW5zLCBJbnRlciwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjYwMCIgZm9udC1zaXplPSIxNCIgbGV0dGVyLXNwYWNpbmc9IjMuNSIgZmlsbD0idXJsKCNzaGFvQ2hhbXApIj48dGV4dFBhdGggaHJlZj0iI3NoYW9MZWZ0IiBzdGFydE9mZnNldD0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RSUFOR1FJQU5HIFNIQU88L3RleHRQYXRoPjwvdGV4dD4KPHRleHQgZm9udC1mYW1pbHk9IklCTSBQbGV4IFNhbnMsIEludGVyLCBzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iNjAwIiBmb250LXNpemU9IjE0IiBsZXR0ZXItc3BhY2luZz0iMy41IiBmaWxsPSJ1cmwoI3NoYW9DaGFtcCkiPjx0ZXh0UGF0aCBocmVmPSIjc2hhb1JpZ2h0IiBzdGFydE9mZnNldD0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5IRU1BVE9MT0dZIMK3IE9OQ09MT0dZPC90ZXh0UGF0aD48L3RleHQ+CjwvZz4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE2IDApIj4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTMxLjUzIC02MS4xMCkgc2NhbGUoMS4yNTU1KSI+CjxjaXJjbGUgY3g9IjEyMiIgY3k9IjIwMCIgcj0iMjYiIGZpbGw9IiNGRkZGRkYiIGZpbGwtb3BhY2l0eT0iMC4wNiI+PC9jaXJjbGU+CjxnIGNsaXAtcGF0aD0idXJsKCNzaGFvTGVucykiPgo8cGF0aCBkPSJNIDEwMi4zIDE5Mi44IEEgMjEgMjEgMCAwIDEgMTE0LjggMTgwLjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0YwRDZBMiIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLW9wYWNpdHk9IjAuODUiPjwvcGF0aD4KPC9nPgo8L2c+CjwvZz4KPC9zdmc+Cg==" alt="Qiangqiang Shao logo" width="54" height="54">
         <div class="day" id="dayTitle"><span class="dline"><span id="dayName">Workout</span><span class="sync" id="sync">Connecting…</span></span><small id="daySub">Loading…</small></div>
       </div>
     </div>
@@ -694,6 +749,7 @@ a.btn { text-decoration: none; color: inherit; display: inline-block; }
 <div class="timer" id="timer"><div class="wrap" id="timerInner"></div></div>
 <div class="lightbox" id="lightbox" hidden></div>
 <div class="toast" id="toast" hidden></div>
+<div id="iconSheet"></div>
 <button class="fab" id="fabAdd" data-act="nx-open" aria-label="Add an exercise to the list" title="Add an exercise" hidden><span aria-hidden="true">+</span></button>
 
 <script>
@@ -1134,7 +1190,7 @@ function signIn(silent) {
 }
 // Sign out / switch account (web 0.2a, user 2026-11-07): removes this person's sign-in and every cached copy of their data from
 // the phone, so the next Google account starts clean. Phone preferences (theme, chart range, plan switch, timer) are kept.
-const KEEP_ON_SIGNOUT = ['wlite.theme.v1', 'wlite.range.v1', 'wlite.showbw.v1', 'wlite.timer.v1', 'qsapp.plan.v1'];
+const KEEP_ON_SIGNOUT = ['wlite.theme.v1', 'wlite.pal.v1', 'wlite.setopen.v1', 'wlite.range.v1', 'wlite.showbw.v1', 'wlite.timer.v1', 'qsapp.plan.v1'];
 function signOut() {
   try {
     const ks = []; for (let i = 0; i < localStorage.length; i++) ks.push(localStorage.key(i));
@@ -1239,6 +1295,31 @@ async function appWrite(name, text) {
   const j = await gfetch(UPLOAD + '?uploadType=multipart&fields=id', { method: 'POST', body, multipart: true, headers: { 'Content-Type': 'multipart/related; boundary=' + b } });
   fileIds[name] = j.id; return j;
 }
+// web 0.2d: own app icon, 'app icon.jpg' in the Workout Lite folder
+const ICON_NAME = 'app icon.jpg';
+async function iconList() {
+  const folder = await wlFolder(false); if (!folder) return [];
+  const j = await gfetch(DRIVE + '?fields=files(id,modifiedTime)&orderBy=modifiedTime desc&pageSize=10&q=' + encodeURIComponent("name='" + ICON_NAME + "' and '" + folder + "' in parents and trashed=false"));
+  return j.files || [];
+}
+async function api_iconGet(have) {
+  const f = (await iconList())[0]; if (!f) return null;
+  if (have && have === f.id) return { id: f.id, same: true };
+  let r; try { r = await fetch(DRIVE + '/' + f.id + '?alt=media', { headers: { Authorization: 'Bearer ' + token() } }); } catch (e) { throw new Error('No connection to Google right now (network).'); }
+  if (!r.ok) throw new Error('The icon could not be read from Drive.');
+  const blob = await r.blob();
+  const data = await new Promise((ok, no) => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.onerror = () => no(new Error('The icon could not be read.')); fr.readAsDataURL(blob); });
+  return { id: f.id, data: String(data).replace(/^data:[^;,]*/, 'data:image/jpeg') };
+}
+async function api_iconSet(b64) {
+  const old = await iconList(), b = 'wweb' + Date.now();
+  const body = '--' + b + '\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n' + JSON.stringify({ name: ICON_NAME, mimeType: 'image/jpeg', parents: [await wlFolder(true)] }) +
+    '\r\n--' + b + '\r\nContent-Type: image/jpeg\r\nContent-Transfer-Encoding: base64\r\n\r\n' + b64 + '\r\n--' + b + '--';
+  const j = await gfetch(UPLOAD + '?uploadType=multipart&fields=id', { method: 'POST', body, multipart: true, headers: { 'Content-Type': 'multipart/related; boundary=' + b } });
+  for (const f of old) { try { await gfetch(DRIVE + '/' + f.id, { method: 'DELETE' }); } catch (e) {} }
+  return { id: j.id };
+}
+async function api_iconDel() { for (const f of await iconList()) await gfetch(DRIVE + '/' + f.id, { method: 'DELETE' }); return true; }
 async function appDelete(name) { const id = await appFind(name); if (id) { await gfetch(DRIVE + '/' + id, { method: 'DELETE' }); delete fileIds[name]; } }
 
 // ---------- per-person settings ----------
@@ -1583,7 +1664,7 @@ async function sheetsCall(tool, input) {
   throw new Error('Not available in the web version: ' + tool);
 }
 
-const API = { api_init, api_data, api_create, api_useExisting, api_forget, api_draftGet, api_draftSet, api_save, api_addExercise, api_signOut, api_plansGet, api_plansSave, api_foodGet, api_foodCreate, api_foodUse, api_foodForget };
+const API = { api_init, api_data, api_create, api_useExisting, api_forget, api_draftGet, api_draftSet, api_save, api_addExercise, api_signOut, api_plansGet, api_plansSave, api_foodGet, api_foodCreate, api_foodUse, api_foodForget, api_iconGet, api_iconSet, api_iconDel };
 
 // google.script.run look-alike, so the page works unchanged
 function runner() {
@@ -1637,8 +1718,6 @@ const UPPER = 'Upper Body Day', LOWER = 'Lower Body Day', END = 'End Workout';
 const LINE = '────────────────────';
 const NOT_EX = /^(upper body day|lower body day|end workout|no entry)$/i;
 // weekday (0=Sun) -> plan digit. Mon 1 push, Tue 2 pull, Wed 4 legs, Fri 3 = the 13/23 repeats.
-const DAY_DIGIT = { 1: '1', 2: '2', 3: '4', 5: '3' };
-const DAY_LABEL = { 1: 'Push day', 2: 'Pull day', 3: 'Leg day', 5: 'Upper body' };
 const WEEKDAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const K_CACHE = 'wlite.cache.v1', K_DRAFT = 'wlite.draft.v1', K_TIMER = 'wlite.timer.v1';
 const DEFAULT_SETS = 3;
@@ -1671,6 +1750,9 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
   del(k) { try { localStorage.removeItem(k); } catch (e) {} }
 };
+const LOGO_ORIG = (document.querySelector('img.logo') || { getAttribute: () => '' }).getAttribute('src');   /* Ver 0.2d: the default logo, before any theme or own icon */
+const K_PAL = 'wlite.pal.v1', K_ICON = 'wlite.icon.v1', ICON_TITLE = 'app icon.jpg';
+const PALS = [{ k: 'navy', n: 'Navy + Gold', b: '#14284b', g: '#d8b072' }, { k: 'ember', n: 'Soft ember', b: '#222222', g: '#d9774f' }, { k: 'blush', n: 'Blush', b: '#b85c7a', g: '#f7cfd8' }];
 const pad2 = n => String(n).padStart(2, '0');
 const isoOf = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
 const usOf = iso => { const [y, m, d] = iso.split('-').map(Number); return m + '/' + d + '/' + y; };
@@ -1770,7 +1852,7 @@ const S = {
   foodState: 'wait', foodMsg: '',
   foodDay: null,          // ISO date shown on the Food tab
   est: null,              // {status, items:[{name, kcal, c, p, f}], note, photo}
-  foodText: '', foodMeal: '', foodPhoto: null, foodSaving: false, qf: [], qfSel: null, qfAmt: '', qfEdit: null, qfSaving: false
+  foodText: '', foodPhoto: null, foodSaving: false, qf: [], qfSel: null, qfAmt: '', qfEdit: null, qfSaving: false
 };
 
 function todayIso() { return isoOf(new Date()); }
@@ -1969,20 +2051,10 @@ function starBtn(name) {
   const on = isFav(name);
   return '<button class="star' + (on ? ' on' : '') + '" data-act="fav" data-name="' + esc(name) + '" aria-pressed="' + on + '" aria-label="' + (on ? 'Remove from favourites' : 'Add to favourites') + '">' + (on ? '★' : '☆') + '</button>';
 }
-// the old plan from the number prefixes (Mon 1, Tue 2, Wed 4, Fri 3)
-function prefixPlan(iso) {
-  return [];   // Ver 0.2c: plan numbers removed from the Sheet; week plans decide Today
-  const wd = new Date(iso + 'T12:00:00').getDay();
-  const digit = DAY_DIGIT[wd];
-  if (!digit) return [];
-  const names = pickable().filter(e => prefixOf(e.name).includes(digit)).map(e => e.name);
-  const warm = pickable().find(e => /warm.?up/i.test(e.name));
-  return (warm ? [warm.name] : []).concat(names);
-}
 function planNames(iso) {
   if (!planOn()) return [];
   const ap = activePlan();
-  if (!ap) return prefixPlan(iso);
+  if (!ap) return [];   // Ver 0.2c: no week plan in use = Today starts empty
   const day = ap.days[dayKeyOf(iso)];
   if (!day || day.type === 'Rest') return [];
   const have = new Set(pickable().map(e => e.name));
@@ -1997,7 +2069,7 @@ function freshDraft(iso) { const items = planFor(iso); return { date: iso, items
 function todayFollowPlan() {
   const d = S.draft; if (!d || !S.exercises.length || d.date !== todayIso() || d.done || draftHasWork(d)) return;
   const now = d.items.map(i => i.name).join('|');
-  const sig = d.planSig != null ? d.planSig : prefixPlan(d.date).join('|');
+  const sig = d.planSig != null ? d.planSig : '';
   if (now !== sig) return;
   const want = planNames(todayIso()).join('|');
   if (want !== now) { S.draft = freshDraft(todayIso()); saveDraft(); }
@@ -2314,7 +2386,6 @@ const K_WEEK = 'wlite.carbweek.v1';
 const FOOD_TAB = 'Food log', FOOD_RANGE = "'Food log'!A1:J";   // J = Fiber (g), Ver 0.1s
 const DRAFT_TAB = 'App draft';   // private spreadsheet: backup of unsaved sets (A1 JSON, B1 time), 2026-10-30
 const SAVE_TIMEOUT = 30000;      // ms; a save call that takes longer is reported instead of hanging
-const MEALS = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
 function weekPlan() { const w = store.get(K_WEEK); return Object.assign({}, DEFAULT_WEEK, w || {}); }
 // Carb day (Ver 0.2b, user 2026-11-07): the week plan (K_WEEK) gives each weekday high / mid / low; changing the Carb day on the
 // Food tab changes that one date only (K_CDAY {iso: kind}); the week plan is set in Carb day › Plan my week.
@@ -2331,7 +2402,7 @@ function workoutWeek() {
   WDAYS.forEach(([k], i) => { const d = p.days[k]; if (!d) return; any = true; m[(i + 1) % 7] = d.type === 'Rest' ? 'low' : d.type === 'Custom' ? 'mid' : 'high'; });
   return any ? m : null;
 }
-function weekPlanBody() {
+function weekPlanBody(inSet) {
   const w = weekPlan(), c = { high: 0, mid: 0, low: 0 }, ww = workoutWeek(), ap = activePlan();
   WK_ORDER.forEach(d => { c[w[d]]++; });
   return '<div class="wkbody">' + WK_ORDER.map(d => '<div class="wkrow"><span class="wkd">' + WEEKDAYS[d] + '</span><div class="seg wkseg">' +
@@ -2342,7 +2413,7 @@ function weekPlanBody() {
       '<button class="btn sm" data-act="wk-pre" data-k="gym"' + (ww ? '' : ' disabled') + '>Match my workouts</button><button class="btn sm" data-act="wk-pre" data-k="mid">All mid</button></div>' +
     '<p class="hint">' + (ww ? 'Match my workouts: high on workout days, mid on custom days, low on rest days of ' + esc(ap.name) + '.' : 'Match my workouts needs a week plan (Settings › Week plan).') +
       ' Days you changed one at a time keep their change.</p></div>' +
-    '<div class="nxfoot"><button class="btn primary" data-act="fs-close">Done</button></div>';
+    (inSet ? '' : '<div class="nxfoot"><button class="btn primary" data-act="fs-close">Done</button></div>');
 }
 // Food settings tab in the food Sheet (Ver 0.2b): week plan, one-day changes, typed weight, body type and unit follow the person
 // to a new phone. Rows: Setting | Day | Value. Read when the food Sheet is read; written a moment after each change.
@@ -2901,6 +2972,7 @@ async function saveSession() {
 // ---------- rendering ----------
 function render() {
   renderHeader();
+  renderIconSheet();
   // Add-exercise bubble: Library tab only, hidden while its sheet is open (Ver 0.1i)
   { const fb = $('#fabAdd'); if (fb) fb.hidden = !(S.tab === 'library' && S.exercises.length && !S.nxOpen); document.body.classList.toggle('lib', S.tab === 'library'); }
   // Food tab class (the + bubble was removed in Ver 0.1v; Enter myself opens Add a food)
@@ -2926,10 +2998,51 @@ function render() {
     fitFigs();
     return;
   }
-  else if (S.tab === 'settings') { const sb = $('#wpBody'), st = sb ? sb.scrollTop : 0; v.innerHTML = viewSettings(); const nb = $('#wpBody'); if (nb) nb.scrollTop = st; }
+  else if (S.tab === 'settings') { const sb = $('#wpBody'), st = sb ? sb.scrollTop : 0; v.innerHTML = viewSettings(); if (!S.wpEdit) foldSettings(v); const nb = $('#wpBody'); if (nb) nb.scrollTop = st; }
   else { const sb = $('#nxBody'), st = sb ? sb.scrollTop : 0; v.innerHTML = viewLibrary() + addExSheet(); const nb = $('#nxBody'); if (nb) nb.scrollTop = st; }
   foodWeekBar();
   startGlows();
+}
+// Settings sections fold to their title bar (Ver 0.2d, user 2026-11-08: "the ones not being used are showing titles only").
+// Works on the built HTML: each title (p.section-h or div.sec-row) becomes a tap bar; the first .panel after it shows only while open.
+// Open sections are kept on this phone (qsapp.setopen.v1); all start folded.
+const K_SETOPEN = 'wlite.setopen.v1', K_LIBOPEN = 'wlite.libopen.v1';
+// Ver 0.2d (user, 2026-11-08, iPhone Settings screenshot): one grouped list, each section a row with an icon tile, title and chevron;
+// tapping a row opens its card right under it inside the same group.
+const SET_ICON = (() => {
+  const s = d => '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  return {
+    'Week plan': s('<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/>'),
+    'Carb week': s('<path d="M3 12h18a9 9 0 0 1-18 0z"/><path d="M8 8c0-2 2-2 2-4M13 8c0-2 2-2 2-4"/>'),
+    'Appearance': s('<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor"/>'),
+    'Renpho import': s('<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M8.5 10a4.5 4.5 0 0 1 7 0"/><path d="M12 10l1.4-1.8"/>'),
+    'Version': s('<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6" fill="currentColor"/>'),
+    'Your workout Sheet': s('<rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M4 9h16M4 14.5h16M10 9v11.5"/>'),
+    'Your food Sheet': s('<path d="M7 3v8a2 2 0 0 0 4 0V3M9 11v10M16.5 21V3c-2 1-3 3.5-3 7 0 1.5 1 2.5 3 2.5"/>'),
+    'Google account': s('<circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20.5c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/>'),
+    'Your Sheets': s('<path d="M3.5 7a2 2 0 0 1 2-2h4l2 2.2h7a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/>')
+  };
+})();
+function foldSettings(v) {
+  const open = store.get(K_SETOPEN) || {};
+  let group = null;
+  [...v.children].forEach(el => {
+    const t = el.matches('p.section-h') ? el : el.matches('.sec-row') ? el.querySelector('.section-h') : null;
+    if (!t) { if (group && !el.classList.contains('sheet-bg')) group.lastElementChild.appendChild(el); else group = el.classList.contains('sheet-bg') ? group : null; return; }
+    let pn = el.nextElementSibling;
+    while (pn && !pn.classList.contains('panel') && !pn.matches('p.section-h, .sec-row')) pn = pn.nextElementSibling;
+    if (!pn || !pn.classList.contains('panel')) { group = null; return; }
+    if (!group) { group = document.createElement('div'); group.className = 'setgroup'; el.before(group); }
+    const key = t.textContent.trim(), on = !!open[key], side = el.querySelector('.sec-side');
+    const row = document.createElement('div');
+    row.className = 'setrow' + (on ? ' on' : ''); row.dataset.act = 'set-tog'; row.dataset.k = key;
+    row.setAttribute('role', 'button'); row.setAttribute('tabindex', '0'); row.setAttribute('aria-expanded', String(on));
+    row.innerHTML = '<span class="seticon">' + (SET_ICON[key] || SET_ICON['Version']) + '</span><span class="settitle">' + esc(key) + '</span>' +
+      (side ? '<span class="setside">' + esc(side.textContent) + '</span>' : '') + '<span class="setchev" aria-hidden="true"></span>';
+    const sec = document.createElement('div'); sec.className = 'setsec' + (on ? ' on' : '');   /* Ver 0.2d: an open section gets a gold edge */
+    sec.appendChild(row); group.appendChild(sec); el.remove();
+    pn.classList.add('setpanel'); pn.hidden = !on;
+  });
 }
 // Border light on the picker cards: one lap every 5 s at a STEADY speed along the border (user, 2026-10-31).
 // A plain rotation would race along the long edges, so the angle keyframes are sampled at equal distances around the card's real size.
@@ -2978,7 +3091,7 @@ function renderHeader() {
   const d = new Date(iso + 'T12:00:00');
   const wd = d.getDay();
   $('#dayName').textContent = WEEKDAYS[wd];
-  let lab = DAY_LABEL[wd] || 'No plan today';
+  let lab = 'No plan today';   /* Ver 0.2d (user, 2026-11-08): no week plan in use = No plan today (the weekday labels went with the plan numbers) */
   const ap = activePlan(); if (ap) { const dd = ap.days[dayKeyOf(iso)]; lab = dd ? typeLabel(dd.type) : 'No plan today'; }
   $('#daySub').textContent = usOf(iso) + (planOn() ? ' · ' + lab : '');
 }
@@ -3051,9 +3164,8 @@ function viewToday() {
 function nameBlock(name, hidePrefix) {
   const e0 = exByName(name) || { cat: '', muscle: '', notes: '' };
   const e = S.isOwner ? e0 : Object.assign({}, e0, { notes: '' });   // exercise notes are the owner's only (user, 2026-11-03)
-  const pre = '';   // plan-number badge removed in Ver 0.2c (favourites took its place); numbers stay in the Sheet names
   const tip = e.notes ? '<span class="tip" role="tooltip">' + esc(e.notes) + '</span>' : '';
-  return '<span class="ex-name' + (e.notes ? ' has-tip" tabindex="0' : '') + '">' + (pre ? '<span class="pre">' + esc(pre) + '</span>' : '') + esc(bareName(name)) + tip + '</span>' +
+  return '<span class="ex-name' + (e.notes ? ' has-tip" tabindex="0' : '') + '">' + esc(bareName(name)) + tip + '</span>' +
     '<span class="meta">' + (e.cat ? '<span class="chip ' + catClass(e.cat) + '">' + esc(catLabel(e.cat)) + '</span>' : '') + (e.muscle ? '<span>' + esc(e.muscle) + '</span>' : '') + '</span>';
 }
 // One picture per exercise showing START (left) and END (right), built into the page as data URIs
@@ -3718,8 +3830,11 @@ function viewLibrary() {
   const list = pickable().filter((e, i, a) => a.findIndex(x => x.name === e.name) === i);
   const nmSort = (a, b) => bareName(a.name).localeCompare(bareName(b.name));
   const favs = list.filter(e => isFav(e.name)).sort(nmSort), other = list.filter(e => !isFav(e.name) && !/warm.?up/i.test(e.name)).sort(nmSort);
-  const card = e => '<section class="card"><div class="lib-h"><div class="titles">' + nameBlock(e.name) + '</div>' + starBtn(e.name) + '</div>' + pics(e.name) + lastLine(e.name) + '</section>';
-  if (favs.length) h += '<div class="lib-group"><h2>★ Favourites · ' + favs.length + '</h2>' + favs.map(card).join('') + '</div>';
+  // Ver 0.2d (user, 2026-11-08): favourite cards fold to their name row; tap the row (or the chevron) to show the picture and last session.
+  const lo = store.get(K_LIBOPEN) || {};
+  const card = e => { const on = !!lo[e.name]; return '<section class="card libcard' + (on ? ' on' : '') + '"><div class="lib-h" data-act="lib-tog" data-k="' + esc(e.name) + '" role="button" aria-expanded="' + on + '"><div class="titles">' + nameBlock(e.name) + '</div>' + starBtn(e.name) + '<span class="setchev" aria-hidden="true"></span></div>' + (on ? pics(e.name) + lastLine(e.name) : '') + '</section>'; };
+  const allOn = favs.length && favs.every(e => lo[e.name]);
+  if (favs.length) h += '<div class="lib-group"><div class="lib-gh"><h2>★ Favourites · ' + favs.length + '</h2><button class="btn sm" data-act="lib-all" data-v="' + (allOn ? '0' : '1') + '">' + (allOn ? 'Collapse all' : 'Expand all') + '</button></div>' + favs.map(card).join('') + '</div>';
   h += '<div class="lib-group"><h2>Other exercises · ' + other.length + '</h2><ul class="namelist">' + other.map(e => '<li><span>' + esc(bareName(e.name)) + '</span>' + starBtn(e.name) + '</li>').join('') + '</ul></div>';
   if (!favs.length) h += '<p class="hint">Tap ☆ to make an exercise a favourite: favourites show first here and as quick picks in the week plan.</p>';
   return h;
@@ -3729,15 +3844,11 @@ function viewLibrary() {
 // ---------- add an exercise (Library tab, Ver 0.1h) ----------
 // The new row goes into the Exercises tab: in its plan-number group, or at the end of the exercises without a number.
 const CATS = ['push', 'pull', 'legs', 'core & cardio'];
-function nxBlank() { return { name: '', cat: 'push', unit: 'lbs', days: {}, fav: false, muscle: '', notes: '' }; }
-// plan days as chips; the plan number is their digits in ascending order (Mon 1, Tue 2, Fri 3, Wed 4), e.g. Mon + Fri = 13
-const NX_DAYS = [['1', 'Mon'], ['2', 'Tue'], ['4', 'Wed'], ['3', 'Fri']];
-function nxPre(f) { return ''; }   // Ver 0.2c: no plan numbers in names
+function nxBlank() { return { name: '', cat: 'push', unit: 'lbs', fav: false, muscle: '', notes: '' }; }
 function addExSheet() {
   if (!S.nx || !S.nxOpen) return '';
-  const f = S.nx, busy = !!S.nxBusy, pre = nxPre(f);
+  const f = S.nx, busy = !!S.nxBusy;
   const chips = (act, list, cur) => '<div class="seg nxseg">' + list.map(([v, lab]) => '<button class="btn' + (cur(v) ? ' on' : '') + '" data-act="' + act + '" data-v="' + esc(v) + '" aria-pressed="' + cur(v) + '">' + esc(lab) + '</button>').join('') + '</div>';
-  const dayNames = NX_DAYS.filter(([d]) => f.days[d]).map(([, n]) => n).join(', ');
   return '<div class="sheet-bg" data-act="nx-hide"><div class="sheet nxsheet" role="dialog" aria-label="Add an exercise" data-act="noop">' +
     '<div class="sheet-h"><b>Add an exercise</b><button class="btn sm" data-act="nx-hide">Close</button></div>' +
     '<div class="nxbody" id="nxBody">' +
@@ -3754,11 +3865,10 @@ function addExSheet() {
 }
 function nxCheck(f) {
   const name = String(f.name || '').trim().replace(/\s+/g, ' ');
-  const pre = nxPre(f);
   if (!name) return { err: 'Type the exercise name.' };
   if (/^\d+ /.test(name)) return { err: 'Don\'t start the name with a number.' };
   if (NOT_EX.test(name) || /^warm.?up$/i.test(name)) return { err: 'That name is reserved. Choose another name.' };
-  const full = (pre ? pre + ' ' : '') + name;
+  const full = name;
   const clash = S.exercises.find(e => bareName(e.name).toLowerCase() === name.toLowerCase());
   if (clash) return { err: '"' + bareName(clash.name) + '" is already in the list' + (prefixOf(clash.name) ? ' (as ' + clash.name + ')' : '') + '.' };
   if (!CATS.includes(f.cat) || !UNITS.includes(f.unit)) return { err: 'Choose a category and a unit.' };
@@ -3814,6 +3924,7 @@ async function addExercise() {
 // (Ver <major.minor><letter> · MMDDYYYY). Each push to GitHub takes the artifact's top APP_VERSIONS entry as its version.
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.2d', '11082026', 'Matches the full app Ver 0.2d. Settings is one grouped list like iPhone Settings: a row per section with an icon; tap a row to open it right under the row (which ones are open is remembered on this phone). Appearance: Follow the phone setting is a switch under Dark mode (Dark mode greyed out while it is on); Color theme (Navy + Gold, Soft ember, Blush; changes every navy and gold, light and dark); App icon: tap the logo at the top left to upload your own picture (cropped square from the middle) or go back to the default logo; it is saved in your Workout Lite folder in Google Drive, so it shows on every phone. New Settings › Carb week (your weight, then high / mid / low carb per weekday; the same as the Food tab). The Start each day with the plan switch moved into the Week plan card; the Week plan row shows the name of the plan in use. Exercises tab: favourite cards fold to their name (tap to open; Expand all / Collapse all). The header says No plan today when no week plan is in use.'],
   ['0.2c', '11082026', 'Matches the full app Ver 0.2c. Plan numbers are gone from exercise names (hidden too if your Sheet still has them); with no week plan in use Today starts empty. Exercises tab and Add an exercise: Favourites first, then the rest A to Z. New people get Dead Hang (stopwatch: Start, then Stop records the seconds; a small box for a typed time) and Pull Up (count only, + set for more; the Progress chart adds up each day; start and end drawing); anyone can add such exercises with the new reps unit or the seconds unit. Bottom sheets keep their last option above the iPhone home bar and away from the rounded corners. The Remove? confirmation on a Today card is a full-size red button. Progress: Show body weight on the chart is for the owner only.'],
   ['0.2b', '11072026', 'Matches the full app Ver 0.2b. Food tab: changing the Carb day is for that day only; Carb day › Plan my week sets the weekly high / mid / low pattern (one switch per weekday, with Standard 2-3-2, Match my workouts and All mid). The Weight box no longer shows Auto (7-day Renpho average) to anyone but the owner; everyone else types their weight. Week plan, one-day changes, typed weight, body type and unit are kept in a Food settings tab of the food Sheet, so they follow you to a new phone. Everything on the Food tab shows before a weight is set; the Weight box glows gold until then.'],
   ['0.2a', '11072026', 'Matches the full app Ver 0.2a. New person: the first-open screen makes a folder named Workout Lite in your My Drive with two Google Sheets, Workout Lite log (exercises, sessions, week plans) and Workout Lite food (food log, quick foods, body weight), in one tap. If the folder is already there it is reused and finished. Creating a food Sheet later also puts it in that folder. Sign-in now asks only for your email and for the files the app made itself, so Google shows no "unverified app" warning; the app settings and unsaved sets are kept in the Workout Lite folder. Using a Sheet the app did not make (Use a Sheet I already have) asks once for the full Google Sheets permission. Settings › Google account: Sign out / switch account (clears your data from this phone; the next sign-in lets you pick the account). Food tab: everything shows from the start; until a weight is set, the Weight box glows gold and a card with Enter my weight takes the place of the targets.'],
@@ -3833,10 +3944,14 @@ function viewSettings() {
   h += weekPlansPanel();
   const [v, d] = APP_VERSIONS[0];
   const dark = document.documentElement.getAttribute('data-theme') === 'dark', chosen = !!store.get(K_THEME);
-  h += '<p class="section-h">Appearance</p><div class="panel"><label class="switch"><span>Dark mode</span><input type="checkbox" role="switch" id="themeSw"' + (dark ? ' checked' : '') + '><i aria-hidden="true"></i></label>' +
-    '<p class="hint">' + (chosen ? 'Your choice is kept on this phone. <button class="linkbtn" data-act="theme-auto">Follow the phone setting instead</button>' : 'Following your phone’s light / dark setting.') + '</p></div>';
-  h += '<p class="section-h">Today\'s plan</p><div class="panel"><label class="switch"><span>Start each day with the plan</span><input type="checkbox" role="switch" id="planSw"' + (planOn() ? ' checked' : '') + '><i aria-hidden="true"></i></label>' +
-    '<p class="hint">' + (planOn() ? (activePlan() ? 'Today fills in from your week plan ' + esc(activePlan().name) + '.' : 'Today fills in from the plan numbers in the Exercises tab (1 Mon, 2 Tue, 4 Wed, 3 Fri).') : 'Today starts empty; pick the exercises yourself. Kept on this phone.') + '</p></div>';
+  /* Ver 0.2d (user, 2026-11-08): Today's plan moved into the Week plan card; Carb week added (same week plan as Food › Carb day › Plan my week) */
+  if (PRIV_ID && S.foodSheet) { const lw = foodWeight();   /* Ver 0.2d (user, 2026-11-08): weight entry in Carb week, the same Weight sheet as the Food tab */
+    h += '<p class="section-h">Carb week</p><div class="panel wkset"><div class="icrow wkw"><div class="ict"><b>Weight · ' + (lw ? esc(wShow(lw.kg)) : 'Not set') + '</b><span>' + (lw ? esc(wSrc(lw)) + '. Your daily carb, protein and fat targets come from it.' : 'Enter your weight so the Food tab can work out your targets.') + '</span></div><button class="btn' + (lw ? '' : ' primary') + '" data-act="fs-open" data-k="w">' + (lw ? 'Change' : 'Enter') + '</button></div>' +
+      '<p class="hint">High, mid or low carb for each weekday on the Food tab. A change on the Food tab’s Carb day is for that one day only.</p>' + weekPlanBody(true) + '</div>';
+    if (S.fsh === 'w') h += foodSetSheet(lw, dayKind(todayIso()), new Date().getDay()); }
+  h += '<p class="section-h">Appearance</p><div class="panel"><label class="switch' + (chosen ? '' : ' dis') + '"><span>Dark mode</span><input type="checkbox" role="switch" id="themeSw"' + (dark ? ' checked' : '') + (chosen ? '' : ' disabled aria-disabled="true"') + '><i aria-hidden="true"></i></label>' +
+    '<label class="switch"><span>Follow the phone setting</span><input type="checkbox" role="switch" id="themeAutoSw"' + (chosen ? '' : ' checked') + '><i aria-hidden="true"></i></label>' +
+    '<p class="hint">' + (chosen ? 'Your choice is kept on this phone.' : 'Light or dark follows your phone’s setting.') + '</p>' + appearanceExtra() + '</div>';
   h += '<p class="section-h">Your workout Sheet</p><div class="panel">' +
     '<p>Sessions are saved to <b>' + esc(S.sheetTitle || 'your Sheet') + '</b>' + (S.sheetTab ? ' › ' + esc(S.sheetTab) : '') + ' (columns J to M).</p>' +
     '<div class="row-acts">' + (S.sheetUrl ? '<a class="btn" href="' + esc(S.sheetUrl) + '" target="_blank" rel="noopener">Open the Sheet</a>' : '') +
@@ -3899,6 +4014,7 @@ function startWith(r) {
   ensureDraft(); render();
   if (changed || !draftRemoteReady) readDraftRemote();
   if (changed || S.wp.state !== 'ok') readPlans();
+  syncIcon();   // web 0.2d
   if (S.foodSheet === undefined || changed) gs('api_foodGet').then(foodStart).catch(e => { S.foodSheet = { error: codeText(e).text }; render(); });
 }
 async function setupRun(kind, fn) {
@@ -3921,7 +4037,7 @@ function planSummary(p) {
 }
 function weekPlansPanel() {
   const n = S.wp.plans.length, ap = activePlan();
-  let h = '<div class="sec-row"><p class="section-h">Week plan</p><span class="sec-side">' + n + ' of ' + MAX_PLANS + ' plans</span></div>' + wpMsgBox() + '<div class="panel">';
+  let h = '<div class="sec-row"><p class="section-h">Week plan</p>' + (ap ? '<span class="sec-side">' + esc(ap.name) + '</span>' : '') + '</div>' + wpMsgBox() + '<div class="panel">';   /* Ver 0.2d (user, 2026-11-08): the row shows the plan in use instead of 'N of 3 plans' */
   if (S.wp.state === 'wait' && !n) h += '<p>Reading your plans…</p>';
   if (S.wp.state === 'err' && !n) h += '<p>Could not read the Plan tab. ' + esc(S.wp.err || '') + '</p>';
   S.wp.plans.forEach(p => {
@@ -3933,8 +4049,11 @@ function weekPlansPanel() {
       '<button class="btn sm' + (arm ? ' danger' : '') + '" data-act="wp-del" data-id="' + esc(p.id) + '">' + (arm ? 'Tap again to delete' : 'Delete') + '</button></div></div>';
   });
   h += '<div class="row-acts"><button class="btn primary" data-act="wp-new"' + (n >= MAX_PLANS || !S.mcp || S.wp.state === 'wait' ? ' disabled' : '') + '>+ New plan</button></div>' +
-    '<p class="hint">' + (ap ? 'Today follows ' + esc(ap.name) + '. Stop using it to start Today empty.' : n ? 'No plan in use: Today starts empty. Tap Use this plan when a plan is ready.' : 'Make a plan for your week: pick a day type and exercises for each day.') +
-    (n >= MAX_PLANS ? ' You can keep up to 3 plans; delete one to make a new one.' : '') + '</p></div>';
+    (n ? '' : '<p class="hint">Make a plan for your week: pick a day type and exercises for each day.</p>') +
+    (n >= MAX_PLANS ? '<p class="hint">You can keep up to 3 plans; delete one to make a new one.</p>' : '') +
+    /* Ver 0.2d (user, 2026-11-08): the Today's plan switch now sits in the Week plan card */
+    '<div class="wp-today"><label class="switch"><span>Start each day with the plan</span><input type="checkbox" role="switch" id="planSw"' + (planOn() ? ' checked' : '') + '><i aria-hidden="true"></i></label>' +
+    '<p class="hint">' + (planOn() ? (ap ? 'Today fills in from ' + esc(ap.name) + '. Stop using it to start Today empty.' : 'No week plan is in use, so Today starts empty. Tap Use this plan on a plan above.') : 'Today starts empty; pick the exercises yourself. Kept on this phone.') + '</p></div></div>';
   if (S.wpAsk) h += '<div class="sheet-bg" data-act="wp-ask-cancel"><div class="sheet wpask" role="dialog" aria-label="New week plan" data-act="noop">' +
     '<div class="sheet-h"><b>New week plan</b><button class="btn sm" data-act="wp-ask-cancel">Cancel</button></div>' +
     '<p class="wpq">Add a warm-up to every workout day in this schedule?</p>' +
@@ -4108,7 +4227,6 @@ document.addEventListener('click', e => {
     case 'nx-cancel': S.nx = null; S.nxOpen = false; S.nxMsg = ''; render(); break;
     case 'nx-cat': if (S.nx) { S.nx.cat = b.dataset.v; render(); } break;
     case 'nx-unit': if (S.nx) { S.nx.unit = b.dataset.v; render(); } break;
-    case 'nx-day': if (S.nx) { S.nx.days[b.dataset.v] = !S.nx.days[b.dataset.v]; render(); } break;
     case 'nx-save': addExercise(); break;
     case 'cfg-new': setupRun('new', () => gs('api_create', (Intl.DateTimeFormat().resolvedOptions() || {}).timeZone || '')); break;
     case 'cfg-use': { const l = ($('#cfgLink') || {}).value || ''; S.setupLink = l; S.setupOpen = true; if (!l.trim()) { S.setupMsg = 'Paste the link of the Sheet first.'; render(); break; } setupRun('use', () => gs('api_useExisting', l, '')); break; }
@@ -4171,15 +4289,13 @@ document.addEventListener('click', e => {
       const k = b.dataset.k, ww = workoutWeek(), w = {};
       WK_ORDER.forEach(d => { w[d] = k === 'std' ? DEFAULT_WEEK[d] : k === 'gym' && ww ? (ww[d] || 'mid') : 'mid'; });
       store.set(K_WEEK, w); render(); saveFoodSet();
-      toast(k === 'std' ? 'Week plan: standard 2-3-2.' : k === 'gym' ? 'Week plan matches your workouts.' : 'Week plan: all mid.'); break; }
+      toast(k === 'std' ? 'Carb week: standard 2-3-2.' : k === 'gym' ? 'Carb week matches your workouts.' : 'Carb week: all mid.'); break; }
     case 'f-est': { const t = $('#foodText'); if (t) S.foodText = t.value; estimateFood(); break; }
-    case 'fa-open': if (!S.fa) S.fa = faBlank(); S.faOpen = true; S.faMsg = ''; S.faFocus = S.fa.name ? 'fa-kcal' : 'fa-name'; render(); break;
     case 'fa-hide': if (!S.faBusy) { S.faOpen = false; render(); } break;                 // typed values are kept until Cancel or Add
     case 'fa-cancel': if (!S.faBusy) { S.fa = null; S.faOpen = false; S.faMsg = ''; render(); } break;
     case 'fa-save': addFoodManual(); break;
     case 'f-ph-clear': { const t = $('#foodText'); if (t) S.foodText = t.value; S.foodPhoto = null; render(); toast('Photo removed.'); break; }   // tap the added photo again to remove it (Ver 0.1t)
     case 'fa-manual': { const t = $('#foodText'); if (t) S.foodText = t.value; if (!S.fa) S.fa = faBlank(S.foodText.trim().slice(0, 120)); else if (!S.fa.name) S.fa.name = S.foodText.trim().slice(0, 120); S.faOpen = true; S.faMsg = ''; S.faFocus = S.fa.name ? 'fa-kcal' : 'fa-name'; render(); break; }
-    case 'f-manual-old': { const t = $('#foodText'); if (t) S.foodText = t.value; S.est = { status: 'ready', items: ((S.est && S.est.items) || []).concat([blankItem(S.foodText.trim(), 'Manual')]), note: '', src: 'Manual' }; S.foodText = ''; render(); break; }
     case 'f-additem': S.est.items.push(blankItem('')); render(); break;
     case 'f-rm': S.est.items.splice(+b.dataset.i, 1); if (!S.est.items.length) S.est = null; render(); break;
     case 'f-cancel': S.est = null; render(); break;
@@ -4242,8 +4358,13 @@ document.addEventListener('click', e => {
     case 'wp-retry': savePlans(); render(); break;
     case 'tbl-more': S.tableAll = S.tableAll === b.dataset.k ? null : b.dataset.k; render(); break;
     case 'range': S.range = b.dataset.r; store.set(K_RANGE, S.range); render(); break;
-    case 'backup': backupToDrive(); break;
-    case 'theme-auto': store.del(K_THEME); applyTheme(); render(); break;
+    case 'pal': store.set(K_PAL, b.dataset.k); applyPal(); render(); break;
+    case 'lib-tog': { if (e.target.closest('.star, button')) break; const o = store.get(K_LIBOPEN) || {}; if (o[b.dataset.k]) delete o[b.dataset.k]; else o[b.dataset.k] = 1; store.set(K_LIBOPEN, o); render(); break; }
+    case 'lib-all': { const o = {}; if (b.dataset.v === '1') S.exercises.forEach(x => { if (isFav(x.name)) o[x.name] = 1; }); store.set(K_LIBOPEN, o); render(); break; }
+    case 'set-tog': { const o = store.get(K_SETOPEN) || {}; if (o[b.dataset.k]) delete o[b.dataset.k]; else o[b.dataset.k] = 1; store.set(K_SETOPEN, o); render(); break; }
+    case 'icon-open': openIconSheet(); break;
+    case 'icon-close': if (!(S.ic && S.ic.busy)) { S.ic = null; render(); } break;
+    case 'icon-default': iconDefault(); break;
     case 'qf-pick': { const i = +b.dataset.i; if (S.qfSel === i) S.qfSel = null; else { S.qfSel = i; S.qfAmt = String(S.qf[i].usual || (qfByAmt(S.qf[i]) ? 100 : 1)); } render(); break; }
     case 'qf-add': { const q = S.qf[S.qfSel]; const a = +S.qfAmt; if (!q || !(a > 0)) { toast('Enter an amount.'); break; }
       const t = $('#foodText'); if (t) S.foodText = t.value;
@@ -4334,7 +4455,6 @@ document.addEventListener('change', e => {
   if (el.id === 'pickSel') { S.pick = el.value; render(); return; }
   if (el.id === 'bwToggle') { S.showBW = el.checked; store.set(K_BW, S.showBW); render(); return; }
   if (el.id === 'metricSel') { S.metric = el.value; render(); return; }
-  if (el.id === 'mealSel') { S.foodMeal = el.value; return; }
   if (el.id === 'faQf' && S.fa) { S.fa.qf = el.checked; render(); return; }
   if (el.id === 'foodPh' && el.files && el.files[0]) { const t = $('#foodText'); if (t) S.foodText = t.value; S.foodPhoto = el.files[0]; if (S.foodPhotoUrl) URL.revokeObjectURL(S.foodPhotoUrl); S.foodPhotoUrl = URL.createObjectURL(S.foodPhoto); el.value = ''; render(); return; }
   if (el.dataset && el.dataset.fi != null) { render(); return; }
@@ -4345,6 +4465,8 @@ document.addEventListener('change', e => {
   if (el.id === 'wpName') { const p = planById(S.wpEdit); if (!p) return; const v = el.value.trim().replace(/\s+/g, ' ').slice(0, 40) || 'Untitled'; if (v === p.name) return; p.name = v; p.updated = stampNow(); render(); savePlans('The plan name'); return; }
   if (el.id === 'wpWarm') { const p = planById(S.wpEdit); if (!p) return; p.warm = el.checked; p.updated = stampNow(); if (p.active) todayFollowPlan(); render(); savePlans('The warm-up setting'); return; }
   if (el.id === 'nxFav') { if (S.nx) S.nx.fav = el.checked; return; }
+  if (el.id === 'iconIn' && el.files && el.files[0]) { uploadIcon(el.files[0]); return; }
+  if (el.id === 'themeAutoSw') { if (el.checked) store.del(K_THEME); else store.set(K_THEME, document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'); applyTheme(); render(); return; }   /* Ver 0.2d: switch instead of the old link */
   if (el.id === 'themeSw') { store.set(K_THEME, el.checked ? 'dark' : 'light'); applyTheme(); render(); return; }
   if (el.id === 'csvIn' && el.files && el.files[0]) {
     const f = el.files[0]; const rd = new FileReader();
@@ -4485,38 +4607,6 @@ function b64utf8(str) { const bytes = new TextEncoder().encode(str); let bin = '
 // every exercise schematic (replacing older copies of the same name) and any missing illustrated picture into "exercise images",
 // and the logo plus a copy of the app page itself into "app files".
 const WORKOUT_FOLDER = '1y0uvw_lUKKqWYx4nlr84OgOX92-9sm2S';
-async function backupToDrive() {
-  if (!S.mcp || !S.isOwner || S.backup === 'busy') return;
-  S.backup = 'busy'; S.backupMsg = 'Saving app files to Drive…'; render();
-  let done = 0, failed = 0;
-  const up = async (title, parentId, mime, data) => { try { await call('create_file', { title, parentId, contentMimeType: mime, base64Content: data, disableConversionToGoogleType: true }, DRIVE); done++; } catch (e) { failed++; } };
-  try {
-    const list = async (q) => { const r = await call('search_files', { query: q, pageSize: 200, excludeContentSnippets: true }, DRIVE); return (r && r.files) || []; };
-    // 1) exercise images: schematics always fresh, illustrated pictures only if missing (Drive keeps the larger originals)
-    const ex = await list("parentId = '" + EX_FOLDER + "'");
-    for (const [k, u] of Object.entries(EX_SCHEM)) {
-      const title = k + ' (schematic).svg';
-      for (const f of ex.filter(f => f.title === title)) { try { await call('trash_file', { fileId: f.id }, DRIVE); } catch (e) {} }
-      await up(title, EX_FOLDER, 'image/svg+xml', dataUriB64(u));
-    }
-    for (const [k, u] of Object.entries(EX_IMG)) if (!ex.some(f => f.title.startsWith(k + '.'))) await up(k + '.webp', EX_FOLDER, 'image/webp', dataUriB64(u));   // Drive keeps the larger .jpg originals
-    // 2) "app files" folder: logo and the app page
-    let folder = (await list("parentId = '" + WORKOUT_FOLDER + "' and title = 'app files' and mimeType = 'application/vnd.google-apps.folder'"))[0];
-    if (!folder) folder = await call('create_file', { title: 'app files', parentId: WORKOUT_FOLDER, contentMimeType: 'application/vnd.google-apps.folder' }, DRIVE);
-    const fid = folder && (folder.id || (folder.file && folder.file.id));
-    if (fid) {
-      const old = await list("parentId = '" + fid + "'");
-      const logo = document.querySelector('img.logo');
-      if (logo && !old.some(f => f.title === 'logo (app copy).svg')) await up('logo (app copy).svg', fid, 'image/svg+xml', dataUriB64(logo.getAttribute('src')));
-      const page = document.documentElement.cloneNode(true);
-      ['#view', '#timerInner', '#lightbox', '#toast'].forEach(sel => { const n = page.querySelector(sel); if (n) n.innerHTML = ''; });
-      const html = '<!doctype html>\n' + page.outerHTML;
-      await up('QS Workout App ' + todayIso() + ' (page copy).html', fid, 'text/html', b64utf8(html));
-    } else failed++;
-    S.backupMsg = failed ? 'Saved ' + done + ' file' + (done === 1 ? '' : 's') + '; ' + failed + ' could not be saved. Try again later.' : 'Saved ' + done + ' files to Drive › Workout app (exercise images and app files).';
-  } catch (err) { S.backupMsg = 'Backup stopped: ' + codeText(err).text; }
-  S.backup = 'done'; render();
-}
 async function syncExImages() {
   if (!S.mcp || !S.isOwner) return;
   try {
@@ -4577,11 +4667,85 @@ const sysDark = () => !!(window.matchMedia && window.matchMedia('(prefers-color-
 function applyTheme() {
   const t = store.get(K_THEME); const dark = t ? t === 'dark' : sysDark();
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-  const b = $('#themeBtn'); if (b) { b.querySelector('.tlab').textContent = dark ? 'Dark mode' : 'Light mode'; b.querySelector('.tcirc').innerHTML = dark ? '<svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true"><path transform="translate(1.6 -0.4)" d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1z" fill="currentColor"/></svg>' : '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>'; /* label and icon show the CURRENT mode (user, 2026-10-31) */ b.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode'); }
 }
-if ($('#themeBtn')) $('#themeBtn').addEventListener('click', () => { const dark = document.documentElement.getAttribute('data-theme') === 'dark'; store.set(K_THEME, dark ? 'light' : 'dark'); applyTheme(); render(); });
 try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (!store.get(K_THEME)) applyTheme(); }); } catch (e) {}
 applyTheme();
+
+// ---------- Ver 0.2d (user, 2026-11-08): color themes and the user's own app icon ----------
+// Themes: data-pal on <html> switches the CSS variables (rules at the end of the style block); kept on this phone.
+function palOf() { const k = store.get(K_PAL); return PALS.find(p => p.k === k) || PALS[0]; }
+let LOGO_SVG = null;
+function defaultLogoSrc() {
+  const p = palOf(); if (p.k === 'navy' || !LOGO_ORIG) return LOGO_ORIG;
+  if (LOGO_SVG == null) { try { LOGO_SVG = decodeURIComponent(escape(atob(LOGO_ORIG.split(',')[1]))); } catch (e) { LOGO_SVG = ''; } }
+  return LOGO_SVG ? 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(LOGO_SVG.replace(/#14284B/gi, p.b)) : LOGO_ORIG;   /* the logo's navy disc takes the theme colour */
+}
+function iconSrc() { const ic = store.get(K_ICON); return ic && ic.data ? ic.data : defaultLogoSrc(); }
+function applyLogo() {
+  const img = document.querySelector('img.logo'); if (!img) return;
+  const ic = store.get(K_ICON), src = iconSrc();
+  if (img.getAttribute('src') !== src) img.setAttribute('src', src);
+  img.classList.toggle('custom', !!(ic && ic.data));
+}
+function applyPal() { document.documentElement.setAttribute('data-pal', palOf().k); applyLogo(); }
+// Settings > Appearance, under the dark mode switch: theme buttons, then the icon row
+function appearanceExtra() {
+  const cur = palOf().k, ic = store.get(K_ICON);
+  const where = 'Workout Lite';
+  return '<p class="setlab">Color theme</p><div class="palrow">' + PALS.map(p => '<button class="palbtn' + (p.k === cur ? ' on' : '') + '" data-act="pal" data-k="' + p.k + '" aria-pressed="' + (p.k === cur) + '"><span class="sw2" aria-hidden="true"><i style="background:' + p.b + '"></i><i style="background:' + p.g + '"></i></span>' + esc(p.n) + '</button>').join('') + '</div>' +
+    '<p class="hint">Changes every navy and gold in the app, in light and dark mode. Kept on this phone.</p>' +
+    '<p class="setlab">App icon</p><div class="icrow"><img src="' + esc(iconSrc()) + '" alt=""><div class="ict"><b>' + (ic && ic.data ? 'Your picture' : 'Default logo') + '</b><span>' + (ic && ic.data ? 'Saved in your Google Drive (' + where + ' folder).' : 'Tap the logo at the top left, or here, to use your own.') + '</span></div><button class="btn" data-act="icon-open">Change</button></div>';
+}
+function openIconSheet() {
+  if (!S.mcp) { toast('Still connecting to Google Drive. Try again in a moment.'); return; }
+  S.ic = { busy: false, msg: '' }; render();
+}
+function renderIconSheet() {
+  const box = $('#iconSheet'); if (!box) return;
+  const I = S.ic; if (!I) { if (box.innerHTML) box.innerHTML = ''; return; }
+  const ic = store.get(K_ICON), own = !!(ic && ic.data), dis = I.busy ? ' aria-disabled="true"' : '';
+  const where = 'Workout Lite';
+  box.innerHTML = '<div class="sheet-bg" data-act="icon-close"><div class="sheet" role="dialog" aria-label="App icon" data-act="noop"><div class="sheet-h"><b>App icon</b><button class="btn sm" data-act="icon-close">Close</button></div>' +
+    '<div class="icprev"><img src="' + esc(iconSrc()) + '" alt="Current icon"></div><div class="sheet-list">' +
+    '<label class="sheet-it" for="iconIn"' + dis + '>' + (own ? 'Upload a new picture' : 'Upload a picture') + '<span class="pp-sub">Cropped to a square from the middle. Saved in your Google Drive (' + where + ' folder).</span></label>' +
+    '<input type="file" id="iconIn" accept="image/*" hidden>' +
+    '<button class="sheet-it' + (own ? '' : ' on') + '" data-act="icon-default"' + dis + '>' + (own ? '' : '✓ ') + 'Default logo<span class="pp-sub">' + (own ? 'Removes your picture from Drive.' : 'In use.') + '</span></button></div>' +
+    (I.busy || I.msg ? '<p class="hint fsh-note"' + (I.err ? ' style="color:var(--bad)"' : '') + '>' + esc(I.busy ? I.busy : I.msg) + '</p>' : '') + '</div></div>';
+}
+// web 0.2d: the picture is a JPEG in the Workout Lite folder (web backend api_icon*); the newest one wins on every phone
+async function uploadIcon(file) {
+  if (!S.ic) return;
+  S.ic = { busy: 'Saving your icon to Google Drive…' }; render();
+  let url = '';
+  try {
+    url = URL.createObjectURL(file); const img = await loadImg(url);
+    const sq = Math.min(img.naturalWidth, img.naturalHeight);
+    const c = drawCanvas(img, { x: (img.naturalWidth - sq) / 2, y: (img.naturalHeight - sq) / 2, w: sq, h: sq }, 256);
+    const data = c.toDataURL('image/jpeg', 0.88);
+    const r = await withTimeout(gs('api_iconSet', data.split(',')[1]), 60000);
+    store.set(K_ICON, { id: r && r.id, data });
+    S.ic = null; applyLogo(); render(); toast('Icon saved to your Google Drive.');
+  } catch (err) { S.ic = { busy: false, err: true, msg: 'The icon was not saved. ' + (err && err.message && !/^\{/.test(err.message) ? err.message : codeText(err).text) }; render(); }
+  finally { if (url) URL.revokeObjectURL(url); }
+}
+async function iconDefault() {
+  const ic = store.get(K_ICON); if (!(ic && ic.data)) { S.ic = null; render(); return; }
+  S.ic = { busy: 'Going back to the default logo…' }; render();
+  try { await withTimeout(gs('api_iconDel'), 60000); store.del(K_ICON); S.ic = null; applyLogo(); render(); toast('Back to the default logo.'); }
+  catch (err) { S.ic = { busy: false, err: true, msg: 'Your picture could not be removed from Drive, so it stays for now. ' + codeText(err).text }; render(); }
+}
+let iconSyncing = false;
+async function syncIcon() {
+  if (!S.mcp || iconSyncing) return; iconSyncing = true;
+  try {
+    const ic = store.get(K_ICON), r = await gs('api_iconGet', ic && ic.id || '');
+    if (!r) { if (ic) { store.del(K_ICON); applyLogo(); if (S.tab === 'settings') render(); } return; }
+    if (r.same) return;
+    store.set(K_ICON, { id: r.id, data: r.data }); applyLogo(); if (S.tab === 'settings' || S.ic) render();
+  } catch (e) { /* keep what the phone has */ }
+  finally { iconSyncing = false; }
+}
+applyPal();
 document.addEventListener('toggle', e => { const t = e.target; if (t && t.matches && t.matches('details.wk')) S.wkOpen = t.open; }, true);   /* Ver 0.1x: keep This week's targets open across re-renders */
 S.initState = 'wait';
 const cache = store.get(K_CACHE);
