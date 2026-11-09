@@ -1,6 +1,10 @@
 # Workout Lite version history
 
-Newest first. The version number matches the full claude.ai app version at the time of each update. Generated from `APP_VERSIONS` in `index.html`.
+Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
+
+## 0.2d.1 · 11/08/2026
+
+Web-only fixes on Ver 0.2d. The "Tap again to ..." confirm buttons (Sign out / switch account, Reset day, Use a different Sheet, Use a different food Sheet, Delete plan) showed red text on a red button, so the second tap prompt could not be read; they are now deep red with bold white text in light and dark mode. The Progress tab opens even when no exercise is starred or in a week plan, with a note on how to get a chart, instead of staying on the previous tab.
 
 ## 0.2d · 11/08/2026
 
