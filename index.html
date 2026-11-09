@@ -213,7 +213,10 @@ body.no-timer main .wrap { padding-bottom: 40px; }
 .addpill { grid-column: 2; grid-row: 1 / span 2; align-self: center; border: 1px solid var(--brand); background: var(--brand); color: var(--gold); border-radius: 999px; padding: 4px 14px; font-size: 13px; font-weight: 600; line-height: 1.2; }
 .addpill:active { opacity: .7; }
 .btn.sm { padding: 4px 10px; font-size: 13px; }
-.btn.danger { background: var(--bad); color: #fff; border-color: var(--bad); }
+/* "Tap again to ..." confirm buttons: deep red with bold white text in both themes (the dark-mode --bad is a light pink, too pale for white text) */
+.btn.danger { background: #b3261e; color: #fff; border-color: #b3261e; font-weight: 700; }
+:root[data-theme="dark"] .btn.danger { background: #c62828; border-color: #ff8a80; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.danger { background: #c62828; border-color: #ff8a80; } }
 .tline { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .tline b { color: var(--ink); } .tline b.over { color: var(--bad); }
 .tline .tl { min-width: 44px; font-weight: 600; }
@@ -627,7 +630,6 @@ body.setup main .wrap { padding-bottom: 40px; }
 .setup-list { margin: 6px 0 10px; padding-left: 20px; line-height: 1.5; }
 details.panel summary { cursor: pointer; font-size: 15px; }
 .tin { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font-size: 16px; }
-.btn.danger { color: var(--bad); border-color: var(--bad); }
 a.btn { text-decoration: none; color: inherit; display: inline-block; }
 /* Lite 1.1: four tabs, so bigger labels (user, 2026-11-01) */
 :root { --tabbar-h: calc(78px + max(12px, env(safe-area-inset-bottom, 0px))); }
