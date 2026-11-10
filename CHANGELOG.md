@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.2e · 11/09/2026
+
+Matches the full app Ver 0.2e. Swipe to remove: swipe an exercise card on Today, or a row on the Food tab (Eaten list, Adding list, Quick add › Edit list), all the way left; a red Remove shape grows out of the right edge, and letting go past about 40% of the width removes it. This replaces the × buttons and the Remove? confirmation on Today cards; a very thin red line on the right edge shows what can be swiped away. Undo in the message, except for a saved Eaten row (that one is deleted from your food Sheet). Swiping needs a touch screen. Food: tapping a Quick add food adds it to the Adding list right away at its usual amount (the amount box and Add button are gone; change the amount in the Adding list). Target / Left numbers are now bars for calories, carbs, protein, fat and fiber: eaten is solid, the Adding list is lighter, the number on the right is what is left, over target turns the bar red with +amount, and fiber shows a check when met. Messages now show small at the very top of the screen instead of over the middle. (Photo Replace / Delete from the full app is not included: the web version has no Photos tab.)
+
 ## 0.2d.1 · 11/08/2026
 
 Web-only fixes on Ver 0.2d. The "Tap again to ..." confirm buttons (Sign out / switch account, Reset day, Use a different Sheet, Use a different food Sheet, Delete plan) showed red text on a red button, so the second tap prompt could not be read; they are now deep red with bold white text in light and dark mode. The Progress tab opens even when no exercise is starred or in a week plan, with a note on how to get a chart, instead of staying on the previous tab.

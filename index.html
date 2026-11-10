@@ -97,8 +97,6 @@ body.no-timer main .wrap { padding-bottom: 40px; }
 .meta { font-size: 13px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .chip { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 1px 7px; border-radius: 999px; border: 1px solid currentColor; }
 .chip.push { color: var(--push); } .chip.pull { color: var(--pull); } .chip.legs { color: var(--legs); } .chip.core { color: var(--core); }
-.icon-btn { background: none; border: 1px solid var(--line); border-radius: 8px; width: 34px; height: 34px; display: grid; place-items: center; color: var(--muted); flex: none; }
-.icon-btn.armed { color: var(--bad); border-color: var(--bad); width: auto; padding: 0 8px; font-size: 12px; }
 
 .pic { display: block; width: 100%; border: 0; padding: 0; background: none; border-radius: 8px; overflow: hidden; aspect-ratio: 3 / 2; max-width: 100%; }
 .pic.sm { width: 112px; flex: none; border-radius: 6px; box-shadow: 0 0 0 1px var(--line); }
@@ -174,7 +172,6 @@ body.no-timer main .wrap { padding-bottom: 40px; }
 #view .card[data-id] .qb { padding: 5px 0; font-size: 13px; min-width: 40px; border-radius: 7px; }
 #view .card[data-id] .qlab { font-size: 11px; min-width: 44px; }
 #view .card[data-id] .add-set { padding: 4px 12px; font-size: 13px; }
-#view .card[data-id] .icon-btn { width: 30px; height: 30px; }
 #view .card[data-id] .pic.sm { width: 96px; }
 .handle { width: 30px; height: 36px; font-size: 18px; color: var(--muted); border-radius: 6px; }
 .handle:active { background: var(--bg); }
@@ -200,13 +197,12 @@ body.no-timer main .wrap { padding-bottom: 40px; }
 .room { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; }
 .room .over { color: var(--bad, #c0392b); }
 .section-sub { font-size: 13px; font-weight: 600; color: var(--muted); margin: 10px 0 4px; }
-.qitem { display: grid; grid-template-columns: 120px auto 1fr 34px; gap: 4px 8px; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
-.qitem .qn { grid-column: 1 / 4; font-weight: 600; }
-.qitem .icon-btn { grid-column: 4; grid-row: 1; }
+.qitem { display: grid; grid-template-columns: 120px auto 1fr; gap: 4px 8px; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.qitem .qn { grid-column: 1 / -1; font-weight: 600; }
 .qitem .field { grid-column: 1; }
 .qitem .field input { font-size: 15px; padding: 5px 0; }
 .qitem .fit { grid-column: 2; padding-inline: 12px; }
-.qitem .qv { grid-column: 3 / 5; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.qitem .qv { grid-column: 3; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .qb.fit { background: var(--brand); color: var(--gold); border-color: var(--brand); }
 .flog.sugg { background: none; border: 0; padding: 0; }
 .flog.sugg .frow { grid-template-columns: 1fr auto; }
@@ -217,9 +213,6 @@ body.no-timer main .wrap { padding-bottom: 40px; }
 .btn.danger { background: #b3261e; color: #fff; border-color: #b3261e; font-weight: 700; }
 :root[data-theme="dark"] .btn.danger { background: #c62828; border-color: #ff8a80; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.danger { background: #c62828; border-color: #ff8a80; } }
-.tline { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.tline b { color: var(--ink); } .tline b.over { color: var(--bad); }
-.tline .tl { min-width: 44px; font-weight: 600; }
 details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padding: 6px 2px; }
 .wstrip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
 .wstrip .wd { display: grid; gap: 1px; justify-items: center; padding: 3px 0; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); font-size: 11px; color: var(--muted); line-height: 1.15; }
@@ -245,16 +238,12 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 /* Quick foods */
 .qchips { display: flex; flex-wrap: wrap; gap: 6px; }
 .qchip { border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 999px; padding: 6px 12px; font-size: 14px; }
-.qchip.on { background: var(--brand); color: var(--gold); border-color: var(--brand); }
+.qchip.on { background: var(--brand); color: var(--gold); border-color: var(--brand); transition: background .1s; }   /* brief flash when a chip is tapped */
 .qchip.edit { border-style: dashed; color: var(--muted); }
-.qrow { display: grid; grid-template-columns: 110px 1fr auto; gap: 8px; align-items: center; margin-top: 8px; }
-.qrow .field input { font-size: 16px; padding: 6px 0; }
-.qprev { font-size: 13px; color: var(--muted); }
 .qfe { display: grid; gap: 10px; }
-.qfe-row { display: grid; grid-template-columns: repeat(3, 1fr) 34px; gap: 6px; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
-.qfe-row .fname { grid-column: 1 / 3; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); min-width: 0; }
-.qfe-row select { grid-column: 3; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
-.qfe-row .icon-btn { grid-column: 4; grid-row: 1; }
+.qfe-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.qfe-row .fname { grid-column: 1 / 4; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); min-width: 0; }
+.qfe-row select { grid-column: 4; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
 /* Body */
 .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .tile { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 9px 8px; display: grid; gap: 2px; min-width: 0; }
@@ -293,9 +282,8 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .mleft { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 #foodText { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: inherit; resize: vertical; }
 .fitems { display: grid; gap: 10px; }
-.fitem { display: grid; grid-template-columns: repeat(5, 1fr) 34px; gap: 6px; align-items: center; }
-.fitem .fname { grid-column: 1 / -2; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); min-width: 0; }
-.fitem .icon-btn { grid-column: -2; grid-row: 1; }
+.fitem { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; align-items: center; }
+.fitem .fname { grid-column: 1 / -1; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); min-width: 0; }
 .fnum { display: grid; gap: 1px; min-width: 0; }
 .fnum input { width: 100%; box-sizing: border-box; padding: 7px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); font-weight: 600; font-variant-numeric: tabular-nums; }
 .fnum span { font-size: 11px; color: var(--muted); }
@@ -309,17 +297,10 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .adjk { margin: 8px 2px; }
 .flog { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 4px 12px; }
 .fmeal { font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding-top: 8px; }
-.frow { display: grid; grid-template-columns: 1fr 34px; gap: 2px 8px; padding: 6px 0; border-bottom: 1px solid var(--line); align-items: center; }
+.frow { display: grid; grid-template-columns: 1fr; gap: 2px 8px; padding: 6px 0; border-bottom: 1px solid var(--line); align-items: center; }
 .frow:last-child { border-bottom: 0; }
 .frow .fn { min-width: 0; }
 .frow .fk { grid-column: 1; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.frow .icon-btn { grid-column: 2; grid-row: 1 / span 2; }
-/* round remove buttons with a drawn cross (Ver 0.1k, user 2026-11-02: the text × sat off-centre) */
-.icon-btn.xbtn { width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: var(--bg); color: var(--muted); justify-self: center; align-self: center; line-height: 0; box-shadow: inset 0 0 0 1px var(--line); transition: background .15s, color .15s; }
-.icon-btn.xbtn svg { display: block; }
-.icon-btn.xbtn:active { background: rgba(179,38,30,.12); color: var(--bad); box-shadow: inset 0 0 0 1px var(--bad); }
-@media (hover: hover) { .icon-btn.xbtn:hover { color: var(--bad); } }
-.icon-btn.xbtn:disabled { opacity: .4; }
 .hist tr.on td { background: var(--accent-soft); font-weight: 600; }
 
 /* Photos */
@@ -474,7 +455,6 @@ body.lib main .wrap { padding-bottom: calc(var(--tabbar-h) + 96px); }
 .fagrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
 .fagrid .fld { gap: 3px; font-size: 12px; white-space: nowrap; }
 .fagrid .fld input { font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; padding: 9px 4px; text-align: center; }
-.tline .fib { color: var(--good); }
 .btn.fphoto { display: inline-flex; align-items: center; gap: 8px; padding-block: 5px; }
 .phbig.cmp-empty { min-height: 160px; border: 2px dashed var(--line); background: var(--surface); }
 .phbig.cmp-empty i { padding: 20px 10px; text-align: center; font-size: 14px; }
@@ -490,7 +470,6 @@ body.lib main .wrap { padding-bottom: calc(var(--tabbar-h) + 96px); }
 .fwk-arr { flex: none; width: 44px; padding: 4px 0; font-size: 20px; line-height: 1.1; }
 .fwk-line b { color: var(--ink); }
 body.food.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + var(--fwk-h, 76px) + 96px); }
-body.food.fwk-on .toast { bottom: calc(var(--tabbar-h) + var(--fwk-h, 76px) + 12px); }
 .namelist { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
 .namelist li { padding: 10px 12px; border-top: 1px solid var(--line); font-size: 15px; }
 .namelist li:first-child { border-top: 0; }
@@ -512,8 +491,6 @@ body.food.fwk-on .toast { bottom: calc(var(--tabbar-h) + var(--fwk-h, 76px) + 12
 .lightbox .frame { width: min(560px, 100%); background: var(--surface); border-radius: 12px; overflow: hidden; display: grid; }
 .lightbox .frame svg { width: 100%; height: auto; display: block; }
 .lightbox .cap { padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(86px + env(safe-area-inset-bottom, 0px)); z-index: 21; background: var(--ink); color: var(--surface); padding: 10px 16px; border-radius: 999px; font-size: 14px; max-width: calc(100% - 32px); }
-@media (prefers-reduced-motion: no-preference) { .toast { animation: rise .2s ease-out; } @keyframes rise { from { transform: translate(-50%, 8px); opacity: 0 } } }
 
 /* Tab bar at the bottom of the screen (user, 2026-10-31: easier to reach on the phone) */
 .tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 7; pointer-events: none;
@@ -552,8 +529,6 @@ body.lib.no-timer main .wrap, body.food.no-timer main .wrap { padding-bottom: ca
 .timer { bottom: var(--tabbar-h); padding-bottom: 0; }
 main .wrap { padding-bottom: calc(var(--tabbar-h) + 110px); }
 body.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + 24px); }
-.toast { bottom: calc(var(--tabbar-h) + 84px); }
-body.no-timer .toast { bottom: calc(var(--tabbar-h) + 12px); }
 
 /* Week plan and favourites (Ver 0.1l) */
 .star { flex: none; width: 36px; height: 36px; border: 0; background: none; font-size: 22px; line-height: 1; color: var(--lighter); padding: 0; }
@@ -646,7 +621,33 @@ a.btn { text-decoration: none; color: inherit; display: inline-block; }
 .sheet, .sheet.nxsheet, .sheet.wpsheet { padding-left: max(18px, calc(env(safe-area-inset-left, 0px) + 8px)); padding-right: max(18px, calc(env(safe-area-inset-right, 0px) + 8px)); padding-bottom: max(34px, calc(env(safe-area-inset-bottom, 0px) + 20px)); }
 .sheet-list { padding-bottom: 8px; }
 /* Remove? confirmation on a Today card (Ver 0.2c, user 2026-11-08): the compact 30px rule squeezed it; now a red button sized to its text */
-#view .card[data-id] .icon-btn.armed, .icon-btn.armed { width: auto; min-width: 92px; height: 36px; padding: 0 14px; font-size: 15px; font-weight: 700; white-space: nowrap; background: var(--bad); color: #fff; border-color: var(--bad); border-radius: 10px; }
+/* Swipe a Today card left to remove it (Ver 0.2e, user 2026-11-09); also Food rows with data-rm. The only way to remove them (no × buttons). */
+#view .swiping { position: relative; transition: none; touch-action: pan-y; }
+/* the red Remove shape sits OUTSIDE the card, in the gap the card leaves on the right (user 2026-11-09: a separate shape, not over the card) */
+/* publish 166 (user 2026-11-09: the thin red line should become the Remove shape): the shape starts ON the 2 px red line at the right edge and grows out of it */
+#view .swiping::after { content: 'Remove'; position: absolute; top: -1px; bottom: -1px; left: calc(100% - 1px); width: calc(var(--dx, 0px) + 2px); border-radius: 0 var(--r) var(--r) 0; background: var(--bad); color: transparent; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; overflow: hidden; white-space: nowrap; opacity: calc(.7 + var(--sw, 0) * .3); pointer-events: none; }
+#view [data-rm].swiping::after { top: 0; bottom: 0; }
+#view .card[data-id].swiping { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right-color: var(--bad); }   /* card and red shape join as one piece */
+#view .swiping.lbl::after { color: #fff; }   /* full 'Remove' shows once the shape is wide enough */
+#view .swiping.past::after { opacity: 1; }
+#view .sw-back::after { transition: width .22s ease; }
+/* Food tab rows that swipe (0.2e): a solid background while moving so they read as a strip */
+#view [data-rm].swiping { background: var(--surface); z-index: 2; }
+/* Removable hint (Ver 0.2e, user 2026-11-09): a very thin red line on the right edge of everything that can be swiped away */
+#view .card[data-id], #view [data-rm] { box-shadow: inset -1px 0 0 var(--bad); box-shadow: inset -1px 0 0 color-mix(in srgb, var(--bad) 75%, transparent); }
+#view [data-rm] { padding-right: 8px; }
+#view .card[data-id].dragging { box-shadow: 0 10px 28px rgba(0,0,0,.25); }
+#view .sw-back { transition: transform .22s ease; }
+#view .sw-gone { transition: transform .22s ease-in, opacity .22s ease-in; opacity: 0; }
+/* Messages (toast) at the very top, small and soft (Ver 0.2e, user 2026-11-09: it showed in the middle over things you tap) */
+.toast { position: fixed; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 8px); transform: translateX(-50%); z-index: 40; max-width: calc(100% - 32px); width: max-content;
+  display: flex; align-items: center; gap: 10px; padding: 7px 14px; border-radius: 999px; font-size: 13px; line-height: 1.3;
+  background: rgba(255,255,255,.88); color: var(--ink); border: 1px solid var(--line); box-shadow: 0 4px 16px rgba(0,0,0,.12);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4); pointer-events: none; }
+:root[data-theme="dark"] .toast { background: rgba(30,36,48,.88); }
+@media (prefers-reduced-motion: no-preference) { .toast { animation: toastIn .25s ease-out; } @keyframes toastIn { from { transform: translate(-50%, -14px); opacity: 0 } } }
+.toast .undo { pointer-events: auto; flex: none; padding: 2px 10px; border: 0; border-radius: 999px; background: var(--brand); color: var(--gold); font: inherit; font-weight: 700; }
+
 /* Photos (Ver 0.2c): Done comparing at the top; Left / Right tags; hold the big photo for full screen */
 .cmp-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--gold); border-radius: var(--r); padding: 8px 8px 8px 12px; }
 .cmp-t { display: grid; gap: 1px; min-width: 0; }
@@ -724,6 +725,31 @@ img.logo.custom { border-radius: 50%; object-fit: cover; border: 2px solid var(-
 label.sheet-it { display: block; cursor: pointer; }
 .sheet-it[aria-disabled="true"] { opacity: .5; pointer-events: none; }
 .switch.dis { opacity: .45; pointer-events: none; }   /* Ver 0.2d: Dark mode greyed out while Follow the phone setting is on */
+
+/* Food tab nutrition bars (Ver 0.2e, user 2026-11-09: bars instead of the Target / Left number lines) */
+.nbars { display: grid; gap: 7px; }
+.nbar { display: grid; grid-template-columns: 62px 1fr 62px; align-items: center; gap: 10px; font-size: 13px; }
+.nbar .nl { color: var(--ink); font-weight: 600; }
+.nbar .nt { position: relative; display: flex; height: 10px; border-radius: 999px; background: rgba(var(--brand-rgb), .08); overflow: hidden; }
+:root[data-theme="dark"] .nbar .nt { background: rgba(255,255,255,.08); }
+.nbar .nt i { display: block; height: 100%; transition: width .35s ease; }
+.nbar .ne { background: var(--nc); border-radius: 999px 0 0 999px; }
+.nbar .np { background: var(--nc); opacity: .38; }
+.nbar .nr { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.nbar .nr b.over { color: var(--bad); } .nbar .nr b.ok { color: var(--good); }
+.nbar.over .ne, .nbar.over .np { background: var(--bad); opacity: 1; }
+.n-kcal { --nc: var(--accent); } .n-c { --nc: var(--gold); } .n-p { --nc: var(--good); } .n-f { --nc: var(--warn); } .n-fib { --nc: var(--push); }
+.nbar.n-kcal .nt { height: 12px; }
+.nhead { display: flex; justify-content: space-between; margin: 0 0 -2px; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+:root[data-theme="dark"] .n-kcal { --nc: var(--ink); }
+
+/* photo tool row (Ver 0.2e) */
+.phtools { display: flex; justify-content: center; gap: 4px; margin: -2px 0 0; }
+.phtool { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 0; border-radius: 999px; background: none; color: var(--muted); font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+.phtool:active { background: rgba(var(--brand-rgb), .08); }
+.phtool.del { color: var(--bad); }
+.phtool.del.armed { background: var(--bad); color: #fff; }
+.phtool:disabled { opacity: .5; }
 </style>
 
 <header class="top">
@@ -1822,7 +1848,6 @@ const S = {
   pick: null,
   saving: false,
   confirm: false,
-  armed: null,            // item id armed for removal
   mcp: null,
   body: [],               // [{iso, time, key, v: {col: number|null}}] newest first
   bodyState: 'wait',      // wait | ok | err
@@ -1854,7 +1879,7 @@ const S = {
   foodState: 'wait', foodMsg: '',
   foodDay: null,          // ISO date shown on the Food tab
   est: null,              // {status, items:[{name, kcal, c, p, f}], note, photo}
-  foodText: '', foodPhoto: null, foodSaving: false, qf: [], qfSel: null, qfAmt: '', qfEdit: null, qfSaving: false
+  foodText: '', foodPhoto: null, foodSaving: false, qf: [], qfEdit: null, qfSaving: false
 };
 
 function todayIso() { return isoOf(new Date()); }
@@ -2496,7 +2521,6 @@ function qfCalc(q, amt) {
   const k = (+amt || 0) / (q.per || 1), r1 = x => Math.round(x * k * 10) / 10;
   return { name: q.name + (qfByAmt(q) ? ', ' + fmt2(+amt) + ' ' + q.unit : ' × ' + fmt2(+amt)), kcal: Math.round(q.kcal * k), c: r1(q.c), p: r1(q.p), f: r1(q.f), fib: r1(q.fib || 0), src: 'Quick foods', qf: q.name, amt: +amt };
 }
-function qfPrevText(q, amt) { const x = qfCalc(q, amt); return x.kcal + ' kcal · C ' + fmt2(x.c) + ' · P ' + fmt2(x.p) + ' · F ' + fmt2(x.f) + (x.fib ? ' · Fib ' + fmt2(x.fib) : ''); }
 async function saveQuick() {
   if (!S.mcp || !S.qfEdit || S.qfSaving) return;
   const rows = S.qfEdit.filter(q => String(q.name).trim()).map(q => [String(q.name).trim(), q.unit, +q.per || (q.unit === 'each' ? 1 : 100), +q.kcal || 0, +q.c || 0, +q.p || 0, +q.f || 0, q.usual === '' ? '' : +q.usual, q.note || '', q.max === '' || q.max == null ? '' : +q.max, +q.fib || 0]);
@@ -2513,18 +2537,16 @@ async function saveQuick() {
 function viewQuick() {
   if (S.qfEdit) {
     let h = '<p class="hint">Values are per <b>Per</b> grams (unit g), millilitres (unit ml) or per piece (unit each). Copy them from the package label. Usual is the amount filled in when you tap the food.</p><div class="qfe">' +
-      S.qfEdit.map((q, i) => '<div class="qfe-row"><input class="fname" data-qi="' + i + '" data-qk="name" value="' + esc(q.name) + '" aria-label="Food" placeholder="Food">' +
+      S.qfEdit.map((q, i) => '<div class="qfe-row" data-rm="qf-rm" data-i="' + i + '"><input class="fname" data-qi="' + i + '" data-qk="name" value="' + esc(q.name) + '" aria-label="Food" placeholder="Food">' +
         '<select data-qi="' + i + '" data-qk="unit" aria-label="Unit"><option value="g"' + (q.unit === 'g' ? ' selected' : '') + '>g</option><option value="ml"' + (q.unit === 'ml' ? ' selected' : '') + '>ml</option><option value="each"' + (q.unit === 'each' ? ' selected' : '') + '>each</option></select>' +
         [['per', 'per'], ['kcal', 'kcal'], ['c', 'carbs'], ['p', 'protein'], ['f', 'fat'], ['fib', 'fiber'], ['usual', 'usual'], ['max', 'max suggested']].map(([k, l]) => '<label class="fnum"><input inputmode="decimal" data-qi="' + i + '" data-qk="' + k + '" value="' + esc(q[k] === '' || q[k] == null ? '' : q[k]) + '"><span>' + l + '</span></label>').join('') +
-        '<button class="icon-btn xbtn" data-act="qf-rm" data-i="' + i + '" aria-label="Remove ' + esc(q.name) + '">' + XICON + '</button></div>').join('') + '</div>' +
+        '</div>').join('') + '</div>' +
       '<div class="row-acts"><button class="btn primary" data-act="qf-save"' + (S.qfSaving || !S.mcp ? ' disabled' : '') + '>' + (S.qfSaving ? 'Saving…' : 'Save list') + '</button><button class="btn" data-act="qf-new">+ food</button><button class="btn" data-act="qf-cancel">Cancel</button></div>';
     return h;
   }
-  let h = '<div class="qchips">' + S.qf.map((q, i) => '<button class="qchip' + (S.qfSel === i ? ' on' : '') + '" data-act="qf-pick" data-i="' + i + '">' + esc(q.name) + '</button>').join('') +
+  // Tapping a chip adds it straight to the Adding list at its usual amount (Ver 0.2e, user 2026-11-09); the amount can be changed there.
+  let h = '<div class="qchips">' + S.qf.map((q, i) => '<button class="qchip" data-act="qf-pick" data-i="' + i + '">' + esc(q.name) + '</button>').join('') +
     '<button class="qchip edit" data-act="qf-edit">Edit list</button></div>';
-  const q = S.qf[S.qfSel];
-  if (q) h += '<div class="qrow"><label class="field"><input id="qfAmt" inputmode="decimal" value="' + esc(S.qfAmt) + '" aria-label="Amount"><span>' + (qfByAmt(q) ? q.unit : '×') + '</span></label>' +
-    '<span class="qprev" id="qfPrev">' + qfPrevText(q, S.qfAmt) + '</span><button class="btn primary" data-act="qf-add">Add</button></div>';
   return h;
 }
 async function readFood() {
@@ -2564,8 +2586,7 @@ async function estimateFood() {
 // A Quick-foods item in Add food: name, values as small text, amount box and Fit to goal (values come from the Quick foods list).
 function qfItemRow(x, i) {
   const q = S.qf.find(f => f.name === x.qf), g = qfByAmt(q);
-  return '<div class="qitem"><span class="qn">' + esc(q.name) + '</span>' +
-    '<button class="icon-btn xbtn" data-act="f-rm" data-i="' + i + '" aria-label="Remove ' + esc(q.name) + '">' + XICON + '</button>' +
+  return '<div class="qitem" data-rm="f-rm" data-i="' + i + '"><span class="qn">' + esc(q.name) + '</span>' +
     '<label class="field"><input inputmode="decimal" data-ai="' + i + '" value="' + esc(x.amt) + '" aria-label="Amount of ' + esc(q.name) + '"><span>' + (g ? q.unit : '×') + '</span></label>' +
     '<button class="qb fit" data-act="amt-fit" data-i="' + i + '" title="Most you can have without going over the day\'s goals">Fit to goal</button>' +
     '<span class="qv"><b>' + x.kcal + '</b> kcal · C ' + fmt2(x.c) + ' · P ' + fmt2(x.p) + ' · F ' + fmt2(x.f) + (x.fib ? ' · Fib ' + fmt2(x.fib) : '') + '</span></div>';
@@ -2660,7 +2681,7 @@ async function removeFoodRows(v, gone) {   // v = all values incl. header (row n
 // Reset: remove every logged food for the shown day and empty the Add food list.
 async function clearFoodDay() {
   if (!S.mcp) return;
-  S.est = null; S.qfSel = null; S.foodText = ''; S.foodPhoto = null;
+  S.est = null; S.foodText = ''; S.foodPhoto = null;
   S.foodSaving = true; render();
   try {
     const v = valuesOf(await call('get_values', { spreadsheetId: PRIV_ID, range: FOOD_RANGE }));
@@ -2824,8 +2845,9 @@ async function prepCrop(target) {
   }
   target.status = 'ready';
 }
-async function startPending(file) {
-  S.pending = { file, date: todayIso(), status: 'working' }; S.photoMsg = ''; render();
+async function startPending(file, replaces) {
+  const old = replaces && (S.photos || []).find(x => x.id === replaces);
+  S.pending = { file, date: old ? old.iso : todayIso(), status: 'working', replaces: old ? old.id : null }; S.photoMsg = ''; render();
   try { S.pending.img = await loadImg(URL.createObjectURL(file)); }
   catch (err) { S.pending.status = 'ready'; S.pending.note = err.message; render(); return; }
   await prepCrop(S.pending); render();
@@ -2837,14 +2859,46 @@ async function uploadPhoto(useCrop) {
     const data = encode(P.img, useCrop ? P.rect : null);
     const now = new Date();
     const title = P.date + ' front ' + pad2(now.getHours()) + pad2(now.getMinutes()) + pad2(now.getSeconds()) + '.jpg';
-    await call('create_file', { title, parentId: PHOTO_FOLDER, contentMimeType: 'image/jpeg', base64Content: data, disableConversionToGoogleType: true }, DRIVE);
+    const nf = await call('create_file', { title, parentId: PHOTO_FOLDER, contentMimeType: 'image/jpeg', base64Content: data, disableConversionToGoogleType: true }, DRIVE);
     try { const tmp = await loadImg('data:image/jpeg;base64,' + data); await saveThumb(title, thumbData(tmp)); } catch (e) {}
-    S.pending = null; S.sel = null; toast('Photo saved to your Drive (body photos).');
+    const old = P.replaces && (S.photos || []).find(x => x.id === P.replaces);
+    let msg = 'Photo saved to your Drive (body photos).';
+    if (old) {   /* Replace (Ver 0.2e): the new photo is saved first, then the old one goes to Drive's trash */
+      try { await trashPhoto(old); msg = 'Photo replaced; the old one is in your Drive trash.'; }
+      catch (e) { msg = 'New photo saved, but the old one could not be moved to the trash, so both are in the folder.'; }
+    }
+    S.pending = null; S.sel = old && nf && nf.id ? nf.id : null; toast(msg);
     await listPhotos();
   } catch (err) {
     S.photoMsg = 'The photo was not saved. ' + (err && err.code ? codeText(err).text : (err && err.message) || '');
   }
   S.uploading = false; render();
+}
+// Small tool row under a large photo (Ver 0.2e, user 2026-11-09: Replace / Delete should sit naturally on the page, not as big buttons)
+function phTools(f) {
+  const arm = S.phDelArm === f.id, busy = S.phBusy ? ' disabled' : '', fid = esc(f.id);
+  const ic = d => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  return '<div class="phtools">' +
+    (S.canCrop ? '<button class="phtool" data-act="ph-crop" data-fid="' + fid + '">' + ic('<path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/>') + 'Crop</button>' : '') +
+    '<label class="phtool" for="phRep">' + ic('<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/>') + 'Replace</label><input type="file" id="phRep" data-fid="' + fid + '" accept="image/*" hidden>' +
+    '<button class="phtool del' + (arm ? ' armed' : '') + '" data-act="ph-del" data-fid="' + fid + '"' + busy + '>' + ic('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 14h10l1-14"/>') + (S.phBusy ? 'Deleting…' : arm ? 'Tap to delete' : 'Delete') + '</button></div>';
+}
+// Delete / replace a progress photo (Ver 0.2e, user 2026-11-09): the photo and its thumbnail go to Drive's trash (restorable there for 30 days).
+async function trashPhoto(f) {
+  await call('trash_file', { fileId: f.id }, DRIVE);
+  const th = S.thumbs.get(f.title);
+  if (th) { try { await call('trash_file', { fileId: th }, DRIVE); } catch (e) {} S.thumbs.delete(f.title); }
+}
+async function deletePhoto(id) {
+  const f = (S.photos || []).find(x => x.id === id); if (!f || S.phBusy) return;
+  S.phBusy = true; S.phDelArm = null; render();
+  try {
+    await trashPhoto(f);
+    if (S.sel === id) S.sel = null;
+    toast('Photo of ' + usOf(f.iso) + ' moved to your Drive trash.');
+    await listPhotos();
+  } catch (err) { S.photoMsg = 'The photo was not deleted. ' + codeText(err).text; }
+  S.phBusy = false; render();
 }
 // Re-crop a photo that is already in Drive: save the cropped copy under the same name, move the old one to Drive's trash.
 async function startRecrop(id) {
@@ -3218,7 +3272,7 @@ function cardToday(it, idx) {
   const open = !!it.open, done = !!it.done && !open, n = filledSets(it).length;
   let h = '<section class="card' + (warm ? ' warm' : '') + (open ? ' open' : ' closed') + (done ? ' done' : '') + '" data-id="' + it.id + '">';
   h += '<div class="chead" title="Hold 1 s to move"><div class="titles">' + nameBlock(it.name, true) + '</div>' + pics(it.name, true) +
-    '<button class="icon-btn' + (S.armed === it.id ? ' armed' : '') + '" data-act="remove" aria-label="Remove ' + esc(bareName(it.name)) + '">' + (S.armed === it.id ? 'Remove?' : '×') + '</button></div>';
+    '</div>';
   if (!warm) h += lastLine(it.name) + (open ? nextHint(it.name) : '');
   if (!open) {
     // Start / Edit on the LEFT, so it is not under the thumb where Finished appears on the right (user, 2026-10-31)
@@ -3527,9 +3581,9 @@ function pendingHtml() {
   const E = S.est; if (!E || !E.items.length) return '';
   let h = '<div class="pend"><p class="section-sub">Adding</p>';
   if (E.note) h += '<p class="hint">' + esc(E.note) + '</p>';
-  h += '<div class="fitems">' + E.items.map((x, i) => x.qf && S.qf.some(f => f.name === x.qf) ? qfItemRow(x, i) : '<div class="fitem"><input class="fname" data-fi="' + i + '" data-fk="name" value="' + esc(x.name) + '" aria-label="Food">' +
+  h += '<div class="fitems">' + E.items.map((x, i) => x.qf && S.qf.some(f => f.name === x.qf) ? qfItemRow(x, i) : '<div class="fitem" data-rm="f-rm" data-i="' + i + '"><input class="fname" data-fi="' + i + '" data-fk="name" value="' + esc(x.name) + '" aria-label="Food">' +
     [['kcal', 'kcal'], ['c', 'carbs g'], ['p', 'protein g'], ['f', 'fat g'], ['fib', 'fiber g']].map(([k, l]) => '<label class="fnum"><input inputmode="decimal" data-fi="' + i + '" data-fk="' + k + '" value="' + (x[k] || '') + '"><span>' + l + '</span></label>').join('') +
-    '<button class="icon-btn xbtn" data-act="f-rm" data-i="' + i + '" aria-label="Remove item">' + XICON + '</button></div>').join('') + '</div>';
+    '</div>').join('') + '</div>';
   const tot = E.items.reduce((a, x) => ({ kcal: a.kcal + (+x.kcal || 0), c: a.c + (+x.c || 0), p: a.p + (+x.p || 0), f: a.f + (+x.f || 0) }), { kcal: 0, c: 0, p: 0, f: 0 });
   h += '<div class="row-acts"><button class="btn primary" data-act="f-save"' + (S.foodSaving || !S.mcp || E.status === 'working' ? ' disabled' : '') + '>' + (S.foodSaving ? 'Saving…' : 'Add ' + Math.round(tot.kcal) + ' kcal to ' + (S.foodDay === todayIso() ? 'today' : usOf(S.foodDay))) + '</button>' +
     '<button class="btn" data-act="f-cancel">Cancel</button></div></div>';
@@ -3573,8 +3627,17 @@ function viewPlan(T, got, mid) {
   const fibLeft = (T.fib || 0) - (got.fib || 0) - pend.fib;
   const room = { kcal: T.kcal - got.kcal - pend.kcal, c: T.c - got.c - pend.c, p: T.p - got.p - pend.p, f: T.f - got.f - pend.f }; S.planRoom = room;
   const lf = (v, u) => v >= 0 ? '<b>' + Math.round(v) + '</b>' + (u ? ' ' + u : '') : '<b class="over">+' + Math.round(-v) + '</b>' + (u ? ' ' + u : '');
-  let h = '<div class="tline"><span class="tl">Target</span><span><b>' + Math.round(T.kcal) + '</b> kcal</span><span>C ' + Math.round(T.c) + '</span><span>P ' + Math.round(T.p) + '</span><span>F ' + Math.round(T.f) + ' g</span><span>Fib ' + Math.round(T.fib) + ' g</span></div>' +
-    '<div class="tline"><span class="tl">Left</span><span>' + lf(room.kcal, 'kcal') + '</span><span>C ' + lf(room.c, '') + '</span><span>P ' + lf(room.p, '') + '</span><span>F ' + lf(room.f, 'g') + '</span><span>Fib ' + (fibLeft > 0.5 ? '<b>' + Math.round(fibLeft) + '</b> g' : '<b class="fib">✓ met</b>') + '</span></div>' + (mid || '');
+  // Bars instead of number lines (Ver 0.2e, user 2026-11-09): eaten = solid, Adding list = lighter, over target = red; the number on the right is what is left.
+  const bar = (k, label, tgt, have, add, unit) => {
+    const t = Math.max(tgt || 0, 1), a = Math.min(have / t, 1), b = Math.min((have + add) / t, 1) - a, left = tgt - have - add, over = left < -0.5;
+    const right = k === 'fib' ? (left <= 0.5 ? '<b class="ok">✓</b>' : Math.round(left) + ' g') : over ? '<b class="over">+' + Math.round(-left) + (unit ? ' ' + unit : '') + '</b>' : Math.round(left) + (unit ? ' ' + unit : '');
+    return '<div class="nbar n-' + k + (over ? ' over' : '') + '" title="' + label + ': ' + Math.round(have + add) + ' of ' + Math.round(tgt) + (unit ? ' ' + unit : '') + '">' +
+      '<span class="nl">' + label + '</span><span class="nt"><i class="ne" style="width:' + (a * 100).toFixed(1) + '%"></i><i class="np" style="width:' + (b * 100).toFixed(1) + '%"></i></span><span class="nr">' + right + '</span></div>';
+  };
+  let h = '<div class="nbars" aria-label="What is left of today’s targets"><p class="nhead"><span>Target ' + Math.round(T.kcal) + ' kcal</span><span>Left</span></p>' +
+    bar('kcal', 'Calories', T.kcal, got.kcal, pend.kcal, 'kcal') + bar('c', 'Carbs', T.c, got.c, pend.c, 'g') + bar('p', 'Protein', T.p, got.p, pend.p, 'g') +
+    bar('f', 'Fat', T.f, got.f, pend.f, 'g') + bar('fib', 'Fiber', T.fib || 0, got.fib || 0, pend.fib, 'g') +
+    '</div>' + (mid || '');
   if (room.kcal < 50 && room.p < 5) return h + '<p class="hint">You have reached the day’s targets.</p>';
   if (!S.qf.length) return h + '<p class="hint">Add foods to Quick add to get suggestions.</p>';
   const sug = planFill(room, T, 3);   // at most 3 different foods (user, 2026-11-06)
@@ -3654,8 +3717,8 @@ function viewFood() {
   else {
     h += '<div class="flog">';
     [day].forEach(xs => {
-      h += xs.map(x => '<div class="frow"><span class="fn">' + esc(x.name) + '</span><span class="fk"><b>' + Math.round(x.kcal) + '</b> kcal · C ' + fmt2(x.c) + ' · P ' + fmt2(x.p) + ' · F ' + fmt2(x.f) + (x.fib ? ' · Fib ' + fmt2(x.fib) : '') + '</span>' +
-        '<button class="icon-btn xbtn" data-act="f-del" data-row="' + x.row + '" aria-label="Remove ' + esc(x.name) + '">' + XICON + '</button></div>').join(''); });
+      h += xs.map(x => '<div class="frow" data-rm="f-del" data-row="' + x.row + '"><span class="fn">' + esc(x.name) + '</span><span class="fk"><b>' + Math.round(x.kcal) + '</b> kcal · C ' + fmt2(x.c) + ' · P ' + fmt2(x.p) + ' · F ' + fmt2(x.f) + (x.fib ? ' · Fib ' + fmt2(x.fib) : '') + '</span>' +
+        '</div>').join(''); });
     h += '</div>';
   }
   // the week's targets
@@ -3744,6 +3807,7 @@ function viewPhotos() {
   if (S.pending) {
     h += '<div class="panel">';
     const P = S.pending, dis = S.uploading ? ' disabled' : '';
+    if (P.replaces) { const o = S.photos && S.photos.find(x => x.id === P.replaces); h += '<p><b>Replacing the photo of ' + esc(o ? usOf(o.iso) : '') + '</b> · the old one goes to your Drive trash after the new one is saved.</p>'; }
     h += '<div class="row-acts"><label for="phDate" class="toggle">Photo date</label><input type="date" id="phDate" value="' + esc(P.date) + '"></div>';
     if (P.status === 'working') h += '<p>Finding you in the photo to crop it…</p>';
     else {
@@ -3817,9 +3881,11 @@ function viewPhotos() {
     '</div>';
   h += '<div class="pinfo"><span><b>' + esc(usOf(f.iso)) + '</b>' + (R && R.preview ? ' · cropped preview' : '') + '</span>' +
     (prev ? '<span>' + Math.round((new Date(f.iso) - new Date(prev.iso)) / 864e5) + ' days after the previous photo</span>' : '<span>First photo</span>') + '</div>' +
+    (!R && !S.pending ? phTools(f) : '') +
     '<p class="hint">Tap the photo to close it and pick another · hold it to see it full screen.</p></div>';
   let acts = '';
-  if (!R) acts = S.canCrop ? '<button class="btn" data-act="ph-crop" data-fid="' + esc(f.id) + '">Auto-crop</button>' : '';
+  if (!R && !S.pending) acts = '';   /* Replace / Delete sit in the small tool row right under the photo (phTools) */
+  else if (!R) acts = '';   /* a new or replacing photo is being added above */
   else if (R.status === 'working') acts = '<span class="toggle">Finding you in the photo…</span>';
   else acts = (R.rect ? '<button class="btn primary" data-act="ph-replace"' + (R.saving ? ' disabled' : '') + '>' + (R.saving ? 'Saving…' : 'Replace with cropped') + '</button>' : '') + '<button class="btn" data-act="ph-crop-cancel">Back</button>';
   if (R && R.note) h += '<p class="hint">' + esc(R.note) + '</p>';
@@ -3930,6 +3996,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.2e', '11092026', 'Matches the full app Ver 0.2e. Swipe to remove: swipe an exercise card on Today, or a row on the Food tab (Eaten list, Adding list, Quick add › Edit list), all the way left; a red Remove shape grows out of the right edge, and letting go past about 40% of the width removes it. This replaces the × buttons and the Remove? confirmation on Today cards; a very thin red line on the right edge shows what can be swiped away. Undo in the message, except for a saved Eaten row (that one is deleted from your food Sheet). Swiping needs a touch screen. Food: tapping a Quick add food adds it to the Adding list right away at its usual amount (the amount box and Add button are gone; change the amount in the Adding list). Target / Left numbers are now bars for calories, carbs, protein, fat and fiber: eaten is solid, the Adding list is lighter, the number on the right is what is left, over target turns the bar red with +amount, and fiber shows a check when met. Messages now show small at the very top of the screen instead of over the middle. (Photo Replace / Delete from the full app is not included: the web version has no Photos tab.)'],
   ['0.2d.1', '11082026', 'Web-only fixes on Ver 0.2d. The "Tap again to ..." confirm buttons (Sign out / switch account, Reset day, Use a different Sheet, Use a different food Sheet, Delete plan) showed red text on a red button, so the second tap prompt could not be read; they are now deep red with bold white text in light and dark mode. The Progress tab opens even when no exercise is starred or in a week plan, with a note on how to get a chart, instead of staying on the previous tab.'],
   ['0.2d', '11082026', 'Matches the full app Ver 0.2d. Settings is one grouped list like iPhone Settings: a row per section with an icon; tap a row to open it right under the row (which ones are open is remembered on this phone). Appearance: Follow the phone setting is a switch under Dark mode (Dark mode greyed out while it is on); Color theme (Navy + Gold, Soft ember, Blush; changes every navy and gold, light and dark); App icon: tap the logo at the top left to upload your own picture (cropped square from the middle) or go back to the default logo; it is saved in your Workout Lite folder in Google Drive, so it shows on every phone. New Settings › Carb week (your weight, then high / mid / low carb per weekday; the same as the Food tab). The Start each day with the plan switch moved into the Week plan card; the Week plan row shows the name of the plan in use. Exercises tab: favourite cards fold to their name (tap to open; Expand all / Collapse all). The header says No plan today when no week plan is in use.'],
   ['0.2c', '11082026', 'Matches the full app Ver 0.2c. Plan numbers are gone from exercise names (hidden too if your Sheet still has them); with no week plan in use Today starts empty. Exercises tab and Add an exercise: Favourites first, then the rest A to Z. New people get Dead Hang (stopwatch: Start, then Stop records the seconds; a small box for a typed time) and Pull Up (count only, + set for more; the Progress chart adds up each day; start and end drawing); anyone can add such exercises with the new reps unit or the seconds unit. Bottom sheets keep their last option above the iPhone home bar and away from the rounded corners. The Remove? confirmation on a Today card is a full-size red button. Progress: Show body weight on the chart is for the owner only.'],
@@ -4194,7 +4261,6 @@ document.addEventListener('click', e => {
   if (nm && !e.target.closest('.tip')) { nm.classList.toggle('open'); return; }
   const b = e.target.closest('[data-act]'); if (!b) return;
   const act = b.dataset.act;
-  if (act !== 'remove' && S.armed) { S.armed = null; }
   const it = itemOf(b);
   switch (act) {
     case 'start': if (it) { S.draft.items.forEach(x => { if (x !== it && x.open) { x.open = false; if (filledSets(x).length) x.done = true; } }); it.open = true;
@@ -4218,10 +4284,6 @@ document.addEventListener('click', e => {
       st.w = String(Math.max(0, Math.round((base + +b.dataset.d) * 100) / 100));
       S.active = { id: it.id, i: idx }; saveDraft(); render(); break; }
     case 'rem-set': if (it.sets.length > 1) { it.sets.pop(); saveDraft(); render(); } break;
-    case 'remove':
-      if (S.armed === it.id || !filledSets(it).length) { S.draft.items = S.draft.items.filter(x => x !== it); S.armed = null; saveDraft(); }
-      else S.armed = it.id;
-      render(); break;
     case 'add-open': S.addOpen = true; render(); break;
     case 'add-close': S.addOpen = false; render(); break;
     case 'add-ex': S.addOpen = false; S.draft.items.push(newItem(b.dataset.name)); saveDraft(); render(); toast(bareName(b.dataset.name) + ' added.'); break;
@@ -4272,6 +4334,11 @@ document.addEventListener('click', e => {
     case 'ph-up-crop': uploadPhoto(true); break;
     case 'ph-up-full': uploadPhoto(false); break;
     case 'ph-crop': startRecrop(b.dataset.fid); break;
+    case 'ph-del': {
+      const id = b.dataset.fid;
+      if (S.phDelArm !== id) { S.phDelArm = id; render(); setTimeout(() => { if (S.phDelArm === id) { S.phDelArm = null; render(); } }, 4000); break; }
+      deletePhoto(id); break;
+    }
     case 'ph-replace': replaceWithCrop(); break;
     case 'ph-crop-cancel': S.recrop = null; render(); break;
     case 'fd-go': S.foodDay = b.dataset.iso; render(); break;
@@ -4304,7 +4371,6 @@ document.addEventListener('click', e => {
     case 'f-ph-clear': { const t = $('#foodText'); if (t) S.foodText = t.value; S.foodPhoto = null; render(); toast('Photo removed.'); break; }   // tap the added photo again to remove it (Ver 0.1t)
     case 'fa-manual': { const t = $('#foodText'); if (t) S.foodText = t.value; if (!S.fa) S.fa = faBlank(S.foodText.trim().slice(0, 120)); else if (!S.fa.name) S.fa.name = S.foodText.trim().slice(0, 120); S.faOpen = true; S.faMsg = ''; S.faFocus = S.fa.name ? 'fa-kcal' : 'fa-name'; render(); break; }
     case 'f-additem': S.est.items.push(blankItem('')); render(); break;
-    case 'f-rm': S.est.items.splice(+b.dataset.i, 1); if (!S.est.items.length) S.est = null; render(); break;
     case 'f-cancel': S.est = null; render(); break;
     case 'madj-open': S.madjOpen = true; if (!S.madj) S.madj = madjBlank(); render(); break;
     case 'madj-hide': S.madjOpen = false; render(); break;
@@ -4372,14 +4438,15 @@ document.addEventListener('click', e => {
     case 'icon-open': openIconSheet(); break;
     case 'icon-close': if (!(S.ic && S.ic.busy)) { S.ic = null; render(); } break;
     case 'icon-default': iconDefault(); break;
-    case 'qf-pick': { const i = +b.dataset.i; if (S.qfSel === i) S.qfSel = null; else { S.qfSel = i; S.qfAmt = String(S.qf[i].usual || (qfByAmt(S.qf[i]) ? 100 : 1)); } render(); break; }
-    case 'qf-add': { const q = S.qf[S.qfSel]; const a = +S.qfAmt; if (!q || !(a > 0)) { toast('Enter an amount.'); break; }
+    case 'qf-pick': { const q = S.qf[+b.dataset.i]; if (!q) break;
       const t = $('#foodText'); if (t) S.foodText = t.value;
       if (!S.est) S.est = { status: 'ready', items: [], note: '', src: 'Quick foods' };
-      S.est.items = S.est.items.filter(x => x.name.trim() || x.kcal || x.c || x.p || x.f); S.est.items.push(qfCalc(q, a)); S.qfSel = null; render(); break; }
+      S.est.items = S.est.items.filter(x => x.name.trim() || x.kcal || x.c || x.p || x.f);
+      S.est.items.push(qfCalc(q, q.usual || (qfByAmt(q) ? 100 : 1))); render();
+      { const chip = document.querySelector('[data-act="qf-pick"][data-i="' + b.dataset.i + '"]'); if (chip) { chip.classList.add('on'); setTimeout(() => chip.classList.remove('on'), 350); } }
+      toast(q.name + ' added. Change the amount in the Adding list.'); break; }
     case 'qf-edit': S.qfEdit = S.qf.map(q => Object.assign({}, q)); if (!S.qfEdit.length) S.qfEdit.push({ name: '', unit: 'g', per: 100, kcal: '', c: '', p: '', f: '', usual: '', note: '' }); render(); break;
     case 'qf-new': S.qfEdit.push({ name: '', unit: 'g', per: 100, kcal: '', c: '', p: '', f: '', usual: '', note: '' }); render(); break;
-    case 'qf-rm': S.qfEdit.splice(+b.dataset.i, 1); render(); break;
     case 'qf-cancel': S.qfEdit = null; render(); break;
     case 'qf-save': saveQuick(); break;
     case 'plan-one': { const x = S.planSug && S.planSug[+b.dataset.i]; if (!x) break; const t = $('#foodText'); if (t) S.foodText = t.value;
@@ -4387,7 +4454,6 @@ document.addEventListener('click', e => {
       S.est.items = S.est.items.filter(y => y.name.trim() || y.kcal || y.c || y.p || y.f); S.est.items.push(Object.assign({}, x));
       toast(x.name + ' put in Add food.'); render(); break; }
     case 'amt-fit': fitAmt(+b.dataset.i); render(); break;
-    case 'f-del': deleteFood(+b.dataset.row); break;
     case 'f-clear': if (!S.clearArmed) { S.clearArmed = true; render(); setTimeout(() => { if (S.clearArmed) { S.clearArmed = false; render(); } }, 4000); } else { S.clearArmed = false; clearFoodDay(); } break;
     case 'th':
       if (S.cmpMode) { const id = b.dataset.fid, k = S.cmp[0] === id ? 0 : S.cmp[1] === id ? 1 : -1;
@@ -4428,7 +4494,6 @@ document.addEventListener('input', e => {
   if (el.id === 'foodText') { S.foodText = el.value; return; }
   if (el.id === 'fwKg') { S.fwKg = el.value; return; }
   if (el.id === 'foodLink') { S.foodSetup = Object.assign(S.foodSetup || {}, { link: el.value }); return; }
-  if (el.id === 'qfAmt') { S.qfAmt = el.value; const q = S.qf[S.qfSel], pv = $('#qfPrev'); if (q && pv) pv.textContent = qfPrevText(q, el.value); return; }
   if (el.dataset && el.dataset.qi != null && S.qfEdit) { const q = S.qfEdit[+el.dataset.qi], k = el.dataset.qk; q[k] = (k === 'name' || k === 'unit') ? el.value : el.value; if (k === 'unit' && !q.per) q.per = el.value === 'each' ? 1 : 100; return; }
   if (el.dataset && el.dataset.fi != null && S.est) { const it = S.est.items[+el.dataset.fi]; const k = el.dataset.fk; it[k] = k === 'name' ? el.value : (parseFloat(el.value) || 0); }
 });
@@ -4467,6 +4532,7 @@ document.addEventListener('change', e => {
   if (el.dataset && el.dataset.fi != null) { render(); return; }
   if (el.dataset && el.dataset.cmp) { S.cmp[+el.dataset.cmp] = el.value; render(); return; }
   if (el.id === 'phDate' && S.pending) { S.pending.date = el.value || todayIso(); return; }
+  if (el.id === 'phRep' && el.files && el.files[0]) { const id = el.dataset.fid; S.cmpMode = false; S.phDelArm = null; startPending(el.files[0], id); window.scrollTo(0, 0); return; }
   if (el.id === 'phIn' && el.files && el.files[0]) { S.tab = 'photos'; S.sel = null; S.cmpMode = false; startPending(el.files[0]); window.scrollTo(0, 0); return; }
   if (el.id === 'planSw') { setPlanOn(el.checked); return; }
   if (el.id === 'wpName') { const p = planById(S.wpEdit); if (!p) return; const v = el.value.trim().replace(/\s+/g, ' ').slice(0, 40) || 'Untitled'; if (v === p.name) return; p.name = v; p.updated = stampNow(); render(); savePlans('The plan name'); return; }
@@ -4628,6 +4694,80 @@ async function syncExImages() {
     }
   } catch (e) { /* the copy is a backup; the app shows its own copy either way */ }
 }
+// Swipe a Today card left to remove it (Ver 0.2e); the same for Food rows with data-rm. A red Remove shape opens on the right as a warning;
+// let go past 40% of the width to remove it (Undo in the toast, except a saved Food log row), otherwise it slides back.
+let csw = null;
+document.addEventListener('touchstart', e => {
+  csw = null;
+  if ((S.tab !== 'today' && S.tab !== 'food') || e.touches.length !== 1 || drag || wdrag) return;
+  const card = e.target.closest('#view .card[data-id], #view [data-rm]');   /* Today cards and Food rows that can be removed */
+  if (!card || e.target.closest('input, textarea, select')) return;
+  csw = { card, x: e.touches[0].clientX, y: e.touches[0].clientY, on: false, dx: 0, w: card.getBoundingClientRect().width };
+}, { passive: true });
+document.addEventListener('touchmove', e => {
+  if (!csw || drag) return;
+  const dx = e.touches[0].clientX - csw.x, dy = e.touches[0].clientY - csw.y;
+  if (!csw.on) {
+    if (Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)) { csw = null; return; }   /* scrolling */
+    if (dx > -12 || Math.abs(dx) < 1.5 * Math.abs(dy)) return;
+    csw.on = true; cancelPress(); tabSw = null; csw.card.classList.remove('sw-back'); csw.card.classList.add('swiping');
+  }
+  e.preventDefault();
+  const x = Math.min(0, dx + 12); csw.dx = x;
+  const p = Math.min(1, -x / (csw.w * 0.4));
+  csw.card.style.transform = 'translateX(' + x + 'px)';
+  csw.card.style.setProperty('--sw', p.toFixed(3));
+  csw.card.style.setProperty('--dx', (-x) + 'px');
+  csw.card.classList.toggle('past', p >= 1);
+  csw.card.classList.toggle('lbl', -x >= 84);
+}, { passive: false });
+function cardSwipeEnd() {
+  if (!csw) return; const c = csw; csw = null;
+  if (!c.on) return;
+  justDragged = true; setTimeout(() => { justDragged = false; }, 400);
+  const card = c.card, id = card.dataset.id;
+  if (-c.dx >= c.w * 0.4) {
+    card.classList.add('sw-gone'); card.style.transform = 'translateX(' + (-c.w - 40) + 'px)';
+    setTimeout(() => { if (card.matches('.card[data-id]')) removeCardBySwipe(id); else removeRowBySwipe(card); }, 200);
+  } else {
+    card.classList.add('sw-back'); card.classList.remove('past', 'lbl'); card.style.transform = ''; card.style.setProperty('--sw', '0'); card.style.setProperty('--dx', '0px');
+    setTimeout(() => { card.classList.remove('swiping', 'sw-back'); }, 240);
+  }
+}
+document.addEventListener('touchend', cardSwipeEnd);
+document.addEventListener('touchcancel', cardSwipeEnd);
+// Food tab rows (0.2e): swiping is the only way to remove them (the × buttons were removed). The row says what it is in data-rm:
+// f-rm = Adding list, qf-rm = Quick foods edit list (both can be undone), f-del = a saved Food log row (removed from the Sheet, no undo).
+function removeRowBySwipe(row) {
+  const act = row.dataset.rm, i = +row.dataset.i;
+  if (act === 'f-rm' && S.est && S.est.items[i]) {
+    const est = S.est, it = est.items[i];
+    est.items.splice(i, 1); if (!est.items.length) S.est = null; render();
+    toastUndo((it.name || it.qf || 'Item') + ' removed.', () => { if (!S.est) S.est = est; S.est.items.splice(Math.min(i, S.est.items.length), 0, it); render(); });
+    return;
+  }
+  if (act === 'qf-rm' && S.qfEdit && S.qfEdit[i]) {
+    const list = S.qfEdit, q = list[i];
+    list.splice(i, 1); render();
+    toastUndo((q.name || 'Food') + ' removed.', () => { if (S.qfEdit !== list) return; list.splice(Math.min(i, list.length), 0, q); render(); });
+    return;
+  }
+  if (act === 'f-del') { row.style.display = 'none'; deleteFood(+row.dataset.row); return; }
+  render();
+}
+function removeCardBySwipe(id) {
+  if (!S.draft) return;
+  const items = S.draft.items, k = items.findIndex(x => String(x.id) === String(id)); if (k < 0) { render(); return; }
+  const [it] = items.splice(k, 1);
+  saveDraft(); render();
+  toastUndo(bareName(it.name) + ' removed.', () => { if (!S.draft) return; S.draft.items.splice(Math.min(k, S.draft.items.length), 0, it); saveDraft(); render(); });
+}
+function toastUndo(msg, undo) {
+  const t = $('#toast'); t.textContent = msg;
+  const b = document.createElement('button'); b.className = 'undo'; b.type = 'button'; b.textContent = 'Undo';
+  b.addEventListener('click', ev => { ev.stopPropagation(); t.hidden = true; undo(); }, { once: true });
+  t.appendChild(b); t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 6000);
+}
 // Swipe left / right anywhere on the page to go to the next / previous tab
 // (not on things that swipe or scroll sideways themselves, and not while moving a card).
 let tabSw = null;
@@ -4638,7 +4778,7 @@ document.addEventListener('touchstart', e => {
   tabSw = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() };
 }, { passive: true });
 document.addEventListener('touchend', e => {
-  if (!tabSw || drag || press || wdrag || wpress) { tabSw = null; return; }
+  if (!tabSw || drag || press || wdrag || wpress || csw) { tabSw = null; return; }
   const dx = e.changedTouches[0].clientX - tabSw.x, dy = e.changedTouches[0].clientY - tabSw.y, dt = Date.now() - tabSw.t; tabSw = null;
   if (Math.abs(dx) < 70 || Math.abs(dx) < 2 * Math.abs(dy) || dt > 800) return;
   const tabs = [...document.querySelectorAll('nav.tabs button')].map(b => b.dataset.tab); const i = tabs.indexOf(S.tab);
