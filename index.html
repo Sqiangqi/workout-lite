@@ -490,6 +490,11 @@ body.food.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + var(--fwk
 .lightbox .frame.wide { width: min(900px, 100%); }
 .lightbox .frame { width: min(560px, 100%); background: var(--surface); border-radius: 12px; overflow: hidden; display: grid; }
 .lightbox .frame svg { width: 100%; height: auto; display: block; }
+.lightbox .frame img { touch-action: none; transform-origin: 50% 50%; position: relative; z-index: 1; }
+.lightbox .frame img.pz-anim { transition: transform .25s ease-out; }
+.lightbox .cap { position: relative; z-index: 2; background: var(--surface); }
+.lightbox .cap span { display: grid; }
+.pz-hint { font-size: 11.5px; color: var(--muted); }
 .lightbox .cap { padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 
 /* Tab bar at the bottom of the screen (user, 2026-10-31: easier to reach on the phone) */
@@ -573,6 +578,93 @@ body.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + 24px); }
 .wpt { font-size: 12px; }
 .wp-empty { padding: 14px 8px; text-align: center; color: var(--muted); font-size: 14px; }
 .wp-empty.sm { padding: 8px; font-size: 13px; }
+.srch { display: flex; align-items: center; gap: 8px; padding: 0 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--muted); }
+.srch input { flex: 1; min-width: 0; border: 0; background: none; padding: 10px 0; font-size: 16px; color: var(--ink); outline: none; }
+.srch input::placeholder { color: var(--lighter); }
+.srch:focus-within { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(var(--gold-rgb), .3); }
+#view > .srch { margin: 4px 0 10px; background: var(--surface); }
+.wp-grps.dim .wp-grp.on { background: var(--bg); border-color: var(--line); color: var(--ink); }
+[hidden] { display: none !important; }
+.wp-find { display: grid; gap: 8px; margin-top: 10px; padding: 10px; border: 1px solid var(--gold); border-radius: 12px; background: var(--surface); }
+.wp-find .wp-grps { padding-bottom: 2px; }
+.wp-find + .wp-drop { border: 0; padding: 8px 0 0; background: none; }
+.wp-sel.sm .wprow { padding: 3px 8px; min-height: 0; font-size: 13px; border-radius: 8px; }
+.wp-sel.sm .wprow .wpn { font-size: 13px; font-weight: 600; }
+.wp-sel.sm .wprow .wph, .wp-sel.sm .wprow .wpt { font-size: 12px; }
+.wp-sel.sm .hint { font-size: 11.5px; margin: 2px 0 0; }
+.wp-sel.sm { display: grid; gap: 4px; }
+.wp-tag { color: var(--accent); }
+/* Week plan calendar, length wheel and day page (Ver 0.2e) */
+.wp-lenrow { display: flex; align-items: center; gap: 10px; padding-top: 8px; padding-bottom: 8px; }
+.wp-lenrow .hint { font-size: 12px; }
+.wp-lenrow > div:first-child { flex: 1; } .wp-lenrow .hint { margin: 2px 0 0; }
+.wheel { flex: none; position: relative; width: 52px; height: 76px; overflow: hidden; border: 1px solid var(--gold); border-radius: 12px; background: var(--surface); touch-action: none; user-select: none; -webkit-user-select: none; cursor: ns-resize; }
+.wh-band { position: absolute; left: 3px; right: 3px; top: 22px; height: 32px; border-radius: 8px; background: var(--gold); box-shadow: 0 1px 4px rgba(var(--gold-rgb), .5); pointer-events: none; }   /* selected number highlighted in gold (user 2026-11-10) */
+.wh-i { position: absolute; left: 0; right: 0; top: 22px; height: 32px; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 26px; color: var(--ink); pointer-events: none; will-change: transform, opacity; }
+.wheel.anim .wh-i { transition: transform .22s cubic-bezier(.2,.8,.2,1), opacity .22s ease-out; }
+@media (prefers-reduced-motion: reduce) { .wheel.anim .wh-i { transition: none; } }
+.wp-lenu { font-size: 14px; color: var(--muted); }
+.wpcal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px 4px; margin: 4px 0 10px; }
+.wpc { position: relative; display: grid; justify-items: center; gap: 2px; border: 0; background: none; padding: 2px 0; color: var(--ink); }
+.wpc-c { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 17px; background: var(--surface); }
+.wpc-c.sm { width: 26px; height: 26px; font-size: 13px; border-width: 1.5px; flex: none; }
+.wpc-n { font-size: 11px; color: var(--muted); }
+.wpc.done .wpc-c { border-color: var(--gold); background: rgba(var(--gold-rgb), .16); }
+.wpc.done::after { content: '✓'; position: absolute; top: -2px; right: calc(50% - 25px); width: 17px; height: 17px; border-radius: 50%; background: var(--gold); color: var(--gold-ink); font-size: 11px; font-weight: 800; display: grid; place-items: center; }
+.wpc.rest .wpc-c { border-style: dashed; }
+.wpc.today .wpc-c { box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--accent); }
+.wp-list { display: grid; gap: 6px; margin-bottom: 8px; }
+.wp-li2 { display: flex; align-items: center; gap: 10px; text-align: left; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: 7px 10px; color: var(--ink); }
+.wl-t { display: grid; min-width: 0; } .wl-t b { font-size: 13.5px; } .wl-t small { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wpd-t { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; }
+.wpd-sel { display: grid; gap: 6px; margin: 6px 0 8px; padding: 10px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.wpd-h { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--muted); }
+.wpd-h b { font-size: 15px; }
+.wpk { color: var(--gold); font-weight: 800; }
+.lmap .lm-pill.sel.sel, .lmap.q .lm-pill.sel.sel { background: var(--gold); border-color: var(--gold); color: var(--gold-ink); opacity: 1; box-shadow: none; }
+.lm-pill .ck, .lm-pill.sel i { font-style: normal; font-weight: 800; color: inherit; }
+.wpd-foot { position: sticky; bottom: calc(var(--tabbar-h) + 14px); z-index: 6; display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-top: 8px; padding: 8px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+/* Library body map (Ver 0.2e) */
+.lib-find { display: grid; gap: 8px; margin: 4px 0 8px; padding: 10px; border: 1px solid var(--gold); border-radius: 12px; background: var(--surface); }
+.lib-find .wp-grps { flex-wrap: wrap; overflow: visible; gap: 5px; padding: 0; }   /* all keywords visible at once, no sideways scroll (user 2026-11-09) */
+.lib-find .wp-grp { font-size: 12px; padding: 4px 9px; }
+.lib-count { font-size: 12.5px; color: var(--muted); padding: 0 2px; }
+.lib-count.none { color: var(--bad); }
+.lmap { position: relative; margin: 4px 0 6px; }
+.lm-body { position: absolute; left: 50%; top: 0; width: 120px; transform: translateX(-50%); overflow: visible; }
+.lm-fig { fill: var(--ink); opacity: .14; }
+.lm-hl { opacity: .8; }
+.lm-rg { fill: var(--gold); opacity: 0; transition: opacity .2s; }
+.lm-rg.on { opacity: 1; }
+.lm-l, .lm-r { position: absolute; top: 0; bottom: 0; width: calc(50% - 64px); }
+.lm-l { left: 0; } .lm-r { right: 0; }
+.lm-pill { position: absolute; max-width: 100%; height: 30px; padding: 0 8px; box-sizing: border-box; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink);
+  font-size: 10px; font-weight: 600; line-height: 1.15; display: flex; align-items: center; overflow: hidden; transition: opacity .2s, background .2s; }
+.lm-pill .t { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; max-height: 2.3em; }
+.lm-l .lm-pill { right: 0; text-align: right; } .lm-r .lm-pill { left: 0; text-align: left; }
+.lm-pill.fav { border-color: var(--gold); } .lm-pill i { font-style: normal; color: var(--gold); }
+.lmap.q .lm-pill { opacity: .28; }
+.lmap.q .lm-pill.hit { opacity: 1; background: rgba(var(--gold-rgb), .22); border-color: var(--gold); box-shadow: 0 0 0 2px rgba(var(--gold-rgb), .35); }
+.lib-sheet .sheet-h { gap: 8px; } .lib-sheet .sheet-h b { flex: 1; }
+.lib-sub { font-size: 13px; color: var(--muted); margin: -4px 0 8px; }
+.wp-addbtn { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 8px; padding: 12px 14px; border: 1px solid var(--gold); border-radius: 12px; background: var(--surface); color: var(--ink); font-size: 16px; font-weight: 700; }
+.wp-addbtn.on { border-bottom-left-radius: 0; border-bottom-right-radius: 0; background: var(--accent-soft); }
+.wp-addbtn .chev { color: var(--muted); font-size: 14px; }
+.wp-drop { display: grid; gap: 6px; padding: 8px; border: 1px solid var(--gold); border-top: 0; border-radius: 0 0 12px 12px; background: var(--surface); }
+.wp-grps { display: flex; gap: 6px; overflow-x: auto; padding: 2px 0 6px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.wp-grps::-webkit-scrollbar { display: none; }
+.wp-grp { flex: none; border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 999px; padding: 6px 12px; font-size: 13.5px; font-weight: 600; }
+.wp-grp.on { background: var(--brand); border-color: var(--brand); color: var(--gold); }
+.wp-ex { display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px 8px; border: 1px solid transparent; border-radius: 10px; background: var(--bg); color: var(--ink); text-align: left; }
+.wp-ex.on { background: var(--accent-soft); border-color: var(--gold); }
+.wp-th { flex: none; width: 66px; height: 44px; border-radius: 6px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); display: grid; place-items: center; }
+.wp-th img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.wp-th i { font-style: normal; font-weight: 700; color: var(--muted); }
+.wp-nm { flex: 1; min-width: 0; display: grid; }
+.wp-nm b { font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wp-nm small { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wp-ex .ck { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+.wp-ex.on .ck { background: var(--gold); border-color: var(--gold); color: var(--gold-ink); }
 .wp-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 0 4px; }
 .wp-chip { border: 1px solid var(--gold); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 7px 12px; font-size: 14px; font-weight: 600; }
 .wp-chip.on { background: var(--gold); color: var(--gold-ink); }
@@ -636,6 +728,8 @@ a.btn { text-decoration: none; color: inherit; display: inline-block; }
 /* Removable hint (Ver 0.2e, user 2026-11-09): a very thin red line on the right edge of everything that can be swiped away */
 #view .card[data-id], #view [data-rm] { box-shadow: inset -1px 0 0 var(--bad); box-shadow: inset -1px 0 0 color-mix(in srgb, var(--bad) 75%, transparent); }
 #view [data-rm] { padding-right: 8px; }
+#view .wprow[data-rm].swiping { background: var(--accent-soft); }   /* week-plan rows keep their own colour while swiping (Ver 0.2e) */
+#view .wprow[data-rm].dragging { box-shadow: 0 8px 22px rgba(0,0,0,.25); }
 #view .card[data-id].dragging { box-shadow: 0 10px 28px rgba(0,0,0,.25); }
 #view .sw-back { transition: transform .22s ease; }
 #view .sw-gone { transition: transform .22s ease-in, opacity .22s ease-in; opacity: 0; }
@@ -658,6 +752,27 @@ a.btn { text-decoration: none; color: inherit; display: inline-block; }
 .btn.phadd svg { flex: none; display: block; }
 #bigPh img { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; cursor: pointer; }
 .phbig.small[data-act] { cursor: pointer; }
+/* Countdown timer for time exercises (Ver 0.2e) */
+.cd { display: grid; gap: 8px; margin: 2px 0 10px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+.cd-main { display: flex; align-items: center; justify-content: center; gap: 18px; }
+.cd-main b { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1; font-variant-numeric: tabular-nums; min-width: 4.2ch; text-align: center; }
+.cd-adj { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 24px; font-weight: 600; line-height: 1; }
+.cd-adj:disabled { opacity: .35; }
+.cd-btns { display: flex; gap: 10px; justify-content: center; }
+.cd-btns .btn.sm:disabled { opacity: .4; }
+.cd-note { font-size: 12px; color: var(--muted); text-align: center; }
+/* Pull Up body weight + band (Ver 0.2e) */
+.pu { display: grid; gap: 8px; margin: 2px 0 10px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+.pu-row { display: flex; align-items: center; gap: 10px; min-height: 36px; }
+.pu-row .switch { flex: none; gap: 10px; }
+.pu-row .field { flex: 1; max-width: 140px; }
+.pu-lab { font-size: 14px; color: var(--muted); flex: none; }
+.pu-val { font-size: 17px; font-variant-numeric: tabular-nums; }
+.pu-src { font-size: 12px; color: var(--muted); flex: 1; min-width: 0; }
+.pu-row .btn.sm { flex: none; }
+.pu-ask.need .field { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(var(--gold-rgb), .35); }
+.pu-note { font-size: 12.5px; color: var(--muted); line-height: 1.35; }
+.pu-off { opacity: .4; pointer-events: none; }
 /* Stopwatch sets (Dead Hang), Ver 0.2c */
 #view .card[data-id] .set.swset, .set.swset { grid-template-columns: 24px 1fr; row-gap: 4px; }
 .sw { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -1800,6 +1915,25 @@ function unitOf(name) {
 }
 function isTimed(name) { return unitOf(name) !== 'lbs'; }
 function isCount(name) { return unitOf(name) === 'reps'; }
+/* Pull Up band + body weight (Ver 0.2e, user 2026-11-09). The Sheet gets one row per set: Weight = band help in lbs (0 = no band), Reps = that set's reps.
+   Body weight never goes to the workout Sheet; the chart works out weight pulled = body weight on that date - band help. */
+function bwFor(iso) {   /* kg nearest to the date: Renpho readings and the weight typed on the Food tab or the Pull Up card */
+  const c = [], m = store.get(K_MKG);
+  if (m && m.kg > 0) c.push({ iso: m.at || todayIso(), kg: +m.kg, src: 'typed' });
+  (S.body || []).forEach(x => { const kg = x.v && x.v['Weight(kg)']; if (kg > 0) c.push({ iso: x.iso, kg: +kg, src: 'renpho' }); });
+  if (!c.length) return null;
+  const dist = a => Math.abs(new Date(a + 'T12:00:00') - new Date(iso + 'T12:00:00'));
+  let best = c[0]; c.forEach(x => { if (dist(x.iso) < dist(best.iso)) best = x; });
+  return best;
+}
+function countRows(name) {   /* [{iso, band, reps}]; old rows (Ver 0.2c-0.2d: count in Weight, Reps empty) have band null */
+  return (S.history.get(name) || []).map(r => {
+    const rs = String(r.reps == null ? '' : r.reps).trim();
+    if (rs !== '') return { iso: r.iso, band: r.weight == null || isNaN(r.weight) ? 0 : +r.weight, reps: rs.split(/[\/,\s]+/).map(Number).filter(x => x > 0).reduce((a, b) => a + b, 0) };
+    return { iso: r.iso, band: null, reps: r.weight == null || isNaN(r.weight) ? 0 : +r.weight };
+  }).filter(x => x.reps > 0);
+}
+function lastBand(name) { const l = lastSession(name); if (!l) return 0; const b = countRows(name).filter(x => x.iso === l.iso && x.band > 0).map(x => x.band); return b.length ? Math.min.apply(null, b) : 0; }
 // Stopwatch exercises (Ver 0.2c, user 2026-11-08): Start / Stop records the seconds; a small box takes a typed time instead
 function isStopwatch(name) { return /dead.?hang/i.test(name); }
 function fmtSw(ms, tenths) { const t = Math.max(0, ms) / 1000, m = Math.floor(t / 60), sec = Math.floor(t % 60); return m + ':' + pad2(sec) + (tenths ? '.' + Math.floor((Math.max(0, ms) % 1000) / 100) : ''); }
@@ -1938,10 +2072,13 @@ function lastSets(name) {
   });
   return out;
 }
-function lastTime(name) { const p = lastSets(name); return p.length ? p[p.length - 1].w : ''; }
+function lastTime(name) {
+  if (isCount(name)) { const l = lastSession(name); const cr = l ? countRows(name).filter(x => x.iso === l.iso) : []; return cr.length ? String(cr[cr.length - 1].reps) : ''; }
+  const p = lastSets(name); return p.length ? p[p.length - 1].w : ''; }
 // Values from the last session are shown as grey placeholders (pw, pr); only what is typed (w, r) is saved.
 function newItem(name) {
   // warm-up (treadmill walk, minutes) and Battle Ropes (seconds): one entry, last session's time as the placeholder
+  if (isCount(name)) { const lb = lastBand(name); return { id: 'i' + (uid++), name, band: { on: lb > 0, lbs: lb > 0 ? String(lb) : '' }, sets: [{ w: '', r: '', pw: lastTime(name), pr: '' }] }; }
   if (isTimed(name)) return { id: 'i' + (uid++), name, sets: [{ w: '', r: '', pw: lastTime(name), pr: '' }] };
   // three sets to start; every box hints the top weight ever and its reps (Ver 0.1n)
   const t = topSet(name);
@@ -2003,9 +2140,37 @@ function setPlanOn(on) {
 // The plan in use decides Today; with no plan in use Today still follows the number prefixes (until the numbers are dropped).
 const PLAN_TAB = 'Plan', PLAN_RANGE = "'Plan'!A2:K500", K_PLANS = 'wlite.plans.v1', MAX_PLANS = 3;
 const WDAYS = [['Mon', 'Monday'], ['Tue', 'Tuesday'], ['Wed', 'Wednesday'], ['Thu', 'Thursday'], ['Fri', 'Friday'], ['Sat', 'Saturday'], ['Sun', 'Sunday']];
-const DAY_TYPES = [['Upper', 'Upper body'], ['Push', 'Push day'], ['Pull', 'Pull day'], ['Lower', 'Lower body'], ['Custom', 'Custom day'], ['Rest', 'Rest day']];
+const DAY_TYPES = [['Upper', 'Upper body'], ['Push', 'Upper body · push'], ['Pull', 'Upper body · pull'], ['Lower', 'Lower body'], ['Custom', 'Combined'], ['Rest', 'Rest day']];
+// Day type is set by the app from the exercises picked (Ver 0.2e, user 2026-11-09): Upper, Lower or Combined, no exercises = Rest;
+// an upper day where more than half of the exercises are pull (or push) gets the pull (push) tag. Stored values stay Upper/Push/Pull/Lower/Custom/Rest.
+// One or two exercises of the other half do not make it Combined (Dead Hang on leg day stays Lower): Combined needs both halves at more than a third each.
+function autoType(items) {
+  if (!items || !items.length) return 'Rest';
+  let P = 0, Q = 0, L = 0;
+  items.forEach(n => { const e = exByName(n), c = e ? catClass(e.cat) : 'core'; if (c === 'push') P++; else if (c === 'pull') Q++; else if (c === 'legs') L++; });
+  const U = P + Q;
+  if (!U && !L) return 'Custom';
+  if (!U || L >= 2 * U) return 'Lower';
+  if (L && U < 2 * L) return 'Custom';
+  if (Q > items.length / 2) return 'Pull';
+  if (P > items.length / 2) return 'Push';
+  return 'Upper';
+}
+// Plan length and cycle (Ver 0.2e, user 2026-11-09): a plan has 2-10 days; day 1 is always a Monday (p.start, a Monday);
+// after the last day it starts over at day 1 whatever the weekday. Day keys: Mon..Sun for days 1-7, Mon2/Tue2/Wed2 for days 8-10.
+// A 7-day plan is the same as the old weekday plan. Length and start are kept in the plan row (H = length, I = start date).
+const PL_MIN = 2, PL_MAX = 10, DAY_LETTER = ['M', 'T', 'W', 'R', 'F', 'S', 'U'];
+const ALLKEYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon2', 'Tue2', 'Wed2'];
+function planKey(i) { return ALLKEYS[i]; }
+function planLen(p) { const n = +(p && p.len); return n >= PL_MIN && n <= PL_MAX ? n : 7; }
+function planKeys(p) { return ALLKEYS.slice(0, planLen(p)); }
+function wrapLen(v) { return ((v - PL_MIN) % 9 + 9) % 9 + PL_MIN; }
+function mondayOf(iso) { const d = new Date(iso + 'T12:00:00'); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return isoOf(d); }
+function planIndex(p, iso) { const s = p.start || mondayOf(todayIso()), n = planLen(p); const k = Math.round((new Date(iso + 'T12:00:00') - new Date(s + 'T12:00:00')) / 864e5); return ((k % n) + n) % n; }
+function planDay(p, iso) { return p ? p.days[planKey(planIndex(p, iso))] || null : null; }
+function dayTitle(k) { const i = ALLKEYS.indexOf(k); return i < 0 ? k : 'Day ' + (i + 1) + ' · ' + WDAYS[i % 7][1]; }
 function dayKeyOf(iso) { return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(iso + 'T12:00:00').getDay()]; }
-function dayFull(k) { const x = WDAYS.find(d => d[0] === k); return x ? x[1] : k; }
+function dayFull(k) { const i = ALLKEYS.indexOf(k); return i < 0 ? k : i < 7 ? WDAYS[i][1] : 'Day ' + (i + 1); }
 function typeLabel(t) { const x = DAY_TYPES.find(d => d[0] === t); return x ? x[1] : ''; }
 function activePlan() { return S.wp.plans.find(p => p.active) || null; }
 function planById(id) { return S.wp.plans.find(p => p.id === id) || null; }
@@ -2014,7 +2179,7 @@ function pad11(r) { const o = []; for (let i = 0; i < 11; i++) o.push(r && r[i] 
 function parsePlans(rows) {
   const plans = [], by = {}, favs = new Set();
   const mine = (rows || []).map(pad11).filter(r => r[0] === LOG_TAB);
-  mine.forEach(r => { if (r[1] === 'plan' && r[2] && !by[r[2]]) { by[r[2]] = { id: r[2], name: r[3] || 'Untitled', active: r[4] === 'yes', warm: r[5] === 'yes', updated: r[10], days: {} }; plans.push(by[r[2]]); } });
+  mine.forEach(r => { if (r[1] === 'plan' && r[2] && !by[r[2]]) { by[r[2]] = { id: r[2], name: r[3] || 'Untitled', active: r[4] === 'yes', warm: r[5] === 'yes', updated: r[10], days: {}, len: +r[7] || 7, start: /^\d{4}-\d{2}-\d{2}$/.test(r[8]) ? r[8] : '' }; plans.push(by[r[2]]); } });
   mine.forEach(r => {
     const p = by[r[2]];
     if (r[1] === 'day' && p && r[6]) p.days[r[6]] = { type: r[7] || 'Custom', items: [], updated: r[10] };
@@ -2029,8 +2194,8 @@ function stampNow() { return usOf(todayIso()) + ' ' + clock12(Date.now()); }
 function planRows() {
   const rows = [];
   S.wp.plans.forEach(p => {
-    rows.push([LOG_TAB, 'plan', p.id, p.name, p.active ? 'yes' : '', p.warm ? 'yes' : 'no', '', '', '', '', p.updated || '']);
-    WDAYS.forEach(([k]) => {
+    rows.push([LOG_TAB, 'plan', p.id, p.name, p.active ? 'yes' : '', p.warm ? 'yes' : 'no', '', String(planLen(p)), p.start || '', '', p.updated || '']);
+    ALLKEYS.forEach(k => {
       const d = p.days[k]; if (!d) return;
       rows.push([LOG_TAB, 'day', p.id, '', '', '', k, d.type, '', '', d.updated || '']);
       if (d.type !== 'Rest') d.items.forEach((n, i) => rows.push([LOG_TAB, 'ex', p.id, '', '', '', k, '', String(i + 1), n, '']));
@@ -2082,7 +2247,7 @@ function planNames(iso) {
   if (!planOn()) return [];
   const ap = activePlan();
   if (!ap) return [];   // Ver 0.2c: no week plan in use = Today starts empty
-  const day = ap.days[dayKeyOf(iso)];
+  const day = planDay(ap, iso);
   if (!day || day.type === 'Rest') return [];
   const have = new Set(pickable().map(e => e.name));
   let names = day.items.filter((n, i, a) => have.has(n) && a.indexOf(n) === i);
@@ -2426,7 +2591,7 @@ function weekIsos(iso) {   // weekday -> date of the Mon..Sun week holding iso
 function workoutWeek() {
   const p = activePlan(); if (!p) return null;
   const m = {}; let any = false;
-  WDAYS.forEach(([k], i) => { const d = p.days[k]; if (!d) return; any = true; m[(i + 1) % 7] = d.type === 'Rest' ? 'low' : d.type === 'Custom' ? 'mid' : 'high'; });
+  const wk = weekIsos(todayIso()); Object.keys(wk).forEach(gd => { const d = planDay(p, wk[gd]); if (!d) return; any = true; m[gd] = d.type === 'Rest' ? 'low' : d.type === 'Custom' ? 'mid' : 'high'; });   /* Ver 0.2e: plan days follow the cycle */
   return any ? m : null;
 }
 function weekPlanBody(inSet) {
@@ -2939,6 +3104,11 @@ function buildEntries(draft) {
     const sets = filledSets(it);
     if (!sets.length) return;
     const timed = isTimed(it.name);
+    if (isCount(it.name)) {   /* Ver 0.2e: one row per set, Weight = band help (0 = no band), Reps = the set's reps */
+      const b = it.band || {}, band = b.on && +b.lbs > 0 ? String(+b.lbs) : '0';
+      sets.forEach(s => entries.push({ name: it.name, w: band, r: String(s.w).trim() }));
+      return;
+    }
     // consecutive sets at the same weight become one archive row, reps run together (10, 10, 8 -> 10108)
     let row = null;
     sets.forEach(s => {
@@ -3148,7 +3318,7 @@ function renderHeader() {
   const wd = d.getDay();
   $('#dayName').textContent = WEEKDAYS[wd];
   let lab = 'No plan today';   /* Ver 0.2d (user, 2026-11-08): no week plan in use = No plan today (the weekday labels went with the plan numbers) */
-  const ap = activePlan(); if (ap) { const dd = ap.days[dayKeyOf(iso)]; lab = dd ? typeLabel(dd.type) : 'No plan today'; }
+  const ap = activePlan(); if (ap) { const dd = planDay(ap, iso); lab = dd ? typeLabel(dd.type) : 'No plan today'; }
   $('#daySub').textContent = usOf(iso) + (planOn() ? ' · ' + lab : '');
 }
 function problemBox() {
@@ -3186,7 +3356,7 @@ function viewToday() {
   if (d.done && !d.items.length) {
     h += '<div class="empty grow">Session saved. Add an exercise below if you want to log more today; it will be added to today\'s blocks in the sheet.</div>';
   } else if (!d.items.length) {
-    const apd = activePlan(), dd = apd && apd.days[dayKeyOf(d.date)];
+    const apd = activePlan(), dd = apd && planDay(apd, d.date);
     if (planOn() && dd && dd.type === 'Rest') h += '<div class="empty grow">Rest day in ' + esc(apd.name) + '. You can still add exercises below.</div>';
     else h += '<div class="empty grow">' + (planOn() ? 'No plan for ' + esc(WEEKDAYS[new Date(d.date + 'T12:00:00').getDay()]) + '. Add exercises below to log a session.' : 'Add the exercises you are doing today below.') + '</div>';
   }
@@ -3258,6 +3428,8 @@ function pics(name, small) {
 function lastLine(name) {
   const l = lastSession(name);
   if (!l) return '<div class="last">No earlier entries</div>';
+  if (isCount(name)) { const cr = countRows(name).filter(x => x.iso === l.iso); const bs = cr.filter(x => x.band > 0).map(x => x.band);
+    return '<div class="last">Last · ' + esc(usOf(l.iso).replace(/\/\d{4}$/, '')) + ' · <b>' + esc(cr.map(x => x.reps).join('/')) + '</b> reps' + (bs.length ? ' · band ' + esc(fmt(Math.min.apply(null, bs))) + ' lbs' : cr.some(x => x.band === 0) ? ' · no band' : '') + '</div>'; }
   const unit = unitOf(name);
   const parts = l.rows.map(r => {
     const w = r.weight == null ? '–' : r.weight;
@@ -3280,7 +3452,10 @@ function cardToday(it, idx) {
       (done ? '<span class="done-tag">✓ Finished' + (n ? ' · ' + (unit === 'reps' ? filledSets(it).reduce((a, x) => a + (parseFloat(x.w) || 0), 0) + ' reps' : n + (timed ? '' : ' set' + (n > 1 ? 's' : ''))) : '') + '</span>' : (n ? '<span class="done-tag part">' + n + (timed ? ' entered' : ' set' + (n > 1 ? 's' : '') + ' entered') + '</span>' : '<span></span>')) +
       '</div></section>';
   }
-  h += '<div class="sets">';
+  const cnt = unit === 'reps', noBw = cnt && !bwFor(todayIso());
+  if (cnt) h += pullTop(it);
+  if (timed && !cnt && !isStopwatch(it.name)) h += cdBlock(it, unit);
+  h += '<div class="sets' + (noBw ? ' pu-off' : '') + '">';
   if (!timed) { const t = topSet(it.name); it.sets.forEach(s => { s.pw = t.w; s.pr = t.r; }); }
   const sw = isStopwatch(it.name);
   if (sw) it.sets.forEach((s, i) => {
@@ -3295,7 +3470,7 @@ function cardToday(it, idx) {
     const act = S.active && S.active.id === it.id && S.active.i === i;
     const rec = recordOf(it.name, s.w, s.r);
     h += '<div class="set' + (act ? ' act' : '') + '" data-i="' + i + '">' + (hasLast ? '<button class="n fill" data-act="fill-set" data-i="' + i + '" aria-label="Set ' + (i + 1) + ': use ' + (timed ? 'last session\'s time' : 'top weight and its reps') + '" title="' + (timed ? 'Use last session\'s time' : 'Use top weight and its reps') + '">' + (i + 1) + '</button>' : '<span class="n">' + (i + 1) + '</span>') +
-      '<label class="field' + (s.w === '' ? ' ghost' : '') + '"><input id="' + it.id + '-w' + i + '" data-k="w" data-i="' + i + '" inputmode="decimal" placeholder="' + esc(timed ? ((i === 0 && lastTime(it.name)) ? (unit === 'reps' ? 'last workout ' : 'last workout time ') + lastTime(it.name) : (unit === 'reps' ? 'reps' : 'time')) : (s.pw ? 'top weight ' + s.pw : 'weight')) + '" value="' + esc(s.w) + '"><span>' + unit + '</span></label>' +
+      '<label class="field' + (s.w === '' ? ' ghost' : '') + '"><input id="' + it.id + '-w' + i + '" data-k="w" data-i="' + i + '" inputmode="decimal" placeholder="' + esc(timed ? ((i === 0 && lastTime(it.name)) ? (unit === 'reps' ? 'last workout ' : 'last workout time ') + lastTime(it.name) : (unit === 'reps' ? 'reps' : 'time')) : (s.pw ? 'top weight ' + s.pw : 'weight')) + '" value="' + esc(s.w) + '"' + (noBw ? ' disabled' : '') + '><span>' + unit + '</span></label>' +
       (timed ? '<span></span>' : '<label class="field' + (s.r === '' ? ' ghost' : '') + '"><input id="' + it.id + '-r' + i + '" data-k="r" data-i="' + i + '" inputmode="numeric" placeholder="' + esc(s.pr ? 'reps at top ' + s.pr : 'reps') + '" value="' + esc(s.r) + '"><span>reps</span></label>') +
       '<span class="rec" id="' + it.id + '-rec' + i + '">' + recBadge(rec) + '</span></div>';
   });
@@ -3305,9 +3480,59 @@ function cardToday(it, idx) {
     h += '<div class="qbar"><span class="qlab">' + (ai != null ? 'Set ' + (ai + 1) : 'Next set') + '</span>' +
       [-5, -2.5, 2.5, 5].map(d => '<button class="qb" data-act="qw" data-d="' + d + '">' + (d > 0 ? '+' : '−') + Math.abs(d) + '</button>').join('') + '</div>';
   }
-  if (!timed || sw || unit === 'reps') h += '<div class="set-btns"><button class="add-set" data-act="add-set">+ set</button>' +
-    '<button class="add-set" data-act="rem-set"' + (it.sets.length < 2 ? ' disabled' : '') + '>− set</button></div>';
+  if (!timed || sw || unit === 'reps') h += '<div class="set-btns"><button class="add-set" data-act="add-set"' + (noBw ? ' disabled' : '') + '>+ set</button>' +
+    '<button class="add-set" data-act="rem-set"' + (it.sets.length < 2 || noBw ? ' disabled' : '') + '>− set</button></div>';
   return h + '<div class="run-row"><span></span><button class="run-btn fin" data-act="finish">Finished</button></div></section>';
+}
+
+// Countdown timer for time exercises (Ver 0.2e, user 2026-11-09): set the time with − / +, Start / Pause, Reset.
+// At 0:00 it beeps and enters the time in the box; Pause enters the time done so far. Typing the time still works.
+function cdStep(unit) { return unit === 'mins' ? 60 : 10; }
+function cdInit(it, unit) {
+  if (it.cd) return it.cd;
+  const lt = parseFloat(lastTime(it.name)), dur = lt > 0 ? Math.round(unit === 'mins' ? lt * 60 : lt) : (unit === 'mins' ? 600 : 30);
+  return (it.cd = { dur, end: 0, left: null });
+}
+function cdLeft(cd) { return cd.end ? Math.max(0, (cd.end - Date.now()) / 1000) : (cd.left != null ? cd.left : cd.dur); }
+function cdText(cd) { return fmtSw(Math.ceil(cdLeft(cd)) * 1000); }
+function cdEnter(it, sec) {
+  const unit = unitOf(it.name), st = it.sets[0]; if (!st || !(sec > 0)) return '';
+  st.w = String(unit === 'mins' ? Math.round(sec / 60 * 10) / 10 : Math.round(sec)); return st.w + ' ' + unit;
+}
+function cdBlock(it, unit) {
+  const cd = cdInit(it, unit), run = !!cd.end, paused = !run && cd.left != null && cd.left < cd.dur, step = cdStep(unit);
+  return '<div class="cd"><div class="cd-main">' +
+    '<button class="cd-adj" data-act="cd-adj" data-d="-' + step + '"' + (run || paused ? ' disabled' : '') + ' aria-label="Less time">−</button>' +
+    '<b data-cd="' + it.id + '" aria-live="off">' + cdText(cd) + '</b>' +
+    '<button class="cd-adj" data-act="cd-adj" data-d="' + step + '"' + (run || paused ? ' disabled' : '') + ' aria-label="More time">+</button></div>' +
+    '<div class="cd-btns"><button class="sw-btn' + (run ? ' stop' : '') + '" data-act="cd-go">' + (run ? 'Pause' : paused ? 'Resume' : 'Start') + '</button>' +
+    '<button class="btn sm" data-act="cd-reset"' + (run || paused ? '' : ' disabled') + '>Reset</button></div>' +
+    '<div class="cd-note">Timer, or type the time below.</div></div>';
+}
+setInterval(() => {
+  if (!S.draft) return;
+  S.draft.items.forEach(it => { const cd = it.cd; if (!cd || !cd.end) return;
+    const el = document.querySelector('[data-cd="' + it.id + '"]'); if (el) el.textContent = cdText(cd);
+    if (cdLeft(cd) <= 0) { cd.end = 0; cd.left = null; playBeep(); const t = cdEnter(it, cd.dur); saveDraft(); render(); toast(bareName(it.name) + ' done' + (t ? ': ' + t + ' entered.' : '.')); }
+  });
+}, 250);
+
+// Pull Up card top (Ver 0.2e): body weight row and Band switch. Without a body weight everything else on the card is greyed out.
+function pullTop(it) {
+  const bw = bwFor(todayIso()), b = it.band || (it.band = { on: false, lbs: '' });
+  let h = '<div class="pu">';
+  if (!bw || S.puEdit === it.id) {
+    h += '<div class="pu-row pu-ask' + (bw ? '' : ' need') + '"><span class="pu-lab">Body weight</span>' +
+      '<label class="field"><input id="puBw" inputmode="decimal" placeholder="' + (bw ? esc(fmt(bw.kg * LB)) : 'e.g. 160') + '"><span>lbs</span></label>' +
+      '<button class="btn sm' + (bw ? '' : ' glowbtn') + '" data-act="pu-bw-save">Save</button>' + (bw ? '<button class="btn sm" data-act="pu-bw-cancel">Cancel</button>' : '') + '</div>';
+    if (!bw) h += '<div class="pu-note">Enter your body weight to log pull-ups. The chart shows the weight you pull: body weight − band help. Kept private with your Food weight, never in the workout Sheet.</div>';
+  } else {
+    h += '<div class="pu-row"><span class="pu-lab">Body weight</span><b class="pu-val">' + esc(fmt(bw.kg * LB)) + ' lbs</b>' +
+      '<span class="pu-src">' + (bw.src === 'renpho' ? 'Renpho' : 'entered') + ' ' + esc(usOf(bw.iso).replace(/\/\d{4}$/, '')) + '</span><button class="btn sm" data-act="pu-bw-edit">Edit</button></div>';
+  }
+  h += '<div class="pu-row pu-band' + (bw ? '' : ' pu-off') + '"><label class="switch"><span>Band</span><input type="checkbox" role="switch" data-puband="1"' + (b.on ? ' checked' : '') + (bw ? '' : ' disabled') + '><i aria-hidden="true"></i></label>' +
+    (b.on ? '<label class="field' + (b.lbs === '' ? ' ghost' : '') + '"><input data-pulbs="1" inputmode="decimal" placeholder="band help" value="' + esc(b.lbs) + '"' + (bw ? '' : ' disabled') + '><span>lbs</span></label>' : '<span class="pu-src">No band: full pull-ups</span>') + '</div>';
+  return h + '</div>';
 }
 
 // Placeholder picture: a framed card naming the exercise and the position, to be replaced by real photos.
@@ -3341,7 +3566,7 @@ function viewProgress() {
   // the exercise picker doubles as the chart title; gold left edge marks the card as interactive
   // exercise picker: a button that opens a scrollable list sheet at the bottom of the screen (user, 2026-10-31: the phone's own list was hard to reach)
   const ctl = '<div class="ctlcard glow"><span class="ctl-lab">Exercise</span><button class="pickbtn" data-act="pick-open" aria-haspopup="listbox" aria-expanded="' + !!S.pickOpen + '">' + esc(bareName(S.pick || '')) + '</button>' +
-    (S.isOwner && S.body.length ? '<label class="switch"><span>Show body weight on the chart</span><input type="checkbox" role="switch" id="bwToggle"' + (S.showBW ? ' checked' : '') + '><i aria-hidden="true"></i></label>' : '') + rangeSeg() + '</div>';
+    (S.isOwner && S.body.length && !isCount(S.pick || '') ? '<label class="switch"><span>Show body weight on the chart</span><input type="checkbox" role="switch" id="bwToggle"' + (S.showBW ? ' checked' : '') + '><i aria-hidden="true"></i></label>' : '') + rangeSeg() + '</div>';
   h += chart(S.pick, ctl);
   if (S.pickOpen) {
     const item = n => '<button class="sheet-it' + (n === S.pick ? ' on' : '') + '" role="option" aria-selected="' + (n === S.pick) + '" data-act="pick-set" data-name="' + esc(n) + '">' + esc(bareName(n)) + '</button>';
@@ -3365,6 +3590,7 @@ function seriesFor(name) {
 }
 function chart(name, ctl) {
   ctl = ctl || '';
+  if (isCount(name)) return chartCount(name, ctl);
   const unit = unitOf(name), farmer = isFarmer(name);
   const all = seriesFor(name), ser = all.filter(d => inRange(d.iso));
   let h = '<div class="chartbox">';
@@ -3434,6 +3660,45 @@ function chart(name, ctl) {
     h += '<tr><td>' + esc(usOf(d.iso)) + '</td><td>' + fmt(d.top.weight) + ' ' + unit + '</td><td>' + esc(splitReps(d.top.reps, farmer).join('/')) + '</td></tr>';
     d.lighter.forEach(l => { h += '<tr class="lt"><td></td><td>' + fmt(l.weight) + ' ' + unit + '</td><td>' + esc(splitReps(l.reps, farmer).join('/')) + '</td></tr>'; });
   });
+  h += '</tbody></table></div>' + moreBtn(rowsAll.length, tKey) + '</div>';
+  return h;
+}
+// Pull Up chart (Ver 0.2e): weight pulled per day = body weight nearest that date - the lightest band help that day; labels = reps per set;
+// dashed line = body weight now (no band = the line reaches it). Days with no body weight or old rows without a band are only in the table.
+function chartCount(name, ctl) {
+  const days = new Map(); countRows(name).forEach(x => { if (!days.has(x.iso)) days.set(x.iso, []); days.get(x.iso).push(x); });
+  const all = [...days.keys()].sort().map(iso => { const rows = days.get(iso), bw = bwFor(iso), bs = rows.filter(r => r.band != null).map(r => r.band);
+    const band = bs.length ? Math.min.apply(null, bs) : null, bwl = bw ? bw.kg * LB : null;
+    return { iso, band, bwl, pulled: bwl != null && band != null ? bwl - band : null, reps: rows.map(r => r.reps), tot: rows.reduce((a, r) => a + r.reps, 0) }; });
+  const ser = all.filter(d => inRange(d.iso)), pts0 = ser.filter(d => d.pulled != null), now = bwFor(todayIso()), goal = now ? now.kg * LB : null;
+  let h = '<div class="chartbox">';
+  if (!ser.length) return h + '<div class="empty">' + (all.length ? 'No entries for ' + esc(bareName(name)) + ' in the last ' + esc(S.range) + '. Pick a longer range below.' : 'No entries for ' + esc(bareName(name)) + ' yet.') + '</div></div>' + ctl;
+  if (!pts0.length) h += '<div class="empty">' + (now ? 'No pull-ups with a band setting in this range yet.' : 'Enter your body weight on the Pull Up card to see this chart.') + '</div>';
+  else {
+    const W = 640, H = 300, L = 44, R = 30, T = 26, B = 36, t = s => new Date(s + 'T12:00:00').getTime();
+    let t0 = t(pts0[0].iso), t1 = t(pts0[pts0.length - 1].iso); const span = Math.max(t1 - t0, 7 * 864e5), padT = span * 0.06; t0 -= padT; t1 = t0 + span + padT * 2;
+    const vals = pts0.map(d => d.pulled); if (goal) vals.push(goal);
+    let y0 = Math.min.apply(null, vals), y1 = Math.max.apply(null, vals); const ypad = Math.max((y1 - y0) * 0.18, 5); y0 = Math.max(0, y0 - ypad); y1 += ypad;
+    const step = niceStep((y1 - y0) / 4); y0 = Math.floor(y0 / step) * step; y1 = Math.ceil(y1 / step) * step;
+    const X = v => L + (v - t0) / (t1 - t0) * (W - L - R), Y = v => T + (1 - (v - y0) / (y1 - y0)) * (H - T - B);
+    let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(bareName(name)) + ': weight pulled per day">';
+    for (let v = y0; v <= y1 + 1e-9; v += step) svg += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="var(--line)" stroke-width="1"/><text x="' + (L - 8) + '" y="' + (Y(v) + 4) + '" text-anchor="end" font-size="12" fill="var(--muted)">' + fmt(v) + '</text>';
+    const every = Math.ceil(pts0.length / 6);
+    pts0.forEach((d, i) => { if (i % every === 0 || i === pts0.length - 1) svg += '<text x="' + X(t(d.iso)) + '" y="' + (H - 12) + '" text-anchor="middle" font-size="12" fill="var(--muted)">' + usOf(d.iso).replace(/\/\d{4}$/, '') + '</text>'; });
+    if (goal) svg += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(goal) + '" y2="' + Y(goal) + '" stroke="var(--gold)" stroke-width="2" stroke-dasharray="7 5"/>' +
+      '<text x="' + (W - R) + '" y="' + (Y(goal) - 6) + '" text-anchor="end" font-size="11.5" font-weight="600" fill="var(--muted)">Body weight ' + fmt(goal) + ' · no band</text>';
+    const pts = pts0.map(d => [X(t(d.iso)), Y(d.pulled)]);
+    svg += '<path d="' + smooth(pts) + '" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>';
+    pts0.forEach((d, i) => { const [x, y] = pts[i], up = i % 2 === 0;
+      svg += '<circle cx="' + x + '" cy="' + y + '" r="' + (d.band === 0 ? 6.5 : 5) + '" fill="var(--gold)" stroke="var(--accent)" stroke-width="2"/>' +
+        '<text x="' + x + '" y="' + (up ? y - 10 : y + 18) + '" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--ink)">' + esc(d.reps.join('/')) + '</text>'; });
+    h += '<div class="legend"><span><i style="background:var(--gold);box-shadow:0 0 0 2px var(--accent)"></i>Weight you pulled (lbs): body weight − band help · labels = reps</span>' + (goal ? '<span><i style="background:var(--gold);height:3px;border-radius:0"></i>Dashed: your body weight now = no band</span>' : '') + '</div>';
+    h += '<div style="overflow-x:auto">' + svg + '</svg></div>';
+  }
+  h += '</div>' + ctl + '<div class="chartbox"><div style="overflow-x:auto"><table class="hist"><thead><tr><th>Date</th><th>Pulled</th><th>Band</th><th>Reps</th></tr></thead><tbody>';
+  const tKey = 'p|' + name + '|' + S.range, showAll = S.tableAll === tKey, rowsAll = ser.slice().reverse();
+  (showAll ? rowsAll : rowsAll.slice(0, TABLE_N)).forEach(d => {
+    h += '<tr><td>' + esc(usOf(d.iso)) + '</td><td>' + (d.pulled != null ? fmt(d.pulled) + ' lbs' : '–') + '</td><td>' + (d.band == null ? '–' : d.band > 0 ? fmt(d.band) + ' lbs' : 'none') + '</td><td>' + esc(d.reps.join('/')) + ' (' + d.tot + ')</td></tr>'; });
   h += '</tbody></table></div>' + moreBtn(rowsAll.length, tKey) + '</div>';
   return h;
 }
@@ -3894,19 +4159,82 @@ function viewPhotos() {
 }
 
 // ---------- library ----------
+// Library body map (Ver 0.2e, user 2026-11-09): small exercise tags placed around a simple front-view body figure, by body area:
+// back exercises up by the head, shoulders by the shoulders, chest by the chest, arms by the arms, core & cardio by the waist, legs at the bottom.
+// The search box and the keyword chips light up the matching tags (and their body area); every other tag greys out. Tap a tag for its picture.
+const LM_BASE = 560, LM_STEP = 34, LM_PILL = 30;   /* smaller tags (user 2026-11-09 23:36) */
+const LM_ANCHOR = { head: 62, shoulders: 104, chest: 140, arms: 190, waist: 235, legs: 420 };
+function libRegion(e) {
+  const c = catClass(e.cat), g = groupsOf(e);
+  if (c === 'legs') return 'legs';
+  if (c === 'core') return 'waist';
+  if (g.includes('Back')) return 'head';
+  if (g.includes('Biceps') || g.includes('Triceps') || g.includes('Forearms & grip')) return 'arms';
+  if (g.includes('Shoulders')) return 'shoulders';
+  return 'chest';
+}
+function libLayout(list) {
+  // each body area's tags alternate left / right, stacked around the area's height; then pushed down so no two overlap
+  const regs = Object.keys(LM_ANCHOR), side = { L: [], R: [] };
+  let k = 0; regs.forEach(r => { const xs = list.filter(e => libRegion(e) === r); xs.forEach(e => { side[k++ % 2 ? 'R' : 'L'].push({ e, r }); }); });   /* one running count: both sides end up the same length */
+  const place = (H) => {
+    let bottom = 0; const sc = H / LM_BASE;
+    ['L', 'R'].forEach(sd => {
+      const arr = side[sd];
+      regs.forEach(r => { const xs = arr.filter(x => x.r === r); xs.forEach((x, i) => { x.y = LM_ANCHOR[r] * sc + (i - (xs.length - 1) / 2) * LM_STEP; }); });
+      let prev = -1e9; arr.forEach(x => { x.y = Math.max(x.y, LM_PILL / 2 + 2, prev + LM_STEP); prev = x.y; bottom = Math.max(bottom, x.y + LM_PILL / 2); });
+    });
+    return bottom;
+  };
+  let H = LM_BASE, b = place(H);
+  if (b + 8 > H) { H = Math.ceil(b + 8); b = place(H); if (b + 8 > H) H = Math.ceil(b + 8); }
+  return { H, side };
+}
+function bodyFig(H) {   /* smooth silhouette, about 8 heads tall (user picked style B, 2026-11-09) */
+  const base = ["M60 13 C73 13 82 25 82 42 C82 60 72 73 60 73 C48 73 38 60 38 42 C38 25 47 13 60 13 Z", "M52 66 L68 66 L69 88 L51 88 Z", "M42 84 Q60 80 78 84 Q96 88 100 102 Q93 118 87 124 Q89 175 81 218 Q89 245 89 282 L60 298 L31 282 Q31 245 39 218 Q31 175 33 124 Q27 118 20 102 Q24 88 42 84 Z", "M21 100 Q12 106 12 142 L10 212 Q8 250 11 290 Q10 315 15 332 Q22 336 23 318 L24 290 Q28 250 26 212 L31 127 Z M 99 100 Q 108 106 108 142 L 110 212 Q 112 250 109 290 Q 110 315 105 332 Q 98 336 97 318 L 96 290 Q 92 250 94 212 L 89 127 Z", "M31 266 Q27 340 37 410 Q32 450 40 500 L42 532 Q33 540 35 548 L56 550 Q57 540 55 532 L56 500 Q60 450 56 410 Q60 340 60 288 Z M 89 266 Q 93 340 83 410 Q 88 450 80 500 L 78 532 Q 87 540 85 548 L 64 550 Q 63 540 65 532 L 64 500 Q 60 450 64 410 Q 60 340 60 288 Z"];
+  const rg = { head: 'M44 84 Q60 80 76 84 Q90 88 95 97 Q60 88 25 97 Q30 88 44 84 Z', shoulders: 'M20 101 Q23 88 38 86 L40 106 Q30 108 22 115 Z M 100 101 Q 97 88 82 86 L 80 106 Q 90 108 98 115 Z', chest: 'M35 106 Q48 100 60 104 Q72 100 85 106 L86 140 Q73 152 60 146 Q47 152 34 140 Z', arms: 'M21 100 Q12 106 12 142 L10 212 Q8 250 11 290 Q10 315 15 332 Q22 336 23 318 L24 290 Q28 250 26 212 L31 127 Z M 99 100 Q 108 106 108 142 L 110 212 Q 112 250 109 290 Q 110 315 105 332 Q 98 336 97 318 L 96 290 Q 92 250 94 212 L 89 127 Z', waist: 'M35 158 Q60 168 85 158 Q85 190 81 218 Q88 242 88 270 L32 270 Q32 242 39 218 Q35 190 35 158 Z', legs: 'M31 266 Q27 340 37 410 Q32 450 40 500 L42 532 Q33 540 35 548 L56 550 Q57 540 55 532 L56 500 Q60 450 56 410 Q60 340 60 288 Z M 89 266 Q 93 340 83 410 Q 88 450 80 500 L 78 532 Q 87 540 85 548 L 64 550 Q 63 540 65 532 L 64 500 Q 60 450 64 410 Q 60 340 60 288 Z' };
+  // highlights: solid gold inside one group that carries the transparency (so overlaps never get darker),
+  // softened with a small blur and clipped to the body outline so neighbouring areas melt into one shape (user 2026-11-09)
+  const parts = base.map(d => '<path d="' + d + '"/>').join('');
+  return '<svg class="lm-body" viewBox="0 0 120 ' + LM_BASE + '" preserveAspectRatio="none" style="height:' + H + 'px" aria-hidden="true">' +
+    '<defs><clipPath id="lmClip">' + parts + '</clipPath><filter id="lmSoft" x="-20%" y="-5%" width="140%" height="110%"><feGaussianBlur stdDeviation="2.4"/></filter></defs>' +
+    '<g class="lm-fig">' + parts + '</g><g class="lm-hl" clip-path="url(#lmClip)"><g filter="url(#lmSoft)">' +
+    Object.keys(rg).map(r => '<path class="lm-rg" data-rg="' + r + '" d="' + rg[r] + '"/>').join('') + '</g></g></svg>';
+}
+function libFilter() {   /* Library and the week-plan day page share the body map; light up the matching tags */
+  const wp = !!S.wpDay && S.tab === 'settings', q = ((wp ? S.wpQ : S.libQ) || '').trim(), g = (wp ? S.wpGrp : S.libGrp) || '', map = document.querySelector('.lmap'); if (!map) return;
+  let n = 0; const regs = new Set();
+  map.querySelectorAll('.lm-pill').forEach(p => { const hit = q ? qMatch(q, p.dataset.q) : g ? p.dataset.g.includes('|' + g + '|') : false; p.classList.toggle('hit', hit); if (hit) { n++; regs.add(p.dataset.reg); } });
+  map.classList.toggle('q', !!(q || g));
+  map.querySelectorAll('[data-rg]').forEach(r => r.classList.toggle('on', regs.has(r.dataset.rg)));
+  const no = document.getElementById(wp ? 'wpCount' : 'libNone');
+  if (no) { no.hidden = !(q || g); no.textContent = n ? n + ' match' + (n > 1 ? 'es' : '') + (q ? ' for “' + q + '”' : ' · ' + g) : 'No exercise matches. Add it in the Library with the + button.'; no.classList.toggle('none', !n); }
+}
+function findCard(id, q, grp, act, list, countId) {
+  const groups = BODY_GROUPS.map(([n]) => n).concat('Other').filter(g => list.some(e => groupsOf(e).includes(g)));
+  return '<div class="lib-find">' + searchBox(id, q || '', 'Search exercises or muscles') +
+    '<div class="wp-grps" role="group" aria-label="Highlight by keyword">' + groups.map(n => '<button class="wp-grp' + (n === grp ? ' on' : '') + '" aria-pressed="' + (n === grp) + '" data-act="' + act + '" data-k="' + esc(n) + '">' + esc(n) + '</button>').join('') + '</div>' +
+    '<div class="lib-count" id="' + countId + '" hidden></div></div>';
+}
+function bodyMap(list, sel, act) {
+  const L = libLayout(list);
+  const pill = x => { const e = x.e, f = isFav(e.name), on = sel && sel.has(e.name);
+    return '<button class="lm-pill' + (f ? ' fav' : '') + (on ? ' sel' : '') + '" style="top:' + Math.round(x.y - LM_PILL / 2) + 'px" data-act="' + act + '" data-name="' + esc(e.name) + '" data-q="' + esc(exQ(e)) + '" data-g="|' + esc(groupsOf(e).join('|')) + '|" data-reg="' + x.r + '"' + (sel ? ' aria-pressed="' + !!on + '"' : '') + '><span class="t">' + (on ? '<i class="ck" aria-hidden="true">✓</i> ' : f ? '<i aria-label="favourite">★</i> ' : '') + esc(bareName(e.name)) + '</span></button>'; };
+  return '<div class="lmap" style="height:' + L.H + 'px">' + bodyFig(L.H) + '<div class="lm-l">' + L.side.L.map(pill).join('') + '</div><div class="lm-r">' + L.side.R.map(pill).join('') + '</div></div>';
+}
 function viewLibrary() {
   let h = problemBox();
   if (!S.exercises.length) return h + '<div class="empty">Waiting for the exercise list from the Google Sheet.</div>';
-  const list = pickable().filter((e, i, a) => a.findIndex(x => x.name === e.name) === i);
-  const nmSort = (a, b) => bareName(a.name).localeCompare(bareName(b.name));
-  const favs = list.filter(e => isFav(e.name)).sort(nmSort), other = list.filter(e => !isFav(e.name) && !/warm.?up/i.test(e.name)).sort(nmSort);
-  // Ver 0.2d (user, 2026-11-08): favourite cards fold to their name row; tap the row (or the chevron) to show the picture and last session.
-  const lo = store.get(K_LIBOPEN) || {};
-  const card = e => { const on = !!lo[e.name]; return '<section class="card libcard' + (on ? ' on' : '') + '"><div class="lib-h" data-act="lib-tog" data-k="' + esc(e.name) + '" role="button" aria-expanded="' + on + '"><div class="titles">' + nameBlock(e.name) + '</div>' + starBtn(e.name) + '<span class="setchev" aria-hidden="true"></span></div>' + (on ? pics(e.name) + lastLine(e.name) : '') + '</section>'; };
-  const allOn = favs.length && favs.every(e => lo[e.name]);
-  if (favs.length) h += '<div class="lib-group"><div class="lib-gh"><h2>★ Favourites · ' + favs.length + '</h2><button class="btn sm" data-act="lib-all" data-v="' + (allOn ? '0' : '1') + '">' + (allOn ? 'Collapse all' : 'Expand all') + '</button></div>' + favs.map(card).join('') + '</div>';
-  h += '<div class="lib-group"><h2>Other exercises · ' + other.length + '</h2><ul class="namelist">' + other.map(e => '<li><span>' + esc(bareName(e.name)) + '</span>' + starBtn(e.name) + '</li>').join('') + '</ul></div>';
-  if (!favs.length) h += '<p class="hint">Tap ☆ to make an exercise a favourite: favourites show first here and as quick picks in the week plan.</p>';
+  const list = pickable().filter((e, i, a) => a.findIndex(x => x.name === e.name) === i && !/warm.?up/i.test(e.name));
+  const groups = BODY_GROUPS.map(([n]) => n).concat('Other').filter(g => list.some(e => groupsOf(e).includes(g)));
+  if (S.libGrp && !groups.includes(S.libGrp)) S.libGrp = '';
+  h += findCard('libQ', S.libQ, S.libGrp, 'lib-grp', list, 'libNone') + bodyMap(list, null, 'lib-pick');
+  h += '<p class="hint">Tap an exercise for its picture and last session. ★ = favourite (tap ☆ in the picture card to change).</p>';
+  if (S.libSel) { const e = exByName(S.libSel);
+    if (e) h += '<div class="sheet-bg" data-act="lib-close"><div class="sheet lib-sheet" role="dialog" aria-label="' + esc(bareName(e.name)) + '" data-act="noop">' +
+      '<div class="sheet-h"><b>' + esc(bareName(e.name)) + '</b>' + starBtn(e.name) + '<button class="btn sm" data-act="lib-close">Close</button></div>' +
+      '<div class="lib-sub">' + esc(catLabel(e.cat)) + (e.muscle ? ' · ' + esc(e.muscle) : '') + '</div>' + pics(e.name) + lastLine(e.name) + '</div></div>'; }
+  Promise.resolve().then(libFilter);
   return h;
 }
 
@@ -3996,6 +4324,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.2f', '11102026', 'Matches the full app Ver 0.2f. Pull Up: the card shows your body weight (the weight you typed on the Food tab or on the card; Edit to change it) and a Band switch with the band help in lbs; with no body weight the card asks for it and the reps are greyed out. Each set is saved as its own row: Weight = band help (0 = no band), Reps = that set. Progress charts the weight you pulled (body weight − band) with a dashed line at your body weight; body weight itself is never written to the workout Sheet. Time exercises (Warm-up, Battle Ropes): a countdown timer on the card (− / + to set it, Start / Pause / Reset, beeps at 0:00 and enters the time; Pause enters the time done so far); typing the time still works. Week plan: choose the plan length (2-10 days) on a number wheel; day 1 is a Monday and the plan repeats after the last day; the days show as circles (M T W R F S U) with a gold check once saved. Tapping a day opens a page like the Library (search, body-part keywords, body figure) where you tap exercises to add them; the picked ones sit on top in small type, swipe one left to remove it (Undo in the message). No day-type buttons any more: the day is named from what you pick (Upper body, Lower body or Combined; Upper gets a push or pull tag when more than half are push or pull; nothing picked = Rest day). Library: exercises are small tags around a body figure (back by the head, shoulders, chest, arms, core at the waist, legs at the bottom); the search box (name or muscle) and keyword chips light up the matching tags and grey out the rest; tap a tag for its picture, last session and ☆. Pinch with two fingers to zoom an enlarged exercise picture (double-tap to reset).'],
   ['0.2e', '11092026', 'Matches the full app Ver 0.2e. Swipe to remove: swipe an exercise card on Today, or a row on the Food tab (Eaten list, Adding list, Quick add › Edit list), all the way left; a red Remove shape grows out of the right edge, and letting go past about 40% of the width removes it. This replaces the × buttons and the Remove? confirmation on Today cards; a very thin red line on the right edge shows what can be swiped away. Undo in the message, except for a saved Eaten row (that one is deleted from your food Sheet). Swiping needs a touch screen. Food: tapping a Quick add food adds it to the Adding list right away at its usual amount (the amount box and Add button are gone; change the amount in the Adding list). Target / Left numbers are now bars for calories, carbs, protein, fat and fiber: eaten is solid, the Adding list is lighter, the number on the right is what is left, over target turns the bar red with +amount, and fiber shows a check when met. Messages now show small at the very top of the screen instead of over the middle. (Photo Replace / Delete from the full app is not included: the web version has no Photos tab.)'],
   ['0.2d.1', '11082026', 'Web-only fixes on Ver 0.2d. The "Tap again to ..." confirm buttons (Sign out / switch account, Reset day, Use a different Sheet, Use a different food Sheet, Delete plan) showed red text on a red button, so the second tap prompt could not be read; they are now deep red with bold white text in light and dark mode. The Progress tab opens even when no exercise is starred or in a week plan, with a note on how to get a chart, instead of staying on the previous tab.'],
   ['0.2d', '11082026', 'Matches the full app Ver 0.2d. Settings is one grouped list like iPhone Settings: a row per section with an icon; tap a row to open it right under the row (which ones are open is remembered on this phone). Appearance: Follow the phone setting is a switch under Dark mode (Dark mode greyed out while it is on); Color theme (Navy + Gold, Soft ember, Blush; changes every navy and gold, light and dark); App icon: tap the logo at the top left to upload your own picture (cropped square from the middle) or go back to the default logo; it is saved in your Workout Lite folder in Google Drive, so it shows on every phone. New Settings › Carb week (your weight, then high / mid / low carb per weekday; the same as the Food tab). The Start each day with the plan switch moved into the Week plan card; the Week plan row shows the name of the plan in use. Exercises tab: favourite cards fold to their name (tap to open; Expand all / Collapse all). The header says No plan today when no week plan is in use.'],
@@ -4104,10 +4433,10 @@ function wpMsgBox() {
   return S.wpMsg ? '<div class="notice err" role="alert"><div>' + esc(S.wpMsg) + '</div><div class="acts"><button class="btn" data-act="wp-retry"' + (S.wpSaving ? ' disabled' : '') + '>' + (S.wpSaving ? 'Saving…' : 'Save again') + '</button></div></div>' : '';
 }
 function planSummary(p) {
-  const set = WDAYS.filter(([k]) => p.days[k]);
-  if (!set.length) return 'No days set yet';
-  const work = set.filter(([k]) => p.days[k].type !== 'Rest').length, rest = set.length - work, open = 7 - set.length;
-  return work + ' workout day' + (work === 1 ? '' : 's') + (rest ? ' · ' + rest + ' rest' : '') + (open ? ' · ' + open + ' not set' : '');
+  const keys = planKeys(p), set = keys.filter(k => p.days[k]);
+  if (!set.length) return keys.length + '-day plan · no days set yet';
+  const work = set.filter(k => p.days[k].type !== 'Rest').length, rest = set.length - work, open = keys.length - set.length;
+  return keys.length + '-day plan · ' + work + ' workout day' + (work === 1 ? '' : 's') + (rest ? ' · ' + rest + ' rest' : '') + (open ? ' · ' + open + ' not set' : '');
 }
 function weekPlansPanel() {
   const n = S.wp.plans.length, ap = activePlan();
@@ -4138,23 +4467,67 @@ function weekPlansPanel() {
 function viewPlanEdit() {
   const p = planById(S.wpEdit);
   if (!p) { S.wpEdit = null; S.wpDay = null; return viewSettings(); }
+  if (S.wpDay) { const out = dayPage(p); Promise.resolve().then(libFilter); return out; }
   let h = wpMsgBox();
   h += '<div class="wp-top"><button class="btn sm" data-act="wp-back">‹ Week plans</button>' + (p.active ? '<span class="wp-badge">★ In use</span>' : '<button class="btn sm" data-act="wp-use" data-id="' + esc(p.id) + '">Use this plan</button>') + '</div>';
   h += '<div class="panel"><label class="fld"><span>Plan name</span><input id="wpName" class="tin" value="' + esc(p.name) + '" autocomplete="off" maxlength="40" enterkeyhint="done"></label>' +
     '<label class="switch"><span>Warm-up first on every workout day</span><input type="checkbox" role="switch" id="wpWarm"' + (p.warm ? ' checked' : '') + '><i aria-hidden="true"></i></label></div>';
-  h += '<p class="section-h">Your week · tap a day</p><div class="wp-week">';
-  WDAYS.forEach(([k]) => {
-    const d = p.days[k], rest = d && d.type === 'Rest';
-    const names = d && !rest ? d.items.map(bareName) : [];
-    h += '<button class="wp-day' + (d ? ' set' : '') + (rest ? ' rest' : '') + '" data-act="wp-day" data-k="' + k + '">' +
-      '<span class="wd">' + k + '</span><span class="wmid"><span class="wt">' + (d ? esc(typeLabel(d.type)) : 'Not set') + '</span>' +
-      (d && !rest ? '<span class="wn">' + (names.length ? esc(names.join(' · ')) : 'No exercises yet') + '</span>' : '') + '</span>' +
-      '<span class="wc">' + (d && !rest ? names.length + (p.warm && names.length ? '+W' : '') : '›') + '</span></button>';
-  });
-  h += '</div><p class="hint">Each day is saved to the Plan tab of the Sheet when you tap Done. A plan you have not finished keeps the days you saved' + (p.name === 'Untitled' ? ' and stays named Untitled until you rename it' : '') + '.</p>';
-  if (S.wpDay) h += daySheet(p);
+  // Ver 0.2e (user 2026-11-09): plan length wheel (2-10) and the days as a row of circles (M T W R F S U); a gold check = day saved
+  const n = planLen(p), keys = planKeys(p), ti = p.active ? planIndex(p, todayIso()) : -1;
+  h += '<div class="panel wp-lenrow"><div><b>Plan length</b><p class="hint">Day 1 is a Monday; repeats after the last day.</p></div>' + lenWheel(n) + '<span class="wp-lenu">days</span></div>';
+  h += '<p class="section-h">Your days · tap one to fill it in</p><div class="wpcal">' + keys.map((k, i) => { const d = p.days[k];
+    return '<button class="wpc' + (d ? ' done' : '') + (i === ti ? ' today' : '') + (d && d.type === 'Rest' ? ' rest' : '') + '" data-act="wp-day" data-k="' + k + '" aria-label="' + esc(dayTitle(k)) + (d ? ', saved' : ', not set') + '">' +
+      '<span class="wpc-c">' + DAY_LETTER[i % 7] + '</span><span class="wpc-n">' + (i + 1) + '</span></button>'; }).join('') + '</div>';
+  const setKeys = keys.filter(k => p.days[k]);
+  if (setKeys.length) h += '<div class="wp-list">' + setKeys.map(k => { const d = p.days[k], i = ALLKEYS.indexOf(k);
+    return '<button class="wp-li2" data-act="wp-day" data-k="' + k + '"><span class="wpc-c sm">' + DAY_LETTER[i % 7] + '</span><span class="wl-t"><b>' + esc(typeLabel(d.type)) + '</b>' +
+      (d.type !== 'Rest' ? '<small>' + esc(d.items.map(bareName).join(' · ')) + '</small>' : '') + '</span></button>'; }).join('') + '</div>';
+  h += '<p class="hint">Each day is saved to the Plan tab of the Sheet when you tap Save day.' + (ti >= 0 ? ' The ringed circle is today.' : '') + '</p>';
   return h;
 }
+// Plan length wheel (Ver 0.2e, user 2026-11-10: a rolling transition): five numbers on a drum; the one moving into the middle grows,
+// the one leaving shrinks and fades. Drag down = more days, drag up = fewer; tap the number above / below to step once.
+const WH_H = 22;   /* row step (user 2026-11-10: smaller numbers above and below, smaller card) */
+function whStyle(y) { const d = Math.abs(y) / WH_H; return 'transform:translateY(' + y.toFixed(1) + 'px) scale(' + Math.max(.35, 1 - .52 * d).toFixed(3) + ');opacity:' + Math.max(0, 1 - .55 * d).toFixed(3) + (d < .5 ? ';color:var(--gold-ink)' : ''); }   /* the number in the gold band reads in the dark gold-ink colour */
+function lenWheel(n) {
+  let h = '<div class="wheel" id="plWheel" data-act="pl-tap" data-n="' + n + '" role="spinbutton" aria-label="Plan length in days" aria-valuemin="' + PL_MIN + '" aria-valuemax="' + PL_MAX + '" aria-valuenow="' + n + '" tabindex="0"><span class="wh-band" aria-hidden="true"></span>';
+  for (let r = -2; r <= 2; r++) h += '<span class="wh-i" data-r="' + r + '" style="' + whStyle(r * WH_H) + '">' + wrapLen(n - r) + '</span>';
+  return h + '</div>';
+}
+function whPaint(n, off, anim) {
+  const w = $('#plWheel'); if (!w) return;
+  w.classList.toggle('anim', !!anim); w.setAttribute('aria-valuenow', n);
+  w.querySelectorAll('.wh-i').forEach(el => { const r = +el.dataset.r; el.textContent = wrapLen(n - r); el.setAttribute('style', whStyle(r * WH_H + off)); });
+}
+let whCommitT = null;
+function whCommit(n) { clearTimeout(whCommitT); whCommitT = setTimeout(() => { const p = planById(S.wpEdit); if (p && n !== planLen(p)) setPlanLen(p, n); }, 450); }
+function whStep(d) {
+  const w = $('#plWheel'); if (!w) return; const n = wrapLen(+w.dataset.n + d); w.dataset.n = n;
+  whPaint(n, d > 0 ? -WH_H : WH_H, false); void w.offsetHeight; whPaint(n, 0, true);
+  try { if (navigator.vibrate) navigator.vibrate(5); } catch (x) {}
+  whCommit(n);
+}
+function setPlanLen(p, n) {
+  n = wrapLen(n); if (n === planLen(p) && p.len) return;
+  p.len = n; if (!p.start) p.start = mondayOf(todayIso()); p.updated = stampNow();
+  if (p.active) todayFollowPlan(); render(); savePlans('The plan length');
+}
+// Day page (Ver 0.2e, user 2026-11-09): works like the Library: search, keywords, the body map; tap a tag to add or remove it.
+function dayPage(p) {
+  const D = S.wpDay, i = ALLKEYS.indexOf(D.k), t = autoType(D.items), busy = S.wpSaving;
+  let h = wpMsgBox() + '<div class="wp-top"><button class="btn sm" data-act="wp-cancel">‹ ' + esc(p.name) + '</button><span class="wpd-t"><span class="wpc-c sm">' + DAY_LETTER[i % 7] + '</span>' + esc(dayTitle(D.k)) + '</span></div>';
+  h += '<div class="wpd-sel"><div class="wpd-h"><b class="wp-tag">' + esc(typeLabel(t)) + '</b><span>' + D.items.length + ' picked</span></div><div class="wp-sel sm">';
+  if (p.warm && D.items.length) h += '<div class="wprow fixed"><span class="wph" aria-hidden="true"></span><span class="wpn">Warm-up</span><span class="wpt">first</span></div>';
+  if (!D.items.length) h += '<div class="wp-empty sm">Nothing picked: this is a rest day. Tap exercises on the body below to add them.</div>';
+  D.items.forEach((n, j) => { h += '<div class="wprow" data-wi="' + j + '" data-rm="wp-rm" data-i="' + j + '"><span class="wph" aria-hidden="true">≡</span><span class="wpk" aria-hidden="true">✓</span><span class="wpn">' + esc(bareName(n)) + (exByName(n) ? '' : ' <i>(not in the list)</i>') + '</span></div>'; });
+  if (D.items.length) h += '<p class="hint">' + (D.items.length > 1 ? 'Drag ≡ to reorder. ' : '') + 'Swipe left to remove.</p>';
+  h += '</div></div>';
+  const list = pickable().filter((e, j, a) => a.findIndex(x => x.name === e.name) === j && !/warm.?up/i.test(e.name));
+  h += findCard('wpQ', S.wpQ, S.wpGrp, 'wp-grp', list, 'wpCount') + bodyMap(list, new Set(D.items), 'wp-add');
+  h += '<div class="wpd-foot"><button class="btn primary" data-act="wp-done"' + (busy ? ' disabled' : '') + '>' + (busy ? 'Saving…' : 'Save day ' + (i + 1)) + '</button><button class="btn" data-act="wp-cancel">Cancel</button></div>';
+  return h;
+}
+
 function wpLists(type) {
   const ex = pickable().filter((e, i, a) => a.findIndex(x => x.name === e.name) === i), c = e => catClass(e.cat);
   const core = ex.filter(e => !['push', 'pull', 'legs'].includes(c(e)));
@@ -4167,30 +4540,60 @@ function wpLists(type) {
   }[type];
   return main ? [main, ['Core & cardio', core]] : [];
 }
+// Body-part groups for the week-plan picker (Ver 0.2e, user 2026-11-09), read from the words in Exercises column D (Muscle worked).
+// An exercise can sit in more than one group (Dead Hang: Back, Shoulders, Forearms & grip).
+const BODY_GROUPS = [
+  ['Push', /cat:push/], ['Pull', /cat:pull/],   /* from the Exercises category (user 2026-11-09) */
+  ['Chest', /chest|pec|serratus/i], ['Shoulders', /shoulder|delt/i], ['Back', /back|lat\b|lats|trap|rhomb/i],
+  ['Biceps', /bicep|brachialis/i], ['Triceps', /tricep/i], ['Forearms & grip', /forearm|grip|wrist/i],
+  ['Legs', /quad|glute|hamstring|calf|calves|leg/i], ['Core', /abdom|core|oblique/i], ['Cardio', /cardio/i]
+];
+// Search (Ver 0.2e, user 2026-11-09): every typed word must appear in the exercise name or its Muscle worked text.
+function qMatch(q, text) { q = String(q || '').trim().toLowerCase(); if (!q) return true; const t = String(text || '').toLowerCase(); return q.split(/\s+/).every(w => t.includes(w)); }
+function exQ(e) { return bareName(e.name) + ' ' + (e.muscle || '') + ' ' + (e.cat || '') + ' ' + groupsOf(e).join(' '); }
+function searchBox(id, val, ph) { return '<label class="srch"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input type="search" id="' + id + '" value="' + esc(val || '') + '" placeholder="' + esc(ph) + '" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search"></label>'; }
+function wpFilter() {
+  const q = S.wpQ || '', g = S.wpGrp || 'All'; let n = 0;
+  document.querySelectorAll('.wp-drop .wp-ex').forEach(r => { const ok = q.trim() ? qMatch(q, r.dataset.q) : (g === 'All' || r.dataset.g.includes('|' + g + '|')); r.hidden = !ok; if (ok) n++; });
+  const gr = document.querySelector('.wp-grps'); if (gr) gr.classList.toggle('dim', !!q.trim());
+  const no = document.getElementById('wpNone'); if (no) no.hidden = n > 0;
+}
+function groupsOf(e) { const c = catClass(e.cat), m = (e.muscle || '') + ' ' + (c === 'legs' ? 'legs' : '') + ' cat:' + c; const g = BODY_GROUPS.filter(([, re]) => re.test(m)).map(([n]) => n); return g.length ? g : ['Other']; }
+function wpPool(type) {
+  const ex = pickable().filter((e, i, a) => a.findIndex(x => x.name === e.name) === i && !/warm.?up/i.test(e.name)), c = e => catClass(e.cat);
+  const ok = { Upper: ['push', 'pull', 'core'], Push: ['push', 'core'], Pull: ['pull', 'core'], Lower: ['legs', 'core'], Custom: ['push', 'pull', 'legs', 'core'] }[type] || [];
+  const order = { push: 0, pull: 1, legs: 2, core: 3 };
+  return ex.filter(e => ok.includes(c(e))).sort((a, b) => order[c(a)] - order[c(b)]);
+}
+// One "Add exercises" drop-down instead of the Favourites chips and long lists: body-part chips on top, then picture + name rows.
+function wpPicker(D) {
+  const pool = wpPool('Custom'), q = S.wpQ || '';
+  const groups = BODY_GROUPS.map(([n]) => n).concat('Other').filter(g => pool.some(e => groupsOf(e).includes(g)));
+  const g = groups.includes(S.wpGrp) ? S.wpGrp : 'All';
+  const shown = e => q.trim() ? qMatch(q, exQ(e)) : (g === 'All' || groupsOf(e).includes(g));
+  let h = '<div class="wp-find">' + searchBox('wpQ', q, 'Search exercises or muscles') +
+    '<div class="wp-grps' + (q.trim() ? ' dim' : '') + '" role="tablist">' + ['All'].concat(groups).map(n => '<button class="wp-grp' + (n === g ? ' on' : '') + '" role="tab" aria-selected="' + (n === g) + '" data-act="wp-grp" data-k="' + esc(n) + '">' + esc(n) + '</button>').join('') + '</div></div>';
+  h += '<div class="wp-drop"><div class="wp-empty sm" id="wpNone"' + (pool.some(shown) ? ' hidden' : '') + '>' + (pool.length ? 'No match. Try another word, or add the exercise in the Library.' : 'No exercises yet. Add one in the Library.') + '</div>';
+  h += pool.map(e => { const on = D.items.includes(e.name), u = exImg(e.name);
+    return '<button class="wp-ex' + (on ? ' on' : '') + '" data-act="wp-add" data-name="' + esc(e.name) + '" aria-pressed="' + on + '" data-q="' + esc(exQ(e)) + '" data-g="|' + esc(groupsOf(e).join('|')) + '|"' + (shown(e) ? '' : ' hidden') + '>' +
+      '<span class="wp-th">' + (u ? '<img src="' + u + '" alt="" loading="lazy">' : '<i>' + esc(bareName(e.name).slice(0, 1)) + '</i>') + '</span>' +
+      '<span class="wp-nm"><b>' + esc(bareName(e.name)) + '</b><small>' + esc(e.muscle || catLabel(e.cat)) + '</small></span>' +
+      '<span class="ck" aria-hidden="true">' + (on ? '✓' : '+') + '</span></button>'; }).join('');
+  return h + '</div>';
+}
 function daySheet(p) {
-  const D = S.wpDay, busy = S.wpSaving;
+  const D = S.wpDay, busy = S.wpSaving, t = autoType(D.items);
   let h = '<div class="sheet-bg" data-act="noop"><div class="sheet wpsheet" role="dialog" aria-label="' + esc(dayFull(D.k)) + '" data-act="noop">' +
-    '<div class="sheet-h"><b>' + esc(dayFull(D.k)) + (D.type ? ' · ' + esc(typeLabel(D.type)) : '') + '</b><button class="btn sm" data-act="wp-cancel">Cancel</button></div>' +
-    '<div class="seg wptypes">' + DAY_TYPES.map(([v, lab]) => '<button class="btn' + (D.type === v ? ' on' : '') + '" data-act="wp-type" data-v="' + v + '" aria-pressed="' + (D.type === v) + '">' + esc(v) + '</button>').join('') + '</div>' +
+    '<div class="sheet-h"><b>' + esc(dayFull(D.k)) + ' · <span class="wp-tag">' + esc(typeLabel(t)) + '</span></b><button class="btn sm" data-act="wp-cancel">Cancel</button></div>' +
     '<div class="wpbody" id="wpBody">';
-  if (!D.type) h += '<div class="wp-empty">Choose the day type above: Upper, Push, Pull, Lower, Custom or Rest.</div>';
-  else if (D.type === 'Rest') h += '<div class="wp-empty">Rest day: no exercises in the plan. On Today you can still add any exercise.</div>';
-  else {
-    h += '<div class="wp-sel"><div class="sheet-sep">Selected · ' + D.items.length + '</div>';
-    if (p.warm) h += '<div class="wprow fixed"><span class="wph" aria-hidden="true"></span><span class="wpn">Warm-up</span><span class="wpt">first</span></div>';
-    if (!D.items.length) h += '<div class="wp-empty sm">Pick exercises from the list below.</div>';
-    D.items.forEach((n, i) => { h += '<div class="wprow" data-wi="' + i + '"><span class="wph" aria-hidden="true">≡</span><span class="wpn">' + esc(bareName(n)) + (exByName(n) ? '' : ' <i>(not in the list)</i>') + '</span><button class="xbtn" data-act="wp-rm" data-i="' + i + '" aria-label="Remove ' + esc(bareName(n)) + '">' + XICON + '</button></div>'; });
-    if (D.items.length > 1) h += '<p class="hint">Hold an exercise for 1 second (or drag ≡), then move it up or down.</p>';
-    h += '</div>';
-    const favs = pickable().map(e => e.name).filter((n, i, a) => a.indexOf(n) === i && isFav(n));
-    if (favs.length) h += '<div class="sheet-sep">★ Favourites</div><div class="wp-chips">' + favs.map(n => '<button class="wp-chip' + (D.items.includes(n) ? ' on' : '') + '" data-act="wp-add" data-name="' + esc(n) + '">' + (D.items.includes(n) ? '✓ ' : '') + esc(bareName(n)) + '</button>').join('') + '</div>';
-    wpLists(D.type).forEach(([title, list]) => {
-      if (!list.length) return;
-      h += '<div class="sheet-sep">' + esc(title) + '</div>' + list.map(e => { const on = D.items.includes(e.name);
-        return '<div class="wp-li' + (on ? ' on' : '') + '"><button class="wp-pick" data-act="wp-add" data-name="' + esc(e.name) + '"><span class="ck">' + (on ? '✓' : '+') + '</span>' + esc(bareName(e.name)) + '</button>' + starBtn(e.name) + '</div>'; }).join('');
-    });
-  }
-  h += '</div><div class="nxfoot"><button class="btn primary" data-act="wp-done"' + (!D.type || busy ? ' disabled' : '') + '>' + (busy ? 'Saving…' : 'Done · save ' + esc(D.k)) + '</button><button class="btn" data-act="wp-cancel">Cancel</button></div></div></div>';
+  // Ver 0.2e (user 2026-11-09): picked exercises on top in a small font; the day type follows from them (no type buttons)
+  h += '<div class="wp-sel sm">';
+  if (p.warm && D.items.length) h += '<div class="wprow fixed"><span class="wph" aria-hidden="true"></span><span class="wpn">Warm-up</span><span class="wpt">first</span></div>';
+  if (!D.items.length) h += '<div class="wp-empty sm">No exercises yet: this is a rest day. Search or pick below to add some.</div>';
+  D.items.forEach((n, i) => { h += '<div class="wprow" data-wi="' + i + '" data-rm="wp-rm" data-i="' + i + '"><span class="wph" aria-hidden="true">≡</span><span class="wpn">' + esc(bareName(n)) + (exByName(n) ? '' : ' <i>(not in the list)</i>') + '</span></div>'; });
+  if (D.items.length) h += '<p class="hint">' + (D.items.length > 1 ? 'Drag ≡ (or hold 1 s) to reorder. ' : '') + 'Swipe left to remove.</p>';
+  h += '</div>' + wpPicker(D) + '</div>';
+  h += '<div class="nxfoot"><button class="btn primary" data-act="wp-done"' + (busy ? ' disabled' : '') + '>' + (busy ? 'Saving…' : 'Done · save ' + esc(D.k)) + '</button><button class="btn" data-act="wp-cancel">Cancel</button></div></div></div>';
   return h;
 }
 
@@ -4268,9 +4671,20 @@ document.addEventListener('click', e => {
     case 'sw': if (it) { const st = it.sets[+b.dataset.i]; if (!st) break;
       if (!swStop(st)) { it.sets.forEach(swStop); st.t0 = Date.now(); }
       saveDraft(); render(); } break;
-    case 'finish': if (it) { it.sets.forEach(swStop); it.open = false; it.done = true; if (S.active && S.active.id === it.id) S.active = null;
+    case 'finish': if (it) { it.sets.forEach(swStop); if (it.cd && it.cd.end) { it.cd.left = cdLeft(it.cd); it.cd.end = 0; cdEnter(it, it.cd.dur - it.cd.left); } it.open = false; it.done = true; if (S.active && S.active.id === it.id) S.active = null;
       const items = S.draft.items; items.splice(items.indexOf(it), 1); items.push(it);   // finished cards sink to the bottom
       saveDraft(); render(); } break;
+    case 'cd-adj': if (it && it.cd && !it.cd.end) { it.cd.dur = Math.max(cdStep(unitOf(it.name)), it.cd.dur + +b.dataset.d); it.cd.left = null; saveDraft(); render(); } break;
+    case 'cd-go': if (it) { const cd = cdInit(it, unitOf(it.name));
+      if (cd.end) { cd.left = cdLeft(cd); cd.end = 0; const t = cdEnter(it, cd.dur - cd.left); if (t) toast('Paused: ' + t + ' entered so far.'); }
+      else { primeBeep(); const l = cdLeft(cd); cd.end = Date.now() + (l > 0 ? l : cd.dur) * 1000; }
+      saveDraft(); render(); } break;
+    case 'cd-reset': if (it && it.cd) { it.cd.end = 0; it.cd.left = null; saveDraft(); render(); } break;
+    case 'pu-bw-edit': if (it) { S.puEdit = it.id; render(); setTimeout(() => { const i = $('#puBw'); if (i) i.focus(); }, 50); } break;
+    case 'pu-bw-cancel': S.puEdit = null; render(); break;
+    case 'pu-bw-save': { const i = $('#puBw'); const lbs = parseFloat(String(i ? i.value : '').replace(',', '.'));
+      if (!(lbs >= 66 && lbs <= 550)) { toast('Type your body weight in lbs, e.g. 160.'); break; }
+      store.set(K_MKG, { kg: Math.round(lbs / LB * 100) / 100, at: todayIso() }); S.puEdit = null; render(); saveFoodSet(); toast('Body weight saved: ' + fmt(lbs) + ' lbs.'); break; }
     case 'add-set': {
       const prev = it.sets[it.sets.length - 1];
       it.sets.push({ w: '', r: '', pw: prev ? (prev.w || prev.pw || '') : '', pr: prev ? (prev.r || prev.pr || '') : '' }); saveDraft(); render();
@@ -4404,7 +4818,7 @@ document.addEventListener('click', e => {
     case 'wp-ask': {
       S.wpAsk = false;
       if (S.wp.plans.length >= MAX_PLANS) { toast('You already have 3 plans.'); render(); break; }
-      const p = { id: 'p' + Date.now().toString(36), name: 'Untitled', active: false, warm: b.dataset.v === 'yes', updated: stampNow(), days: {} };
+      const p = { id: 'p' + Date.now().toString(36), name: 'Untitled', active: false, warm: b.dataset.v === 'yes', updated: stampNow(), days: {}, len: 2, start: mondayOf(todayIso()) };   /* Ver 0.2e: new plans start at 2 days */
       S.wp.plans.push(p); S.wpEdit = p.id; S.wpDay = null; render(); window.scrollTo(0, 0);
       savePlans('The new plan'); break; }
     case 'wp-edit': S.wpEdit = b.dataset.id; S.wpDay = null; S.wpArm = null; render(); window.scrollTo(0, 0); break;
@@ -4417,22 +4831,30 @@ document.addEventListener('click', e => {
       S.wpArm = null; const p = planById(id); if (!p) break;
       S.wp.plans = S.wp.plans.filter(x => x !== p); if (S.wpEdit === id) { S.wpEdit = null; S.wpDay = null; }
       todayFollowPlan(); render(); toast(p.name + ' deleted.'); savePlans('The delete'); break; }
-    case 'wp-day': { const p = planById(S.wpEdit); if (!p) break; const d = p.days[b.dataset.k];
-      S.wpDay = { k: b.dataset.k, type: d ? d.type : null, items: d ? d.items.slice() : [] }; render(); break; }
-    case 'wp-type': if (S.wpDay) { S.wpDay.type = b.dataset.v; render(); } break;
+    case 'wp-day': { const p = planById(S.wpEdit); if (!p) break; const d = p.days[b.dataset.k]; S.wpGrp = ''; S.wpQ = '';
+      S.wpDay = { k: b.dataset.k, type: d ? d.type : null, items: d ? d.items.slice() : [] }; render(); window.scrollTo(0, 0); break; }
+    case 'pl-tap': { const r = b.getBoundingClientRect(), mid = r.top + r.height / 2; if (e.clientY < mid - WH_H / 2) whStep(1); else if (e.clientY > mid + WH_H / 2) whStep(-1); break; }
+    case 'wp-type': if (S.wpDay) { S.wpDay.type = b.dataset.v; S.wpGrp = 'All'; S.wpQ = ''; if (!S.wpDay.items.length) S.wpPick = true; render(); } break;
     case 'wp-add': if (S.wpDay) { const n = b.dataset.name, i = S.wpDay.items.indexOf(n); if (i >= 0) S.wpDay.items.splice(i, 1); else S.wpDay.items.push(n); render(); } break;
     case 'wp-rm': if (S.wpDay) { S.wpDay.items.splice(+b.dataset.i, 1); render(); } break;
-    case 'wp-cancel': S.wpDay = null; render(); break;
+    case 'wp-cancel': S.wpDay = null; render(); window.scrollTo(0, 0); break;
+    case 'wp-pick': S.wpPick = !S.wpPick; render(); break;
+    case 'wp-grp': S.wpGrp = S.wpGrp === b.dataset.k ? '' : b.dataset.k; S.wpQ = ''; render(); break;
     case 'wp-done': {
-      const p = planById(S.wpEdit), D = S.wpDay; if (!p || !D || !D.type) break;
-      p.days[D.k] = { type: D.type, items: D.type === 'Rest' ? [] : D.items.slice(), updated: stampNow() }; p.updated = stampNow();
-      S.wpDay = null; if (p.active) todayFollowPlan(); render();
-      const k = D.k; savePlans(dayFull(k)).then(() => { if (!S.wpMsg) toast(dayFull(k) + ' saved to the plan.'); }); break; }
+      const p = planById(S.wpEdit), D = S.wpDay; if (!p || !D) break;
+      const ty = autoType(D.items); D.type = ty;
+      p.days[D.k] = { type: ty, items: ty === 'Rest' ? [] : D.items.slice(), updated: stampNow() }; p.updated = stampNow();
+      if (!p.start) p.start = mondayOf(todayIso()); if (!p.len) p.len = planLen(p);
+      S.wpDay = null; if (p.active) todayFollowPlan(); render(); window.scrollTo(0, 0);
+      const k = D.k; savePlans(dayTitle(k)).then(() => { if (!S.wpMsg) toast(dayTitle(k) + ' saved to the plan.'); }); break; }
     case 'wp-retry': savePlans(); render(); break;
     case 'tbl-more': S.tableAll = S.tableAll === b.dataset.k ? null : b.dataset.k; render(); break;
     case 'range': S.range = b.dataset.r; store.set(K_RANGE, S.range); render(); break;
     case 'pal': store.set(K_PAL, b.dataset.k); applyPal(); render(); break;
     case 'lib-tog': { if (e.target.closest('.star, button')) break; const o = store.get(K_LIBOPEN) || {}; if (o[b.dataset.k]) delete o[b.dataset.k]; else o[b.dataset.k] = 1; store.set(K_LIBOPEN, o); render(); break; }
+    case 'lib-pick': S.libSel = b.dataset.name; render(); break;
+    case 'lib-close': S.libSel = null; render(); break;
+    case 'lib-grp': S.libGrp = S.libGrp === b.dataset.k ? '' : b.dataset.k; S.libQ = ''; render(); break;
     case 'lib-all': { const o = {}; if (b.dataset.v === '1') S.exercises.forEach(x => { if (isFav(x.name)) o[x.name] = 1; }); store.set(K_LIBOPEN, o); render(); break; }
     case 'set-tog': { const o = store.get(K_SETOPEN) || {}; if (o[b.dataset.k]) delete o[b.dataset.k]; else o[b.dataset.k] = 1; store.set(K_SETOPEN, o); render(); break; }
     case 'icon-open': openIconSheet(); break;
@@ -4474,6 +4896,15 @@ document.addEventListener('click', e => {
     case 't180': startTimer(180); break;
     case 'tstop': stopTimer(); break;
   }
+});
+document.addEventListener('input', e => {   /* search boxes (Ver 0.2e): filter the rows in place, no re-render, so the keyboard stays up */
+  const el = e.target; if (el.id === 'wpQ') { S.wpQ = el.value; if (S.wpGrp) { S.wpGrp = ''; document.querySelectorAll('.lib-find .wp-grp.on').forEach(x => x.classList.remove('on')); } libFilter(); } else if (el.id === 'libQ') { S.libQ = el.value; if (S.libGrp) { S.libGrp = ''; document.querySelectorAll('.lib-find .wp-grp.on').forEach(x => x.classList.remove('on')); } libFilter(); }
+});
+document.addEventListener('input', e => {   /* Pull Up band help (Ver 0.2e) */
+  const el = e.target; if (!el.dataset || !el.dataset.pulbs) return;
+  const it = itemOf(el); if (!it) return; it.band = it.band || { on: true, lbs: '' };
+  const v = el.value.replace(/[^\d.]/g, ''); if (v !== el.value) el.value = v; it.band.lbs = v;
+  const fl = el.closest('.field'); if (fl) fl.classList.toggle('ghost', v === ''); saveDraft();
 });
 document.addEventListener('input', e => {
   const inp = e.target; if (!inp.dataset || !inp.dataset.k) return;
@@ -4525,6 +4956,7 @@ document.addEventListener('focusin', e => {
 document.addEventListener('change', e => {
   const el = e.target;
   if (el.id === 'pickSel') { S.pick = el.value; render(); return; }
+  if (el.dataset && el.dataset.puband) { const it = itemOf(el); if (it) { it.band = it.band || { on: false, lbs: '' }; it.band.on = el.checked; if (el.checked && !it.band.lbs) { const lb = lastBand(it.name); if (lb > 0) it.band.lbs = String(lb); } saveDraft(); render(); if (el.checked && !it.band.lbs) setTimeout(() => { const c = document.querySelector('[data-id="' + it.id + '"] [data-pulbs]'); if (c) c.focus(); }, 50); } return; }
   if (el.id === 'bwToggle') { S.showBW = el.checked; store.set(K_BW, S.showBW); render(); return; }
   if (el.id === 'metricSel') { S.metric = el.value; render(); return; }
   if (el.id === 'faQf' && S.fa) { S.fa.qf = el.checked; render(); return; }
@@ -4558,7 +4990,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && (S.pickOpe
 function openPic(name) {
   const lb = $('#lightbox'); const u = exImg(name);
   lb.innerHTML = '<div class="frame wide">' + (u ? '<img src="' + u + '" alt="' + esc(bareName(name)) + ': start (left) and end (right)">' : placeholder(name)) +
-    '<div class="cap"><span>' + esc(bareName(name)) + ' · start (left), end (right)</span><button class="btn" data-act="close-pic">Close</button></div></div>';
+    '<div class="cap"><span>' + esc(bareName(name)) + ' · start (left), end (right)<small class="pz-hint">Pinch to zoom · double-tap to reset</small></span><button class="btn" data-act="close-pic">Close</button></div></div>';
   lb.hidden = false;
 }
 function openPhoto(id) { if (!S.photoUrls.get(id)) return; S.lbId = id; renderLB(); $('#lightbox').hidden = false; }
@@ -4694,14 +5126,24 @@ async function syncExImages() {
     }
   } catch (e) { /* the copy is a backup; the app shows its own copy either way */ }
 }
+// Plan length wheel (Ver 0.2e, user 2026-11-09): drag down = more days (2, 3 … 10, then 2), drag up = fewer (2, 10, 9 …); every 26 px is one step.
+let whl = null;
+document.addEventListener('touchstart', e => { const w = e.target.closest('#plWheel'); if (!w || e.touches.length !== 1) { whl = null; return; } clearTimeout(whCommitT); whl = { y: e.touches[0].clientY, n0: +w.dataset.n, n: +w.dataset.n, moved: false }; }, { passive: true });
+document.addEventListener('touchmove', e => { if (!whl) return; e.preventDefault(); const dy = e.touches[0].clientY - whl.y; if (Math.abs(dy) > 4) whl.moved = true;
+  const st = Math.round(dy / WH_H), n = wrapLen(whl.n0 + st);
+  if (n !== whl.n) { whl.n = n; try { if (navigator.vibrate) navigator.vibrate(5); } catch (x) {} }
+  whPaint(n, dy - st * WH_H, false); }, { passive: false });
+document.addEventListener('touchend', () => { if (!whl) return; const w = whl; whl = null; if (!w.moved) return; justDragged = true; setTimeout(() => { justDragged = false; }, 400);
+  const el = $('#plWheel'); if (el) el.dataset.n = w.n; whPaint(w.n, 0, true); whCommit(w.n); });
 // Swipe a Today card left to remove it (Ver 0.2e); the same for Food rows with data-rm. A red Remove shape opens on the right as a warning;
 // let go past 40% of the width to remove it (Undo in the toast, except a saved Food log row), otherwise it slides back.
 let csw = null;
 document.addEventListener('touchstart', e => {
   csw = null;
-  if ((S.tab !== 'today' && S.tab !== 'food') || e.touches.length !== 1 || drag || wdrag) return;
-  const card = e.target.closest('#view .card[data-id], #view [data-rm]');   /* Today cards and Food rows that can be removed */
-  if (!card || e.target.closest('input, textarea, select')) return;
+  if ((S.tab !== 'today' && S.tab !== 'food' && S.tab !== 'settings') || e.touches.length !== 1 || drag || wdrag) return;
+  const card = e.target.closest('#view .card[data-id], #view [data-rm]');   /* Today cards, Food rows and week-plan day rows (Settings) that can be removed */
+  if (!card || e.target.closest('input, textarea, select, .wph')) return;
+  if (S.tab === 'settings' && !card.matches('.wprow')) return;
   csw = { card, x: e.touches[0].clientX, y: e.touches[0].clientY, on: false, dx: 0, w: card.getBoundingClientRect().width };
 }, { passive: true });
 document.addEventListener('touchmove', e => {
@@ -4710,7 +5152,7 @@ document.addEventListener('touchmove', e => {
   if (!csw.on) {
     if (Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)) { csw = null; return; }   /* scrolling */
     if (dx > -12 || Math.abs(dx) < 1.5 * Math.abs(dy)) return;
-    csw.on = true; cancelPress(); tabSw = null; csw.card.classList.remove('sw-back'); csw.card.classList.add('swiping');
+    csw.on = true; cancelPress(); wCancelPress(); tabSw = null; csw.card.classList.remove('sw-back'); csw.card.classList.add('swiping');
   }
   e.preventDefault();
   const x = Math.min(0, dx + 12); csw.dx = x;
@@ -4750,6 +5192,12 @@ function removeRowBySwipe(row) {
     const list = S.qfEdit, q = list[i];
     list.splice(i, 1); render();
     toastUndo((q.name || 'Food') + ' removed.', () => { if (S.qfEdit !== list) return; list.splice(Math.min(i, list.length), 0, q); render(); });
+    return;
+  }
+  if (act === 'wp-rm' && S.wpDay && S.wpDay.items[i] != null) {   /* week-plan day sheet (Ver 0.2e): nothing is saved until the day is saved */
+    const D = S.wpDay, n = D.items[i];
+    D.items.splice(i, 1); render();
+    toastUndo(bareName(n) + ' removed.', () => { if (S.wpDay !== D) return; D.items.splice(Math.min(i, D.items.length), 0, n); render(); });
     return;
   }
   if (act === 'f-del') { row.style.display = 'none'; deleteFood(+row.dataset.row); return; }
@@ -4799,9 +5247,49 @@ document.addEventListener('input', e => {
 });
 function renderLB() {
   const f = (S.photos || []).find(x => x.id === S.lbId); const url = S.photoUrls.get(S.lbId); if (!f || !url) return;
-  $('#lightbox').innerHTML = '<div class="frame"><img src="' + url + '" alt="Progress photo ' + esc(usOf(f.iso)) + '"><div class="cap"><span>' + esc(usOf(f.iso)) + ' · front</span><button class="btn" data-act="close-pic">Close</button></div></div>';
+  $('#lightbox').innerHTML = '<div class="frame"><img src="' + url + '" alt="Progress photo ' + esc(usOf(f.iso)) + '"><div class="cap"><span>' + esc(usOf(f.iso)) + ' · front<small class="pz-hint">Pinch to zoom · double-tap to reset</small></span><button class="btn" data-act="close-pic">Close</button></div></div>';
 }
 $('#lightbox').addEventListener('click', e => { if (e.target.id === 'lightbox') { e.currentTarget.hidden = true; S.lbId = null; } });
+// Two-finger zoom on the enlarged picture (exercise pictures and progress photos; Ver 0.2e, user 2026-11-10): pinch to zoom 1-5x
+// around the fingers, drag with one finger while zoomed, double-tap to switch between 1x and 2.5x. Zoom resets when the picture is closed.
+let pz = null;
+function pzApply(st) { st.el.style.transform = 'translate(' + st.tx.toFixed(1) + 'px,' + st.ty.toFixed(1) + 'px) scale(' + st.s.toFixed(3) + ')'; }
+function pzClamp(st) { const w = st.el.offsetWidth, h = st.el.offsetHeight, mx = (w * st.s - w) / 2, my = (h * st.s - h) / 2; st.tx = Math.max(-mx, Math.min(mx, st.tx)); st.ty = Math.max(-my, Math.min(my, st.ty)); }
+function pzCenter(st) { const r = st.el.getBoundingClientRect(); return { x: r.left + r.width / 2 - st.tx, y: r.top + r.height / 2 - st.ty }; }   /* scaling keeps the centre; only the translate moves it */
+(() => {
+  const lb = $('#lightbox');
+  lb.addEventListener('touchstart', e => {
+    const img = e.target.closest('.frame img'); if (!img) { pz = null; return; }
+    const st = img._pz || (img._pz = { el: img, s: 1, tx: 0, ty: 0, last: 0 });
+    if (e.touches.length === 2) {
+      const [a, b] = e.touches, c = pzCenter(st), mx = (a.clientX + b.clientX) / 2, my = (a.clientY + b.clientY) / 2;
+      pz = { st, mode: 'pinch', d0: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY) || 1, s0: st.s, px: (mx - c.x - st.tx) / st.s, py: (my - c.y - st.ty) / st.s, c };
+      e.preventDefault(); return;
+    }
+    if (e.touches.length !== 1) return;
+    const t = e.touches[0], now = Date.now();
+    if (now - st.last < 300) {   // double-tap
+      st.last = 0; const c = pzCenter(st);
+      if (st.s > 1.05) { st.s = 1; st.tx = 0; st.ty = 0; } else { const px = (t.clientX - c.x - st.tx) / st.s, py = (t.clientY - c.y - st.ty) / st.s; st.s = 2.5; st.tx = t.clientX - c.x - px * st.s; st.ty = t.clientY - c.y - py * st.s; pzClamp(st); }
+      img.classList.add('pz-anim'); pzApply(st); setTimeout(() => img.classList.remove('pz-anim'), 260); pz = null; e.preventDefault(); return;
+    }
+    st.last = now;
+    pz = st.s > 1.01 ? { st, mode: 'pan', x0: t.clientX, y0: t.clientY, tx0: st.tx, ty0: st.ty } : null;
+  }, { passive: false });
+  lb.addEventListener('touchmove', e => {
+    if (!pz) return; e.preventDefault(); const st = pz.st;
+    if (pz.mode === 'pinch' && e.touches.length === 2) {
+      const [a, b] = e.touches, d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), mx = (a.clientX + b.clientX) / 2, my = (a.clientY + b.clientY) / 2;
+      st.s = Math.max(1, Math.min(5, pz.s0 * d / pz.d0)); st.tx = mx - pz.c.x - pz.px * st.s; st.ty = my - pz.c.y - pz.py * st.s;
+    } else if (pz.mode === 'pan' && e.touches.length === 1) { const t = e.touches[0]; st.tx = pz.tx0 + t.clientX - pz.x0; st.ty = pz.ty0 + t.clientY - pz.y0; }
+    pzClamp(st); pzApply(st);
+  }, { passive: false });
+  lb.addEventListener('touchend', e => {
+    if (!pz) return; const st = pz.st;
+    if (e.touches.length === 1 && pz.mode === 'pinch') { const t = e.touches[0]; pz = { st, mode: 'pan', x0: t.clientX, y0: t.clientY, tx0: st.tx, ty0: st.ty }; return; }
+    if (!e.touches.length) { if (st.s < 1.05) { st.s = 1; st.tx = 0; st.ty = 0; st.el.classList.add('pz-anim'); pzApply(st); setTimeout(() => st.el.classList.remove('pz-anim'), 260); } pz = null; }
+  });
+})();
 let toastT;
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 4000); }
 
