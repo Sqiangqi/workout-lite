@@ -134,8 +134,6 @@ body.no-timer main .wrap { padding-bottom: 40px; }
 .add-set:disabled { opacity: .4; cursor: default; }
 .add-set { justify-self: start; background: none; border: 1px dashed var(--accent); color: var(--accent); border-radius: 8px; padding: 6px 14px; font-weight: 600; }
 
-.addbar { display: flex; gap: 8px; }
-.addbar select { flex: 1; min-width: 0; padding: 9px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); }
 .btn { border-radius: 8px; padding: 9px 14px; border: 1px solid var(--line); background: var(--surface); font-weight: 600; }
 .btn.primary { background: var(--gold); color: var(--gold-ink); border-color: var(--gold); }
 .btn:disabled { opacity: .5; cursor: default; }
@@ -256,7 +254,6 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .panel p { margin: 0; font-size: 14px; color: var(--muted); }
 .row-acts { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .row-acts input[type="date"] { padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); }
-.gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .ph { border: 0; padding: 0; background: var(--bg); border-radius: 8px; overflow: hidden; aspect-ratio: 3 / 4; max-width: 100%; position: relative; }
 .ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .ph span { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(var(--brand-rgb),.78); color: #fff; font-size: 12px; padding: 3px 6px; text-align: left; font-variant-numeric: tabular-nums; }
@@ -273,13 +270,6 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .fday { justify-content: space-between; }
 .fday b { font-family: var(--font-display); font-size: 18px; letter-spacing: .04em; text-transform: uppercase; }
 .seg .btn { flex: 1; }
-.mbar { display: grid; gap: 3px; }
-.mtop { display: flex; justify-content: space-between; font-size: 14px; font-variant-numeric: tabular-nums; }
-.mtrack { height: 9px; background: var(--bg); border-radius: 5px; overflow: hidden; }
-.mtrack i { display: block; height: 100%; border-radius: 5px; }
-.mtrack i.k { background: var(--accent); } .mtrack i.c { background: #c98a12; } .mtrack i.p { background: #b4462e; } .mtrack i.f { background: #557a22; }
-.mtrack i.over { background: var(--bad); }
-.mleft { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 #foodText { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: inherit; resize: vertical; }
 .fitems { display: grid; gap: 10px; }
 .fitem { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; align-items: center; }
@@ -296,7 +286,6 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .adjv input { text-align: center; font-size: 17px; }
 .adjk { margin: 8px 2px; }
 .flog { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 4px 12px; }
-.fmeal { font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding-top: 8px; }
 .frow { display: grid; grid-template-columns: 1fr; gap: 2px 8px; padding: 6px 0; border-bottom: 1px solid var(--line); align-items: center; }
 .frow:last-child { border-bottom: 0; }
 .frow .fn { min-width: 0; }
@@ -428,15 +417,12 @@ header.top .sync.saved { color: #8fe0ad; border-color: #8fe0ad; font-weight: 600
 .tabbar nav.tabs button.today-tab { flex: 0 0 auto; position: relative; margin: -14px 2px 0; padding: 11px 9px; font-size: clamp(13.5px, 3.9vw, 17px); font-weight: 700; border-radius: 16px; border: 2px solid var(--gold); background: var(--brand); color: var(--gold); box-shadow: 0 4px 12px rgba(0,0,0,.35); }
 .tabbar nav.tabs button.today-tab[aria-selected="true"] { background: var(--gold); color: var(--brand); }
 /* Library */
-.lib-group h2 { font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 10px 0 6px; }
-.lib-group { display: grid; gap: 10px; }
 .nxsheet { padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
 .nxbody { max-height: calc(50vh - 110px); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; display: grid; gap: 10px; padding: 2px 4px 6px; }   /* lower sheet, top within thumb reach (user, 2026-11-01) */
 .nxsheet .fld { display: grid; gap: 5px; font-size: 13px; color: var(--muted); }
 .nxsheet .fld input, .nxsheet .fld textarea { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); font-size: 16px; font-family: inherit; }
 .nxseg { flex-wrap: wrap; }
 .nxseg .btn { flex: 1 1 auto; padding: 8px 6px; font-size: 15px; }
-.nxpre { font-size: 12.5px; color: var(--muted); } .nxpre b { color: var(--ink); }
 .nxfoot { display: flex; gap: 8px; padding: 8px 4px 0; border-top: 1px solid var(--line); }
 .nxfoot .btn { flex: 1; padding-block: 12px; }
 /* floating add bubble with a gold halo circling it (Ver 0.1i) */
@@ -455,10 +441,8 @@ body.lib main .wrap { padding-bottom: calc(var(--tabbar-h) + 96px); }
 .fagrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
 .fagrid .fld { gap: 3px; font-size: 12px; white-space: nowrap; }
 .fagrid .fld input { font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; padding: 9px 4px; text-align: center; }
-.btn.fphoto { display: inline-flex; align-items: center; gap: 8px; padding-block: 5px; }
 .phbig.cmp-empty { min-height: 160px; border: 2px dashed var(--line); background: var(--surface); }
 .phbig.cmp-empty i { padding: 20px 10px; text-align: center; font-size: 14px; }
-.btn.fphoto img { width: 30px; height: 30px; object-fit: cover; border-radius: 6px; display: block; }
 .facalc { margin: 0; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .facalc b { color: var(--ink); }
 /* Week bar on the Food tab (Ver 0.1q, user 2026-11-06): the week calendar shows again just above the tab bar once the top one scrolls away,
@@ -470,9 +454,6 @@ body.lib main .wrap { padding-bottom: calc(var(--tabbar-h) + 96px); }
 .fwk-arr { flex: none; width: 44px; padding: 4px 0; font-size: 20px; line-height: 1.1; }
 .fwk-line b { color: var(--ink); }
 body.food.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + var(--fwk-h, 76px) + 96px); }
-.namelist { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
-.namelist li { padding: 10px 12px; border-top: 1px solid var(--line); font-size: 15px; }
-.namelist li:first-child { border-top: 0; }
 
 /* Rest timer */
 .timer { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); }
@@ -538,9 +519,6 @@ body.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + 24px); }
 /* Week plan and favourites (Ver 0.1l) */
 .star { flex: none; width: 36px; height: 36px; border: 0; background: none; font-size: 22px; line-height: 1; color: var(--lighter); padding: 0; }
 .star.on { color: var(--gold); }
-.lib-h { display: flex; gap: 8px; align-items: flex-start; }
-.lib-h .titles { flex: 1; min-width: 0; display: grid; gap: 2px; }
-.namelist li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-block: 4px; }
 .wp-card { border: 1px solid var(--line); border-radius: 10px; padding: 10px; display: grid; gap: 6px; background: var(--bg); }
 .wp-card.act { border-color: var(--gold); box-shadow: inset 3px 0 0 var(--gold); }
 .wp-ch { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
@@ -550,23 +528,9 @@ body.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + 24px); }
 .wp-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .panel .fld { display: grid; gap: 5px; font-size: 13px; color: var(--muted); }
 .panel .tin { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); font-size: 17px; font-weight: 600; }
-.wp-week { display: grid; gap: 6px; }
-.wp-day { display: flex; align-items: center; gap: 10px; text-align: left; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); min-height: 54px; }
-.wp-day.set { border-style: solid; }
-.wp-day.rest { opacity: .7; }
-.wp-day .wd { flex: none; width: 44px; font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--accent); text-transform: uppercase; }
-.wp-day .wmid { flex: 1; min-width: 0; display: grid; gap: 1px; }
-.wp-day .wt { font-weight: 600; font-size: 15px; }
-.wp-day:not(.set) .wt { color: var(--muted); font-weight: 500; }
-.wp-day .wn { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.wp-day .wc { flex: none; font-size: 13px; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
 .wpask .wpq { margin: 4px 4px 0; font-size: 17px; font-weight: 600; color: var(--ink); }
 .wpask .hint { margin: 0 4px 4px; }
-.wpsheet { padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
-.wptypes { flex-wrap: wrap; gap: 5px; }
-.wptypes .btn { flex: 1 1 30%; padding: 8px 0; font-size: 14px; }
-.wptypes .btn.on, .nxseg .btn.on { background: var(--gold); color: var(--gold-ink); border-color: var(--gold); }
-.wpbody { max-height: calc(72vh - 170px); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; display: grid; gap: 4px; padding: 0 2px 6px; align-content: start; }
+.nxseg .btn.on { background: var(--gold); color: var(--gold-ink); border-color: var(--gold); }
 .wp-sel { display: grid; gap: 4px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
 .wprow { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 10px; background: var(--accent-soft); border: 1px solid var(--line); -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: pan-y; transition: transform .15s ease; }
 .wprow.fixed { background: var(--bg); color: var(--muted); }
@@ -585,9 +549,6 @@ body.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + 24px); }
 #view > .srch { margin: 4px 0 10px; background: var(--surface); }
 .wp-grps.dim .wp-grp.on { background: var(--bg); border-color: var(--line); color: var(--ink); }
 [hidden] { display: none !important; }
-.wp-find { display: grid; gap: 8px; margin-top: 10px; padding: 10px; border: 1px solid var(--gold); border-radius: 12px; background: var(--surface); }
-.wp-find .wp-grps { padding-bottom: 2px; }
-.wp-find + .wp-drop { border: 0; padding: 8px 0 0; background: none; }
 .wp-sel.sm .wprow { padding: 3px 8px; min-height: 0; font-size: 13px; border-radius: 8px; }
 .wp-sel.sm .wprow .wpn { font-size: 13px; font-weight: 600; }
 .wp-sel.sm .wprow .wph, .wp-sel.sm .wprow .wpt { font-size: 12px; }
@@ -647,32 +608,10 @@ body.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + 24px); }
 .lmap.q .lm-pill.hit { opacity: 1; background: rgba(var(--gold-rgb), .22); border-color: var(--gold); box-shadow: 0 0 0 2px rgba(var(--gold-rgb), .35); }
 .lib-sheet .sheet-h { gap: 8px; } .lib-sheet .sheet-h b { flex: 1; }
 .lib-sub { font-size: 13px; color: var(--muted); margin: -4px 0 8px; }
-.wp-addbtn { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 8px; padding: 12px 14px; border: 1px solid var(--gold); border-radius: 12px; background: var(--surface); color: var(--ink); font-size: 16px; font-weight: 700; }
-.wp-addbtn.on { border-bottom-left-radius: 0; border-bottom-right-radius: 0; background: var(--accent-soft); }
-.wp-addbtn .chev { color: var(--muted); font-size: 14px; }
-.wp-drop { display: grid; gap: 6px; padding: 8px; border: 1px solid var(--gold); border-top: 0; border-radius: 0 0 12px 12px; background: var(--surface); }
 .wp-grps { display: flex; gap: 6px; overflow-x: auto; padding: 2px 0 6px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .wp-grps::-webkit-scrollbar { display: none; }
 .wp-grp { flex: none; border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 999px; padding: 6px 12px; font-size: 13.5px; font-weight: 600; }
 .wp-grp.on { background: var(--brand); border-color: var(--brand); color: var(--gold); }
-.wp-ex { display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px 8px; border: 1px solid transparent; border-radius: 10px; background: var(--bg); color: var(--ink); text-align: left; }
-.wp-ex.on { background: var(--accent-soft); border-color: var(--gold); }
-.wp-th { flex: none; width: 66px; height: 44px; border-radius: 6px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); display: grid; place-items: center; }
-.wp-th img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.wp-th i { font-style: normal; font-weight: 700; color: var(--muted); }
-.wp-nm { flex: 1; min-width: 0; display: grid; }
-.wp-nm b { font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wp-nm small { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wp-ex .ck { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); font-size: 14px; color: var(--muted); }
-.wp-ex.on .ck { background: var(--gold); border-color: var(--gold); color: var(--gold-ink); }
-.wp-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 0 4px; }
-.wp-chip { border: 1px solid var(--gold); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 7px 12px; font-size: 14px; font-weight: 600; }
-.wp-chip.on { background: var(--gold); color: var(--gold-ink); }
-.wp-li { display: flex; align-items: center; gap: 4px; border-radius: 10px; background: var(--bg); }
-.wp-li.on { background: var(--accent-soft); }
-.wp-pick { flex: 1; min-width: 0; display: flex; gap: 10px; align-items: center; text-align: left; padding: 11px 10px; border: 0; background: none; color: var(--ink); font-size: 15px; font-weight: 600; }
-.wp-pick .ck { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); font-size: 13px; color: var(--muted); }
-.wp-li.on .ck { background: var(--gold); border-color: var(--gold); color: var(--gold-ink); }
 .nxfav { padding: 2px 0; }
 
 .planpill { justify-self: start; align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; border: 1px solid var(--gold); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 4px 12px 4px 14px; font-size: 14px; }
@@ -701,16 +640,13 @@ a.btn { text-decoration: none; color: inherit; display: inline-block; }
 /* Lite 1.1: four tabs, so bigger labels (user, 2026-11-01) */
 :root { --tabbar-h: calc(78px + max(12px, env(safe-area-inset-bottom, 0px))); }
 .tabbar nav.tabs button { font-size: clamp(13.5px, 4.1vw, 18px); padding: 14px 3px; }   /* five tabs since web 0.1g */
-.fwrow { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
-.fwrow .field input { font-size: 18px; padding: 8px 0; }
 
 .tabbar nav.tabs button.today-tab { font-size: clamp(17px, 5.2vw, 21px); padding: 13px 18px; margin-top: -16px; }
 .tabbar nav.tabs button.gear { padding-inline: 14px; }
 .tabbar nav.tabs button.gear svg { width: 26px; height: 26px; }
-.fullbtn:active { background: var(--gold); color: var(--brand); }
 /* Bottom sheets on iPhone (Ver 0.2c, user 2026-11-08): the screen corners are rounded and the home bar sits at the bottom edge,
    and inside the app the safe-area inset can read as 0, so every sheet keeps at least 34px below its last option and 18px at the sides. */
-.sheet, .sheet.nxsheet, .sheet.wpsheet { padding-left: max(18px, calc(env(safe-area-inset-left, 0px) + 8px)); padding-right: max(18px, calc(env(safe-area-inset-right, 0px) + 8px)); padding-bottom: max(34px, calc(env(safe-area-inset-bottom, 0px) + 20px)); }
+.sheet, .sheet.nxsheet { padding-left: max(18px, calc(env(safe-area-inset-left, 0px) + 8px)); padding-right: max(18px, calc(env(safe-area-inset-right, 0px) + 8px)); padding-bottom: max(34px, calc(env(safe-area-inset-bottom, 0px) + 20px)); }
 .sheet-list { padding-bottom: 8px; }
 /* Remove? confirmation on a Today card (Ver 0.2c, user 2026-11-08): the compact 30px rule squeezed it; now a red button sized to its text */
 /* Swipe a Today card left to remove it (Ver 0.2e, user 2026-11-09); also Food rows with data-rm. The only way to remove them (no × buttons). */
@@ -801,13 +737,6 @@ a.btn { text-decoration: none; color: inherit; display: inline-block; }
 :root[data-pal="blush"][data-theme="dark"] {
   --bg: #1a1114; --surface: #26191e; --ink: #f6e9ed; --muted: #c2a3ad; --line: #3f2a32;
   --accent: #f7cfd8; --accent-ink: #7a3550; --accent-soft: #3d2129; --lighter: #8a7078; }
-/* Library favourite cards fold to the name row (Ver 0.2d) */
-.libcard .lib-h { cursor: pointer; align-items: center; }
-.libcard .lib-h .setchev { margin-left: 4px; }
-.libcard.on .lib-h .setchev { transform: rotate(45deg) translate(-2px, -2px); }
-.libcard:not(.on) { padding-block: 10px; }
-.lib-gh { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.lib-gh h2 { margin: 0; }
 /* Settings as one grouped list, iPhone style (Ver 0.2d) */
 .setgroup { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; margin-top: 10px; }
 .setrow { position: relative; display: flex; align-items: center; gap: 14px; min-height: 54px; padding: 8px 14px; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; }
@@ -1849,7 +1778,6 @@ document.addEventListener('visibilitychange', () => {
 
 </script>
 <script>
-const XICON = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>';   /* drawn cross for the Food tab remove buttons (Ver 0.1k) */
 
 (function () {
 'use strict';
@@ -1894,7 +1822,7 @@ const store = {
   del(k) { try { localStorage.removeItem(k); } catch (e) {} }
 };
 const LOGO_ORIG = (document.querySelector('img.logo') || { getAttribute: () => '' }).getAttribute('src');   /* Ver 0.2d: the default logo, before any theme or own icon */
-const K_PAL = 'wlite.pal.v1', K_ICON = 'wlite.icon.v1', ICON_TITLE = 'app icon.jpg';
+const K_PAL = 'wlite.pal.v1', K_ICON = 'wlite.icon.v1';
 const PALS = [{ k: 'navy', n: 'Navy + Gold', b: '#14284b', g: '#d8b072' }, { k: 'ember', n: 'Soft ember', b: '#222222', g: '#d9774f' }, { k: 'blush', n: 'Blush', b: '#b85c7a', g: '#f7cfd8' }];
 const pad2 = n => String(n).padStart(2, '0');
 const isoOf = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
@@ -2005,7 +1933,6 @@ const S = {
   sel: null,              // selected photo id on the timeline
   cmpMode: false,
   cmpNext: 0,             // which slot (A=0, B=1) the next tap fills
-  cmpView: 'side',        // side | slider
   slider: 50,
   stripToEnd: true,
   active: null,           // {id, i}: the set the quick weight buttons change
@@ -2138,7 +2065,7 @@ function setPlanOn(on) {
 // Kept in the Plan tab of the workout Sheet, one set of rows per log tab, so each person has their own plans and stars.
 // Columns A:K = Log tab | Kind (plan / day / ex / fav) | Plan ID | Plan name | Active | Warm-up | Day | Day type | Order | Exercise | Updated.
 // The plan in use decides Today; with no plan in use Today still follows the number prefixes (until the numbers are dropped).
-const PLAN_TAB = 'Plan', PLAN_RANGE = "'Plan'!A2:K500", K_PLANS = 'wlite.plans.v1', MAX_PLANS = 3;
+const PLAN_TAB = 'Plan', K_PLANS = 'wlite.plans.v1', MAX_PLANS = 3;
 const WDAYS = [['Mon', 'Monday'], ['Tue', 'Tuesday'], ['Wed', 'Wednesday'], ['Thu', 'Thursday'], ['Fri', 'Friday'], ['Sat', 'Saturday'], ['Sun', 'Sunday']];
 const DAY_TYPES = [['Upper', 'Upper body'], ['Push', 'Upper body · push'], ['Pull', 'Upper body · pull'], ['Lower', 'Lower body'], ['Custom', 'Combined'], ['Rest', 'Rest day']];
 // Day type is set by the app from the exercises picked (Ver 0.2e, user 2026-11-09): Upper, Lower or Combined, no exercises = Rest;
@@ -2169,8 +2096,6 @@ function mondayOf(iso) { const d = new Date(iso + 'T12:00:00'); d.setDate(d.getD
 function planIndex(p, iso) { const s = p.start || mondayOf(todayIso()), n = planLen(p); const k = Math.round((new Date(iso + 'T12:00:00') - new Date(s + 'T12:00:00')) / 864e5); return ((k % n) + n) % n; }
 function planDay(p, iso) { return p ? p.days[planKey(planIndex(p, iso))] || null : null; }
 function dayTitle(k) { const i = ALLKEYS.indexOf(k); return i < 0 ? k : 'Day ' + (i + 1) + ' · ' + WDAYS[i % 7][1]; }
-function dayKeyOf(iso) { return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(iso + 'T12:00:00').getDay()]; }
-function dayFull(k) { const i = ALLKEYS.indexOf(k); return i < 0 ? k : i < 7 ? WDAYS[i][1] : 'Day ' + (i + 1); }
 function typeLabel(t) { const x = DAY_TYPES.find(d => d[0] === t); return x ? x[1] : ''; }
 function activePlan() { return S.wp.plans.find(p => p.active) || null; }
 function planById(id) { return S.wp.plans.find(p => p.id === id) || null; }
@@ -2405,22 +2330,6 @@ function foodSetupView() {
     '<div class="row-acts"><button class="btn" data-act="food-use"' + (busy ? ' disabled' : '') + '>' + (F.busy === 'use' ? 'Checking…' : 'Use this Sheet') + '</button></div></details>';
   return h;
 }
-function weightBox(lw) {
-  return '<div class="fwrow"><label class="field"><input id="fwKg" inputmode="decimal" autocomplete="off" value="' + esc(S.fwKg || '') + '" placeholder="' + (lw ? fmt2(lw.kg) : 'e.g. 70') + '" aria-label="Weight in kg"><span>kg</span></label>' +
-    '<button class="btn primary" data-act="fw-save"' + (S.fwBusy || !PRIV_ID ? ' disabled' : '') + '>' + (S.fwBusy ? 'Saving…' : 'Save weight') + '</button></div>';
-}
-async function saveWeight() {
-  const kg = Math.round(parseFloat(String(S.fwKg || '').replace(',', '.')) * 100) / 100;
-  if (!(kg >= 25 && kg <= 300)) { toast('Type your weight in kg, e.g. 70.5'); return; }
-  S.fwBusy = true; render();
-  try {
-    const d = new Date(), t = "'" + pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ':' + pad2(d.getSeconds());
-    await call('append_values', { spreadsheetId: PRIV_ID, range: BODY_RANGE, values: [[usOf(todayIso()), t, kg]] });
-    S.fwKg = ''; toast('Weight saved: ' + fmt2(kg) + ' kg.');
-    await readBody();
-  } catch (err) { S.problem = { text: 'Weight not saved. ' + codeText(err).text, retry: false }; }
-  S.fwBusy = false; render();
-}
 function timeShort(ms) { const d = new Date(ms); return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + pad2(d.getMinutes()); }
 function clock12(ms) { const d = new Date(ms), h = d.getHours(); return ((h + 11) % 12 + 1) + ':' + pad2(d.getMinutes()) + (h < 12 ? ' AM' : ' PM'); }
 // After a save the header keeps '\u2713 Saved <time>' until new sets are entered; a routine 'Synced' refresh does not replace it.
@@ -2464,46 +2373,6 @@ function importRenphoText(text, name) {
     S.imp = { all, fresh, dup: all.length - fresh.length, file: name };
   } catch (err) { S.problem = { text: 'The CSV could not be read. ' + err.message, retry: false }; }
 }
-// Ver 0.2c: the iPhone Files browser comes up black inside the Claude app, so the CSV can also come from Google Drive.
-function textFromResult(res) {
-  const b64 = d => { const bin = atob(String(d).replace(/^data:[^,]*,/, '').replace(/\s+/g, '')); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new TextDecoder('utf-8').decode(u); };
-  const looksCsv = v => /,/.test(v) && /\n/.test(v);
-  const fromObj = o => { if (!o || typeof o !== 'object') return null; for (const k of ['text', 'content', 'data', 'base64Content', 'blob']) { const v = o[k]; if (typeof v === 'string') return looksCsv(v) || k === 'text' ? v : b64(v); } return null; };
-  for (const c of (res && res.content) || []) {
-    if (c.resource) { if (typeof c.resource.text === 'string') return c.resource.text; if (c.resource.blob) return b64(c.resource.blob); }
-    if (c.blob) return b64(c.blob);
-    if (c.type === 'text' && typeof c.text === 'string') { try { const t = fromObj(JSON.parse(c.text)); if (t != null) return t; } catch (e) {} return c.text; }
-  }
-  let p = res && res.payload;
-  if (typeof p === 'string') { try { p = JSON.parse(p); } catch (e) { return looksCsv(p) ? p : b64(p); } }
-  return fromObj(p);
-}
-async function csvDriveList() {
-  S.csvDrive = { busy: true, files: [] }; render();
-  try {
-    const files = await driveList("(mimeType = 'text/csv' or mimeType = 'text/comma-separated-values' or title contains '.csv')");
-    const t = f => Date.parse(f.modifiedTime || f.modifiedDate || f.createdTime || f.createdDate || '') || 0;
-    S.csvDrive = { busy: false, files: files.filter(f => /\.csv$/i.test(f.title || f.name || '') || /csv/i.test(f.mimeType || '')).sort((a, b) => t(b) - t(a)).slice(0, 15) };
-  } catch (err) { S.csvDrive = null; S.problem = { text: 'Drive could not be searched. ' + codeText(err).text, retry: false }; }
-  render();
-}
-async function csvDriveGet(id, name) {
-  S.csvDrive = { busy: true, files: [], loading: name }; render();
-  try {
-    const res = await S.mcp.callTool(DRIVE, 'download_file_content', { fileId: id }, { cache: false });
-    const text = textFromResult(res); if (!text) throw new Error('No text came back from Drive.');
-    S.csvDrive = null; importRenphoText(text, name);
-  } catch (err) { S.csvDrive = null; S.problem = { text: 'The CSV could not be downloaded from Drive. ' + (err.message || codeText(err).text), retry: false }; }
-  render();
-}
-function csvDriveSheet() {
-  const D = S.csvDrive; if (!D) return '';
-  const when = f => { const d = new Date(f.modifiedTime || f.modifiedDate || f.createdTime || f.createdDate || ''); return isNaN(d) ? '' : usOf(isoOf(d)); };
-  const body = D.busy ? '<p class="hint fsh-note">' + (D.loading ? 'Reading ' + esc(D.loading) + '…' : 'Looking for CSV files in your Drive…') + '</p>'
-    : D.files.length ? '<div class="sheet-list">' + D.files.map(f => { const n = f.title || f.name || 'file.csv'; return '<button class="sheet-it" data-act="csv-drive-pick" data-id="' + esc(idOf(f)) + '" data-name="' + esc(n) + '">' + esc(n) + (when(f) ? '<span class="pp-sub">' + esc(when(f)) + '</span>' : '') + '</button>'; }).join('') + '</div>'
-    : '<p class="hint fsh-note">No CSV files found in your Google Drive. In the Renpho app, export the data and save the file to Google Drive, then try again.</p>';
-  return '<div class="sheet-bg" data-act="csv-drive-close"><div class="sheet" role="listbox" aria-label="Renpho CSV in Drive" data-act="noop"><div class="sheet-h"><b>CSV files in Drive</b><button class="btn sm" data-act="csv-drive-close">Close</button></div>' + body + '</div></div>';
-}
 function parseRenpho(text) {
   const rows = parseCSV(text.replace(/^﻿/, ''));
   if (!rows.length) throw new Error('The file is empty.');
@@ -2530,32 +2399,6 @@ async function readBody() {
   } catch (err) { S.bodyState = 'err'; S.bodyMsg = codeText(err).text; }
   render();
 }
-async function saveBody() {
-  if (!S.imp || S.bodySaving || !S.mcp) return;
-  S.bodySaving = true; render(); setSync('busy', 'Saving…');
-  let wrote = false;
-  try {
-    const p = await call('get_values', { spreadsheetId: PRIV_ID, range: BODY_RANGE });
-    const cur = bodyRowsFromSheet(valuesOf(p));
-    const have = new Set(cur.map(r => r.key));
-    const fresh = S.imp.all.filter(r => !have.has(r.key));
-    if (!fresh.length) { S.imp = null; S.bodySaving = false; toast('Nothing new: every reading is already in the sheet.'); setSync('ok', 'Synced ' + timeShort(Date.now())); render(); return; }
-    const all = sortBody(cur.concat(fresh));
-    const values = [BODY_COLS].concat(all.map(r => [usOf(r.iso), "'" + r.time].concat(BODY_COLS.slice(2).map(c => r.v[c] == null ? '' : r.v[c]))));
-    wrote = true;
-    await call('update_values', { spreadsheetId: PRIV_ID, range: "'" + BODY_TAB + "'!A1:U" + values.length, values });
-    const back = await call('get_values', { spreadsheetId: PRIV_ID, range: BODY_RANGE });
-    S.body = bodyRowsFromSheet(valuesOf(back));
-    const ok = S.body.length === all.length;
-    S.imp = null;
-    if (ok) { store.set('wlite.lastimport.v1', Date.now()); toast('Added ' + fresh.length + ' reading' + (fresh.length === 1 ? '' : 's') + ' to the Body metrics tab.'); setSync('ok', 'Saved ' + timeShort(Date.now())); }
-    else { S.problem = { text: 'Saved, but the Body metrics tab read back ' + S.body.length + ' rows instead of ' + all.length + '. Please check that tab.', retry: false }; setSync('err', 'Check sheet'); }
-  } catch (err) {
-    S.problem = { text: (wrote ? 'The import may or may not have reached the sheet. Open the Body metrics tab to check; importing the same file again does not add duplicates. ' : 'Not saved. ') + codeText(err).text, retry: false };
-    setSync('err', 'Save problem');
-  }
-  S.bodySaving = false; render();
-}
 
 // ---------- food: carb cycling targets (the user's 凯圣王 tool) and the food log ----------
 // Body type (Ver 0.1x, user 2026-11-07): picked on the Food tab, saved on this phone (wlite.soma.v1, default meso).
@@ -2576,7 +2419,6 @@ const DAYTYPE = { high: { name: 'High-carb day', zh: 'High carb', n: 2, cr: 0.50
 const DEFAULT_WEEK = { 0: 'low', 1: 'high', 2: 'mid', 3: 'high', 4: 'mid', 5: 'mid', 6: 'low' };   // Sun..Sat; changeable on the Food tab
 const K_WEEK = 'wlite.carbweek.v1';
 const FOOD_TAB = 'Food log', FOOD_RANGE = "'Food log'!A1:J";   // J = Fiber (g), Ver 0.1s
-const DRAFT_TAB = 'App draft';   // private spreadsheet: backup of unsaved sets (A1 JSON, B1 time), 2026-10-30
 const SAVE_TIMEOUT = 30000;      // ms; a save call that takes longer is reported instead of hanging
 function weekPlan() { const w = store.get(K_WEEK); return Object.assign({}, DEFAULT_WEEK, w || {}); }
 // Carb day (Ver 0.2b, user 2026-11-07): the week plan (K_WEEK) gives each weekday high / mid / low; changing the Carb day on the
@@ -2666,7 +2508,6 @@ function targetsFor(kind, kg) {
   const kcal = c * 4 + p * 4 + f * 9;
   return { c, f, p, kcal, fib: kcal / 1000 * CYC.fibPer1000 };   // fiber: 14 g per 1,000 kcal of the day's target (Ver 0.1s, US Dietary Guidelines rule)
 }
-function mealNow() { const h = new Date().getHours(); return h < 10 ? 'Breakfast' : h < 15 ? 'Lunch' : h < 21 ? 'Dinner' : 'Snack'; }
 // Quick foods: the user's common foods with values per 100 g (Unit g) or per piece (Unit each); kept in the private sheet so they can be calibrated.
 const QF_TAB = 'Quick foods', QF_RANGE = "'Quick foods'!A1:K";   // K = Fiber (g), Ver 0.1s
 async function readQuick() {
@@ -2724,29 +2565,6 @@ async function readFood() {
     S.foodState = 'ok'; { const c = new Date(); c.setDate(c.getDate() - 90); const cut = isoOf(c); store.set('wlite.food.v1', S.food.filter(x => x.iso >= cut)); }   // phone copy: last 90 days (Ver 0.1c)
   } catch (err) { S.foodState = 'err'; S.foodMsg = codeText(err).text; }
   if (S.tab === 'food') render();
-}
-async function estimateFood() {
-  const text = S.foodText.trim(); const photo = S.foodPhoto;
-  if (!text && !photo) { toast('Type what you ate, or add a photo.'); return; }
-  const prev = (S.est && S.est.items) || [];
-  if (!SAMPLE) { S.est = { status: 'ready', items: prev.concat([blankItem(text, 'Manual')]), note: 'Calorie estimates are not available in this view. Enter the numbers yourself.' }; render(); return; }
-  S.est = { status: 'working', items: prev }; render();
-  try {
-    const opts = { modelTier: 'default' };
-    if (photo) opts.images = [await canvasBlob(drawCanvas(await loadImg(URL.createObjectURL(photo)), null, 1200), 0.8)];
-    const res = await SAMPLE.json(
-      'You are a nutrition estimator. Estimate the calories and macros of the food below' + (photo ? ' (a photo is attached; use it to judge the dishes and portion sizes)' : '') + '. ' +
-      'Use typical portion sizes when amounts are not given; Chinese and other Asian dishes are common. Split into one item per food. ' +
-      'Reply with only JSON like {"items":[{"name":"Steamed white rice, 1 bowl (about 200 g)","kcal":260,"carbs_g":57,"protein_g":5,"fat_g":0.5,"fiber_g":0.6}],"note":"one short sentence on any assumption"}.\n\nFood: ' + (text || '(see photo)'),
-      opts);
-    const items = ((res && res.items) || []).map(x => ({ name: String(x.name || '').slice(0, 120), kcal: Math.round(+x.kcal || 0), c: Math.round((+x.carbs_g || 0) * 10) / 10, p: Math.round((+x.protein_g || 0) * 10) / 10, f: Math.round((+x.fat_g || 0) * 10) / 10, fib: Math.round((+x.fiber_g || 0) * 10) / 10 })).filter(x => x.name);
-    items.forEach(x => { x.src = 'Claude estimate'; }); S.foodText = ''; S.foodPhoto = null;
-    S.est = { status: 'ready', items: prev.concat(items.length ? items : [blankItem(text, 'Manual')]), note: (res && res.note ? String(res.note).slice(0, 200) : '') + ' Estimates are approximate; adjust before adding.', src: 'Claude estimate' };
-  } catch (err) {
-    const c = err && err.code;
-    S.est = { status: 'ready', items: prev.concat([blankItem(text, 'Manual')]), note: (c === 'not_granted' ? 'Estimates need your permission for the page to use Claude.' : c === 'rate_limited' ? 'Claude is busy or your usage limit is reached.' : 'The estimate did not work.') + ' You can enter the numbers yourself.' };
-  }
-  render();
 }
 // A Quick-foods item in Add food: name, values as small text, amount box and Fit to goal (values come from the Quick foods list).
 function qfItemRow(x, i) {
@@ -2808,7 +2626,6 @@ async function addFoodManual() {
   }
   render();
 }
-function blankItem(name, src) { return { name: name || '', kcal: 0, c: 0, p: 0, f: 0, fib: 0, src: src || 'Manual' }; }
 async function saveFood() {
   const E = S.est; if (!E || S.foodSaving || !S.mcp) return;
   const items = E.items.filter(x => x.name.trim() && (x.kcal || x.c || x.p || x.f));
@@ -3232,7 +3049,7 @@ function render() {
 // Settings sections fold to their title bar (Ver 0.2d, user 2026-11-08: "the ones not being used are showing titles only").
 // Works on the built HTML: each title (p.section-h or div.sec-row) becomes a tap bar; the first .panel after it shows only while open.
 // Open sections are kept on this phone (qsapp.setopen.v1); all start folded.
-const K_SETOPEN = 'wlite.setopen.v1', K_LIBOPEN = 'wlite.libopen.v1';
+const K_SETOPEN = 'wlite.setopen.v1';
 // Ver 0.2d (user, 2026-11-08, iPhone Settings screenshot): one grouped list, each section a row with an icon tile, title and chevron;
 // tapping a row opens its card right under it inside the same group.
 const SET_ICON = (() => {
@@ -3742,10 +3559,6 @@ function rolling(points, days) {   // linear time (Ver 0.1c); points sorted olde
   points.forEach((p, i) => { sum += p.v; while (t(points[lo]) <= t(p) - days * 864e5) { sum -= points[lo].v; lo++; } out.push({ iso: p.iso, v: sum / (i - lo + 1) }); });
   return out;
 }
-function rollingOld(points, days) {
-  const t = p => new Date(p.iso + 'T12:00:00').getTime();
-  return points.map(p => { const win = points.filter(q => t(q) <= t(p) && t(q) > t(p) - days * 864e5); return { iso: p.iso, v: win.reduce((a, q) => a + q.v, 0) / win.length }; });
-}
 function timeChart(points, unit, label, avg) {
   if (!points.length) return '<div class="empty">No readings for ' + esc(label) + ' yet.</div>';
   const W = 640, H = 260, L = 48, R = 20, T = 18, B = 34;
@@ -3770,11 +3583,6 @@ function timeChart(points, unit, label, avg) {
   s += '<circle cx="' + lp[0] + '" cy="' + lp[1] + '" r="4" fill="var(--gold)" stroke="var(--accent)" stroke-width="1.5"/>';
   s += '<text x="' + Math.min(lp[0], W - R - 4) + '" y="' + (lp[1] - 10) + '" text-anchor="end" font-size="12" font-weight="600" fill="var(--ink)">' + fmt2(lv) + ' ' + esc(unit) + (avg ? ' avg' : '') + '</text>';
   return '<div style="overflow-x:auto">' + s + '</svg></div>';
-}
-function photoTile(f, act) {
-  const url = S.photoUrls.get(f.id);
-  const inner = url ? '<img src="' + url + '" alt="Progress photo ' + esc(usOf(f.iso)) + '">' : (url === '' ? '<span class="wait">Could not load</span>' : '<span class="wait">Loading…</span>');
-  return '<button class="ph" data-act="' + act + '" data-fid="' + esc(f.id) + '">' + inner + (url ? '<span>' + esc(usOf(f.iso)) + '</span>' : '') + '</button>';
 }
 function viewBody() {
   let h = problemBox();
@@ -3806,12 +3614,6 @@ function viewBody() {
 }
 
 // ---------- food view ----------
-function macroBar(label, got, goal, unit, cls) {
-  const pct = goal > 0 ? Math.min(100, got / goal * 100) : 0; const left = goal - got;
-  return '<div class="mbar"><div class="mtop"><span class="lab">' + label + '</span><span><b>' + Math.round(got) + '</b> / ' + Math.round(goal) + ' ' + unit + '</span></div>' +
-    '<div class="mtrack"><i class="' + cls + (got > goal * 1.05 ? ' over' : '') + '" style="width:' + pct.toFixed(1) + '%"></i></div>' +
-    '<span class="mleft">' + (left >= 0 ? Math.round(left) + ' ' + unit + ' left' : Math.round(-left) + ' ' + unit + ' over') + '</span></div>';
-}
 // Diet planning: room left for the day (logged + items waiting to be added) and a fill-up suggestion from Quick foods.
 function planFill(room, T, maxFoods) {
   const foods = S.qf.filter(q => q.kcal > 0);
@@ -4272,27 +4074,6 @@ function nxCheck(f) {
   if (!CATS.includes(f.cat) || !UNITS.includes(f.unit)) return { err: 'Choose a category and a unit.' };
   return { row: ['', f.cat, full, String(f.muscle || '').trim(), '', f.unit], full };
 }
-// rows = Exercises A2:F as read now (index 0 = sheet row 2). Returns the 0-based index in rows where the new row goes.
-function nxInsertAt(rows, full) {
-  const nm = r => String((r && r[2]) || '').trim(), pre = prefixOf(full);
-  let at = -1;
-  if (pre) {
-    rows.forEach((r, i) => { if (prefixOf(nm(r)) === pre) at = i + 1; });                 // after the last row of the same plan number
-    if (at < 0) rows.forEach((r, i) => { if (prefixOf(nm(r))) at = i + 1; });             // a new number: after the last numbered row
-  }
-  if (at < 0) {                                                                           // no number: end of the exercises, above End Workout
-    const end = rows.findIndex(r => /^end workout$/i.test(nm(r)));
-    if (end >= 0) { at = end; while (at > 0 && !(rows[at - 1] || []).join('').trim()) at--; }
-    else { at = rows.length; while (at > 0 && !(rows[at - 1] || []).join('').trim()) at--; }
-  }
-  return at;
-}
-// row whose format (colour) the new row copies: the nearest row with the same category
-function nxFormatFrom(rows, at, cat) {
-  let best = -1, dist = 1e9;
-  rows.forEach((r, i) => { if (String(r[1] || '').trim().toLowerCase() === cat && Math.abs(i - at) < dist) { best = i; dist = Math.abs(i - at); } });
-  return best;
-}
 async function addExerciseRemote(row, full) {
   // Google re-reads the Exercises tab, works out the place with the same rules, inserts the row and reads it back
   const res = await withTimeout(gs('api_addExercise', row, full), 60000);
@@ -4324,6 +4105,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.2f.1', '11102026', 'Web-only update on Ver 0.2f: code tidy-up. Unused parts removed: the old week-plan day sheet and its lists, the old Library list, and leftovers from the full app that the web version never shows (Claude food estimates, Renpho import from Google Drive, the old body weight box, exercise picture backup). Nothing changes on screen.'],
   ['0.2f', '11102026', 'Matches the full app Ver 0.2f. Pull Up: the card shows your body weight (the weight you typed on the Food tab or on the card; Edit to change it) and a Band switch with the band help in lbs; with no body weight the card asks for it and the reps are greyed out. Each set is saved as its own row: Weight = band help (0 = no band), Reps = that set. Progress charts the weight you pulled (body weight − band) with a dashed line at your body weight; body weight itself is never written to the workout Sheet. Time exercises (Warm-up, Battle Ropes): a countdown timer on the card (− / + to set it, Start / Pause / Reset, beeps at 0:00 and enters the time; Pause enters the time done so far); typing the time still works. Week plan: choose the plan length (2-10 days) on a number wheel; day 1 is a Monday and the plan repeats after the last day; the days show as circles (M T W R F S U) with a gold check once saved. Tapping a day opens a page like the Library (search, body-part keywords, body figure) where you tap exercises to add them; the picked ones sit on top in small type, swipe one left to remove it (Undo in the message). No day-type buttons any more: the day is named from what you pick (Upper body, Lower body or Combined; Upper gets a push or pull tag when more than half are push or pull; nothing picked = Rest day). Library: exercises are small tags around a body figure (back by the head, shoulders, chest, arms, core at the waist, legs at the bottom); the search box (name or muscle) and keyword chips light up the matching tags and grey out the rest; tap a tag for its picture, last session and ☆. Pinch with two fingers to zoom an enlarged exercise picture (double-tap to reset).'],
   ['0.2e', '11092026', 'Matches the full app Ver 0.2e. Swipe to remove: swipe an exercise card on Today, or a row on the Food tab (Eaten list, Adding list, Quick add › Edit list), all the way left; a red Remove shape grows out of the right edge, and letting go past about 40% of the width removes it. This replaces the × buttons and the Remove? confirmation on Today cards; a very thin red line on the right edge shows what can be swiped away. Undo in the message, except for a saved Eaten row (that one is deleted from your food Sheet). Swiping needs a touch screen. Food: tapping a Quick add food adds it to the Adding list right away at its usual amount (the amount box and Add button are gone; change the amount in the Adding list). Target / Left numbers are now bars for calories, carbs, protein, fat and fiber: eaten is solid, the Adding list is lighter, the number on the right is what is left, over target turns the bar red with +amount, and fiber shows a check when met. Messages now show small at the very top of the screen instead of over the middle. (Photo Replace / Delete from the full app is not included: the web version has no Photos tab.)'],
   ['0.2d.1', '11082026', 'Web-only fixes on Ver 0.2d. The "Tap again to ..." confirm buttons (Sign out / switch account, Reset day, Use a different Sheet, Use a different food Sheet, Delete plan) showed red text on a red button, so the second tap prompt could not be read; they are now deep red with bold white text in light and dark mode. The Progress tab opens even when no exercise is starred or in a week plan, with a note on how to get a chart, instead of staying on the previous tab.'],
@@ -4528,18 +4310,6 @@ function dayPage(p) {
   return h;
 }
 
-function wpLists(type) {
-  const ex = pickable().filter((e, i, a) => a.findIndex(x => x.name === e.name) === i), c = e => catClass(e.cat);
-  const core = ex.filter(e => !['push', 'pull', 'legs'].includes(c(e)));
-  const main = {
-    Upper: ['Upper body · push & pull', ex.filter(e => c(e) === 'push' || c(e) === 'pull')],
-    Push: ['Push', ex.filter(e => c(e) === 'push')],
-    Pull: ['Pull', ex.filter(e => c(e) === 'pull')],
-    Lower: ['Lower body · legs', ex.filter(e => c(e) === 'legs')],
-    Custom: ['Push, pull & legs', ex.filter(e => ['push', 'pull', 'legs'].includes(c(e)))]
-  }[type];
-  return main ? [main, ['Core & cardio', core]] : [];
-}
 // Body-part groups for the week-plan picker (Ver 0.2e, user 2026-11-09), read from the words in Exercises column D (Muscle worked).
 // An exercise can sit in more than one group (Dead Hang: Back, Shoulders, Forearms & grip).
 const BODY_GROUPS = [
@@ -4552,50 +4322,7 @@ const BODY_GROUPS = [
 function qMatch(q, text) { q = String(q || '').trim().toLowerCase(); if (!q) return true; const t = String(text || '').toLowerCase(); return q.split(/\s+/).every(w => t.includes(w)); }
 function exQ(e) { return bareName(e.name) + ' ' + (e.muscle || '') + ' ' + (e.cat || '') + ' ' + groupsOf(e).join(' '); }
 function searchBox(id, val, ph) { return '<label class="srch"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input type="search" id="' + id + '" value="' + esc(val || '') + '" placeholder="' + esc(ph) + '" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search"></label>'; }
-function wpFilter() {
-  const q = S.wpQ || '', g = S.wpGrp || 'All'; let n = 0;
-  document.querySelectorAll('.wp-drop .wp-ex').forEach(r => { const ok = q.trim() ? qMatch(q, r.dataset.q) : (g === 'All' || r.dataset.g.includes('|' + g + '|')); r.hidden = !ok; if (ok) n++; });
-  const gr = document.querySelector('.wp-grps'); if (gr) gr.classList.toggle('dim', !!q.trim());
-  const no = document.getElementById('wpNone'); if (no) no.hidden = n > 0;
-}
 function groupsOf(e) { const c = catClass(e.cat), m = (e.muscle || '') + ' ' + (c === 'legs' ? 'legs' : '') + ' cat:' + c; const g = BODY_GROUPS.filter(([, re]) => re.test(m)).map(([n]) => n); return g.length ? g : ['Other']; }
-function wpPool(type) {
-  const ex = pickable().filter((e, i, a) => a.findIndex(x => x.name === e.name) === i && !/warm.?up/i.test(e.name)), c = e => catClass(e.cat);
-  const ok = { Upper: ['push', 'pull', 'core'], Push: ['push', 'core'], Pull: ['pull', 'core'], Lower: ['legs', 'core'], Custom: ['push', 'pull', 'legs', 'core'] }[type] || [];
-  const order = { push: 0, pull: 1, legs: 2, core: 3 };
-  return ex.filter(e => ok.includes(c(e))).sort((a, b) => order[c(a)] - order[c(b)]);
-}
-// One "Add exercises" drop-down instead of the Favourites chips and long lists: body-part chips on top, then picture + name rows.
-function wpPicker(D) {
-  const pool = wpPool('Custom'), q = S.wpQ || '';
-  const groups = BODY_GROUPS.map(([n]) => n).concat('Other').filter(g => pool.some(e => groupsOf(e).includes(g)));
-  const g = groups.includes(S.wpGrp) ? S.wpGrp : 'All';
-  const shown = e => q.trim() ? qMatch(q, exQ(e)) : (g === 'All' || groupsOf(e).includes(g));
-  let h = '<div class="wp-find">' + searchBox('wpQ', q, 'Search exercises or muscles') +
-    '<div class="wp-grps' + (q.trim() ? ' dim' : '') + '" role="tablist">' + ['All'].concat(groups).map(n => '<button class="wp-grp' + (n === g ? ' on' : '') + '" role="tab" aria-selected="' + (n === g) + '" data-act="wp-grp" data-k="' + esc(n) + '">' + esc(n) + '</button>').join('') + '</div></div>';
-  h += '<div class="wp-drop"><div class="wp-empty sm" id="wpNone"' + (pool.some(shown) ? ' hidden' : '') + '>' + (pool.length ? 'No match. Try another word, or add the exercise in the Library.' : 'No exercises yet. Add one in the Library.') + '</div>';
-  h += pool.map(e => { const on = D.items.includes(e.name), u = exImg(e.name);
-    return '<button class="wp-ex' + (on ? ' on' : '') + '" data-act="wp-add" data-name="' + esc(e.name) + '" aria-pressed="' + on + '" data-q="' + esc(exQ(e)) + '" data-g="|' + esc(groupsOf(e).join('|')) + '|"' + (shown(e) ? '' : ' hidden') + '>' +
-      '<span class="wp-th">' + (u ? '<img src="' + u + '" alt="" loading="lazy">' : '<i>' + esc(bareName(e.name).slice(0, 1)) + '</i>') + '</span>' +
-      '<span class="wp-nm"><b>' + esc(bareName(e.name)) + '</b><small>' + esc(e.muscle || catLabel(e.cat)) + '</small></span>' +
-      '<span class="ck" aria-hidden="true">' + (on ? '✓' : '+') + '</span></button>'; }).join('');
-  return h + '</div>';
-}
-function daySheet(p) {
-  const D = S.wpDay, busy = S.wpSaving, t = autoType(D.items);
-  let h = '<div class="sheet-bg" data-act="noop"><div class="sheet wpsheet" role="dialog" aria-label="' + esc(dayFull(D.k)) + '" data-act="noop">' +
-    '<div class="sheet-h"><b>' + esc(dayFull(D.k)) + ' · <span class="wp-tag">' + esc(typeLabel(t)) + '</span></b><button class="btn sm" data-act="wp-cancel">Cancel</button></div>' +
-    '<div class="wpbody" id="wpBody">';
-  // Ver 0.2e (user 2026-11-09): picked exercises on top in a small font; the day type follows from them (no type buttons)
-  h += '<div class="wp-sel sm">';
-  if (p.warm && D.items.length) h += '<div class="wprow fixed"><span class="wph" aria-hidden="true"></span><span class="wpn">Warm-up</span><span class="wpt">first</span></div>';
-  if (!D.items.length) h += '<div class="wp-empty sm">No exercises yet: this is a rest day. Search or pick below to add some.</div>';
-  D.items.forEach((n, i) => { h += '<div class="wprow" data-wi="' + i + '" data-rm="wp-rm" data-i="' + i + '"><span class="wph" aria-hidden="true">≡</span><span class="wpn">' + esc(bareName(n)) + (exByName(n) ? '' : ' <i>(not in the list)</i>') + '</span></div>'; });
-  if (D.items.length) h += '<p class="hint">' + (D.items.length > 1 ? 'Drag ≡ (or hold 1 s) to reorder. ' : '') + 'Swipe left to remove.</p>';
-  h += '</div>' + wpPicker(D) + '</div>';
-  h += '<div class="nxfoot"><button class="btn primary" data-act="wp-done"' + (busy ? ' disabled' : '') + '>' + (busy ? 'Saving…' : 'Done · save ' + esc(D.k)) + '</button><button class="btn" data-act="wp-cancel">Cancel</button></div></div></div>';
-  return h;
-}
 
 // ---------- rest timer ----------
 const T = { end: 0, total: 0, tick: null };
@@ -4729,7 +4456,6 @@ document.addEventListener('click', e => {
       break;
     case 'food-new': foodSetupRun('new', () => gs('api_foodCreate', (Intl.DateTimeFormat().resolvedOptions() || {}).timeZone || '')); break;
     case 'food-use': { const l = ($('#foodLink') || {}).value || ''; S.foodSetup = Object.assign(S.foodSetup || {}, { link: l, open: true }); if (!l.trim()) { S.foodSetup.msg = 'Paste the link of the Sheet first.'; render(); break; } foodSetupRun('use', () => gs('api_foodUse', l)); break; }
-    case 'fw-save': { const i = $('#fwKg'); if (i) S.fwKg = i.value; saveWeight(); break; }
     case 'food-forget':
       if (!S.foodArmed) { S.foodArmed = true; render(); setTimeout(() => { if (S.foodArmed) { S.foodArmed = false; render(); } }, 4000); break; }
       S.foodArmed = false;
@@ -4740,11 +4466,6 @@ document.addEventListener('click', e => {
     case 'retry-save': S.problem = null; saveSession(); break;
     case 'pic': openPic(b.dataset.name); break;
     case 'close-pic': $('#lightbox').hidden = true; S.lbId = null; break;
-    case 'imp-save': saveBody(); break;
-    case 'imp-cancel': S.imp = null; render(); break;
-    case 'csv-drive': csvDriveList(); break;
-    case 'csv-drive-pick': csvDriveGet(b.dataset.id, b.dataset.name); break;
-    case 'csv-drive-close': if (!(S.csvDrive && S.csvDrive.loading)) { S.csvDrive = null; render(); } break;
     case 'ph-up-crop': uploadPhoto(true); break;
     case 'ph-up-full': uploadPhoto(false); break;
     case 'ph-crop': startRecrop(b.dataset.fid); break;
@@ -4778,13 +4499,10 @@ document.addEventListener('click', e => {
       WK_ORDER.forEach(d => { w[d] = k === 'std' ? DEFAULT_WEEK[d] : k === 'gym' && ww ? (ww[d] || 'mid') : 'mid'; });
       store.set(K_WEEK, w); render(); saveFoodSet();
       toast(k === 'std' ? 'Carb week: standard 2-3-2.' : k === 'gym' ? 'Carb week matches your workouts.' : 'Carb week: all mid.'); break; }
-    case 'f-est': { const t = $('#foodText'); if (t) S.foodText = t.value; estimateFood(); break; }
     case 'fa-hide': if (!S.faBusy) { S.faOpen = false; render(); } break;                 // typed values are kept until Cancel or Add
     case 'fa-cancel': if (!S.faBusy) { S.fa = null; S.faOpen = false; S.faMsg = ''; render(); } break;
     case 'fa-save': addFoodManual(); break;
-    case 'f-ph-clear': { const t = $('#foodText'); if (t) S.foodText = t.value; S.foodPhoto = null; render(); toast('Photo removed.'); break; }   // tap the added photo again to remove it (Ver 0.1t)
     case 'fa-manual': { const t = $('#foodText'); if (t) S.foodText = t.value; if (!S.fa) S.fa = faBlank(S.foodText.trim().slice(0, 120)); else if (!S.fa.name) S.fa.name = S.foodText.trim().slice(0, 120); S.faOpen = true; S.faMsg = ''; S.faFocus = S.fa.name ? 'fa-kcal' : 'fa-name'; render(); break; }
-    case 'f-additem': S.est.items.push(blankItem('')); render(); break;
     case 'f-cancel': S.est = null; render(); break;
     case 'madj-open': S.madjOpen = true; if (!S.madj) S.madj = madjBlank(); render(); break;
     case 'madj-hide': S.madjOpen = false; render(); break;
@@ -4834,11 +4552,9 @@ document.addEventListener('click', e => {
     case 'wp-day': { const p = planById(S.wpEdit); if (!p) break; const d = p.days[b.dataset.k]; S.wpGrp = ''; S.wpQ = '';
       S.wpDay = { k: b.dataset.k, type: d ? d.type : null, items: d ? d.items.slice() : [] }; render(); window.scrollTo(0, 0); break; }
     case 'pl-tap': { const r = b.getBoundingClientRect(), mid = r.top + r.height / 2; if (e.clientY < mid - WH_H / 2) whStep(1); else if (e.clientY > mid + WH_H / 2) whStep(-1); break; }
-    case 'wp-type': if (S.wpDay) { S.wpDay.type = b.dataset.v; S.wpGrp = 'All'; S.wpQ = ''; if (!S.wpDay.items.length) S.wpPick = true; render(); } break;
     case 'wp-add': if (S.wpDay) { const n = b.dataset.name, i = S.wpDay.items.indexOf(n); if (i >= 0) S.wpDay.items.splice(i, 1); else S.wpDay.items.push(n); render(); } break;
     case 'wp-rm': if (S.wpDay) { S.wpDay.items.splice(+b.dataset.i, 1); render(); } break;
     case 'wp-cancel': S.wpDay = null; render(); window.scrollTo(0, 0); break;
-    case 'wp-pick': S.wpPick = !S.wpPick; render(); break;
     case 'wp-grp': S.wpGrp = S.wpGrp === b.dataset.k ? '' : b.dataset.k; S.wpQ = ''; render(); break;
     case 'wp-done': {
       const p = planById(S.wpEdit), D = S.wpDay; if (!p || !D) break;
@@ -4851,11 +4567,9 @@ document.addEventListener('click', e => {
     case 'tbl-more': S.tableAll = S.tableAll === b.dataset.k ? null : b.dataset.k; render(); break;
     case 'range': S.range = b.dataset.r; store.set(K_RANGE, S.range); render(); break;
     case 'pal': store.set(K_PAL, b.dataset.k); applyPal(); render(); break;
-    case 'lib-tog': { if (e.target.closest('.star, button')) break; const o = store.get(K_LIBOPEN) || {}; if (o[b.dataset.k]) delete o[b.dataset.k]; else o[b.dataset.k] = 1; store.set(K_LIBOPEN, o); render(); break; }
     case 'lib-pick': S.libSel = b.dataset.name; render(); break;
     case 'lib-close': S.libSel = null; render(); break;
     case 'lib-grp': S.libGrp = S.libGrp === b.dataset.k ? '' : b.dataset.k; S.libQ = ''; render(); break;
-    case 'lib-all': { const o = {}; if (b.dataset.v === '1') S.exercises.forEach(x => { if (isFav(x.name)) o[x.name] = 1; }); store.set(K_LIBOPEN, o); render(); break; }
     case 'set-tog': { const o = store.get(K_SETOPEN) || {}; if (o[b.dataset.k]) delete o[b.dataset.k]; else o[b.dataset.k] = 1; store.set(K_SETOPEN, o); render(); break; }
     case 'icon-open': openIconSheet(); break;
     case 'icon-close': if (!(S.ic && S.ic.busy)) { S.ic = null; render(); } break;
@@ -4884,14 +4598,10 @@ document.addEventListener('click', e => {
       else { S.sel = S.sel === b.dataset.fid ? null : b.dataset.fid; S.recrop = null; }
       render(); break;
     case 'ph-step': stepPhoto(+b.dataset.d); break;
-    case 'ph-full': openPhoto(b.dataset.fid); break;
     case 'ph-tap': if (phHeld) { phHeld = false; break; } S.sel = null; S.recrop = null; render(); break;
     case 'cmp-clear': S.cmp[+b.dataset.k] = null; S.cmpNext = +b.dataset.k; render(); break;
     case 'cmp-toggle': S.cmpMode = !S.cmpMode; S.cmpNext = 0; S.recrop = null; if (S.cmpMode) S.cmpFill = true; render(); break;
-    case 'cmp-side': S.cmpView = 'side'; render(); break;
-    case 'cmp-slider': S.cmpView = 'slider'; render(); break;
     case 'ph-cancel': S.pending = null; render(); break;
-    case 'ph-open': openPhoto(b.dataset.fid); break;
     case 't120': startTimer(120); break;
     case 't180': startTimer(180); break;
     case 'tstop': stopTimer(); break;
@@ -5103,29 +4813,6 @@ document.addEventListener('touchmove', e => { if (wdrag) { e.preventDefault(); w
 document.addEventListener('touchend', () => { if (wdrag) wEnd(); });
 document.addEventListener('contextmenu', e => { if (wdrag || wpress || e.target.closest('.wprow')) e.preventDefault(); });
 document.addEventListener('pointercancel', endDrag);
-// Keep a copy of each exercise picture in Drive (Workout app > exercise images), uploaded once from the app.
-const EX_FOLDER = '1L15CB7MAypQbgdBDFK74O79PSkwpb51a';
-// base64 of a data: link's bytes, or of a text in UTF-8
-function dataUriB64(u) { const i = u.indexOf(','), head = u.slice(0, i), body = u.slice(i + 1); return /;base64$/.test(head) ? body : b64utf8(decodeURIComponent(body)); }
-function b64utf8(str) { const bytes = new TextEncoder().encode(str); let bin = ''; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(bin); }
-// Owner-only backup (user, 2026-10-31): copies the app's own files to Drive "Workout app":
-// every exercise schematic (replacing older copies of the same name) and any missing illustrated picture into "exercise images",
-// and the logo plus a copy of the app page itself into "app files".
-const WORKOUT_FOLDER = '1y0uvw_lUKKqWYx4nlr84OgOX92-9sm2S';
-async function syncExImages() {
-  if (!S.mcp || !S.isOwner) return;
-  try {
-    const p = await call('search_files', { query: "parentId = '" + EX_FOLDER + "' and mimeType contains 'image/'", pageSize: 200, excludeContentSnippets: true }, DRIVE);
-    const have = new Set(((p && p.files) || []).map(f => f.title));
-    const jobs = Object.entries(EX_IMG).filter(([k]) => ![...have].some(t => t.startsWith(k + '.'))).map(([k, u]) => [k + '.webp', u, 'image/webp'])
-      .concat(Object.entries(EX_SCHEM).map(([k, u]) => [k + ' (schematic).svg', u, 'image/svg+xml']));
-    for (const [title, url, mime] of jobs) {
-      if (have.has(title)) continue;
-      const data = dataUriB64(url);   // no fetch(): the page may not fetch data: links (that is why earlier copies never arrived)
-      await call('create_file', { title, parentId: EX_FOLDER, contentMimeType: mime, base64Content: data, disableConversionToGoogleType: true }, DRIVE);
-    }
-  } catch (e) { /* the copy is a backup; the app shows its own copy either way */ }
-}
 // Plan length wheel (Ver 0.2e, user 2026-11-09): drag down = more days (2, 3 … 10, then 2), drag up = fewer (2, 10, 9 …); every 26 px is one step.
 let whl = null;
 document.addEventListener('touchstart', e => { const w = e.target.closest('#plWheel'); if (!w || e.touches.length !== 1) { whl = null; return; } clearTimeout(whCommitT); whl = { y: e.touches[0].clientY, n0: +w.dataset.n, n: +w.dataset.n, moved: false }; }, { passive: true });
