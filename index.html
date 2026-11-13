@@ -208,6 +208,11 @@ body.no-timer main .wrap { padding-bottom: 40px; }
 .addpill:active { opacity: .7; }
 .btn.sm { padding: 4px 10px; font-size: 13px; }
 /* "Tap again to ..." confirm buttons: deep red with bold white text in both themes (the dark-mode --bad is a light pink, too pale for white text) */
+/* Ver 0.2k (user 2026-11-12): dark mode and colour theme changes wipe in from the top instead of switching at once (themeSwap) */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-new(root) { animation: themeWipe .6s cubic-bezier(.4, 0, .2, 1) both; }
+@keyframes themeWipe { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+:root.vt-circle::view-transition-new(root) { animation: none; }   /* tapped change: themeSwap grows a circle from the tap instead */
 .btn.danger { background: #b3261e; color: #fff; border-color: #b3261e; font-weight: 700; }
 :root[data-theme="dark"] .btn.danger { background: #c62828; border-color: #ff8a80; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.danger { background: #c62828; border-color: #ff8a80; } }
@@ -4598,6 +4603,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.2k', '11122026', 'Matches the full app Ver 0.2k. Settings › Appearance: switching Dark mode, Follow the phone setting or the Color theme no longer changes the whole screen at once; the new look grows as a circle from the switch or colour you tapped and fills the screen (about 0.6 s). When the phone switches between light and dark by itself while Follow the phone setting is on, the new look wipes down from the top instead. Phones that do not support it (older than iOS 18), and Reduce Motion, keep the instant change.'],
   ['0.2j.1', '11122026', 'Web-only fix on Ver 0.2j: the app stayed on Loading forever (since 0.2i) because the starter food list for the My foods button could not be found when the page started; it now loads again.'],
   ['0.2j', '11122026', 'Matches the full app Ver 0.2j, which brought the readable dark-mode Tap again buttons over from Web 0.2d.1. The web version already had them, so nothing changes here.'],
   ['0.2i', '11122026', 'Matches the full app Ver 0.2i. My foods: people other than the owner get a button under their list, + Add N new starter foods, when the starter list (the owner list) has foods they do not have yet (matched by name). It only adds those foods; foods they added or edited themselves are never changed or removed.'],
@@ -5065,7 +5071,7 @@ document.addEventListener('click', e => {
     case 'wp-retry': savePlans(); render(); break;
     case 'tbl-more': S.tableAll = S.tableAll === b.dataset.k ? null : b.dataset.k; render(); break;
     case 'range': S.range = b.dataset.r; store.set(K_RANGE, S.range); render(); break;
-    case 'pal': store.set(K_PAL, b.dataset.k); applyPal(); render(); break;
+    case 'pal': { const k = b.dataset.k; themeSwap(() => { store.set(K_PAL, k); applyPal(); render(); }, b); break; }
     case 'lib-pick': S.libSel = b.dataset.name; render(); break;
     case 'lib-close': S.libSel = null; render(); break;
     case 'lib-grp': S.libGrp = S.libGrp === b.dataset.k ? '' : b.dataset.k; S.libQ = ''; render(); break;
@@ -5198,8 +5204,8 @@ document.addEventListener('change', e => {
   if (el.id === 'wpWarm') { const p = planById(S.wpEdit); if (!p) return; p.warm = el.checked; p.updated = stampNow(); if (p.active) todayFollowPlan(); render(); savePlans('The warm-up setting'); return; }
   if (el.id === 'nxFav') { if (S.nx) S.nx.fav = el.checked; return; }
   if (el.id === 'iconIn' && el.files && el.files[0]) { uploadIcon(el.files[0]); return; }
-  if (el.id === 'themeAutoSw') { if (el.checked) store.del(K_THEME); else store.set(K_THEME, document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'); applyTheme(); render(); return; }   /* Ver 0.2d: switch instead of the old link */
-  if (el.id === 'themeSw') { store.set(K_THEME, el.checked ? 'dark' : 'light'); applyTheme(); render(); return; }
+  if (el.id === 'themeAutoSw') { const on = el.checked, cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'; themeSwap(() => { if (on) store.del(K_THEME); else store.set(K_THEME, cur); applyTheme(); render(); }, swKnob(el)); return; }   /* Ver 0.2d: switch instead of the old link */
+  if (el.id === 'themeSw') { const t = el.checked ? 'dark' : 'light'; themeSwap(() => { store.set(K_THEME, t); applyTheme(); render(); }, swKnob(el)); return; }
   if (el.id === 'csvIn' && el.files && el.files[0]) {
     const f = el.files[0]; const rd = new FileReader();
     rd.onload = () => {
@@ -5549,13 +5555,30 @@ function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = fal
 S.showBW = !!store.get(K_BW);
 S.range = store.get(K_RANGE) || 'All';
 // Light / dark mode button at the top right (user, 2026-10-31). Follows the phone's setting until tapped; the choice is remembered on this device.
+// Theme transition (Ver 0.2k, user 2026-11-12): runs a theme change inside a View Transition, so the new look wipes down from
+// the top over the old one. Without the API (older phones) or with Reduce Motion on, the change stays instant.
+// from = the switch or button tapped: the new look grows as a circle from its centre (user 2026-11-12); no from (the phone
+// switched by itself) = the top-to-bottom wipe.
+function themeSwap(fn, from) {
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!document.startViewTransition || reduce) { fn(); return; }
+  const root = document.documentElement; let o = null;
+  if (from && from.getBoundingClientRect) { const r = from.getBoundingClientRect(); if (r.width || r.height) o = { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
+  let t; try { if (o) root.classList.add('vt-circle'); t = document.startViewTransition(fn); } catch (e) { root.classList.remove('vt-circle'); fn(); return; }
+  t.finished.finally(() => root.classList.remove('vt-circle'));
+  if (!o) return;
+  const R = Math.hypot(Math.max(o.x, innerWidth - o.x), Math.max(o.y, innerHeight - o.y));
+  t.ready.then(() => { root.animate({ clipPath: ['circle(0px at ' + o.x + 'px ' + o.y + 'px)', 'circle(' + R + 'px at ' + o.x + 'px ' + o.y + 'px)'] },
+    { duration: 650, easing: 'cubic-bezier(.4, 0, .2, 1)', fill: 'both', pseudoElement: '::view-transition-new(root)' }); }).catch(() => {});
+}
+function swKnob(el) { const s = el && el.closest && el.closest('.switch'); return (s && s.querySelector('i')) || el; }
 const K_THEME = 'wlite.theme.v1';
 const sysDark = () => !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
 function applyTheme() {
   const t = store.get(K_THEME); const dark = t ? t === 'dark' : sysDark();
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
 }
-try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (!store.get(K_THEME)) applyTheme(); }); } catch (e) {}
+try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (!store.get(K_THEME)) themeSwap(applyTheme); }); } catch (e) {}
 applyTheme();
 
 // ---------- Ver 0.2d (user, 2026-11-08): color themes and the user's own app icon ----------
