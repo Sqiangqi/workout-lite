@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.2m · 11/13/2026
+
+Matches the full app Ver 0.2m. Food tab: the food tiles in My foods and Suggested have a light paint texture (short dabs and brush strokes, like a painting) over their carbs / protein / fat colours; the names and numbers stay as they were. In dark mode the tile colours are stronger (they looked dim) and the texture has only small, faint light strokes that blend into the colour. Food tiles are more compact: the name, then the amount with the calories right next to it (they were on a row of their own), and carbs, protein and fat still stacked in a column on the right. All food tiles are the same height: names stay on one line in the narrow heading font, and long names are shown a little smaller so they fit. The calories line up on every tile (right next to the carbs / protein / fat column), and the tiles say pc / pcs instead of piece / pieces. New color themes Crimson + Gold (deep crimson with warm gold) and Black + Silver (near-black with silver; the Today button, selected tab, rest timer, main buttons and switches have a brushed-metal shine), light and dark, in Settings › Appearance; the theme buttons are now two by two. The logo disc takes the theme colour (black in Black + Silver, crimson in Crimson + Gold) and its gold always stays gold. Pork dumpling is no longer in the starter food list for new people (38 foods).
+
 ## 0.2l · 11/12/2026
 
 Matches the full app Ver 0.2l. Progress: Show body weight on the chart is on by default; switch it off if you do not want it (still owner only).
