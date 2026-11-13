@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.2j.1 · 11/12/2026
+
+Web-only fix on Ver 0.2j: the app stayed on Loading forever (since 0.2i) because the starter food list for the My foods button could not be found when the page started; it now loads again.
+
 ## 0.2j · 11/12/2026
 
 Matches the full app Ver 0.2j, which brought the readable dark-mode Tap again buttons over from Web 0.2d.1. The web version already had them, so nothing changes here.
