@@ -560,6 +560,8 @@ body.lib main .wrap { padding-bottom: calc(var(--tabbar-h) + 96px); }
 .qtab tbody tr:nth-child(even) { background: rgba(var(--brand-rgb), .035); }
 .qtab tbody tr:active { background: rgba(var(--gold-rgb), .25); }
 .qthint { margin: 0; font-size: 12px; }
+.qfst { display: grid; gap: 4px; justify-items: start; border-top: 1px solid var(--line); margin-top: 6px; padding-top: 8px; }
+.qfst .hint { font-size: 12px; }
 .qfl-foot { display: flex; justify-content: space-between; padding-top: 6px; }
 .lnk { border: 0; background: none; padding: 6px 2px; font: inherit; font-size: 14px; font-weight: 600; color: var(--accent); }
 .lnk.danger { color: var(--bad); }
@@ -2777,6 +2779,25 @@ function qfCalc(q, amt) {
 }
 function qfRow(q) { return [String(q.name).trim(), qfUnit(q.unit), +q.per || (q.unit === 'each' ? 1 : 100), +q.kcal || 0, +q.c || 0, +q.p || 0, +q.f || 0, q.usual === '' || q.usual == null ? '' : +q.usual, q.note || '', q.max === '' || q.max == null ? '' : +q.max, +q.fib || 0]; }
 // Writes the whole Quick foods list (header + rows, blanks over leftover rows), then reads it back.
+// Starter foods button (Ver 0.2i, user 2026-11-12): adds the starter foods a person's My foods list does not have yet (matched by
+// name, any case). It only appends rows; it never changes or removes foods the person added or edited. Hidden for the owner,
+// whose list is the starter list.
+const QF_STARTER = STARTER_FOODS;
+function qfStarterMissing() { const have = new Set(S.qf.map(q => String(q.name).trim().toLowerCase())); return QF_STARTER.filter(r => !have.has(String(r[0]).trim().toLowerCase())); }
+async function qfAddStarter() {
+  if (!S.mcp || S.qfSaving || !PRIV_ID) return;
+  S.qfSaving = true; render();
+  try {
+    const v = valuesOf(await call('get_values', { spreadsheetId: PRIV_ID, range: QF_RANGE }));   /* fresh read, so nothing is added twice */
+    const have = new Set(v.slice(1).map(r => String(r[0] || '').trim().toLowerCase()).filter(Boolean));
+    const miss = QF_STARTER.filter(r => !have.has(String(r[0]).trim().toLowerCase())).map(r => r.slice());
+    if (miss.length) await call('append_values', { spreadsheetId: PRIV_ID, range: "'" + QF_TAB + "'!A1:K",
+      values: (v.length ? [] : [['Food', 'Unit', 'Per', 'Calories (kcal)', 'Carbs (g)', 'Protein (g)', 'Fat (g)', 'Usual amount', 'Note', 'Max suggested', 'Fiber (g)']]).concat(miss) });
+    toast(miss.length ? 'Added ' + miss.length + ' food' + (miss.length === 1 ? '' : 's') + ' to My foods. Your own foods were kept.' : 'My foods already has every starter food.');
+    await readQuick();
+  } catch (err) { S.problem = { text: 'Starter foods not added. ' + codeText(err).text, retry: false }; }
+  S.qfSaving = false; render();
+}
 async function saveQuickList(list, okMsg) {
   if (!S.mcp || S.qfSaving) return false;
   const rows = list.filter(q => String(q.name).trim()).map(qfRow);
@@ -2840,6 +2861,9 @@ function viewQuick() {
     '<p class="qfl-tip">Tap to add · hold to see or edit</p>' +
     '<div class="qfl-foot">' + (!sel && hidden ? '<button class="lnk" data-act="qf-all" id="qfAllBtn">' + (S.qfAll ? 'Show fewer' : 'Show all ' + S.qf.length) + '</button>' : '<span></span>') +
     '<button class="lnk" data-act="qf-new">+ New food</button></div>';
+  { const n = S.isOwner ? 0 : qfStarterMissing().length;   /* starter foods button (Ver 0.2i) */
+    if (n) h += '<div class="qfst"><button class="btn sm" data-act="qf-starter"' + (S.qfSaving || !S.mcp ? ' disabled' : '') + '>' + (S.qfSaving ? 'Adding…' : '+ Add ' + n + ' new starter food' + (n === 1 ? '' : 's')) + '</button>' +
+      '<span class="hint">Only adds foods you do not have yet; your own foods stay as they are.</span></div>'; }
   return h;
 }
 // Hold (0.5 s) on an element with data-hold runs that action instead of its tap action
@@ -4574,6 +4598,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.2i', '11122026', 'Matches the full app Ver 0.2i. My foods: people other than the owner get a button under their list, + Add N new starter foods, when the starter list (the owner list) has foods they do not have yet (matched by name). It only adds those foods; foods they added or edited themselves are never changed or removed.'],
   ['0.2h', '11122026', 'Matches the full app Ver 0.2h. New people start with the owner\'s food list in My foods (39 foods: meats, fish, eggs, rice, noodles, bread, fruit, nuts, dairy, vegetables and more) instead of the 10 generic ones; notes that spoke of the owner\'s own labels now just say Label. People who already have a food Sheet keep their own list.'],
   ['0.2g', '11122026', 'Matches the full app Ver 0.2g. Food tab: Quick add is now My foods, with a Full list table (tap a row to open the food); foods show as tiles, two per row (name, the amount a tap adds, its calories, and carbs, protein and fat in grams in their colours), grouped by main nutrient (Protein, Carbs, Fat) with filter chips and a search box; tap a tile to add it, hold it to open its card (donut by calories or grams, legend with grams and %), where Edit changes or removes the food and + New food adds one. More units (g, ml, oz, cup, tbsp, tsp, each) on a small scroll wheel in Add a food and the food card; Add a food has an Amount box for what the label numbers are for. Suggested to fill the day: up to 2 foods as tiles, tap to add. Clearer macro colours (amber carbs, green protein, coral fat) in the tiles, the nutrition bars and the Adding / Eaten rows. The week calendar on the Food tab scrolls sideways (8 weeks back and ahead); tap the date at the top to slide back to today. Carb week: one small wheel per weekday, scroll it to switch High / Mid / Low (amber, blue, teal). Settings: only one section open at a time. Appearance: the Dark mode switch is grey (not gold) while Follow the phone setting is on. Exercise pictures for the exercises that had none (Barbell Back Squat, Dumbbell Bench Press, Pull Up, Dead Hang and others); hold a full-screen picture to close it. Fix: a workout that was already saved no longer comes back the next day as not saved yet. Not in the web version (full app only): the Photos timeline, photo swiping and the Describe food buttons. Removed: Quick add chips and its Edit list (Save list), the Together total line under suggestions.'],
   ['0.2f.1', '11102026', 'Web-only update on Ver 0.2f: code tidy-up. Unused parts removed: the old week-plan day sheet and its lists, the old Library list, and leftovers from the full app that the web version never shows (Claude food estimates, Renpho import from Google Drive, the old body weight box, exercise picture backup). Nothing changes on screen.'],
@@ -5056,6 +5081,7 @@ document.addEventListener('click', e => {
       toast(q.name + ' added. Change the amount in the Adding list.'); break; }
     case 'qf-open': S.qfo = { i: +b.dataset.i, edit: false }; render(); break;
     case 'qf-new': S.qfo = { i: -1, edit: true, d: qfBlank() }; render(); break;
+    case 'qf-starter': qfAddStarter(); break;
     case 'qf-all': S.qfAll = !S.qfAll; render(); break;
     case 'qf-grp': S.qfGrp = b.dataset.g || ''; render(); break;
     case 'qf-table': S.qfTable = true; render(); break;

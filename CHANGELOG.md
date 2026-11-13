@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.2i · 11/12/2026
+
+Matches the full app Ver 0.2i. My foods: people other than the owner get a button under their list, + Add N new starter foods, when the starter list (the owner list) has foods they do not have yet (matched by name). It only adds those foods; foods they added or edited themselves are never changed or removed.
+
 ## 0.2h · 11/12/2026
 
 Matches the full app Ver 0.2h. New people start with the owner's food list in My foods (39 foods: meats, fish, eggs, rice, noodles, bread, fruit, nuts, dairy, vegetables and more) instead of the 10 generic ones; notes that spoke of the owner's own labels now just say Label. People who already have a food Sheet keep their own list.
