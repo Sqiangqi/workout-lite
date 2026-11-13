@@ -2109,7 +2109,7 @@ const S = {
   pending: null,          // {file, date}
   uploading: false,
   cmp: [null, null],
-  showBW: false,
+  showBW: true,
   canCrop: false,
   recrop: null,           // {id, status, img, rect, preview, note, saving}
   lbId: null,
@@ -4603,6 +4603,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.2l', '11122026', 'Matches the full app Ver 0.2l. Progress: Show body weight on the chart is on by default; switch it off if you do not want it (still owner only).'],
   ['0.2k', '11122026', 'Matches the full app Ver 0.2k. Settings › Appearance: switching Dark mode, Follow the phone setting or the Color theme no longer changes the whole screen at once; the new look grows as a circle from the switch or colour you tapped and fills the screen (about 0.6 s). When the phone switches between light and dark by itself while Follow the phone setting is on, the new look wipes down from the top instead. Phones that do not support it (older than iOS 18), and Reduce Motion, keep the instant change.'],
   ['0.2j.1', '11122026', 'Web-only fix on Ver 0.2j: the app stayed on Loading forever (since 0.2i) because the starter food list for the My foods button could not be found when the page started; it now loads again.'],
   ['0.2j', '11122026', 'Matches the full app Ver 0.2j, which brought the readable dark-mode Tap again buttons over from Web 0.2d.1. The web version already had them, so nothing changes here.'],
@@ -5552,7 +5553,7 @@ let toastT;
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 4000); }
 
 // ---------- boot ----------
-S.showBW = !!store.get(K_BW);
+S.showBW = store.get(K_BW) !== false;   /* on unless switched off (Ver 0.2l, user 2026-11-12; was off unless switched on) */
 S.range = store.get(K_RANGE) || 'All';
 // Light / dark mode button at the top right (user, 2026-10-31). Follows the phone's setting until tapped; the choice is remembered on this device.
 // Theme transition (Ver 0.2k, user 2026-11-12): runs a theme change inside a View Transition, so the new look wipes down from

@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.2l · 11/12/2026
+
+Matches the full app Ver 0.2l. Progress: Show body weight on the chart is on by default; switch it off if you do not want it (still owner only).
+
 ## 0.2k · 11/12/2026
 
 Matches the full app Ver 0.2k. Settings › Appearance: switching Dark mode, Follow the phone setting or the Color theme no longer changes the whole screen at once; the new look grows as a circle from the switch or colour you tapped and fills the screen (about 0.6 s). When the phone switches between light and dark by itself while Follow the phone setting is on, the new look wipes down from the top instead. Phones that do not support it (older than iOS 18), and Reduce Motion, keep the instant change.
