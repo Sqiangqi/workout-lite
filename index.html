@@ -1805,16 +1805,45 @@ const FOOD_TABS = [
 ];
 // generic starter foods for a new food Sheet (values per Per; check your own labels)
 const STARTER_FOODS = [
-  ['Egg (large)', 'each', 1, 70, 0.5, 6, 5, 2, 'Generic', 4, 0],
-  ['Chicken breast (raw)', 'g', 100, 120, 0, 22.5, 2.6, 150, 'Generic', '', 0],
-  ['Cooked white rice', 'g', 100, 130, 28, 2.7, 0.3, 200, 'Generic', '', 0.4],
-  ['Rolled oats (dry)', 'g', 40, 150, 27, 5, 3, 40, 'Generic', 80, 4],
-  ['Banana (medium)', 'each', 1, 105, 27, 1.3, 0.4, 1, 'Generic', '', 3.1],
-  ['2% milk', 'ml', 240, 120, 12, 8, 5, 250, 'Generic US label', 500, 0],
-  ['Whey protein (scoop)', 'each', 1, 120, 3, 24, 1.5, 1, 'Generic; check your tub', 2, 0],
-  ['Avocado (medium)', 'g', 100, 160, 8.5, 2, 14.7, 150, 'Generic flesh per 100 g', 150, 6.7],
-  ['Vegetables (non-starchy)', 'g', 100, 30, 6, 2, 0.3, 150, 'Greens, broccoli, peppers, tomatoes, mushrooms…', 300, 2.5],
-  ['Vegetables (starchy)', 'g', 100, 85, 18, 2.5, 0.4, 150, 'Potato, corn, peas, pumpkin, taro…', 200, 2.5]
+  ['Dry pasta', 'g', 50, 190, 37.5, 6.5, 0.8, 100, 'Label: 50 g = 190 kcal; carbs/protein/fat still generic', '', 1.6],
+  ['Chicken breast', 'g', 112, 130, 0, 25, 3, 112, 'Label: 112 g = 130 kcal, 25 g protein; fat estimated from the calories', '', 0],
+  ['Cooked white rice', 'g', 100, 130, 28, 2.7, 0.3, 200, 'Generic values', '', 0.4],
+  ['Beef sausage', 'each', 1, 260, 4, 14, 12, 1, 'Label: 78 g each, 260 kcal, 14 g protein, 4 g carbs, 12 g fat (check fat: these macros add up to about 180 kcal)', '', 0],
+  ['Egg (lg)', 'each', 1, 70, 1, 6, 5, 5, 'Large eggs: about 60 g each, 70 kcal, 6 g protein, 1 g carbs, 5 g fat', 5, 0],
+  ['Banana (med)', 'each', 1, 105, 27, 1.3, 0.4, 1, 'Generic', '', 3.1],
+  ['Whey protein (scoop)', 'each', 1, 120, 2, 25, 1, 1, 'Tub label: 1 scoop = 31 g, 120 kcal, 25 g protein, 2 g carbs, 1 g fat', 2, 0],
+  ['Chicken thigh (w/ skin)', 'each', 1, 242, 0, 22, 20, 1, 'Label: one thigh 112 g, 242 kcal, 22 g protein, 20 g fat, 0 g carbs', '', 0],
+  ['Chicken thigh (skinless)', 'each', 1, 140, 0, 22, 4.5, 1, 'Label: one thigh 112 g, 140 kcal, 22 g protein, 4.5 g fat, 0 g carbs', '', 0],
+  ['Rolled oats (dry)', 'g', 40, 150, 27, 5, 3, 40, 'Balancer for carbs. Generic values; calibrate from your package label', '', 4],
+  ['Liquid egg whites', 'g', 100, 52, 0.7, 11, 0.2, 100, 'Balancer for protein, almost no fat. Generic values; calibrate from your carton label', '', 0],
+  ['Hot chocolate (bag)', 'each', 1, 80, 16, 1, 2, 1, 'Label: 1 bag = 20 g, 80 kcal, 16 g carbs, 2 g fat; protein not given, about 1 g assumed', '', 1],
+  ['Toast (slice)', 'each', 1, 73, 14, 2, 1, 1, 'Label: 1 slice = 27 g, 2 g protein, 14 g carbs, 1 g fat; calories not given, worked out as about 73 kcal', '', 0.7],
+  ['2% milk', 'ml', 240, 120, 12, 8, 5, 100, 'Generic US 2% milk label: 1 cup (240 ml) = 120 kcal, 12 g carbs, 8 g protein, 5 g fat; calibrate from your carton', 500, 0],
+  ['Avocado (med)', 'g', 100, 160, 8.5, 2, 14.7, 150, 'Generic USDA raw avocado flesh per 100 g; a medium one is about 150 g of flesh (240 kcal, 22 g fat)', 150, 6.7],
+  ['Veg (non-starchy)', 'g', 100, 30, 6, 2, 0.3, 150, 'Generic average for greens, broccoli, cabbage, peppers, tomatoes, cucumber, mushrooms etc. (about 2-3 g fiber per 100 g)', 300, 2.5],
+  ['Veg (starchy)', 'g', 100, 85, 18, 2.5, 0.4, 150, 'Generic average for potato, sweet potato, corn, peas, pumpkin/squash, taro, cooked (about 2-3 g fiber per 100 g); log big portions of one kind by name for accuracy', 200, 2.5],
+  ['Chia seeds', 'g', 100, 486, 42.1, 16.5, 30.7, 10, 'Generic USDA dried chia seeds per 100 g; 10 g = 49 kcal, 3.4 g fiber (1 tbsp is about 12 g); calibrate from your bag', 30, 34.4],
+  ['Cheerios', 'g', 37, 140, 30, 3, 2, 37, 'Label: 1 cup = 37 g, 140 kcal, 30 g carbs, 3 g protein, 2 g fat', '', 0],
+  ['Greek yogurt (nonfat)', 'g', 100, 59, 3.6, 10.2, 0.4, 170, 'Generic USDA plain nonfat Greek yogurt per 100 g; a single cup is about 170 g. Calibrate from your label', '', 0],
+  ['Apple (med)', 'each', 1, 95, 25, 0.5, 0.3, 1, 'Generic USDA medium apple, about 180 g', 2, 4.4],
+  ['Orange (med)', 'each', 1, 62, 15.4, 1.2, 0.2, 1, 'Generic USDA medium orange, about 130 g', 2, 3.1],
+  ['Blueberries', 'g', 100, 57, 14.5, 0.7, 0.3, 100, 'Generic USDA raw blueberries per 100 g (about 2/3 cup)', 200, 2.4],
+  ['Peanut butter', 'g', 32, 190, 7, 7, 16, 16, 'Generic label: 2 tbsp (32 g) = 190 kcal; 16 g is about 1 tbsp. Calibrate from your jar', 32, 2],
+  ['Almonds', 'g', 28, 164, 6.1, 6, 14.2, 28, 'Generic USDA raw almonds, 1 oz (28 g, about 23 almonds)', 28, 3.5],
+  ['Salmon', 'g', 100, 208, 0, 20.4, 13.4, 150, 'Generic USDA farmed Atlantic salmon, raw, per 100 g', '', 0],
+  ['Canned tuna (water)', 'g', 100, 116, 0, 25.5, 0.8, 100, 'Generic USDA light tuna canned in water, drained, per 100 g', '', 0],
+  ['Tofu (firm)', 'g', 100, 144, 2.8, 17.3, 8.7, 150, 'Generic USDA firm tofu per 100 g. Calibrate from your package', '', 2.3],
+  ['Ground beef 90/10', 'g', 100, 176, 0, 20, 10, 112, 'Generic USDA 90% lean ground beef, raw, per 100 g', '', 0],
+  ['Shrimp', 'g', 100, 85, 0, 20.1, 0.5, 150, 'Generic USDA shrimp, raw, per 100 g', '', 0],
+  ['Sweet potato', 'g', 100, 90, 20.7, 2, 0.2, 150, 'Generic USDA sweet potato, baked in skin, per 100 g', 300, 3.3],
+  ['Wheat bread (slice)', 'each', 1, 82, 13.8, 4, 1.1, 2, 'Generic whole wheat bread, 1 slice about 32 g. Calibrate from your bag', 4, 1.9],
+  ['Brown rice (cooked)', 'g', 100, 123, 25.6, 2.7, 1, 200, 'Generic USDA cooked long-grain brown rice per 100 g', '', 1.6],
+  ['Noodles (cooked)', 'g', 100, 138, 25, 4.5, 2.1, 200, 'Generic cooked wheat/egg noodles per 100 g', '', 1.2],
+  ['Mantou', 'each', 1, 180, 37, 5.6, 0.9, 1, 'Generic plain steamed bun, about 80 g each; size varies a lot, weigh one to calibrate', 2, 1],
+  ['Pork dumpling', 'each', 1, 50, 5, 2.5, 2.2, 10, 'Generic boiled pork and cabbage dumpling, about 22 g each; values vary by brand and filling', 20, 0.3],
+  ['Cheddar cheese', 'g', 28, 113, 0.4, 6.4, 9.3, 28, 'Generic USDA cheddar, 1 oz (28 g)', 56, 0],
+  ['Olive oil', 'tbsp', 1, 119, 0, 0, 13.5, 1, 'Generic USDA olive oil, 1 tbsp (about 13.5 g)', 2, 0],
+  ['Edamame', 'g', 100, 121, 8.9, 11.9, 5.2, 100, 'Generic USDA shelled edamame, cooked, per 100 g', 200, 5.2]
 ];
 async function foodMeta(id) { return gfetch(SHEETS + id + '?fields=properties.title,spreadsheetUrl,sheets.properties(sheetId,title,gridProperties(columnCount))'); }
 async function foodRec() {
@@ -4545,6 +4574,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.2h', '11122026', 'Matches the full app Ver 0.2h. New people start with the owner\'s food list in My foods (39 foods: meats, fish, eggs, rice, noodles, bread, fruit, nuts, dairy, vegetables and more) instead of the 10 generic ones; notes that spoke of the owner\'s own labels now just say Label. People who already have a food Sheet keep their own list.'],
   ['0.2g', '11122026', 'Matches the full app Ver 0.2g. Food tab: Quick add is now My foods, with a Full list table (tap a row to open the food); foods show as tiles, two per row (name, the amount a tap adds, its calories, and carbs, protein and fat in grams in their colours), grouped by main nutrient (Protein, Carbs, Fat) with filter chips and a search box; tap a tile to add it, hold it to open its card (donut by calories or grams, legend with grams and %), where Edit changes or removes the food and + New food adds one. More units (g, ml, oz, cup, tbsp, tsp, each) on a small scroll wheel in Add a food and the food card; Add a food has an Amount box for what the label numbers are for. Suggested to fill the day: up to 2 foods as tiles, tap to add. Clearer macro colours (amber carbs, green protein, coral fat) in the tiles, the nutrition bars and the Adding / Eaten rows. The week calendar on the Food tab scrolls sideways (8 weeks back and ahead); tap the date at the top to slide back to today. Carb week: one small wheel per weekday, scroll it to switch High / Mid / Low (amber, blue, teal). Settings: only one section open at a time. Appearance: the Dark mode switch is grey (not gold) while Follow the phone setting is on. Exercise pictures for the exercises that had none (Barbell Back Squat, Dumbbell Bench Press, Pull Up, Dead Hang and others); hold a full-screen picture to close it. Fix: a workout that was already saved no longer comes back the next day as not saved yet. Not in the web version (full app only): the Photos timeline, photo swiping and the Describe food buttons. Removed: Quick add chips and its Edit list (Save list), the Together total line under suggestions.'],
   ['0.2f.1', '11102026', 'Web-only update on Ver 0.2f: code tidy-up. Unused parts removed: the old week-plan day sheet and its lists, the old Library list, and leftovers from the full app that the web version never shows (Claude food estimates, Renpho import from Google Drive, the old body weight box, exercise picture backup). Nothing changes on screen.'],
   ['0.2f', '11102026', 'Matches the full app Ver 0.2f. Pull Up: the card shows your body weight (the weight you typed on the Food tab or on the card; Edit to change it) and a Band switch with the band help in lbs; with no body weight the card asks for it and the reps are greyed out. Each set is saved as its own row: Weight = band help (0 = no band), Reps = that set. Progress charts the weight you pulled (body weight − band) with a dashed line at your body weight; body weight itself is never written to the workout Sheet. Time exercises (Warm-up, Battle Ropes): a countdown timer on the card (− / + to set it, Start / Pause / Reset, beeps at 0:00 and enters the time; Pause enters the time done so far); typing the time still works. Week plan: choose the plan length (2-10 days) on a number wheel; day 1 is a Monday and the plan repeats after the last day; the days show as circles (M T W R F S U) with a gold check once saved. Tapping a day opens a page like the Library (search, body-part keywords, body figure) where you tap exercises to add them; the picked ones sit on top in small type, swipe one left to remove it (Undo in the message). No day-type buttons any more: the day is named from what you pick (Upper body, Lower body or Combined; Upper gets a push or pull tag when more than half are push or pull; nothing picked = Rest day). Library: exercises are small tags around a body figure (back by the head, shoulders, chest, arms, core at the waist, legs at the bottom); the search box (name or muscle) and keyword chips light up the matching tags and grey out the rest; tap a tag for its picture, last session and ☆. Pinch with two fingers to zoom an enlarged exercise picture (double-tap to reset).'],
