@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.2j · 11/12/2026
+
+Matches the full app Ver 0.2j, which brought the readable dark-mode Tap again buttons over from Web 0.2d.1. The web version already had them, so nothing changes here.
+
 ## 0.2i · 11/12/2026
 
 Matches the full app Ver 0.2i. My foods: people other than the owner get a button under their list, + Add N new starter foods, when the starter list (the owner list) has foods they do not have yet (matched by name). It only adds those foods; foods they added or edited themselves are never changed or removed.
