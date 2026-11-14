@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3n · 11/14/2026
+
+Matches the full app Ver 0.3n. Progress exercise list: shows every exercise that has entries (also ones no longer in a plan or the Sheet), and no longer lists exercises without entries.
+
 ## 0.3m · 11/14/2026
 
 Matches the full app Ver 0.3k to 0.3m. Progress: the exercise picker is smaller and sits on the left, with 3M, 6M, 1Y and All on its right in the same row and at the same height (a long name wraps to a second line). Start workout: an Adjust plan link beside Current plan opens Settings › Week plan with the plan in use ready to edit; the Save session card says to tap a set row to pick its weight and reps. Empty charts show a sample: until there is something to chart, Progress shows a dimmed sample lift chart and Home › Muscles worked a sample shape, each with a SAMPLE label and what is missing; they go away as soon as your own entries are there. Code tidy: the Photos and Body tab code of the full app, which the web version never shows, was taken out.

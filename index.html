@@ -4073,30 +4073,29 @@ function placeholder(name) {
 
 // ---------- progress ----------
 function chartNames() {
-  // only exercises in the current plan (name starts with a plan number), user 2026-10-31; others stay in the Sheet and the Library
-  const inPlans = new Set(); S.wp.plans.forEach(p => Object.values(p.days).forEach(d => d.items.forEach(n => inPlans.add(n))));
-  const all = pickable().filter(e => !/warm.?up/i.test(e.name) && (prefixOf(e.name) || isFav(e.name) || inPlans.has(e.name))).filter((e, i, a) => a.findIndex(x => x.name === e.name) === i);
-  const withData = all.filter(e => S.history.has(e.name)).map(e => e.name);
-  const without = all.filter(e => !S.history.has(e.name)).map(e => e.name);
-  return { withData, without };
+  // Ver 0.3n: every exercise with at least one entry, user 2026-11-14 (plan exercises without entries no longer listed).
+  // Order: as in the Sheet, then exercises no longer in the Sheet A to Z.
+  const has = n => !NOT_EX.test(n) && !/warm.?up/i.test(n) && (S.history.get(n) || []).length > 0;
+  const seen = new Set(), withData = [];
+  pickable().forEach(e => { if (!seen.has(e.name) && has(e.name)) { seen.add(e.name); withData.push(e.name); } });
+  [...S.history.keys()].filter(n => !seen.has(n) && has(n)).sort((a, b) => bareName(a).localeCompare(bareName(b))).forEach(n => withData.push(n));
+  return { withData, without: [] };
 }
 function viewProgress() {
   let h = problemBox();
   if (!S.exercises.length) return h + '<div class="empty">Waiting for data from the Google Sheet.</div>';
   const { withData, without } = chartNames();
-  // no starred or planned exercise yet (e.g. a new person): placeholder instead of a chart with no name, which stopped the tab from opening
-  if (!withData.length && !without.length) return h + '<div class="chartbox">' + sampleChartSvg() + '</div>';   /* Ver 0.3m: nothing to chart yet: the sample, with what to do */
-  if (!S.pick || !(withData.includes(S.pick) || without.includes(S.pick))) S.pick = withData[0] || without[0];
+  if (!S.pick || !withData.includes(S.pick)) S.pick = withData[0] || '';   /* '' = nothing logged yet: the sample chart */
   // chart options sit between the chart and the session table, within thumb reach;
   // the exercise picker doubles as the chart title; gold left edge marks the card as interactive
   // exercise picker: a button that opens a scrollable list sheet at the bottom of the screen (the phone's own list was hard to reach)
-  const ctl = '<div class="ctlcard glow"><span class="ctl-lab">Exercise</span><div class="ctl-row"><button class="pickbtn" data-act="pick-open" aria-haspopup="listbox" aria-expanded="' + !!S.pickOpen + '">' + esc(bareName(S.pick || '')) + '</button>' + rangeSeg() + '</div>' +   /* Ver 0.3k: picker and range on one row */
+  const ctl = '<div class="ctlcard glow"><span class="ctl-lab">Exercise</span><div class="ctl-row"><button class="pickbtn" data-act="pick-open" aria-haspopup="listbox" aria-expanded="' + !!S.pickOpen + '">' + (S.pick ? esc(bareName(S.pick)) : 'No exercises yet') + '</button>' + rangeSeg() + '</div>' +   /* Ver 0.3k: picker and range on one row */
     (S.isOwner && S.body.length && !isCount(S.pick || '') ? '<label class="switch"><span>Show body weight on the chart</span><input type="checkbox" role="switch" id="bwToggle"' + (S.showBW ? ' checked' : '') + '><i aria-hidden="true"></i></label>' : '') + '</div>';
   h += chart(S.pick, ctl);
   if (S.pickOpen) {
     const item = n => '<button class="sheet-it' + (n === S.pick ? ' on' : '') + '" role="option" aria-selected="' + (n === S.pick) + '" data-act="pick-set" data-name="' + esc(n) + '">' + esc(bareName(n)) + '</button>';
     h += '<div class="sheet-bg" data-act="pick-close"><div class="sheet" role="listbox" aria-label="Exercise to chart" data-act="noop"><div class="sheet-h"><b>Choose exercise</b><button class="btn sm" data-act="pick-close">Close</button></div>' +
-      '<div class="sheet-list" id="sheetList">' + withData.map(item).join('') + (without.length ? '<div class="sheet-sep">No entries yet</div>' + without.map(item).join('') : '') + '</div></div></div>';
+      '<div class="sheet-list" id="sheetList">' + (withData.length ? withData.map(item).join('') : '<div class="sheet-sep">No entries yet: exercises show here once you log them</div>') + '</div></div></div>';
   }
   return h;
 }
@@ -4120,10 +4119,6 @@ function smpIso(daysAgo) { const d = new Date(todayIso() + 'T12:00:00'); d.setDa
 function sampleLift() {
   const plan = [[40, '10/10/8'], [40, '10/10/10'], [45, '10/9/8'], [45, '10/10/9'], [45, '10/10/10'], [50, '10/9/8'], [50, '10/10/9'], [50, '10/10/10'], [55, '10/10/8']];
   return plan.map(([w, r], i) => { const iso = smpIso((plan.length - 1 - i) * 13); return { iso, top: { iso, weight: w, reps: r }, lighter: i % 3 === 1 ? [{ iso, weight: w - 5, reps: '12' }] : [] }; });
-}
-function sampleChartSvg() {   /* the sample lift chart when no exercise can be charted yet (none starred or in a plan) */
-  const c = chart('sample', ''), i = c.indexOf('<div class="smp">'), j = c.indexOf('</p>', i);
-  return i < 0 ? '' : c.slice(i, c.indexOf('<p class="smp-note">', i)) + '<p class="smp-note"><b>Nothing to chart yet.</b> Star ☆ an exercise in the Library or put it in a week plan (Settings › Week plan); its progress shows here once you log it.</p>';
 }
 function smpWrap(inner, what, how) {
   return '<div class="smp"><span class="smp-chip">Sample</span><div class="smp-in" aria-hidden="true">' + inner + '</div></div>' +
@@ -4192,7 +4187,7 @@ function chart(name, ctl) {
   h += '<div class="legend">' + (isCount(name) ? '<span><i style="background:var(--gold);box-shadow:0 0 0 2px var(--accent)"></i>Total reps that day (all sets added up)</span>' : '<span><i style="background:var(--gold);box-shadow:0 0 0 2px var(--accent)"></i>Heaviest set (' + unit + ')</span><span><i style="background:var(--lighter)"></i>Lighter sets</span>') +
     (bwOn ? '<span><i style="background:var(--muted)"></i>Body weight, 7-day avg (kg, left scale)</span>' : '') + bwNote +
     (isBench(name) ? '<span>Warm-up sets of ' + BENCH_WARMUP_MAX + ' lbs or less are left out</span>' : '') + '</div>';
-  if (sample) return h + smpWrap(svg, 'No entries for ' + esc(bareName(name)) + ' yet', 'Your sessions show here as you log them.') + '</div>' + ctl;
+  if (sample) return h + smpWrap(svg, name ? 'No entries for ' + esc(bareName(name)) + ' yet' : 'No exercises logged yet', 'Your sessions show here as you log them.') + '</div>' + ctl;
   h += '<div style="overflow-x:auto">' + svg + '</div></div>' + ctl;
   // the days of this exercise on a date ruler: the three closest to the centre line show as tiles
   h += drHtml('p|' + name + '|' + S.range, ser.map(d => ({ iso: d.iso, html: isCount(name)
@@ -4805,6 +4800,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3n', '11142026', 'Matches the full app Ver 0.3n. Progress exercise list: shows every exercise that has entries (also ones no longer in a plan or the Sheet), and no longer lists exercises without entries.'],
   ['0.3m', '11142026', 'Matches the full app Ver 0.3k to 0.3m. Progress: the exercise picker is smaller and sits on the left, with 3M, 6M, 1Y and All on its right in the same row and at the same height (a long name wraps to a second line). Start workout: an Adjust plan link beside Current plan opens Settings › Week plan with the plan in use ready to edit; the Save session card says to tap a set row to pick its weight and reps. Empty charts show a sample: until there is something to chart, Progress shows a dimmed sample lift chart and Home › Muscles worked a sample shape, each with a SAMPLE label and what is missing; they go away as soon as your own entries are there. Code tidy: the Photos and Body tab code of the full app, which the web version never shows, was taken out.'],
   ['0.3j.1', '11142026', 'Web-only update on Ver 0.3j: Settings › Version has a Check for updates button. It reads the newest version from GitHub (not a stored copy) and says Your app is up to date, or shows Update now to Ver …, which loads the newest version straight away (your sign-in and unsaved sets on this phone are kept).'],
   ['0.3j', '11142026', 'Matches the full app Ver 0.3j, which redesigned its Photos tab (full app only). Nothing changes in the web version.'],
