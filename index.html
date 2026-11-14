@@ -1293,13 +1293,11 @@ body.home header.top .wrap { padding-top: 10px; }      /* Home: the same for the
 .nm-ic span { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-decoration: underline; text-underline-offset: 3px; }
 .nm-ic:active img { transform: scale(.96); }
 .nm-sheet .nm-hint { font-size: 12px; }
-/* Web 0.3g.1: iPhone home-screen app bug: the page can come out shorter than the screen (by about the status bar), which left a band under the
-   bottom strip. --vgap is that missing height (measured below, 0 everywhere else); everything fixed to the bottom moves down by it. */
-:root { --vgap: 0px; }
-.tabbar { bottom: calc(-1 * var(--vgap)); }
-.fweek { bottom: calc(var(--tabbar-h) - var(--vgap)); }
-.sheet-bg, .wveil { bottom: calc(-1 * var(--vgap)); }
-.hm-start { bottom: calc(var(--tabbar-h) + 10px - var(--vgap)); }
+/* Web 0.3i.2: in the iPhone home-screen app, a page shorter than the screen (Settings, Progress, Start workout) was drawn only down to
+   about the status bar height above the bottom, so the bottom strip there was cut off or hidden. Long pages were fine, so every page is now
+   at least as tall as the whole screen. (The 0.3g.1 / 0.3i.1 strip-moving script made it worse and was removed.) */
+body { min-height: calc(100vh + env(safe-area-inset-top, 0px) + 1px); }
+@supports (height: 100lvh) { body { min-height: calc(100lvh + env(safe-area-inset-top, 0px) + 1px); } }
 </style>
 
 <header class="top">
@@ -5236,6 +5234,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3i.2', '11142026', 'Web-only fix on Ver 0.3i.1: the 0.3i.1 change made it worse (the bottom strip was hidden under a background band on short pages and only showed while scrolling), so it was taken out, with the 0.3g.1 one. Instead every page is now at least as tall as the whole screen, so short pages (Settings, Progress, Start workout) are drawn to the bottom like the long ones (Food, Library), where the strip was always right.'],
   ['0.3i.1', '11142026', 'Web-only fix on Ver 0.3i: in the iPhone home-screen app the bottom strip still sat above the bottom of the screen on short pages (Settings, Progress, Start workout). The app now checks where the strip really ends after every page change, scroll and turn of the phone and moves it, the Food week bar, the Start workout button and the pop-up sheets down to the real bottom.'],
   ['0.3i', '11142026', 'Matches the full app Ver 0.3i. Progress: the exercise numbers (weight, or reps for Pull Up) are on the right and the body weight scale, when it shows, on the left.'],
   ['0.3h', '11142026', 'Matches the full app Ver 0.3h. Home, Last workout tile: the longer muscle names go in the first column and the shorter ones in the second, and a name that still does not fit ends in … instead of running out of the card.'],
@@ -6637,31 +6636,6 @@ withTimeout(gs('api_init'), 60000).then(startWith).catch(err => {
   setSync('err', S.loadedAt ? 'Offline copy' : 'Not synced');
   render();
 });
-})();
-</script>
-<script>
-/* Web 0.3i.1: in the iPhone home-screen app the bottom strip could end above the bottom of the screen (on short pages such as Settings,
-   Progress and Start workout). After every page change, scroll and turn, measure where the strip really ends and move it (and the other
-   bottom-fixed parts, through --vgap) down by the difference. Does nothing in a browser tab or when the strip already reaches the bottom. */
-(function () {
-  var root = document.documentElement, busy = false;
-  function standalone() { return window.navigator.standalone === true || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches); }
-  function measure() {
-    busy = false;
-    var bar = document.querySelector('.tabbar'), g = 0;
-    if (standalone() && window.screen && bar && bar.offsetHeight) {
-      var port = window.innerHeight >= window.innerWidth, full = port ? Math.max(screen.width, screen.height) : Math.min(screen.width, screen.height);
-      var cur = parseFloat(getComputedStyle(root).getPropertyValue('--vgap')) || 0;
-      g = Math.round(cur + full - bar.getBoundingClientRect().bottom);
-      if (g < 2 || g > 160) g = 0;
-    }
-    if ((parseFloat(root.style.getPropertyValue('--vgap')) || 0) !== g) root.style.setProperty('--vgap', g + 'px');
-  }
-  function soon() { if (!busy) { busy = true; requestAnimationFrame(function () { requestAnimationFrame(measure); }); } }
-  soon();
-  ['resize', 'scroll', 'pageshow', 'orientationchange'].forEach(function (k) { window.addEventListener(k, soon, { passive: true }); });
-  document.addEventListener('visibilitychange', function () { if (!document.hidden) setTimeout(soon, 250); });
-  try { new MutationObserver(soon).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'hidden'] }); } catch (e) {}
 })();
 </script>
 

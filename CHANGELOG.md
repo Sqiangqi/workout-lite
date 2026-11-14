@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3i.2 · 11/14/2026
+
+Web-only fix on Ver 0.3i.1: the 0.3i.1 change made it worse (the bottom strip was hidden under a background band on short pages and only showed while scrolling), so it was taken out, with the 0.3g.1 one. Instead every page is now at least as tall as the whole screen, so short pages (Settings, Progress, Start workout) are drawn to the bottom like the long ones (Food, Library), where the strip was always right.
+
 ## 0.3i.1 · 11/14/2026
 
 Web-only fix on Ver 0.3i: in the iPhone home-screen app the bottom strip still sat above the bottom of the screen on short pages (Settings, Progress, Start workout). The app now checks where the strip really ends after every page change, scroll and turn of the phone and moves it, the Food week bar, the Start workout button and the pop-up sheets down to the real bottom.
