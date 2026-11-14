@@ -1196,6 +1196,9 @@ body.home main .wrap { gap: 10px; padding-bottom: calc(var(--tabbar-h) + 20px); 
 .hm-tiles .tile .val.nm { font-size: clamp(17px, 4.8vw, 21px); white-space: normal; line-height: 1.1; }
 .hm-tiles .chg.dn { color: var(--good); } .hm-tiles .chg.upw { color: var(--warn); }
 .hm-spark { display: block; width: 100%; height: 26px; margin-top: 2px; }
+.hm-mus { display: flex; flex-wrap: wrap; gap: 3px 9px; margin: 2px 0 1px; }   /* Ver 0.3f: muscles of the last workout, each with a green check */
+.hm-mus i { display: inline-flex; align-items: center; gap: 3px; font-style: normal; font-size: 14px; font-weight: 600; color: var(--ink); }
+.hm-mus i b { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: var(--good); color: var(--surface); font-size: 10px; font-weight: 800; }
 .hm-start { position: sticky; bottom: calc(var(--tabbar-h) + 10px); z-index: 3; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 2px; padding: 14px 12px; border: 0; border-radius: 12px; background: var(--gold); color: var(--gold-ink); font-family: var(--font-display); font-size: 19px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; box-shadow: 0 6px 18px rgba(0, 0, 0, .25); }
 .hm-start svg { width: 18px; height: 18px; flex: none; }
 .hm-start:active { transform: scale(.98); }
@@ -1277,6 +1280,7 @@ body.home header.top .wrap { padding-top: 10px; }      /* Home: the same for the
 .ob-pl { display: grid; gap: 3px; font-size: 13px; }
 .ob-pl div { display: flex; gap: 8px; } .ob-pl div b { width: 34px; flex: none; } .ob-pl div span { color: var(--muted); min-width: 0; }
 .nm-setup { width: 100%; padding: 12px; }
+.ob-same { margin-left: 8px; padding: 1px 7px; border-radius: 999px; background: rgba(var(--gold-rgb), .18); color: var(--gold); letter-spacing: .04em; }
 /* Ver 0.3e: You sheet layout */
 .nm-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; }
 .nm-fields { display: grid; gap: 8px; min-width: 0; }
@@ -3901,11 +3905,28 @@ function nmWeightHint() {   /* what the Food tab uses now, shown under the weigh
 const K_ONB = 'wlite.onboard.v1';   /* date the questionnaire was finished or put off */
 const OB_DAYS = [['Mon', 1], ['Tue', 2], ['Wed', 3], ['Thu', 4], ['Fri', 5], ['Sat', 6], ['Sun', 0]];   /* plan day key, JS weekday */
 const OB_STEPS = ['hi', 'name', 'weight', 'goal', 'days', 'exp', 'build', 'trend', 'sum'];
-function obStart() {
-  const ap = activePlan(), wk = weekPlan(), days = ap ? OB_DAYS.filter(([k]) => { const d = ap.days[k]; return d && d.type !== 'Rest' && d.items.length; }).map(([k]) => k) : [];
-  S.ob = { step: 0, a: { name: userName(), kg: '', goal: '', days: days.length ? days : ['Mon', 'Wed', 'Fri'], exp: '', build: '', trend: '', plan: !ap && S.wp.plans.length < MAX_PLANS } };
-  void wk; renderOb();
+const K_OBA = 'wlite.obanswers.v1';   /* Ver 0.3f: the last answers given, to fill the questionnaire in next time */
+function obStart() {   /* Ver 0.3f: filled in from what this person has now (plan, weight, body type and units read from their Sheets) */
+  const ap = activePlan(), saved = store.get(K_OBA) || {}, u = wUnit(), lw = foodWeight();
+  const days = ap ? OB_DAYS.filter(([k]) => { const d = ap.days[k]; return d && d.type !== 'Rest' && d.items.length; }).map(([k]) => k) : [];
+  const per = ap ? (() => { const n = OB_DAYS.map(([k]) => ap.days[k]).filter(d => d && d.type !== 'Rest' && d.items.length).map(d => d.items.length); return n.length ? n.reduce((x, y) => x + y, 0) / n.length : 0; })() : 0;
+  const soma = store.get(K_SOMA) ? somaKey() : '';
+  const a = { name: userName(), kg: lw ? String(Math.round((u === 'lbs' ? lw.kg * LB : lw.kg) * 10) / 10) : '', unit: u,
+    goal: saved.goal || (soma ? 'fit' : ''), exp: saved.exp || (per ? (per <= 4.4 ? 'new' : per < 5.6 ? 'some' : 'pro') : ''),
+    build: saved.build || ({ ecto: 'lean', meso: 'same', endo: 'gain' }[soma] || ''), trend: saved.trend || (soma ? 'same' : ''),
+    days: days.length ? days : ['Mon', 'Wed', 'Fri'], plan: !ap && S.wp.plans.length < MAX_PLANS };
+  S.ob = { step: 0, a, init: { kg: a.kg, unit: a.unit, goal: a.goal, build: a.build, trend: a.trend, days: days.slice().sort().join(','), soma, hasWeek: !!store.get(K_WEEK), hasPlan: !!ap } };
+  renderOb();
 }
+// what stays as it is: the body type when the answers behind it did not change; the carb week and the plan when the training days did not change
+function obSame(a, what) {
+  const i = S.ob && S.ob.init; if (!i) return false;
+  if (what === 'soma') return !!i.soma && a.build === i.build && a.trend === i.trend && a.goal === i.goal;
+  if (what === 'days') return a.days.slice().sort().join(',') === i.days;
+  return false;
+}
+function obSomaFor(a) { return obSame(a, 'soma') ? S.ob.init.soma : obSoma(a); }
+function obWeekFor(a) { return obSame(a, 'days') && S.ob.init.hasWeek ? weekPlan() : obCarbWeek(a); }
 function obSoma(a) {   /* body type from how the body responds to food, nudged by last week's weight and the goal */
   const sc = ({ lean: -1, same: 0, gain: 1 }[a.build] || 0) + 0.5 * ({ down: -1, same: 0, up: 1 }[a.trend] || 0) + 0.5 * ({ lose: 1, muscle: -1 }[a.goal] || 0);
   return sc <= -1 ? 'ecto' : sc >= 1 ? 'endo' : 'meso';
@@ -3955,7 +3976,7 @@ function renderOb() {
   if (!S.ob) { box.innerHTML = ''; return; }
   const st = OB_STEPS[S.ob.step], a = S.ob.a, u = a.unit || wUnit(), lw = foodWeight();
   let q = '', sub = '', body = '', next = 'Next', ok = true;
-  if (st === 'hi') { q = 'Let’s set up your app'; sub = 'A few quick questions, about a minute. They set your food targets, your carb days and a first week plan. Nothing changes until the last step, and you can quit any time without saving. Later, tap the logo on Home to come back.'; next = 'Start'; }
+  if (st === 'hi') { q = 'Let’s set up your app'; sub = 'A few quick questions, about a minute. They set your food targets, your carb days and a first week plan. Your current answers are filled in: change only what you want. Nothing changes until the last step, and you can quit any time without saving. Later, tap the logo on Home to come back.'; next = 'Start'; }
   if (st === 'name') { q = 'What should we call you?'; body = '<input class="ob-in" id="obName" maxlength="30" autocomplete="given-name" placeholder="Your first name" value="' + esc(a.name) + '">'; }
   if (st === 'weight') { q = 'What do you weigh?'; sub = lw ? 'Now ' + wShow(lw.kg) + (lw.src === 'avg' ? ', the 7-day average of your readings. Leave it empty to keep using that.' : '. Leave it empty to keep it.') : 'Your daily food targets are worked out from it. A rough number is fine.';
     body = '<div class="nm-w"><input class="ob-in" id="obKg" inputmode="decimal" autocomplete="off" placeholder="' + (u === 'lbs' ? 'e.g. 153' : 'e.g. 69.5') + '" value="' + esc(a.kg) + '"><div class="seg nm-u" role="group" aria-label="Unit">' +
@@ -3967,14 +3988,15 @@ function renderOb() {
   if (st === 'build') { q = 'How does your body usually respond to food?'; body = obOpts('build'); ok = !!a.build; }
   if (st === 'trend') { q = 'Eating the way you do now, your weight this past week has been…'; body = obOpts('trend'); ok = !!a.trend; }
   if (st === 'sum') {
-    const so = obSoma(a), wk = obCarbWeek(a), pl = obPlan(a), SO = SOMA[so];
+    const so = obSomaFor(a), wk = obWeekFor(a), pl = obPlan(a), SO = SOMA[so], keepSo = obSame(a, 'soma'), keepWk = obSame(a, 'days') && S.ob.init.hasWeek, keepPl = S.ob.init.hasPlan && !a.plan;
+    const same = '<span class="ob-same">Same as now</span>';
     q = (a.name ? a.name + ', here' : 'Here') + ' is your setup'; next = 'Use this setup';
     const why = { ecto: 'You stay lean easily, so your days get more carbs to fuel training and growth.', meso: 'Your weight holds steady, so your carbs sit in the middle.', endo: 'You gain easily, so your days get fewer carbs; protein stays high.' }[so];
-    body = '<div class="ob-sum"><div class="ob-card"><span class="lab">Body type</span><b class="big">' + SO.en + '</b><p>' + why + ' Carbs about ' + SO.carb + ' g per kg a day over the week, protein 1.5 g per kg every day.</p></div>' +
-      '<div class="ob-card"><span class="lab">Carb week</span><div class="ob-wk">' + OB_DAYS.map(([k, d]) => '<div class="' + wk[d] + '"><span>' + k.slice(0, 2) + '</span><b>' + wk[d][0].toUpperCase() + '</b></div>').join('') + '</div><p>High carbs on hard training days, low on rest days. Change any day on the Food tab.</p></div>' +
-      '<div class="ob-card"><span class="lab">Week plan</span><div class="ob-pl">' + OB_DAYS.map(([k]) => { const d = pl[k]; return '<div><b>' + k + '</b><span>' + (d.type === 'Rest' ? 'Rest' : esc(typeLabel(d.type)) + ' · ' + (d.items.length ? esc(d.items.slice(0, 3).join(', ')) + (d.items.length > 3 ? ' +' + (d.items.length - 3) : '') : 'no exercises found')) + '</span></div>'; }).join('') + '</div>' +
+    body = '<div class="ob-sum"><div class="ob-card"><span class="lab">Body type' + (keepSo ? same : '') + '</span><b class="big">' + SO.en + '</b><p>' + why + ' Carbs about ' + SO.carb + ' g per kg a day over the week, protein 1.5 g per kg every day.</p></div>' +
+      '<div class="ob-card"><span class="lab">Carb week' + (keepWk ? same : '') + '</span><div class="ob-wk">' + OB_DAYS.map(([k, d]) => '<div class="' + wk[d] + '"><span>' + k.slice(0, 2) + '</span><b>' + wk[d][0].toUpperCase() + '</b></div>').join('') + '</div><p>High carbs on hard training days, low on rest days. Change any day on the Food tab.</p></div>' +
+      '<div class="ob-card"><span class="lab">' + (keepPl ? 'Week plan' + same : 'Week plan') + '</span><div class="ob-pl">' + OB_DAYS.map(([k]) => { const d = keepPl ? (activePlan().days[k] || { type: 'Rest', items: [] }) : pl[k]; return '<div><b>' + k + '</b><span>' + (d.type === 'Rest' ? 'Rest' : esc(typeLabel(d.type)) + ' · ' + (d.items.length ? esc(d.items.slice(0, 3).join(', ')) + (d.items.length > 3 ? ' +' + (d.items.length - 3) : '') : 'no exercises found')) + '</span></div>'; }).join('') + '</div>' +
       (S.wp.plans.length >= MAX_PLANS && !activePlan() ? '<p>You already have 3 week plans, so no new one is made.</p>' :
-        '<button class="ob-opt' + (a.plan ? ' on' : '') + '" data-act="ob-plan" aria-pressed="' + !!a.plan + '"><b>' + (a.plan ? '✓ ' : '') + 'Make this my week plan</b><span>' + (activePlan() ? 'Your plan in use now (' + esc(activePlan().name) + ') is kept and switched off; you can switch back in Settings.' : 'Start workout then lists each day’s exercises. Edit it any time in Settings › Week plan.') + '</span></button>') + '</div></div>';
+        '<button class="ob-opt' + (a.plan ? ' on' : '') + '" data-act="ob-plan" aria-pressed="' + !!a.plan + '"><b>' + (a.plan ? '✓ ' : '') + 'Make this my week plan</b><span>' + (activePlan() ? (a.plan ? 'Your plan in use now (' + esc(activePlan().name) + ') is kept and switched off; you can switch back in Settings.' : 'Off: you keep ' + esc(activePlan().name) + ' (shown above). Tap to use a new plan from your answers instead.') : 'Start workout then lists each day’s exercises. Edit it any time in Settings › Week plan.') + '</span></button>') + '</div></div>';
   }
   const n = OB_STEPS.length;
   box.innerHTML = '<div class="sheet-bg" data-act="noop"><div class="sheet ob-sheet" role="dialog" aria-label="Get started" data-act="noop">' +
@@ -3992,8 +4014,8 @@ function obApply() {
   const a = S.ob.a;
   if (a.name) store.set(K_UNAME, a.name);
   if (a.unit) store.set(K_WUNIT, a.unit);
-  if (a.kg) { let kg = parseFloat(a.kg); if (wUnit() === 'lbs') kg = kg / LB; store.set(K_MKG, { kg: Math.round(kg * 100) / 100, at: todayIso() }); store.set(K_WMODE, 'manual'); }
-  store.set(K_SOMA, obSoma(a)); store.set(K_WEEK, obCarbWeek(a)); saveFoodSet();
+  if (a.kg && (a.kg !== S.ob.init.kg || a.unit !== S.ob.init.unit)) { let kg = parseFloat(a.kg); if (wUnit() === 'lbs') kg = kg / LB; store.set(K_MKG, { kg: Math.round(kg * 100) / 100, at: todayIso() }); store.set(K_WMODE, 'manual'); }
+  store.set(K_SOMA, obSomaFor(a)); store.set(K_WEEK, obWeekFor(a)); store.set(K_OBA, { goal: a.goal, exp: a.exp, build: a.build, trend: a.trend }); saveFoodSet();
   let made = false;
   if (a.plan && S.wp.plans.length < MAX_PLANS) {
     const p = { id: 'p' + Date.now().toString(36), name: 'My start plan', active: true, warm: pickable().some(e => /warm.?up/i.test(e.name)), updated: stampNow(), days: obPlan(a), len: 7, start: mondayOf(todayIso()) };
@@ -5206,6 +5228,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3f', '11142026', 'Matches the full app Ver 0.3f. Get started is filled in from what you have now: your name, your weight and unit, the training days and the number of exercises of your plan in use, and the answers that match your body type (your exact answers are remembered after the first time). Whatever you leave as it is stays the same: the body type when those answers did not change, your carb week and your week plan when the training days did not change (marked Same as now), and a weight is saved again only if you change it. Changing the training days switches on a new plan from your answers. Home: the Last workout tile now lists the muscles that session trained, each with a green check (Chest, Back, Legs and so on, the most worked first), with the date and the number of sets under them.'],
   ['0.3e', '11142026', 'Matches the full app Ver 0.3e. You sheet (tap the logo on Home): the Name and Body weight boxes are smaller and the app icon sits to their right, with Change under it; tap it to change the icon. Get started: Quit \u00b7 don\u2019t save at the top of every step leaves the questionnaire with nothing changed (the kg / lbs choice there is now saved only with Use this setup). Removed: the wide Change the app icon button in the You sheet; Not now and Close in the questionnaire (now Quit \u00b7 don\u2019t save).'],
   ['0.3d', '11142026', 'Matches the full app Ver 0.3d. Get started: a short questionnaire that sets up the app. It opens by itself once for someone with nothing set up (no name, no plan in use), and You (tap the logo on Home) \u203a Set up my app opens it any time. One question per screen: your name, your weight (kg or lbs), your main goal, the days you can train, how much you have trained, how your body usually responds to food, and your weight over the past week. Then Your setup shows and applies: the body type (worked out from the answers), the carb week (2 high, 3 mid, 2 low where the days allow) and a first week plan from your Exercises list, which becomes the plan in use unless you switch that off.'],
   ['0.3c', '11142026', 'Matches the full app Ver 0.3c. Home: tap the logo (or the pencil beside Hello) to open a You sheet: your name, your body weight (kg or lbs, the same weight and unit as Food \u203a Weight; saving one makes Food use it, Manual) and Change the app icon, which used to open straight from the logo. Home: the Body weight tile is replaced by Last workout (Today, Yesterday or N days ago, with the date and how many exercises and sets; tap it for Progress), since most people have no weight readings.'],
@@ -5658,15 +5681,19 @@ function viewHome() {
     hmRing(Tg ? got.kcal / Tg.kcal : 0, 'var(--cw-high)', hmNum(got.kcal), Tg ? 'of ' + hmNum(Tg.kcal) + ' kcal' : 'kcal today', 'food') +
     hmRing(Tg ? got.p / Tg.p : 0, 'var(--cw-low)', hmNum(got.p) + ' g', Tg ? 'of ' + hmNum(Tg.p) + ' g protein' : 'protein today', 'food') + '</div>';
   if (S.exercises && S.exercises.length) h += muscleCard();
-  // last workout tile (Ver 0.3c; was body weight, which most people have no readings for): the latest saved session
+  // last workout tile (Ver 0.3f): the muscles the latest saved session trained, each with a green check
   let wt = '<span class="lab">Last workout</span><span class="val nm">None yet</span><span class="chg">your first saved session shows here</span>';
   { let last = ''; (S.history || new Map()).forEach(rows => rows.forEach(r => { if (r.iso && r.iso <= today && r.iso > last) last = r.iso; }));
     if (last) {
-      let nEx = 0, nSets = 0;
-      S.history.forEach((rows, name) => { const rs = rows.filter(r => r.iso === last && !isWarmupSet(name, r.weight)); if (!rs.length || /warm.?up/i.test(name)) return; nEx++; rs.forEach(r => { nSets += Math.max(1, splitReps(r.reps, isFarmer(name)).length); }); });
+      const byBare = new Map((S.exercises || []).map(e => [bareName(e.name), e])), mus = {}; let nSets = 0;
+      S.history.forEach((rows, name) => { const rs = rows.filter(r => r.iso === last && !isWarmupSet(name, r.weight)); if (!rs.length || /warm.?up/i.test(name)) return;
+        const n = rs.reduce((k, r) => k + Math.max(1, splitReps(r.reps, isFarmer(name)).length), 0); nSets += n;
+        const e = byBare.get(name); (e ? groupsOf(e) : []).forEach(g => { const m = { 'Forearms & grip': 'Forearms' }[g] || g; if (MX_AXES.includes(g) || m === 'Forearms' || g === 'Cardio') mus[m] = (mus[m] || 0) + n; }); });
+      const list = Object.keys(mus).sort((x, y) => mus[y] - mus[x]);
       const days = Math.round((new Date(today + 'T12:00:00') - new Date(last + 'T12:00:00')) / 864e5), d = new Date(last + 'T12:00:00');
-      wt = '<span class="lab">Last workout</span><span class="val nm">' + (days === 0 ? 'Today' : days === 1 ? 'Yesterday' : days + ' days ago') + '</span>' +
-        '<span class="chg">' + esc(WEEKDAYS[d.getDay()].slice(0, 3)) + ' ' + esc(usOf(last).replace(/\/\d{4}$/, '')) + ' · ' + nEx + ' exercise' + (nEx === 1 ? '' : 's') + ' · ' + nSets + ' set' + (nSets === 1 ? '' : 's') + '</span>';
+      wt = '<span class="lab">Last workout · ' + (days === 0 ? 'today' : days === 1 ? 'yesterday' : days + ' days ago') + '</span>' +
+        (list.length ? '<span class="hm-mus">' + list.slice(0, 6).map(m => '<i><b aria-hidden="true">✓</b>' + esc(m) + '</i>').join('') + '</span>' : '<span class="val nm">Done</span>') +
+        '<span class="chg">' + esc(WEEKDAYS[d.getDay()].slice(0, 3)) + ' ' + esc(usOf(last).replace(/\/\d{4}$/, '')) + ' · ' + nSets + ' set' + (nSets === 1 ? '' : 's') + '</span>';
     } }
   // next exercise: the first one not finished on today's list, or the plan's first
   const items = S.draft && S.draft.date === today ? S.draft.items.filter(x => !/warm.?up/i.test(x.name)) : [];
@@ -5851,7 +5878,8 @@ const ACTIONS = {
     S.ob.step++; renderOb();
   },
   'ob-pick'(b, it, e, act) { if (S.ob) { S.ob.a[b.dataset.k] = b.dataset.v; renderOb(); } },
-  'ob-day'(b, it, e, act) { if (!S.ob) return; const d = S.ob.a.days, k = b.dataset.k, i = d.indexOf(k); if (i >= 0) d.splice(i, 1); else d.push(k); renderOb(); },
+  'ob-day'(b, it, e, act) { if (!S.ob) return; const d = S.ob.a.days, k = b.dataset.k, i = d.indexOf(k); if (i >= 0) d.splice(i, 1); else d.push(k);
+    if (S.ob.init.hasPlan && S.wp.plans.length < MAX_PLANS) S.ob.a.plan = !obSame(S.ob.a, 'days'); renderOb(); },
   'ob-unit'(b, it, e, act) { obKeep(); if (S.ob) { S.ob.a.unit = b.dataset.k; renderOb(); } },   /* kept in the answers; saved with Use this setup */
   'ob-plan'(b, it, e, act) { if (S.ob) { S.ob.a.plan = !S.ob.a.plan; renderOb(); } },
   'nm-icon'(b, it, e, act) { S.nameOpen = false; renderNameSheet(); openIconSheet(); },

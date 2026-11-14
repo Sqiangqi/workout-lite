@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3f · 11/14/2026
+
+Matches the full app Ver 0.3f. Get started is filled in from what you have now: your name, your weight and unit, the training days and the number of exercises of your plan in use, and the answers that match your body type (your exact answers are remembered after the first time). Whatever you leave as it is stays the same: the body type when those answers did not change, your carb week and your week plan when the training days did not change (marked Same as now), and a weight is saved again only if you change it. Changing the training days switches on a new plan from your answers. Home: the Last workout tile now lists the muscles that session trained, each with a green check (Chest, Back, Legs and so on, the most worked first), with the date and the number of sets under them.
+
 ## 0.3e · 11/14/2026
 
 Matches the full app Ver 0.3e. You sheet (tap the logo on Home): the Name and Body weight boxes are smaller and the app icon sits to their right, with Change under it; tap it to change the icon. Get started: Quit · don’t save at the top of every step leaves the questionnaire with nothing changed (the kg / lbs choice there is now saved only with Use this setup). Removed: the wide Change the app icon button in the You sheet; Not now and Close in the questionnaire (now Quit · don’t save).
