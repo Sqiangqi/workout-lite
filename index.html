@@ -5236,6 +5236,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3i.1', '11142026', 'Web-only fix on Ver 0.3i: in the iPhone home-screen app the bottom strip still sat above the bottom of the screen on short pages (Settings, Progress, Start workout). The app now checks where the strip really ends after every page change, scroll and turn of the phone and moves it, the Food week bar, the Start workout button and the pop-up sheets down to the real bottom.'],
   ['0.3i', '11142026', 'Matches the full app Ver 0.3i. Progress: the exercise numbers (weight, or reps for Pull Up) are on the right and the body weight scale, when it shows, on the left.'],
   ['0.3h', '11142026', 'Matches the full app Ver 0.3h. Home, Last workout tile: the longer muscle names go in the first column and the shorter ones in the second, and a name that still does not fit ends in … instead of running out of the card.'],
   ['0.3g.1', '11142026', 'Web-only fix on Ver 0.3g: in the iPhone home-screen app the bottom strip could sit well above the bottom of the screen with a band of page under it (an iPhone bug that makes the page shorter than the screen, about the height of the status bar, often after signing in). The app now measures that gap and moves the strip, the Food week bar, the Start workout button and the pop-up sheets down to the real bottom.'],
@@ -6639,19 +6640,28 @@ withTimeout(gs('api_init'), 60000).then(startWith).catch(err => {
 })();
 </script>
 <script>
-/* Web 0.3g.1: measure how much shorter than the screen the page is in the iPhone home-screen app (see --vgap above) */
+/* Web 0.3i.1: in the iPhone home-screen app the bottom strip could end above the bottom of the screen (on short pages such as Settings,
+   Progress and Start workout). After every page change, scroll and turn, measure where the strip really ends and move it (and the other
+   bottom-fixed parts, through --vgap) down by the difference. Does nothing in a browser tab or when the strip already reaches the bottom. */
 (function () {
-  function run() {
-    var sa = window.navigator.standalone === true || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches), g = 0;
-    if (sa && window.screen) {
+  var root = document.documentElement, busy = false;
+  function standalone() { return window.navigator.standalone === true || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches); }
+  function measure() {
+    busy = false;
+    var bar = document.querySelector('.tabbar'), g = 0;
+    if (standalone() && window.screen && bar && bar.offsetHeight) {
       var port = window.innerHeight >= window.innerWidth, full = port ? Math.max(screen.width, screen.height) : Math.min(screen.width, screen.height);
-      g = Math.round(full - window.innerHeight); if (g < 8 || g > 140) g = 0;
+      var cur = parseFloat(getComputedStyle(root).getPropertyValue('--vgap')) || 0;
+      g = Math.round(cur + full - bar.getBoundingClientRect().bottom);
+      if (g < 2 || g > 160) g = 0;
     }
-    document.documentElement.style.setProperty('--vgap', g + 'px');
+    if ((parseFloat(root.style.getPropertyValue('--vgap')) || 0) !== g) root.style.setProperty('--vgap', g + 'px');
   }
-  run(); window.addEventListener('resize', run); window.addEventListener('orientationchange', function () { setTimeout(run, 300); });
-  document.addEventListener('visibilitychange', function () { if (!document.hidden) setTimeout(run, 250); });
-  window.addEventListener('pageshow', run);
+  function soon() { if (!busy) { busy = true; requestAnimationFrame(function () { requestAnimationFrame(measure); }); } }
+  soon();
+  ['resize', 'scroll', 'pageshow', 'orientationchange'].forEach(function (k) { window.addEventListener(k, soon, { passive: true }); });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) setTimeout(soon, 250); });
+  try { new MutationObserver(soon).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'hidden'] }); } catch (e) {}
 })();
 </script>
 

@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3i.1 · 11/14/2026
+
+Web-only fix on Ver 0.3i: in the iPhone home-screen app the bottom strip still sat above the bottom of the screen on short pages (Settings, Progress, Start workout). The app now checks where the strip really ends after every page change, scroll and turn of the phone and moves it, the Food week bar, the Start workout button and the pop-up sheets down to the real bottom.
+
 ## 0.3i · 11/14/2026
 
 Matches the full app Ver 0.3i. Progress: the exercise numbers (weight, or reps for Pull Up) are on the right and the body weight scale, when it shows, on the left.
