@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3i · 11/14/2026
+
+Matches the full app Ver 0.3i. Progress: the exercise numbers (weight, or reps for Pull Up) are on the right and the body weight scale, when it shows, on the left.
+
 ## 0.3h · 11/14/2026
 
 Matches the full app Ver 0.3h. Home, Last workout tile: the longer muscle names go in the first column and the shorter ones in the second, and a name that still does not fit ends in … instead of running out of the card.

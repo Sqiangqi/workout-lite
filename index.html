@@ -4364,7 +4364,7 @@ function chart(name, ctl) {
   let h = '<div class="chartbox">';
   if (!ser.length) return h + '<div class="empty">' + (all.length ? 'No entries for ' + esc(bareName(name)) + ' in the last ' + esc(S.range) + '. Pick a longer range below.' : 'No entries for ' + esc(bareName(name)) + ' yet.') + '</div></div>' + ctl;
   const bwOn = S.showBW && S.isOwner && S.body.length > 0;   // owner only
-  const W = 640, H = 300, L = 52, R = bwOn ? 62 : 30, T = 26, B = 36;
+  const W = 640, H = 300, L = bwOn ? 62 : 22, R = 54, T = 26, B = 36;   /* Ver 0.3i: exercise axis on the right, body weight on the left */
   const t = s => new Date(s + 'T12:00:00').getTime();
   let t0 = t(ser[0].iso), t1 = t(ser[ser.length - 1].iso);
   const span = Math.max(t1 - t0, 7 * 864e5); const padT = span * 0.06;
@@ -4378,7 +4378,7 @@ function chart(name, ctl) {
   let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(bareName(name)) + (isCount(name) ? ' total reps per day' : ' heaviest set per day') + '">';
   for (let v = y0; v <= y1 + 1e-9; v += step) {
     svg += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="var(--line)" stroke-width="1"/>' +
-      '<text x="' + (L - 8) + '" y="' + (Y(v) + 4) + '" text-anchor="end" font-size="15" fill="var(--muted)">' + fmt(v) + '</text>';
+      '<text x="' + (W - R + 8) + '" y="' + (Y(v) + 4) + '" font-size="15" fill="var(--muted)">' + fmt(v) + '</text>';
   }
   // x labels: up to 6 session dates
   const every = Math.ceil(ser.length / 6);
@@ -4394,7 +4394,7 @@ function chart(name, ctl) {
       const bp = Math.max((b1 - b0) * 0.2, 0.5); b0 -= bp; b1 += bp;
       const bs = niceStep((b1 - b0) / 4); b0 = Math.floor(b0 / bs) * bs; b1 = Math.ceil(b1 / bs) * bs;
       const Yb = v => T + (1 - (v - b0) / (b1 - b0)) * (H - T - B);
-      for (let v = b0; v <= b1 + 1e-9; v += bs) svg += '<text x="' + (W - R + 8) + '" y="' + (Yb(v) + 4) + '" font-size="14" fill="var(--muted)">' + fmt(v) + '</text>';
+      for (let v = b0; v <= b1 + 1e-9; v += bs) svg += '<text x="' + (L - 8) + '" y="' + (Yb(v) + 4) + '" text-anchor="end" font-size="14" fill="var(--muted)">' + fmt(v) + '</text>';
       const bpts = bw.map(p => [X(t(p.iso)), Yb(p.v)]);
       svg += '<path d="' + smooth(bpts) + '" fill="none" stroke="var(--muted)" stroke-width="1.75" stroke-dasharray="5 4"/>';
       bpts.forEach(([x, y]) => { svg += '<circle cx="' + x + '" cy="' + y + '" r="2.5" fill="var(--muted)"/>'; });
@@ -4417,7 +4417,7 @@ function chart(name, ctl) {
   });
   svg += '</svg>';
   h += '<div class="legend">' + (isCount(name) ? '<span><i style="background:var(--gold);box-shadow:0 0 0 2px var(--accent)"></i>Total reps that day (all sets added up)</span>' : '<span><i style="background:var(--gold);box-shadow:0 0 0 2px var(--accent)"></i>Heaviest set (' + unit + ')</span><span><i style="background:var(--lighter)"></i>Lighter sets</span>') +
-    (bwOn ? '<span><i style="background:var(--muted)"></i>Body weight, 7-day avg (kg, right scale)</span>' : '') + bwNote +
+    (bwOn ? '<span><i style="background:var(--muted)"></i>Body weight, 7-day avg (kg, left scale)</span>' : '') + bwNote +
     (isBench(name) ? '<span>Warm-up sets of ' + BENCH_WARMUP_MAX + ' lbs or less are left out</span>' : '') + '</div>';
   h += '<div style="overflow-x:auto">' + svg + '</div></div>' + ctl;
   // the days of this exercise on a date ruler: the three closest to the centre line show as tiles
@@ -4439,14 +4439,14 @@ function chartCount(name, ctl) {
   if (!ser.length) return h + '<div class="empty">' + (all.length ? 'No entries for ' + esc(bareName(name)) + ' in the last ' + esc(S.range) + '. Pick a longer range below.' : 'No entries for ' + esc(bareName(name)) + ' yet.') + '</div></div>' + ctl;
   if (!pts0.length) h += '<div class="empty">' + (now ? 'No pull-ups with a band setting in this range yet.' : 'Enter your body weight on the Pull Up card to see this chart.') + '</div>';
   else {
-    const W = 640, H = 300, L = 52, R = 30, T = 26, B = 36, t = s => new Date(s + 'T12:00:00').getTime();
+    const W = 640, H = 300, L = 22, R = 54, T = 26, B = 36, t = s => new Date(s + 'T12:00:00').getTime();   /* Ver 0.3i: axis on the right */
     let t0 = t(pts0[0].iso), t1 = t(pts0[pts0.length - 1].iso); const span = Math.max(t1 - t0, 7 * 864e5), padT = span * 0.06; t0 -= padT; t1 = t0 + span + padT * 2;
     const vals = pts0.map(d => d.pulled); if (goal) vals.push(goal);
     let y0 = Math.min.apply(null, vals), y1 = Math.max.apply(null, vals); const ypad = Math.max((y1 - y0) * 0.18, 5); y0 = Math.max(0, y0 - ypad); y1 += ypad;
     const step = niceStep((y1 - y0) / 4); y0 = Math.floor(y0 / step) * step; y1 = Math.ceil(y1 / step) * step;
     const X = v => L + (v - t0) / (t1 - t0) * (W - L - R), Y = v => T + (1 - (v - y0) / (y1 - y0)) * (H - T - B);
     let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(bareName(name)) + ': weight pulled per day">';
-    for (let v = y0; v <= y1 + 1e-9; v += step) svg += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="var(--line)" stroke-width="1"/><text x="' + (L - 8) + '" y="' + (Y(v) + 4) + '" text-anchor="end" font-size="15" fill="var(--muted)">' + fmt(v) + '</text>';
+    for (let v = y0; v <= y1 + 1e-9; v += step) svg += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="var(--line)" stroke-width="1"/><text x="' + (W - R + 8) + '" y="' + (Y(v) + 4) + '" font-size="15" fill="var(--muted)">' + fmt(v) + '</text>';
     const every = Math.ceil(pts0.length / 6);
     pts0.forEach((d, i) => { if (i % every === 0 || i === pts0.length - 1) svg += '<text x="' + X(t(d.iso)) + '" y="' + (H - 12) + '" text-anchor="middle" font-size="12" fill="var(--muted)">' + usOf(d.iso).replace(/\/\d{4}$/, '') + '</text>'; });
     if (goal) svg += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(goal) + '" y2="' + Y(goal) + '" stroke="var(--gold)" stroke-width="2" stroke-dasharray="7 5"/>' +
@@ -4505,7 +4505,7 @@ function rolling(points, days) {   // linear time; points sorted oldest first
 }
 function timeChart(points, unit, label, avg) {
   if (!points.length) return '<div class="empty">No readings for ' + esc(label) + ' yet.</div>';
-  const W = 640, H = 260, L = 56, R = 20, T = 18, B = 34;
+  const W = 640, H = 260, L = 20, R = 58, T = 18, B = 34;   /* Ver 0.3i: axis on the right */
   const t = s => new Date(s + 'T12:00:00').getTime();
   let t0 = t(points[0].iso), t1 = t(points[points.length - 1].iso);
   const span = Math.max(t1 - t0, 7 * 864e5), padT = span * 0.04; t0 -= padT; t1 = t0 + span + padT * 2;
@@ -4515,7 +4515,7 @@ function timeChart(points, unit, label, avg) {
   const step = niceStep((y1 - y0) / 4); y0 = Math.floor(y0 / step) * step; y1 = Math.ceil(y1 / step) * step;
   const X = v => L + (v - t0) / (t1 - t0) * (W - L - R), Y = v => T + (1 - (v - y0) / (y1 - y0)) * (H - T - B);
   let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(label) + ' over time">';
-  for (let v = y0; v <= y1 + 1e-9; v += step) s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="var(--line)"/><text x="' + (L - 8) + '" y="' + (Y(v) + 4) + '" text-anchor="end" font-size="15" fill="var(--muted)">' + fmt(v) + '</text>';
+  for (let v = y0; v <= y1 + 1e-9; v += step) s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="var(--line)"/><text x="' + (W - R + 8) + '" y="' + (Y(v) + 4) + '" font-size="15" fill="var(--muted)">' + fmt(v) + '</text>';
   const every = Math.ceil(points.length / 6);
   points.forEach((p, i) => { if (i % every === 0 || i === points.length - 1) s += '<text x="' + X(t(p.iso)) + '" y="' + (H - 10) + '" text-anchor="middle" font-size="12" fill="var(--muted)">' + usOf(p.iso).replace(/\/\d{4}$/, '') + '</text>'; });
   const pts = points.map(p => [X(t(p.iso)), Y(p.v)]);
@@ -5236,6 +5236,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3i', '11142026', 'Matches the full app Ver 0.3i. Progress: the exercise numbers (weight, or reps for Pull Up) are on the right and the body weight scale, when it shows, on the left.'],
   ['0.3h', '11142026', 'Matches the full app Ver 0.3h. Home, Last workout tile: the longer muscle names go in the first column and the shorter ones in the second, and a name that still does not fit ends in … instead of running out of the card.'],
   ['0.3g.1', '11142026', 'Web-only fix on Ver 0.3g: in the iPhone home-screen app the bottom strip could sit well above the bottom of the screen with a band of page under it (an iPhone bug that makes the page shorter than the screen, about the height of the status bar, often after signing in). The app now measures that gap and moves the strip, the Food week bar, the Start workout button and the pop-up sheets down to the real bottom.'],
   ['0.3g', '11142026', 'Matches the full app Ver 0.3g. Home, Last workout tile: the muscle names sit in two even columns, so each column lines up.'],
