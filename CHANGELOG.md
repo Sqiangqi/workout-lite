@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3e · 11/14/2026
+
+Matches the full app Ver 0.3e. You sheet (tap the logo on Home): the Name and Body weight boxes are smaller and the app icon sits to their right, with Change under it; tap it to change the icon. Get started: Quit · don’t save at the top of every step leaves the questionnaire with nothing changed (the kg / lbs choice there is now saved only with Use this setup). Removed: the wide Change the app icon button in the You sheet; Not now and Close in the questionnaire (now Quit · don’t save).
+
 ## 0.3d · 11/14/2026
 
 Matches the full app Ver 0.3d. Get started: a short questionnaire that sets up the app. It opens by itself once for someone with nothing set up (no name, no plan in use), and You (tap the logo on Home) › Set up my app opens it any time. One question per screen: your name, your weight (kg or lbs), your main goal, the days you can train, how much you have trained, how your body usually responds to food, and your weight over the past week. Then Your setup shows and applies: the body type (worked out from the answers), the carb week (2 high, 3 mid, 2 low where the days allow) and a first week plan from your Exercises list, which becomes the plan in use unless you switch that off.
