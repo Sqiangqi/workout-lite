@@ -1196,7 +1196,7 @@ body.home main .wrap { gap: 10px; padding-bottom: calc(var(--tabbar-h) + 20px); 
 .hm-tiles .tile .val.nm { font-size: clamp(17px, 4.8vw, 21px); white-space: normal; line-height: 1.1; }
 .hm-tiles .chg.dn { color: var(--good); } .hm-tiles .chg.upw { color: var(--warn); }
 .hm-spark { display: block; width: 100%; height: 26px; margin-top: 2px; }
-.hm-mus { display: grid; grid-template-columns: repeat(2, auto); justify-content: start; gap: 4px clamp(5px, 2.4vw, 10px); margin: 2px 0 1px; }   /* Ver 0.3g: two columns, each as wide as its longest name */   /* Ver 0.3f: muscles of the last workout, each with a green check */
+.hm-mus { display: grid; grid-template-columns: max-content minmax(0, auto); justify-content: start; gap: 4px clamp(5px, 2.4vw, 10px); margin: 2px 0 1px; }   /* Ver 0.3g: two columns, each as wide as its longest name */   /* Ver 0.3f: muscles of the last workout, each with a green check */
 .hm-mus i { display: flex; align-items: center; gap: 4px; min-width: 0; font-style: normal; font-family: var(--font-display); font-size: clamp(13.5px, 3.95vw, 15.5px); letter-spacing: .01em; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hm-mus i b { flex: none; width: 15px; height: 15px; font-size: 9.5px; }
 .hm-mus i b { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: var(--good); color: var(--surface); font-size: 10px; font-weight: 800; }
@@ -5236,6 +5236,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3h', '11142026', 'Matches the full app Ver 0.3h. Home, Last workout tile: the longer muscle names go in the first column and the shorter ones in the second, and a name that still does not fit ends in … instead of running out of the card.'],
   ['0.3g.1', '11142026', 'Web-only fix on Ver 0.3g: in the iPhone home-screen app the bottom strip could sit well above the bottom of the screen with a band of page under it (an iPhone bug that makes the page shorter than the screen, about the height of the status bar, often after signing in). The app now measures that gap and moves the strip, the Food week bar, the Start workout button and the pop-up sheets down to the real bottom.'],
   ['0.3g', '11142026', 'Matches the full app Ver 0.3g. Home, Last workout tile: the muscle names sit in two even columns, so each column lines up.'],
   ['0.3f', '11142026', 'Matches the full app Ver 0.3f. Get started is filled in from what you have now: your name, your weight and unit, the training days and the number of exercises of your plan in use, and the answers that match your body type (your exact answers are remembered after the first time). Whatever you leave as it is stays the same: the body type when those answers did not change, your carb week and your week plan when the training days did not change (marked Same as now), and a weight is saved again only if you change it. Changing the training days switches on a new plan from your answers. Home: the Last workout tile now lists the muscles that session trained, each with a green check (Chest, Back, Legs and so on, the most worked first), with the date and the number of sets under them.'],
@@ -5699,10 +5700,12 @@ function viewHome() {
       S.history.forEach((rows, name) => { const rs = rows.filter(r => r.iso === last && !isWarmupSet(name, r.weight)); if (!rs.length || /warm.?up/i.test(name)) return;
         const n = rs.reduce((k, r) => k + Math.max(1, splitReps(r.reps, isFarmer(name)).length), 0); nSets += n;
         const e = byBare.get(name); (e ? groupsOf(e) : []).forEach(g => { const m = { 'Forearms & grip': 'Forearms' }[g] || g; if (MX_AXES.includes(g) || m === 'Forearms' || g === 'Cardio') mus[m] = (mus[m] || 0) + n; }); });
-      const list = Object.keys(mus).sort((x, y) => mus[y] - mus[x]);
+      const top = Object.keys(mus).sort((x, y) => mus[y] - mus[x]).slice(0, 6), byLen = top.slice().sort((x, y) => y.length - x.length), half = Math.ceil(byLen.length / 2);
+      const c1 = byLen.slice(0, half), c2 = byLen.slice(half), list = [];   /* Ver 0.3h: the longer names in the first column, the shorter ones in the second */
+      c1.forEach((m, i) => { list.push(m); if (c2[i]) list.push(c2[i]); });
       const days = Math.round((new Date(today + 'T12:00:00') - new Date(last + 'T12:00:00')) / 864e5), d = new Date(last + 'T12:00:00');
       wt = '<span class="lab">Last workout · ' + (days === 0 ? 'today' : days === 1 ? 'yesterday' : days + ' days ago') + '</span>' +
-        (list.length ? '<span class="hm-mus">' + list.slice(0, 6).map(m => '<i><b aria-hidden="true">✓</b>' + esc(m) + '</i>').join('') + '</span>' : '<span class="val nm">Done</span>') +
+        (list.length ? '<span class="hm-mus">' + list.map(m => '<i><b aria-hidden="true">✓</b>' + esc(m) + '</i>').join('') + '</span>' : '<span class="val nm">Done</span>') +
         '<span class="chg">' + esc(WEEKDAYS[d.getDay()].slice(0, 3)) + ' ' + esc(usOf(last).replace(/\/\d{4}$/, '')) + ' · ' + nSets + ' set' + (nSets === 1 ? '' : 's') + '</span>';
     } }
   // next exercise: the first one not finished on today's list, or the plan's first
