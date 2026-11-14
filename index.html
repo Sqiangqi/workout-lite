@@ -1281,6 +1281,7 @@ body.home header.top .wrap { padding-top: 10px; }      /* Home: the same for the
 .ob-pl { display: grid; gap: 3px; font-size: 13px; }
 .ob-pl div { display: flex; gap: 8px; } .ob-pl div b { width: 34px; flex: none; } .ob-pl div span { color: var(--muted); min-width: 0; }
 .nm-setup { width: 100%; padding: 12px; }
+.upd-msg { margin: 6px 0 0; } .upd-msg.ok { color: var(--good); }   /* Web 0.3j.1 */
 .ob-same { margin-left: 8px; padding: 1px 7px; border-radius: 999px; background: rgba(var(--gold-rgb), .18); color: var(--gold); letter-spacing: .04em; }
 /* Ver 0.3e: You sheet layout */
 .nm-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; }
@@ -5234,6 +5235,8 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3j.1', '11142026', 'Web-only update on Ver 0.3j: Settings › Version has a Check for updates button. It reads the newest version from GitHub (not a stored copy) and says Your app is up to date, or shows Update now to Ver …, which loads the newest version straight away (your sign-in and unsaved sets on this phone are kept).'],
+  ['0.3j', '11142026', 'Matches the full app Ver 0.3j, which redesigned its Photos tab (full app only). Nothing changes in the web version.'],
   ['0.3i.2', '11142026', 'Web-only fix on Ver 0.3i.1: the 0.3i.1 change made it worse (the bottom strip was hidden under a background band on short pages and only showed while scrolling), so it was taken out, with the 0.3g.1 one. Instead every page is now at least as tall as the whole screen, so short pages (Settings, Progress, Start workout) are drawn to the bottom like the long ones (Food, Library), where the strip was always right.'],
   ['0.3i.1', '11142026', 'Web-only fix on Ver 0.3i: in the iPhone home-screen app the bottom strip still sat above the bottom of the screen on short pages (Settings, Progress, Start workout). The app now checks where the strip really ends after every page change, scroll and turn of the phone and moves it, the Food week bar, the Start workout button and the pop-up sheets down to the real bottom.'],
   ['0.3i', '11142026', 'Matches the full app Ver 0.3i. Progress: the exercise numbers (weight, or reps for Pull Up) are on the right and the body weight scale, when it shows, on the left.'],
@@ -5305,7 +5308,11 @@ function viewSettings() {
     (window.__liteSrc ? '<p class="hint">' + (window.__liteSrc === 'github' ? 'Page loaded from GitHub (updates on its own).' : 'GitHub could not be reached: using the built-in copy of the page.') + '</p>' : '') +
     // only the latest two updates here, a few lines each; the full list is CHANGELOG.md on GitHub (user, 2026-11-07)
     '<p class="hint">Latest updates</p><ul class="verlist recent">' + APP_VERSIONS.slice(0, 2).map(([a, b, c]) => '<li><b>' + esc(a) + '</b> · ' + esc(b) + ' — ' + esc(c) + '</li>').join('') + '</ul>' +
-    '<div class="row-acts"><a class="btn" href="https://github.com/Sqiangqi/workout-lite/blob/main/CHANGELOG.md" target="_blank" rel="noopener">View full version history</a></div></div>';
+    '<div class="row-acts"><a class="btn" href="https://github.com/Sqiangqi/workout-lite/blob/main/CHANGELOG.md" target="_blank" rel="noopener">View full version history</a></div>' +
+    // Web 0.3j.1: check GitHub for a newer version and load it
+    '<div class="row-acts">' + (S.upd && S.upd.newer ? '<button class="btn primary" data-act="upd-go">Update now to Ver ' + esc(S.upd.newer) + '</button>' :
+      '<button class="btn primary" data-act="upd-check"' + (S.upd && S.upd.busy ? ' disabled' : '') + '>' + (S.upd && S.upd.busy ? 'Checking…' : 'Check for updates') + '</button>') + '</div>' +
+    (S.upd && S.upd.msg ? '<p class="hint upd-msg' + (S.upd.ok ? ' ok' : '') + '">' + esc(S.upd.msg) + '</p>' : '') + '</div>';
   return h;
 }
 // First open: make a Sheet, or point the app at one that already exists.
@@ -5837,6 +5844,23 @@ const ACTIONS = {
       return; },
   'sign-out'(b, it, e, act) { if (!S.outArmed) { S.outArmed = true; render(); setTimeout(() => { if (S.outArmed) { S.outArmed = false; render(); } }, 4000); return; } S.outArmed = false; gs('api_signOut').catch(e => toast(codeText(e).text)); },
   'sign-out-now'(b, it, e, act) { gs('api_signOut').catch(e => toast(codeText(e).text)); },
+  'upd-check'(b, it, e, act) {   /* Web 0.3j.1: fetch the newest page from GitHub (no cache) and compare its version with this one */
+    S.upd = { busy: true }; render();
+    fetch(location.pathname + '?check=' + Date.now(), { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('GitHub answered ' + r.status + '.'); return r.text(); }).then(t => {
+      const m = t.match(/const APP_VERSIONS = \[\s*\['([^']+)'/), now = APP_VERSIONS[0][0];
+      if (!m) throw new Error('The version on GitHub could not be read.');
+      S.upd = m[1] === now ? { ok: true, msg: 'Your app is up to date (Ver ' + now + ').' } : { newer: m[1], msg: 'Ver ' + m[1] + ' is available (you have Ver ' + now + ').' };
+      if (S.upd.ok) toast(S.upd.msg); render();
+    }).catch(err => { S.upd = { msg: 'Could not check for updates: ' + (err && err.message ? err.message : 'no connection') + ' Try again in a moment.' }; render(); });
+  },
+  'upd-go'(b, it, e, act) {   /* drop any stored copies of the page, then load the newest one; sign-in and unsaved sets on this phone are kept */
+    const v = S.upd && S.upd.newer, go = () => location.replace(location.pathname + '?v=' + encodeURIComponent(v || '') + '&t=' + Date.now());
+    S.upd = { busy: true, msg: 'Updating…' }; render();
+    const jobs = [];
+    try { if (window.caches && caches.keys) jobs.push(caches.keys().then(ks => Promise.all(ks.map(k => caches.delete(k))))); } catch (x) {}
+    try { if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) jobs.push(navigator.serviceWorker.getRegistrations().then(rs => Promise.all(rs.map(r => r.unregister())))); } catch (x) {}
+    Promise.all(jobs).catch(() => {}).then(go);
+  },
   'retry'(b, it, e, act) { S.problem = null; readSheet(); if (S.wp.state === 'err') readPlans(); },
   'retry-save'(b, it, e, act) { S.problem = null; saveSession(); },
   'pic'(b, it, e, act) { openPic(b.dataset.name); },

@@ -2,6 +2,14 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3j.1 · 11/14/2026
+
+Web-only update on Ver 0.3j: Settings › Version has a Check for updates button. It reads the newest version from GitHub (not a stored copy) and says Your app is up to date, or shows Update now to Ver …, which loads the newest version straight away (your sign-in and unsaved sets on this phone are kept).
+
+## 0.3j · 11/14/2026
+
+Matches the full app Ver 0.3j, which redesigned its Photos tab (full app only). Nothing changes in the web version.
+
 ## 0.3i.2 · 11/14/2026
 
 Web-only fix on Ver 0.3i.1: the 0.3i.1 change made it worse (the bottom strip was hidden under a background band on short pages and only showed while scrolling), so it was taken out, with the 0.3g.1 one. Instead every page is now at least as tall as the whole screen, so short pages (Settings, Progress, Start workout) are drawn to the bottom like the long ones (Food, Library), where the strip was always right.
