@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3g · 11/14/2026
+
+Matches the full app Ver 0.3g. Home, Last workout tile: the muscle names sit in two even columns, so each column lines up.
+
 ## 0.3f · 11/14/2026
 
 Matches the full app Ver 0.3f. Get started is filled in from what you have now: your name, your weight and unit, the training days and the number of exercises of your plan in use, and the answers that match your body type (your exact answers are remembered after the first time). Whatever you leave as it is stays the same: the body type when those answers did not change, your carb week and your week plan when the training days did not change (marked Same as now), and a weight is saved again only if you change it. Changing the training days switches on a new plan from your answers. Home: the Last workout tile now lists the muscles that session trained, each with a green check (Chest, Back, Legs and so on, the most worked first), with the date and the number of sets under them.
