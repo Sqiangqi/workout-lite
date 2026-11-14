@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3c · 11/14/2026
+
+Matches the full app Ver 0.3c. Home: tap the logo (or the pencil beside Hello) to open a You sheet: your name, your body weight (kg or lbs, the same weight and unit as Food › Weight; saving one makes Food use it, Manual) and Change the app icon, which used to open straight from the logo. Home: the Body weight tile is replaced by Last workout (Today, Yesterday or N days ago, with the date and how many exercises and sets; tap it for Progress), since most people have no weight readings.
+
 ## 0.3b.1 · 11/14/2026
 
 Web-only fix on Ver 0.3b: on tab pages (Settings, Library, Food and the others) the content started far below the top of the screen because the top safe area was counted twice, and the bottom strip sat high with a gap under it. Both now sit where they should: the page starts just under the status bar, Home has its greeting row closer to the top, and the Go to, Home and return icons sit just above the home bar.
