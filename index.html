@@ -1293,6 +1293,13 @@ body.home header.top .wrap { padding-top: 10px; }      /* Home: the same for the
 .nm-ic span { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-decoration: underline; text-underline-offset: 3px; }
 .nm-ic:active img { transform: scale(.96); }
 .nm-sheet .nm-hint { font-size: 12px; }
+/* Web 0.3g.1: iPhone home-screen app bug: the page can come out shorter than the screen (by about the status bar), which left a band under the
+   bottom strip. --vgap is that missing height (measured below, 0 everywhere else); everything fixed to the bottom moves down by it. */
+:root { --vgap: 0px; }
+.tabbar { bottom: calc(-1 * var(--vgap)); }
+.fweek { bottom: calc(var(--tabbar-h) - var(--vgap)); }
+.sheet-bg, .wveil { bottom: calc(-1 * var(--vgap)); }
+.hm-start { bottom: calc(var(--tabbar-h) + 10px - var(--vgap)); }
 </style>
 
 <header class="top">
@@ -5229,6 +5236,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3g.1', '11142026', 'Web-only fix on Ver 0.3g: in the iPhone home-screen app the bottom strip could sit well above the bottom of the screen with a band of page under it (an iPhone bug that makes the page shorter than the screen, about the height of the status bar, often after signing in). The app now measures that gap and moves the strip, the Food week bar, the Start workout button and the pop-up sheets down to the real bottom.'],
   ['0.3g', '11142026', 'Matches the full app Ver 0.3g. Home, Last workout tile: the muscle names sit in two even columns, so each column lines up.'],
   ['0.3f', '11142026', 'Matches the full app Ver 0.3f. Get started is filled in from what you have now: your name, your weight and unit, the training days and the number of exercises of your plan in use, and the answers that match your body type (your exact answers are remembered after the first time). Whatever you leave as it is stays the same: the body type when those answers did not change, your carb week and your week plan when the training days did not change (marked Same as now), and a weight is saved again only if you change it. Changing the training days switches on a new plan from your answers. Home: the Last workout tile now lists the muscles that session trained, each with a green check (Chest, Back, Legs and so on, the most worked first), with the date and the number of sets under them.'],
   ['0.3e', '11142026', 'Matches the full app Ver 0.3e. You sheet (tap the logo on Home): the Name and Body weight boxes are smaller and the app icon sits to their right, with Change under it; tap it to change the icon. Get started: Quit \u00b7 don\u2019t save at the top of every step leaves the questionnaire with nothing changed (the kg / lbs choice there is now saved only with Use this setup). Removed: the wide Change the app icon button in the You sheet; Not now and Close in the questionnaire (now Quit \u00b7 don\u2019t save).'],
@@ -6624,6 +6632,22 @@ withTimeout(gs('api_init'), 60000).then(startWith).catch(err => {
   setSync('err', S.loadedAt ? 'Offline copy' : 'Not synced');
   render();
 });
+})();
+</script>
+<script>
+/* Web 0.3g.1: measure how much shorter than the screen the page is in the iPhone home-screen app (see --vgap above) */
+(function () {
+  function run() {
+    var sa = window.navigator.standalone === true || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches), g = 0;
+    if (sa && window.screen) {
+      var port = window.innerHeight >= window.innerWidth, full = port ? Math.max(screen.width, screen.height) : Math.min(screen.width, screen.height);
+      g = Math.round(full - window.innerHeight); if (g < 8 || g > 140) g = 0;
+    }
+    document.documentElement.style.setProperty('--vgap', g + 'px');
+  }
+  run(); window.addEventListener('resize', run); window.addEventListener('orientationchange', function () { setTimeout(run, 300); });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) setTimeout(run, 250); });
+  window.addEventListener('pageshow', run);
 })();
 </script>
 

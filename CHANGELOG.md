@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3g.1 · 11/14/2026
+
+Web-only fix on Ver 0.3g: in the iPhone home-screen app the bottom strip could sit well above the bottom of the screen with a band of page under it (an iPhone bug that makes the page shorter than the screen, about the height of the status bar, often after signing in). The app now measures that gap and moves the strip, the Food week bar, the Start workout button and the pop-up sheets down to the real bottom.
+
 ## 0.3g · 11/14/2026
 
 Matches the full app Ver 0.3g. Home, Last workout tile: the muscle names sit in two even columns, so each column lines up.
