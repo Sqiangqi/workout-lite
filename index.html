@@ -261,12 +261,7 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .ph span { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(var(--brand-rgb),.78); color: #fff; font-size: 12px; padding: 3px 6px; text-align: left; font-variant-numeric: tabular-nums; }
 .ph .wait { position: static; background: none; color: var(--muted); display: grid; place-items: center; height: 100%; }
-.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.compare select { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); }
-.compare .ph { aspect-ratio: 3 / 4; }
 .toggle { display: flex; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); }
-.crop-prev { display: grid; place-items: center; background: var(--bg); border-radius: 8px; padding: 8px; }
-.crop-prev img { max-height: 360px; width: auto; border-radius: 6px; }
 .lightbox .frame img { width: 100%; height: auto; display: block; max-height: 78vh; object-fit: contain; background: var(--bg); }
 
 /* Food */
@@ -298,29 +293,6 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .frow .fk { grid-column: 1; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .hist tr.on td { background: var(--accent-soft); font-weight: 600; }
 
-/* Photos */
-.strip { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x proximity; padding: 4px 2px 8px; -webkit-overflow-scrolling: touch; }
-.strip .mon { flex: none; align-self: center; writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-.th { flex: none; width: 76px; scroll-snap-align: center; border: 2px solid transparent; border-radius: 8px; padding: 0; background: var(--surface); display: grid; gap: 2px; position: relative; overflow: hidden; }
-.th img, .th i { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: grid; place-items: center; background: var(--bg); color: var(--muted); font-style: normal; }
-.th span { font-size: 12px; font-variant-numeric: tabular-nums; padding-bottom: 3px; }
-.th:not(.on)::after, .phbig:not(.cmp-empty)::after { content: ""; position: absolute; inset: 0; border: 1px solid color-mix(in srgb, var(--ink) 24%, transparent); border-radius: inherit; pointer-events: none; }   /* thin border on top of the photo, like the food tiles */
-.th.on { border-color: var(--gold); box-shadow: 0 0 0 1px var(--accent); }
-.th em, .phbig em { position: absolute; top: 4px; left: 4px; font-style: normal; font-weight: 700; font-size: 12px; background: var(--gold); color: var(--gold-ink); border-radius: 4px; padding: 0 5px; }
-.phbig { position: relative; background: var(--bg); border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 240px; touch-action: pan-y; }
-.phbig img { width: 100%; max-height: 70vh; object-fit: contain; display: block; cursor: zoom-in; }
-.phbig i { color: var(--muted); font-style: normal; padding: 40px; }
-.phbig.small { min-height: 160px; justify-content: flex-start; }
-.phbig.small img { width: 100%; height: auto; max-height: none; }
-.phbig .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 52px; border: 0; border-radius: 8px; background: rgba(var(--brand-rgb),.55); color: #fff; font-size: 26px; line-height: 1; }
-.phbig .nav.l { left: 6px; } .phbig .nav.r { right: 6px; }
-.pinfo.above { gap: 2px 14px; }
-.phfig { margin: 0 auto; max-width: 100%; display: grid; gap: 6px; }
-.phfig .phbig img { width: 100%; height: auto; max-height: none; }
-.phbig.small em { top: auto; bottom: 4px; }
-.pinfo { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.pinfo b { color: var(--ink); }
-.cmp-col { display: grid; gap: 6px; min-width: 0; }
 .seg { display: flex; gap: 6px; }
 .fset { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 8px 0 4px; }
 .fset-it { display: grid; gap: 1px; text-align: left; padding: 6px 7px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); font: inherit; cursor: pointer; min-width: 0; }
@@ -378,19 +350,8 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .fkgrow .tin { width: 6.5em; flex: 0 0 auto; }
 .btn.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .hint { margin: 0; font-size: 13px; color: var(--muted); }
-.slider-box { position: relative; aspect-ratio: 3 / 4; max-width: 100%; max-height: 55vh; margin-inline: auto; background: var(--bg); border-radius: var(--r); overflow: hidden; }
-.slider-box img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-.slider-box #slLine { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--gold); box-shadow: 0 0 0 1px var(--accent); }
-.slider-box em { position: absolute; top: 6px; font-style: normal; font-weight: 700; font-size: 12px; background: var(--gold); color: var(--gold-ink); border-radius: 4px; padding: 1px 6px; }
-.slider-box .la { left: 6px; } .slider-box .lb { right: 6px; }
-#slider { width: 100%; accent-color: var(--accent); }
 
-.ph-bottom { display: grid; gap: 8px; margin-top: 4px; padding-top: 10px; border-top: 1px solid var(--line); }
-/* Photos timeline */
-.phnear { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; min-height: 60px; }
-.phnear .th { width: auto; }
 .tlwrap { position: relative; min-width: 0; max-width: 100%; }
-.ph-bottom > * { min-width: 0; }
 .tl { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
 .tl::-webkit-scrollbar { display: none; }
 .tl-in { display: inline-block; padding: 0 50%; white-space: nowrap; }
@@ -405,8 +366,6 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .tl-mark { position: absolute; left: 50%; top: 0; bottom: 0; width: 0; pointer-events: none; }
 .tl-mark::before { content: ""; position: absolute; left: -1px; top: 6px; bottom: 6px; width: 2px; border-radius: 1px; background: var(--accent); }
 .tl-mark span { position: absolute; left: 50%; bottom: 3px; transform: translateX(-50%); font-size: 11px; font-weight: 700; white-space: nowrap; color: var(--accent); background: var(--surface); padding: 0 5px; border-radius: 6px; }
-.ph-acts .btn { flex: 1; padding-block: 12px; text-align: center; }
-.ph-tip { text-align: center; padding: 18px 0 4px; }
 /* Progress chart options card */
 .ctlcard { background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--gold); border-radius: var(--r); padding: 10px 12px; display: grid; gap: 10px; }
 .ctl-lab { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: -6px; }
@@ -617,8 +576,6 @@ body.lib main .wrap { padding-bottom: calc(var(--tabbar-h) + 96px); }
 .qorow .uwrap { font-size: 11.5px; }
 .faamt { grid-template-columns: 110px auto; justify-content: start; }
 .qfc-rm { justify-self: start; }
-.phbig.cmp-empty { min-height: 160px; border: 2px dashed var(--line); background: var(--surface); }
-.phbig.cmp-empty i { padding: 20px 10px; text-align: center; font-size: 14px; }
 .facalc { margin: 0; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .facalc b { color: var(--ink); }
 /* Week bar on the Food tab: the week calendar shows again just above the tab bar once the top one scrolls away,
@@ -809,6 +766,7 @@ body.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + 24px); }
 .pprow { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .pprow .pp-label { flex: none; font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .pprow .planpill { min-width: 0; }
+.pp-adj { margin-left: auto; flex: none; border: 0; background: none; padding: 6px 2px; color: var(--accent); font: inherit; font-size: 13.5px; font-weight: 700; white-space: nowrap; text-decoration: underline; text-underline-offset: 3px; }   /* Ver 0.3l */
 .pp-acts .btn { flex: 1; padding-block: 12px; }
 .sheet-it .pp-sub { display: block; font-size: 12px; font-weight: 500; opacity: .75; margin-top: 2px; }
 .planpill.off { border-color: var(--line); color: var(--muted); }
@@ -858,16 +816,6 @@ a.btn { text-decoration: none; color: inherit; display: inline-block; }
 @media (prefers-reduced-motion: no-preference) { .toast { animation: toastIn .25s ease-out; } @keyframes toastIn { from { transform: translate(-50%, -14px); opacity: 0 } } }
 .toast .undo { pointer-events: auto; flex: none; padding: 2px 10px; border: 0; border-radius: 999px; background: var(--brand); color: var(--gold); font: inherit; font-weight: 700; }
 
-/* Photos: Done comparing at the top; Left / Right tags; hold the big photo for full screen */
-.cmp-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--gold); border-radius: var(--r); padding: 8px 8px 8px 12px; }
-.cmp-t { display: grid; gap: 1px; min-width: 0; }
-.cmp-t b { font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: .04em; text-transform: uppercase; line-height: 1.1; }
-.cmp-t span { font-size: 12px; color: var(--muted); }
-.btn.cmp-done { flex: none; padding: 10px 22px; border-radius: 10px; font-size: 15px; }
-.btn.phadd { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-.btn.phadd svg { flex: none; display: block; }
-#bigPh img { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; cursor: pointer; }
-.phbig.small[data-act] { cursor: pointer; }
 /* Countdown timer for time exercises */
 .cd { display: grid; gap: 8px; margin: 2px 0 10px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
 .cd-main { display: flex; align-items: center; justify-content: center; gap: 18px; }
@@ -997,13 +945,6 @@ label.sheet-it { display: block; cursor: pointer; }
 .nhead { display: flex; justify-content: space-between; margin: 0 0 -2px; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
 :root[data-theme="dark"] .n-kcal { --nc: var(--ink); }
 
-/* photo tool row */
-.phtools { display: flex; justify-content: center; gap: 4px; margin: -2px 0 0; }
-.phtool { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 0; border-radius: 999px; background: none; color: var(--muted); font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; }
-.phtool:active { background: rgba(var(--brand-rgb), .08); }
-.phtool.del { color: var(--bad); }
-.phtool.del.armed { background: var(--bad); color: #fff; }
-.phtool:disabled { opacity: .5; }
 /* Today: the page of a started exercise (only this exercise shows). Compact: it should fit one phone screen without scrolling. */
 #view .card[data-id].focus { background: none; border: 0; padding: 0; gap: 8px; box-shadow: none; position: relative;
   /* a column as tall as the free screen (down to the bottom bar): the picture takes whatever height the rows leave over */
@@ -1299,6 +1240,18 @@ body.home header.top .wrap { padding-top: 10px; }      /* Home: the same for the
    at least as tall as the whole screen. (The 0.3g.1 / 0.3i.1 strip-moving script made it worse and was removed.) */
 body { min-height: calc(100vh + env(safe-area-inset-top, 0px) + 1px); }
 @supports (height: 100lvh) { body { min-height: calc(100lvh + env(safe-area-inset-top, 0px) + 1px); } }
+/* Ver 0.3k: Progress and Body pickers: the dropdown on the left (smaller), 3M / 6M / 1Y / All on its right at the same height */
+.ctl-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: stretch; }
+.ctl-row .pickbtn { font-size: 17px; line-height: 1.15; padding: 9px 30px 9px 11px; min-height: 46px; overflow-wrap: anywhere; }
+.ctl-row .pickbtn::after { right: 12px; width: 7px; height: 7px; border-right-width: 2px; border-bottom-width: 2px; }
+.ctl-row .seg.rng { gap: 4px; }
+.ctl-row .seg.rng .btn { flex: none; min-width: 40px; height: 100%; padding: 0 6px; font-size: 13.5px; display: grid; place-items: center; }
+/* Ver 0.3m: sample charts while there is nothing to show yet */
+.smp { position: relative; }
+.smp-in { opacity: .55; filter: saturate(.6); pointer-events: none; }
+.smp-chip { position: absolute; left: 4px; top: 2px; z-index: 1; padding: 2px 9px; border-radius: 999px; background: var(--gold); color: var(--gold-ink); font-size: 10.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.smp-note { margin: 2px 0 0; font-size: 13px; line-height: 1.4; color: var(--muted); text-align: center; }
+.smp-note b { color: var(--ink); font-weight: 600; }
 </style>
 
 <header class="top">
@@ -2358,10 +2311,8 @@ let PRIV_ID = '';   // this person's food Sheet (web 0.1g): set from api_foodGet
 const BODY_TAB = 'Body metrics';
 const BODY_RANGE = "'" + BODY_TAB + "'!A1:U";
 const BODY_COLS = ['Date','Time','Weight(kg)','BMI','Body Fat Percentage(%)','Body Fat Mass(kg)','Muscle Percentage(%)','Muscle Mass(kg)','Skeletal Muscle Percentage(%)','Skeletal Muscle Mass(kg)','Bone Percentage(%)','Bone Mass(kg)','Protein Percentage(%)','Protein Mass(kg)','Body Water Percentage(%)','Body Water Mass(kg)','Fat-Free Mass(kg)','Subcutaneous Fat(%)','Visceral Fat','BMR(kcal)','Metabolic Age'];
-const PHOTO_FOLDER = '1ux3UUhumTHPSca6_nTvCffFq7iFKzHAM'; // Drive: Claude AI shared folder > Workout app > body photos
-const THUMB_FOLDER = '1RU7UKxEjNbAnFepvLcEYHqJtwBuX2yJp'; // ... > body photos > thumbs (same file names, about 300 px)
-function metricLabel(h) { return h.replace(/\s*Percentage/, '').replace(/\((.*)\)$/, ' ($1)').replace('(kcal)', '(kcal)'); }
-function metricUnit(h) { const m = /\(([^)]*)\)$/.exec(h); return m ? m[1] : ''; }
+// Drive: Claude AI shared folder > Workout app > body photos
+// ... > body photos > thumbs (same file names, about 300 px)
 
 // ---------- small helpers ----------
 const $ = (s, r) => (r || document).querySelector(s);
@@ -2372,7 +2323,6 @@ const store = {
   del(k) { try { localStorage.removeItem(k); } catch (e) {} }
 };
 const LOGO_ORIG = (document.querySelector('img.logo') || { getAttribute: () => '' }).getAttribute('src');   /* the default logo, before any theme or own icon */
-const ICON_TITLE = 'app icon.jpg';
 const PALS = [{ k: 'navy', n: 'Navy + Gold', b: '#14284b', g: '#d8b072' }, { k: 'ember', n: 'Soft ember', b: '#222222', g: '#d9774f' }, { k: 'blush', n: 'Blush', b: '#b85c7a', g: '#f7cfd8' }, { k: 'crimson', n: 'Crimson + Gold', b: '#8c1c22', g: '#d6a84e' }, { k: 'steel', n: 'Black + Silver', b: '#111214', g: '#c3c7cd' }];
 const pad2 = n => String(n).padStart(2, '0');
 const isoOf = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
@@ -2960,7 +2910,7 @@ const CYC = { carb: 2.5, fat: 1.0, prot: 1.5, fibPer1000: 14 };   // carb and fa
 const DAYTYPE = { high: { name: 'High-carb day', zh: 'High carb', n: 2, cr: 0.50, fr: 0.15 }, mid: { name: 'Mid-carb day', zh: 'Mid carb', n: 3, cr: 0.35, fr: 0.35 }, low: { name: 'Low-carb day', zh: 'Low carb', n: 2, cr: 0.15, fr: 0.50 } };
 const DEFAULT_WEEK = { 0: 'low', 1: 'high', 2: 'mid', 3: 'high', 4: 'mid', 5: 'mid', 6: 'low' };   // Sun..Sat; changeable on the Food tab
 const FOOD_TAB = 'Food log', FOOD_RANGE = "'Food log'!A1:J";   // J = Fiber (g)
-const DRAFT_TAB = 'App draft';   // private spreadsheet: backup of unsaved sets (A1 JSON, B1 time)
+// private spreadsheet: backup of unsaved sets (A1 JSON, B1 time)
 const SAVE_TIMEOUT = 30000;      // ms; a save call that takes longer is reported instead of hanging
 function weekPlan() { const w = store.get(K_WEEK); return Object.assign({}, DEFAULT_WEEK, w || {}); }
 // Carb day: the week plan (K_WEEK) gives each weekday high / mid / low; changing the Carb day on the
@@ -3075,9 +3025,6 @@ function qfBulk(q) { return !!q && (q.unit === 'g' || q.unit === 'ml'); }   /* g
 function qfStep(q) { return qfBulk(q) ? 25 : q.unit === 'cup' ? 0.5 : q.unit === 'each' ? Math.max(1, +q.usual || 1) : 1; }
 function qfFitStep(q) { return qfBulk(q) ? 5 : q.unit === 'cup' ? 0.25 : 1; }
 function qfAmtText(q, a) { return q.unit === 'each' ? fmt2(+a) + ' each' : fmt2(+a) + ' ' + q.unit; }
-function unitPick(sel, act) {
-  return '<div class="upick" role="radiogroup" aria-label="Unit">' + QF_UNITS.map(u => '<button type="button" class="upk' + (u === sel ? ' on' : '') + '" role="radio" aria-checked="' + (u === sel) + '" data-act="' + act + '" data-u="' + u + '">' + u + '</button>').join('') + '</div>';
-}
 // Unit wheel ("like the plan length in Settings, swipe between units"). Same drum look as lenWheel
 // (WH_H, whStyle, .wheel / .wh-band / .wh-i); drag up or down, or tap the unit above / below. who = 'fa' (Add a food) or 'qo' (food card edit).
 const CW_LIST = ['high', 'mid', 'low'], CW_LAB = { high: 'High', mid: 'Mid', low: 'Low' };
@@ -3167,10 +3114,8 @@ async function saveQuickList(list, okMsg) {
   S.qfSaving = false; render(); return ok;
 }
 // Last time each quick food was logged (Food log names start with the quick-food name), newest first in the list
-function qfLastUse() { const m = {}; S.food.forEach(x => { const t = x.iso + ' ' + x.time; S.qf.forEach(q => { const n = x.name; if ((n === q.name || n.startsWith(q.name + ',') || n.startsWith(q.name + ' ×')) && !(m[q.name] > t)) m[q.name] = t; }); }); return m; }
 // Quick add: search box + tiles, several per row. Tap a tile = add at the usual amount;
 // hold it = open the food's card (read-only; Edit is behind a tap so saved foods are not changed by accident).
-const QF_SHOW = 8;
 // One food tile (name, amount and calories must be easy to read). x = values for the amount shown.
 function qfAmtLabel(q, a) { return q.unit === 'each' ? fmt2(+a) + (+a === 1 ? ' pc' : ' pcs') : qfAmtText(q, a); }   /* short on the tiles so the calories have room */
 // Tile background (no donut; the card itself is tinted, each macro's share of the width = its share of the GRAMS
@@ -3450,24 +3395,6 @@ async function deleteFood(row) {
 }
 
 // ---------- progress photos (kept only in your Google Drive) ----------
-async function listPhotos() {
-  if (!S.mcp || !S.isOwner) return;
-  S.photoMsg = '';
-  try {
-    const p = await call('search_files', { query: "parentId = '" + PHOTO_FOLDER + "' and mimeType contains 'image/'", pageSize: 200, excludeContentSnippets: true }, DRIVE);
-    const files = (p && p.files) || [];
-    files.forEach(f => { const m = /^(\d{4}-\d{2}-\d{2})/.exec(f.title || ''); f.iso = m ? m[1] : (f.createdTime || '').slice(0, 10); });
-    files.sort((a, b) => ((a.iso + (a.title || '')) > (b.iso + (b.title || '')) ? 1 : -1)); // oldest first
-    S.photos = files;
-    try {
-      const t = await call('search_files', { query: "parentId = '" + THUMB_FOLDER + "' and mimeType contains 'image/'", pageSize: 200, excludeContentSnippets: true }, DRIVE);
-      S.thumbs = new Map(((t && t.files) || []).map(f => [f.title, f.id]));
-    } catch (e) { S.thumbs = new Map(); }
-    if (S.sel && !files.find(f => f.id === S.sel)) S.sel = null;   // nothing open until a thumbnail is tapped
-    S.stripToEnd = true;
-  } catch (err) { S.photos = S.photos || []; S.photoMsg = 'Photos could not be listed. ' + codeText(err).text; }
-  render(); loadThumbs();
-}
 async function downloadUrl(fileId) {
   const res = await S.mcp.callTool(DRIVE, 'download_file_content', { fileId }, { cache: { staleTime: 6048e5, gcTime: 6048e5 } });
   const b = blobFromResult(res); if (!b) throw new Error('no image data');
@@ -3481,12 +3408,6 @@ function ensureFull(id) {
   const pr = downloadUrl(id).then(u => u, () => '').then(u => { S.photoUrls.set(id, u); fullBusy.delete(id); render(); return u; });
   fullBusy.set(id, pr); return pr;
 }
-function thumbData(img) { return drawCanvas(img, null, 320).toDataURL('image/jpeg', 0.72).split(',')[1]; }
-async function saveThumb(title, data) {
-  const r = await call('create_file', { title, parentId: THUMB_FOLDER, contentMimeType: 'image/jpeg', base64Content: data, disableConversionToGoogleType: true }, DRIVE);
-  if (r && r.id) S.thumbs.set(title, r.id);
-}
-let thumbBusy = false;
 // Load thumbnails newest first; a photo without one gets its thumbnail made from the full photo and saved to Drive once.
 // Thumbnails are kept on this phone (IndexedDB) so they are downloaded from Drive only once; full photos still come from Drive.
 const thumbDB = (() => {
@@ -3495,30 +3416,6 @@ const thumbDB = (() => {
   const tx = async (mode, fn) => { const db = await open(); if (!db) return null; return new Promise(ok => { try { const t = db.transaction('t', mode); const q = fn(t.objectStore('t')); t.oncomplete = () => ok(q && q.result); t.onerror = () => ok(null); } catch (e) { ok(null); } }); };
   return { get: k => tx('readonly', st => st.get(k)), put: (k, v) => tx('readwrite', st => st.put(v, k)) };
 })();
-async function downloadData(fileId) {
-  const res = await S.mcp.callTool(DRIVE, 'download_file_content', { fileId }, { cache: { staleTime: 6048e5, gcTime: 6048e5 } });
-  const b = blobFromResult(res); if (!b) throw new Error('no image data');
-  return 'data:' + b.mime + ';base64,' + b.data;
-}
-async function loadThumbs() {
-  if (thumbBusy || !S.photos) return; thumbBusy = true;
-  for (const f of S.photos.slice().reverse()) {
-    if (S.thumbUrls.has(f.id)) continue;
-    if (!S.thumbs.get(f.title)) { const made = await thumbDB.get('made:' + f.id); if (made) { S.thumbUrls.set(f.id, made); if (S.tab === 'photos') render(); continue; } }
-    try {
-      const tid = S.thumbs.get(f.title);
-      if (tid) { const key = 'drive:' + tid; let u = await thumbDB.get(key); if (!u) { u = await downloadData(tid); thumbDB.put(key, u); } S.thumbUrls.set(f.id, u); }
-      else {
-        const full = await ensureFull(f.id); if (!full) throw new Error('no photo');
-        const img = await loadImg(full); const data = thumbData(img);
-        S.thumbUrls.set(f.id, 'data:image/jpeg;base64,' + data); thumbDB.put('made:' + f.id, 'data:image/jpeg;base64,' + data);
-        saveThumb(f.title, data).catch(() => {});
-      }
-    } catch (err) { S.thumbUrls.set(f.id, ''); }
-    if (S.tab === 'photos') render();
-  }
-  thumbBusy = false;
-}
 function blobFromResult(res) {
   const pick = (data, mime) => data ? { data: String(data).replace(/^data:[^,]*,/, ''), mime: mime || 'image/jpeg' } : null;
   for (const c of (res && res.content) || []) {
@@ -3532,9 +3429,7 @@ function blobFromResult(res) {
   return null;
 }
 // ---------- photo crop: Claude finds the body, the page crops a 3:4 portrait around it ----------
-let SAMPLE = null;
 function loadImg(src) { return new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => no(new Error('This photo format could not be opened. Try a JPEG or PNG.')); i.src = src; }); }
-function canvasBlob(c, q) { return new Promise(ok => c.toBlob(b => ok(b), 'image/jpeg', q)); }
 function drawCanvas(img, rect, maxSide) {
   const r = rect || { x: 0, y: 0, w: img.naturalWidth, h: img.naturalHeight };
   const k = Math.min(1, maxSide / Math.max(r.w, r.h));
@@ -3542,140 +3437,11 @@ function drawCanvas(img, rect, maxSide) {
   c.getContext('2d').drawImage(img, r.x, r.y, r.w, r.h, 0, 0, c.width, c.height);
   return c;
 }
-async function findBody(img) {
-  const blob = await canvasBlob(drawCanvas(img, null, 1200), 0.8);
-  const box = await SAMPLE.json(
-    'This is a gym mirror selfie used as a body progress photo. Find the main person in it. ' +
-    'Reply with only JSON like {"left":0.2,"top":0.1,"right":0.6,"bottom":0.95}: the bounding box of their whole body, ' +
-    'from the top of the head to the feet and including any raised arm, as fractions of the image width and height ' +
-    '(0 = left or top edge, 1 = right or bottom edge).', { images: [blob], modelTier: 'quick' });
-  const l = Number(box && box.left), t = Number(box && box.top), r = Number(box && box.right), b = Number(box && box.bottom);
-  if (![l, t, r, b].every(v => isFinite(v) && v >= 0 && v <= 1) || r - l < 0.05 || b - t < 0.1) throw { code: 'bad_box', message: 'No clear body outline was found in this photo.' };
-  return { l, t, r, b };
-}
 // 3:4 portrait centred on the body, with a small margin, kept inside the photo.
-function cropRect(img, box) {
-  const W = img.naturalWidth, H = img.naturalHeight;
-  const bx = box.l * W, by = box.t * H, bw = (box.r - box.l) * W, bh = (box.b - box.t) * H;
-  let h = bh * 1.12, w = h * 0.75;
-  if (bw * 1.2 > w) { w = bw * 1.2; h = w / 0.75; }
-  if (h > H) { h = H; w = Math.min(W, h * 0.75); }
-  if (w > W) { w = W; h = Math.min(H, w / 0.75); }
-  let x = bx + bw / 2 - w / 2, y = by + bh / 2 - h / 2;
-  x = Math.max(0, Math.min(W - w, x)); y = Math.max(0, Math.min(H - h, y));
-  return { x: Math.round(x), y: Math.round(y), w: Math.round(w), h: Math.round(h) };
-}
 // JPEG at most 1600 px on the long side, small enough to send to Drive in one call.
-function encode(img, rect) {
-  let max = 1600, q = 0.85, data = '';
-  for (let tries = 0; tries < 8; tries++) {
-    data = drawCanvas(img, rect, max).toDataURL('image/jpeg', q).split(',')[1];
-    if (data.length < 900000) return data;
-    if (q > 0.6) q -= 0.1; else max = Math.round(max * 0.8);
-  }
-  return data;
-}
-async function prepCrop(target) {
-  // target: S.pending or S.recrop; fills target.rect and target.preview, or target.note when cropping is not possible
-  try {
-    if (!SAMPLE || !S.canCrop) throw { message: 'Auto-crop is not available in this view.' };
-    const box = await findBody(target.img);
-    target.rect = cropRect(target.img, box);
-    target.preview = drawCanvas(target.img, target.rect, 700).toDataURL('image/jpeg', 0.8);
-  } catch (err) {
-    const c = err && err.code;
-    target.note = c === 'not_granted' ? 'Auto-crop needs your permission for the page to use Claude. Reload and allow it to try again.'
-      : c === 'rate_limited' ? 'Claude is busy or your usage limit is reached. Try auto-crop later.'
-      : c === 'refused' ? 'Claude could not look at this photo.'
-      : (err && err.message) || 'Auto-crop did not work for this photo.';
-  }
-  target.status = 'ready';
-}
-async function startPending(file, replaces) {
-  const old = replaces && (S.photos || []).find(x => x.id === replaces);
-  S.pending = { file, date: old ? old.iso : todayIso(), status: 'working', replaces: old ? old.id : null }; S.photoMsg = ''; render();
-  try { S.pending.img = await loadImg(URL.createObjectURL(file)); }
-  catch (err) { S.pending.status = 'ready'; S.pending.note = err.message; render(); return; }
-  await prepCrop(S.pending); render();
-}
-async function uploadPhoto(useCrop) {
-  const P = S.pending; if (!P || !P.img || S.uploading) return;
-  S.uploading = true; render();
-  try {
-    const data = encode(P.img, useCrop ? P.rect : null);
-    const now = new Date();
-    const title = P.date + ' front ' + pad2(now.getHours()) + pad2(now.getMinutes()) + pad2(now.getSeconds()) + '.jpg';
-    const nf = await call('create_file', { title, parentId: PHOTO_FOLDER, contentMimeType: 'image/jpeg', base64Content: data, disableConversionToGoogleType: true }, DRIVE);
-    try { const tmp = await loadImg('data:image/jpeg;base64,' + data); await saveThumb(title, thumbData(tmp)); } catch (e) {}
-    const old = P.replaces && (S.photos || []).find(x => x.id === P.replaces);
-    let msg = 'Photo saved to your Drive (body photos).';
-    if (old) {   /* Replace: the new photo is saved first, then the old one goes to Drive's trash */
-      try { await trashPhoto(old); msg = 'Photo replaced; the old one is in your Drive trash.'; }
-      catch (e) { msg = 'New photo saved, but the old one could not be moved to the trash, so both are in the folder.'; }
-    }
-    S.pending = null; S.sel = old && nf && nf.id ? nf.id : null; toast(msg);
-    await listPhotos();
-  } catch (err) {
-    S.photoMsg = 'The photo was not saved. ' + (err && err.code ? codeText(err).text : (err && err.message) || '');
-  }
-  S.uploading = false; render();
-}
 // Small tool row under a large photo (Replace / Delete should sit naturally on the page, not as big buttons)
-function phTools(f) {
-  const arm = S.phDelArm === f.id, busy = S.phBusy ? ' disabled' : '', fid = esc(f.id);
-  const ic = d => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
-  return '<div class="phtools">' +
-    (S.canCrop ? '<button class="phtool" data-act="ph-crop" data-fid="' + fid + '">' + ic('<path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/>') + 'Crop</button>' : '') +
-    '<label class="phtool" for="phRep">' + ic('<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/>') + 'Replace</label><input type="file" id="phRep" data-fid="' + fid + '" accept="image/*" hidden>' +
-    '<button class="phtool del' + (arm ? ' armed' : '') + '" data-act="ph-del" data-fid="' + fid + '"' + busy + '>' + ic('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 14h10l1-14"/>') + (S.phBusy ? 'Deleting…' : arm ? 'Tap to delete' : 'Delete') + '</button></div>';
-}
 // Delete / replace a progress photo: the photo and its thumbnail go to Drive's trash (restorable there for 30 days).
-async function trashPhoto(f) {
-  await call('trash_file', { fileId: f.id }, DRIVE);
-  const th = S.thumbs.get(f.title);
-  if (th) { try { await call('trash_file', { fileId: th }, DRIVE); } catch (e) {} S.thumbs.delete(f.title); }
-}
-async function deletePhoto(id) {
-  const f = (S.photos || []).find(x => x.id === id); if (!f || S.phBusy) return;
-  S.phBusy = true; S.phDelArm = null; render();
-  try {
-    await trashPhoto(f);
-    if (S.sel === id) S.sel = null;
-    toast('Photo of ' + usOf(f.iso) + ' moved to your Drive trash.');
-    await listPhotos();
-  } catch (err) { S.photoMsg = 'The photo was not deleted. ' + codeText(err).text; }
-  S.phBusy = false; render();
-}
 // Re-crop a photo that is already in Drive: save the cropped copy under the same name, move the old one to Drive's trash.
-async function startRecrop(id) {
-  S.recrop = { id, status: 'working' }; render();
-  try { const url = await ensureFull(id); if (!url) throw new Error('The full photo could not be loaded.'); S.recrop.img = await loadImg(url); await prepCrop(S.recrop); }
-  catch (err) { if (S.recrop) { S.recrop.status = 'ready'; S.recrop.note = err.message; } }
-  render();
-}
-async function replaceWithCrop() {
-  const R = S.recrop; const f = (S.photos || []).find(x => x.id === (R && R.id));
-  if (!R || !R.rect || !f || R.saving) return;
-  R.saving = true; render();
-  let created = false;
-  try {
-    const data = encode(R.img, R.rect);
-    const nf = await call('create_file', { title: f.title, parentId: PHOTO_FOLDER, contentMimeType: 'image/jpeg', base64Content: data, disableConversionToGoogleType: true }, DRIVE);
-    created = true;
-    await call('trash_file', { fileId: f.id }, DRIVE);
-    const oldThumb = S.thumbs.get(f.title);
-    if (oldThumb) { try { await call('trash_file', { fileId: oldThumb }, DRIVE); } catch (e) {} S.thumbs.delete(f.title); }
-    try { const tmp = await loadImg('data:image/jpeg;base64,' + data); await saveThumb(f.title, thumbData(tmp)); } catch (e) {}
-    S.recrop = null; if (nf && nf.id) S.sel = nf.id; toast('Cropped photo saved; the uncropped one is in your Drive trash.');
-    await listPhotos();
-  } catch (err) {
-    R.saving = false;
-    R.note = created ? 'The cropped copy was saved, but the original could not be moved to the trash, so both are in the folder now. ' + codeText(err).text
-      : 'Not saved. ' + codeText(err).text;
-    R.rect = created ? null : R.rect; render();
-    if (created) listPhotos();
-  }
-}
 
 // ---------- save: same rules as the sheet script ----------
 function buildEntries(draft) {
@@ -3801,15 +3567,7 @@ function render() {
   if (S.tab === 'home') { v.innerHTML = viewHome(); setTimeout(obAuto, 400); }
   else if (S.tab === 'today') { v.innerHTML = viewToday(); renderTimer(); renderSetPick(); }
   else if (S.tab === 'progress') v.innerHTML = viewProgress();
-  else if (S.tab === 'body') v.innerHTML = viewBody();
   else if (S.tab === 'food') { v.innerHTML = viewFood() + addFoodSheet() + qfSheet() + qfTableSheet(); qfFilter(); qfFitNames(); const fi = S.faFocus && document.getElementById(S.faFocus); if (fi) { fi.focus(); S.faFocus = null; } }
-  else if (S.tab === 'photos') {
-    v.innerHTML = viewPhotos();
-    tlInit();   /* timeline position and the three nearest thumbnails */
-    fitFigs();
-    foodWeekBar();   /* hides the Food tab's bottom week bar (this branch returned before it, so the bar could stay up on Photos) */
-    return;
-  }
   else if (S.tab === 'settings') { const sb = $('#wpBody'), st = sb ? sb.scrollTop : 0; v.innerHTML = viewSettings(); if (!S.wpEdit) foldSettings(v); const nb = $('#wpBody'); if (nb) nb.scrollTop = st; }
   else { const sb = $('#nxBody'), st = sb ? sb.scrollTop : 0; v.innerHTML = viewLibrary() + addExSheet(); const nb = $('#nxBody'); if (nb) nb.scrollTop = st; }
   foodWeekBar();
@@ -4070,7 +3828,7 @@ function problemBox() {
 function planPill() {
   const ap = planOn() ? activePlan() : null;
   const txt = !planOn() ? 'Plan off' : ap ? ap.name : 'Choose a plan';
-  let x = '<div class="pprow"><span class="pp-label">Current plan</span><button class="planpill' + (ap ? '' : ' off') + '" data-act="pp-open" aria-haspopup="listbox" aria-label="Week plan: ' + esc(txt) + '. Tap to switch."><b>' + esc(txt) + '</b><span class="pp-go" aria-hidden="true">▾</span></button></div>';
+  let x = '<div class="pprow"><span class="pp-label">Current plan</span><button class="planpill' + (ap ? '' : ' off') + '" data-act="pp-open" aria-haspopup="listbox" aria-label="Week plan: ' + esc(txt) + '. Tap to switch."><b>' + esc(txt) + '</b><span class="pp-go" aria-hidden="true">▾</span></button><button class="pp-adj" data-act="go-plan">Adjust plan<span aria-hidden="true"> ›</span></button></div>';   /* Ver 0.3l: a link to edit the week plan */
   if (S.ppOpen) {
     const it = (act, id, name, sub, on) => '<button class="sheet-it' + (on ? ' on' : '') + '" role="option" aria-selected="' + on + '" data-act="' + act + '"' + (id ? ' data-id="' + esc(id) + '"' : '') + '>' + esc(name) + (sub ? '<span class="pp-sub">' + esc(sub) + '</span>' : '') + '</button>';
     x += '<div class="sheet-bg" data-act="pp-close"><div class="sheet" role="listbox" aria-label="Switch week plan" data-act="noop"><div class="sheet-h"><b>Week plan</b><button class="btn sm" data-act="pp-close">Close</button></div><div class="sheet-list">' +
@@ -4125,7 +3883,7 @@ function viewToday() {
     h += '<p>Save ' + n + ' entr' + (n === 1 ? 'y' : 'ies') + ' for ' + esc(usOf(d.date)) + ' to your Google Sheet (' + esc(S.sheetTab || 'log') + ')? Upper and lower body blocks are sorted the same way as the sheet\'s save box.</p>' +
       '<div class="acts"><button class="btn primary" data-act="save-yes">Save to sheet</button><button class="btn" data-act="save-no">Cancel</button></div>';
   } else {
-    h += '<p>' + (n ? n + ' entr' + (n === 1 ? 'y' : 'ies') + ' ready to save.' : 'Type the weight and reps you did to log a set.') + '</p>' +
+    h += '<p>' + (n ? n + ' entr' + (n === 1 ? 'y' : 'ies') + ' ready to save.' : 'Start an exercise and tap a set row to pick its weight and reps.') + '</p>' +
       '<div class="acts"><button class="btn primary" data-act="save" ' + (!n || S.saving || !S.mcp ? 'disabled' : '') + '>' + (S.saving ? 'Saving…' : 'Save session') + '</button></div>';
   }
   h += '</div>';
@@ -4327,13 +4085,13 @@ function viewProgress() {
   if (!S.exercises.length) return h + '<div class="empty">Waiting for data from the Google Sheet.</div>';
   const { withData, without } = chartNames();
   // no starred or planned exercise yet (e.g. a new person): placeholder instead of a chart with no name, which stopped the tab from opening
-  if (!withData.length && !without.length) return h + '<div class="empty">Nothing to chart yet.<br>Star ☆ an exercise in the Library or put it in a week plan (Settings › Week plan); its progress shows here once you log it.</div>';
+  if (!withData.length && !without.length) return h + '<div class="chartbox">' + sampleChartSvg() + '</div>';   /* Ver 0.3m: nothing to chart yet: the sample, with what to do */
   if (!S.pick || !(withData.includes(S.pick) || without.includes(S.pick))) S.pick = withData[0] || without[0];
   // chart options sit between the chart and the session table, within thumb reach;
   // the exercise picker doubles as the chart title; gold left edge marks the card as interactive
   // exercise picker: a button that opens a scrollable list sheet at the bottom of the screen (the phone's own list was hard to reach)
-  const ctl = '<div class="ctlcard glow"><span class="ctl-lab">Exercise</span><button class="pickbtn" data-act="pick-open" aria-haspopup="listbox" aria-expanded="' + !!S.pickOpen + '">' + esc(bareName(S.pick || '')) + '</button>' +
-    (S.isOwner && S.body.length && !isCount(S.pick || '') ? '<label class="switch"><span>Show body weight on the chart</span><input type="checkbox" role="switch" id="bwToggle"' + (S.showBW ? ' checked' : '') + '><i aria-hidden="true"></i></label>' : '') + rangeSeg() + '</div>';
+  const ctl = '<div class="ctlcard glow"><span class="ctl-lab">Exercise</span><div class="ctl-row"><button class="pickbtn" data-act="pick-open" aria-haspopup="listbox" aria-expanded="' + !!S.pickOpen + '">' + esc(bareName(S.pick || '')) + '</button>' + rangeSeg() + '</div>' +   /* Ver 0.3k: picker and range on one row */
+    (S.isOwner && S.body.length && !isCount(S.pick || '') ? '<label class="switch"><span>Show body weight on the chart</span><input type="checkbox" role="switch" id="bwToggle"' + (S.showBW ? ' checked' : '') + '><i aria-hidden="true"></i></label>' : '') + '</div>';
   h += chart(S.pick, ctl);
   if (S.pickOpen) {
     const item = n => '<button class="sheet-it' + (n === S.pick ? ' on' : '') + '" role="option" aria-selected="' + (n === S.pick) + '" data-act="pick-set" data-name="' + esc(n) + '">' + esc(bareName(n)) + '</button>';
@@ -4355,14 +4113,30 @@ function seriesFor(name) {
     return { iso, top, lighter: rows.filter(r => r !== top) };
   });
 }
+// ---------- sample charts (Ver 0.3m) ----------
+// When there is nothing to chart yet, a dimmed sample shows what the chart will look like, with a SAMPLE label and what is missing.
+// The shape follows a typical first months of training: a dumbbell press going 40 -> 55 lbs, body weight easing down about 0.5 kg a month.
+function smpIso(daysAgo) { const d = new Date(todayIso() + 'T12:00:00'); d.setDate(d.getDate() - daysAgo); return isoOf(d); }
+function sampleLift() {
+  const plan = [[40, '10/10/8'], [40, '10/10/10'], [45, '10/9/8'], [45, '10/10/9'], [45, '10/10/10'], [50, '10/9/8'], [50, '10/10/9'], [50, '10/10/10'], [55, '10/10/8']];
+  return plan.map(([w, r], i) => { const iso = smpIso((plan.length - 1 - i) * 13); return { iso, top: { iso, weight: w, reps: r }, lighter: i % 3 === 1 ? [{ iso, weight: w - 5, reps: '12' }] : [] }; });
+}
+function sampleChartSvg() {   /* the sample lift chart when no exercise can be charted yet (none starred or in a plan) */
+  const c = chart('sample', ''), i = c.indexOf('<div class="smp">'), j = c.indexOf('</p>', i);
+  return i < 0 ? '' : c.slice(i, c.indexOf('<p class="smp-note">', i)) + '<p class="smp-note"><b>Nothing to chart yet.</b> Star ☆ an exercise in the Library or put it in a week plan (Settings › Week plan); its progress shows here once you log it.</p>';
+}
+function smpWrap(inner, what, how) {
+  return '<div class="smp"><span class="smp-chip">Sample</span><div class="smp-in" aria-hidden="true">' + inner + '</div></div>' +
+    (what || how ? '<p class="smp-note">' + (what ? '<b>' + what + '.</b> ' : '') + (how || '') + '</p>' : '');
+}
 function chart(name, ctl) {
   ctl = ctl || '';
   if (isCount(name)) return chartCount(name, ctl);
   const unit = unitOf(name), farmer = isFarmer(name);
-  const all = seriesFor(name), ser = all.filter(d => inRange(d.iso));
+  const all = seriesFor(name), sample = !all.length, ser = sample ? sampleLift() : all.filter(d => inRange(d.iso));   /* Ver 0.3m: a sample when there are no entries yet */
   let h = '<div class="chartbox">';
-  if (!ser.length) return h + '<div class="empty">' + (all.length ? 'No entries for ' + esc(bareName(name)) + ' in the last ' + esc(S.range) + '. Pick a longer range below.' : 'No entries for ' + esc(bareName(name)) + ' yet.') + '</div></div>' + ctl;
-  const bwOn = S.showBW && S.isOwner && S.body.length > 0;   // owner only
+  if (!ser.length) return h + '<div class="empty">No entries for ' + esc(bareName(name)) + ' in the last ' + esc(S.range) + '. Pick a longer range below.</div></div>' + ctl;
+  const bwOn = !sample && S.showBW && S.isOwner && S.body.length > 0;   // owner only
   const W = 640, H = 300, L = bwOn ? 62 : 22, R = 54, T = 26, B = 36;   /* Ver 0.3i: exercise axis on the right, body weight on the left */
   const t = s => new Date(s + 'T12:00:00').getTime();
   let t0 = t(ser[0].iso), t1 = t(ser[ser.length - 1].iso);
@@ -4418,6 +4192,7 @@ function chart(name, ctl) {
   h += '<div class="legend">' + (isCount(name) ? '<span><i style="background:var(--gold);box-shadow:0 0 0 2px var(--accent)"></i>Total reps that day (all sets added up)</span>' : '<span><i style="background:var(--gold);box-shadow:0 0 0 2px var(--accent)"></i>Heaviest set (' + unit + ')</span><span><i style="background:var(--lighter)"></i>Lighter sets</span>') +
     (bwOn ? '<span><i style="background:var(--muted)"></i>Body weight, 7-day avg (kg, left scale)</span>' : '') + bwNote +
     (isBench(name) ? '<span>Warm-up sets of ' + BENCH_WARMUP_MAX + ' lbs or less are left out</span>' : '') + '</div>';
+  if (sample) return h + smpWrap(svg, 'No entries for ' + esc(bareName(name)) + ' yet', 'Your sessions show here as you log them.') + '</div>' + ctl;
   h += '<div style="overflow-x:auto">' + svg + '</div></div>' + ctl;
   // the days of this exercise on a date ruler: the three closest to the centre line show as tiles
   h += drHtml('p|' + name + '|' + S.range, ser.map(d => ({ iso: d.iso, html: isCount(name)
@@ -4477,82 +4252,17 @@ function smooth(p) {
 }
 
 // ---------- body view ----------
-const KG_LB = 2.20462;
 function dailyBody(col) {
   // one point per day: the average of that day's readings
   const m = new Map();
   S.body.forEach(r => { const x = r.v[col]; if (x == null) return; if (!m.has(r.iso)) m.set(r.iso, []); m.get(r.iso).push(x); });
   return [...m.keys()].sort().map(iso => ({ iso, v: m.get(iso).reduce((a, b) => a + b, 0) / m.get(iso).length }));
 }
-function tile(col, label, lbs) {
-  const d = dailyBody(col); if (!d.length) return '<div class="tile"><span class="lab">' + label + '</span><span class="val">–</span></div>';
-  const last = d[d.length - 1];
-  const cut = new Date(new Date(last.iso + 'T12:00:00').getTime() - 30 * 864e5);
-  const base = d.slice().reverse().find(x => new Date(x.iso + 'T12:00:00') <= cut);
-  const unit = metricUnit(col);
-  let chg = 'no reading 30+ days earlier';
-  if (base) { const dv = last.v - base.v; chg = (dv >= 0 ? '+' : '−') + fmt2(Math.abs(dv)) + ' ' + unit + ' vs 30 days'; }
-  const av = rolling(d, 7); const a = av[av.length - 1].v;
-  return '<div class="tile"><span class="lab">' + label + '</span><span class="val">' + fmt2(last.v) + '<small> ' + esc(unit) + '</small></span>' +
-    (lbs ? '<span class="chg">' + fmt2(last.v * KG_LB) + ' lbs</span>' : '') + '<span class="chg">7-day avg ' + fmt2(a) + ' ' + esc(unit) + '</span><span class="chg">' + esc(chg) + '</span></div>';
-}
 function fmt2(v) { return Math.round(v * 100) / 100; }
 function rolling(points, days) {   // linear time; points sorted oldest first
   const t = p => new Date(p.iso + 'T12:00:00').getTime(), out = []; let lo = 0, sum = 0;
   points.forEach((p, i) => { sum += p.v; while (t(points[lo]) <= t(p) - days * 864e5) { sum -= points[lo].v; lo++; } out.push({ iso: p.iso, v: sum / (i - lo + 1) }); });
   return out;
-}
-function timeChart(points, unit, label, avg) {
-  if (!points.length) return '<div class="empty">No readings for ' + esc(label) + ' yet.</div>';
-  const W = 640, H = 260, L = 20, R = 58, T = 18, B = 34;   /* Ver 0.3i: axis on the right */
-  const t = s => new Date(s + 'T12:00:00').getTime();
-  let t0 = t(points[0].iso), t1 = t(points[points.length - 1].iso);
-  const span = Math.max(t1 - t0, 7 * 864e5), padT = span * 0.04; t0 -= padT; t1 = t0 + span + padT * 2;
-  const vals = points.map(p => p.v);
-  let y0 = Math.min.apply(null, vals), y1 = Math.max.apply(null, vals);
-  const yp = Math.max((y1 - y0) * 0.15, Math.abs(y1) * 0.01 || 1); y0 -= yp; y1 += yp;
-  const step = niceStep((y1 - y0) / 4); y0 = Math.floor(y0 / step) * step; y1 = Math.ceil(y1 / step) * step;
-  const X = v => L + (v - t0) / (t1 - t0) * (W - L - R), Y = v => T + (1 - (v - y0) / (y1 - y0)) * (H - T - B);
-  let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(label) + ' over time">';
-  for (let v = y0; v <= y1 + 1e-9; v += step) s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="var(--line)"/><text x="' + (W - R + 8) + '" y="' + (Y(v) + 4) + '" font-size="15" fill="var(--muted)">' + fmt(v) + '</text>';
-  const every = Math.ceil(points.length / 6);
-  points.forEach((p, i) => { if (i % every === 0 || i === points.length - 1) s += '<text x="' + X(t(p.iso)) + '" y="' + (H - 10) + '" text-anchor="middle" font-size="12" fill="var(--muted)">' + usOf(p.iso).replace(/\/\d{4}$/, '') + '</text>'; });
-  const pts = points.map(p => [X(t(p.iso)), Y(p.v)]);
-  const line = avg ? avg.map(p => [X(t(p.iso)), Y(p.v)]) : pts;
-  if (avg) pts.forEach(([x, y]) => { s += '<circle cx="' + x + '" cy="' + y + '" r="3" fill="var(--lighter)"/>'; });
-  s += '<path d="' + smooth(line) + '" fill="none" stroke="var(--accent)" stroke-width="2.5"/>';
-  if (!avg) pts.forEach(([x, y]) => { s += '<circle cx="' + x + '" cy="' + y + '" r="3.5" fill="var(--gold)" stroke="var(--accent)" stroke-width="1.5"/>'; });
-  const lp = line[line.length - 1], lv = (avg || points)[line.length - 1].v;
-  s += '<circle cx="' + lp[0] + '" cy="' + lp[1] + '" r="4" fill="var(--gold)" stroke="var(--accent)" stroke-width="1.5"/>';
-  s += '<text x="' + Math.min(lp[0], W - R - 4) + '" y="' + (lp[1] - 10) + '" text-anchor="end" font-size="12" font-weight="600" fill="var(--ink)">' + fmt2(lv) + ' ' + esc(unit) + (avg ? ' avg' : '') + '</text>';
-  return '<div style="overflow-x:auto">' + s + '</svg></div>';
-}
-function viewBody() {
-  let h = problemBox();
-  if (S.bodyState === 'wait') h += '<div class="empty">Reading the Body metrics tab…</div>';
-  else if (S.bodyState === 'err') h += '<div class="notice err">Body metrics could not be read. ' + esc(S.bodyMsg) + '</div>';
-  if (S.body.length) {
-    const last = S.body[0];
-    h += '<p class="section-h">Latest · ' + esc(usOf(last.iso)) + ' ' + esc(last.time.slice(0, 5)) + '</p>';
-    h += '<div class="tiles">' + tile('Weight(kg)', 'Weight', true) + tile('Body Fat Percentage(%)', 'Body fat') + tile('Muscle Mass(kg)', 'Muscle mass') + '</div>';
-    const cols = BODY_COLS.slice(2).filter(c => S.body.some(r => r.v[c] != null));
-    if (!cols.includes(S.metric)) S.metric = cols[0];
-    // chart first, then the measure picker in a gold-edged card within thumb reach (same as the Progress tab)
-    h += '<div class="panel">' +
-      (function () { const d = dailyBody(S.metric), av = rolling(d, 7), keep = d.map(p => inRange(p.iso));
-        return timeChart(d.filter((p, i) => keep[i]), metricUnit(S.metric), metricLabel(S.metric), av.filter((p, i) => keep[i])); })() +
-      '<p class="legend"><span><i style="background:var(--lighter)"></i>Daily reading</span><span><i style="background:var(--gold);box-shadow:0 0 0 2px var(--accent)"></i>7-day average</span></p></div>';
-    h += '<div class="ctlcard glow"><span class="ctl-lab">Measure</span><button class="pickbtn" data-act="metric-open" aria-haspopup="listbox" aria-expanded="' + !!S.metricOpen + '">' + esc(metricLabel(S.metric)) + '</button>' + rangeSeg() + '</div>';
-    // readings of the chosen measure on the date ruler (like the Progress tab)
-    { const dd = dailyBody(S.metric), av = rolling(dd, 7), u = metricUnit(S.metric);
-      h += drHtml('b|' + S.metric + '|' + S.range, dd.map((p, i) => [p, av[i]]).filter(([p]) => inRange(p.iso)).map(([p, a]) => ({ iso: p.iso, html: '<b>' + fmt2(p.v) + (u ? ' ' + esc(u) : '') + '</b><span class="drl">Avg ' + fmt2(a.v) + '</span>' })),
-        'One tile per day (the average when there were several readings that day), with its 7-day average under it.'); }
-    if (S.metricOpen) {
-      h += '<div class="sheet-bg" data-act="metric-close"><div class="sheet" role="listbox" aria-label="Measure to chart" data-act="noop"><div class="sheet-h"><b>Choose measure</b><button class="btn sm" data-act="metric-close">Close</button></div>' +
-        '<div class="sheet-list" id="sheetList">' + cols.map(c => '<button class="sheet-it' + (c === S.metric ? ' on' : '') + '" role="option" aria-selected="' + (c === S.metric) + '" data-act="metric-set" data-col="' + esc(c) + '">' + esc(metricLabel(c)) + '</button>').join('') + '</div></div></div>';
-    }
-  }
-  return h;
 }
 
 // ---------- food view ----------
@@ -4822,68 +4532,12 @@ function foodSetSheet(lw, kind, wd) {
 }
 
 // ---------- photos view ----------
-function nearBody(iso) {
-  // nearest Renpho day within 3 days; daily averages of weight, body fat, muscle mass
-  const cols = ['Weight(kg)', 'Body Fat Percentage(%)', 'Muscle Mass(kg)'];
-  const t = new Date(iso + 'T12:00:00').getTime(); let best = null;
-  const days = new Map(); S.body.forEach(r => { if (!days.has(r.iso)) days.set(r.iso, []); days.get(r.iso).push(r); });
-  days.forEach((rows, d) => { const dd = Math.abs(new Date(d + 'T12:00:00').getTime() - t) / 864e5; if (dd <= 3 && (!best || dd < best.dd)) best = { d, dd, rows }; });
-  if (!best) return null;
-  const v = {}; cols.forEach(c => { const xs = best.rows.map(r => r.v[c]).filter(x => x != null); v[c] = xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null; });
-  return { iso: best.d, v };
-}
-function bodyLine(iso, short) {
-  const b = nearBody(iso);
-  if (!b) return '<span>No Renpho reading within 3 days</span>';
-  const w = b.v['Weight(kg)'], f = b.v['Body Fat Percentage(%)'], m = b.v['Muscle Mass(kg)'];
-  return (w != null ? '<span><b>' + fmt2(w) + '</b> kg' + (short ? '' : ' (' + fmt2(w * KG_LB) + ' lbs)') + '</span>' : '') + (f != null ? '<span>' + (short ? 'Fat ' : 'Body fat ') + '<b>' + fmt2(f) + '%</b></span>' : '') +
-    (m != null ? '<span>' + (short ? 'Musc. ' : 'Muscle ') + '<b>' + fmt2(m) + '</b> kg</span>' : '') + (b.iso !== iso ? '<span>Renpho ' + esc(usOf(b.iso).replace(/\/\d{4}$/, '')) + '</span>' : '');
-}
-function photoSrc(id) { const u = S.photoUrls.get(id); return u || S.thumbUrls.get(id) || ''; }
 // ---------- Photos timeline ----------
 // A sideways-scrolling time ruler with month labels and a dot for every photo. The date under the centre line picks the
 // three photos closest to it, shown as thumbnails above the ruler (they change while scrolling). Tap a dot to jump to it.
-const TL_PX = 6;   /* pixels per day */
+/* pixels per day */
 function tlDays(a, b) { return Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / 864e5); }
 function tlAdd(iso, d) { const t = new Date(iso + 'T12:00:00'); t.setDate(t.getDate() + d); return isoOf(t); }
-function tlRange() {
-  const ps = S.photos || []; if (!ps.length) return null;
-  const a = ps[0].iso.slice(0, 7) + '-01', last = ps[ps.length - 1].iso > todayIso() ? ps[ps.length - 1].iso : todayIso();
-  const e = new Date(last + 'T12:00:00'); e.setMonth(e.getMonth() + 1, 0);
-  return { a, b: isoOf(e), n: tlDays(a, isoOf(e)) + 1 };
-}
-function thumbBtn(f) {
-  const u = S.thumbUrls.get(f.id), mark = S.cmpMode ? (S.cmp[0] === f.id ? 'Left' : S.cmp[1] === f.id ? 'Right' : '') : '', on = S.cmpMode ? !!mark : S.sel === f.id;
-  return '<button class="th' + (on ? ' on' : '') + '" data-act="th" data-fid="' + esc(f.id) + '" aria-label="Photo ' + esc(usOf(f.iso)) + '">' +
-    (u ? '<img src="' + u + '" alt="">' : '<i>' + (u === '' ? '!' : '…') + '</i>') + (mark ? '<em>' + mark + '</em>' : '') +
-    '<span>' + esc(usOf(f.iso).replace(/\/\d{4}$/, '')) + '</span></button>';
-}
-function tlHtml() {
-  const R = tlRange(); if (!R) return '';
-  let tk = '', yNow = String(new Date().getFullYear());
-  for (let d = 0; d < R.n; d++) { const iso = tlAdd(R.a, d), day = +iso.slice(8);
-    if (day === 1) { const m = new Date(iso + 'T12:00:00'); tk += '<i class="tl-m" style="left:' + d * TL_PX + 'px"><b>' + m.toLocaleString('en-US', { month: 'short' }) + (iso.slice(0, 4) !== yNow ? ' ' + iso.slice(0, 4) : '') + '</b></i>'; }
-    else if (day === 8 || day === 15 || day === 22) tk += '<i class="tl-w" style="left:' + d * TL_PX + 'px"></i>'; }
-  const seen = {};
-  (S.photos || []).forEach(f => { if (seen[f.iso]) return; seen[f.iso] = 1; tk += '<button class="tl-dot" data-act="tl-go" data-iso="' + f.iso + '" style="left:' + tlDays(R.a, f.iso) * TL_PX + 'px" aria-label="Go to ' + esc(usOf(f.iso)) + '"></button>'; });
-  return '<div class="tlwrap"><div class="tl" id="phTl"><div class="tl-in"><div class="tl-track" style="width:' + (R.n - 1) * TL_PX + 'px">' + tk + '</div></div></div><div class="tl-mark" aria-hidden="true"><span id="tlDate"></span></div></div>';
-}
-let tlRaf = 0, tlKey = '';
-function tlCenter() { const R = tlRange(), el = $('#phTl'); if (!R || !el) return null; return tlAdd(R.a, Math.max(0, Math.min(R.n - 1, Math.round(el.scrollLeft / TL_PX)))); }
-function tlUpdate(force) {
-  const iso = tlCenter(); if (!iso) return; S.tlIso = iso;
-  const lab = $('#tlDate'); if (lab) lab.textContent = new Date(iso + 'T12:00:00').toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  const near = (S.photos || []).map((f, i) => ({ f, i, d: Math.abs(tlDays(iso, f.iso)) })).sort((x, y) => x.d - y.d || y.i - x.i).slice(0, 3).sort((x, y) => x.i - y.i).map(x => x.f);
-  const key = near.map(f => f.id).join('|') + '#' + (S.thumbUrls ? near.map(f => S.thumbUrls.get(f.id) ? 1 : 0).join('') : '');
-  if (force || key !== tlKey) { tlKey = key; const box = $('#phNear'); if (box) box.innerHTML = near.map(thumbBtn).join('');
-    document.querySelectorAll('#phTl .tl-dot').forEach(d => d.classList.toggle('near', near.some(f => f.iso === d.dataset.iso))); }
-}
-function tlInit() {
-  const el = $('#phTl'), R = tlRange(); if (!el || !R) return;
-  if (S.stripToEnd || !S.tlIso) { const sel = S.photos.find(f => f.id === S.sel); S.tlIso = sel ? sel.iso : S.photos[S.photos.length - 1].iso; if (S.photos.length) S.stripToEnd = false; }
-  el.scrollLeft = tlDays(R.a, S.tlIso) * TL_PX; tlUpdate(true);
-  el.addEventListener('scroll', () => { if (tlRaf) return; tlRaf = requestAnimationFrame(() => { tlRaf = 0; tlUpdate(); }); }, { passive: true });
-}
 // ---------- date ruler for Progress and Body ----------
 // The same ruler as the Photos timeline: scroll it sideways to choose a date. The three days with data closest to the
 // centre line show as tiles under it (the closest one is marked); tap a tile or a dot to bring that day to the centre.
@@ -4923,90 +4577,6 @@ function drInit() {
   const iso = S.drFor === DR.key && S.drIso ? S.drIso : DR.days[DR.days.length - 1].iso;   /* a new exercise, measure or range starts on the newest day */
   el.scrollLeft = tlDays(DR.a, iso) * DR_PX; drUpdate(true);
   el.addEventListener('scroll', () => { if (drRaf) return; drRaf = requestAnimationFrame(() => { drRaf = 0; drUpdate(); }); }, { passive: true });
-}
-function viewPhotos() {
-  // Layout: large photo or comparison on top; thumbnails and the Add photo / Compare buttons at the bottom, within thumb reach.
-  // Nothing is shown large until a thumbnail is tapped (tap it again to close) or Compare is on.
-  let h = problemBox();
-  if (!S.isOwner) return h + '<div class="empty">Progress photos are only shown to the owner of this app.</div>';
-  if (S.photoMsg) h += '<div class="notice err">' + esc(S.photoMsg) + '</div>';
-  // a photo being added (date, crop preview, save) stays on top while it is in progress
-  if (S.pending) {
-    h += '<div class="panel">';
-    const P = S.pending, dis = S.uploading ? ' disabled' : '';
-    if (P.replaces) { const o = S.photos && S.photos.find(x => x.id === P.replaces); h += '<p><b>Replacing the photo of ' + esc(o ? usOf(o.iso) : '') + '</b> · the old one goes to your Drive trash after the new one is saved.</p>'; }
-    h += '<div class="row-acts"><label for="phDate" class="toggle">Photo date</label><input type="date" id="phDate" value="' + esc(P.date) + '"></div>';
-    if (P.status === 'working') h += '<p>Finding you in the photo to crop it…</p>';
-    else {
-      if (P.preview) h += '<div class="crop-prev"><img src="' + P.preview + '" alt="Cropped preview"></div>';
-      if (P.note) h += '<p>' + esc(P.note) + ' You can still save the full photo.</p>';
-      h += '<div class="row-acts">' + (P.rect ? '<button class="btn primary" data-act="ph-up-crop"' + dis + '>' + (S.uploading ? 'Saving…' : 'Save cropped') + '</button>' : '') +
-        (P.img ? '<button class="btn' + (P.rect ? '' : ' primary') + '" data-act="ph-up-full"' + dis + '>' + (S.uploading && !P.rect ? 'Saving…' : 'Save full photo') + '</button>' : '') +
-        '<button class="btn" data-act="ph-cancel">Cancel</button></div>';
-    }
-    h += '</div>';
-  }
-  let bottom = '<div class="ph-bottom">';
-  const tools = () => {
-    if (S.pending) return '';   // finish or cancel the photo being added first
-    if (S.cmpMode) return '';   // Done comparing sits at the top while comparing
-    let t = '<div class="row-acts ph-acts">';
-    t += '<label class="btn primary phadd" for="phIn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="9.5" r="1.8"/><path d="M21 16l-5.5-5.5L5 20"/></svg><span>Add photo</span></label><input type="file" id="phIn" accept="image/*" hidden>';
-    t += (S.photos && S.photos.length > 1 ? '<button class="btn" data-act="cmp-toggle" aria-pressed="false">Compare</button>' : '');
-    return t + '</div>';
-  };
-  if (S.photos === null) return h + '<div class="empty">Loading photos…</div>' + bottom + tools() + '</div>';
-  if (!S.photos.length) return h + '<div class="empty">No photos yet. Add your first one with Add progress photo below.</div>' + bottom + tools() + '</div>';
-  if (S.cmpMode && !S.pending) h += '<div class="cmp-top"><div class="cmp-t"><b>Comparing</b><span>Left is the earlier photo, Right the later one</span></div><button class="btn primary cmp-done" data-act="cmp-toggle" aria-pressed="true">Done</button></div>';
-  if (S.cmpMode) {
-    // A and B are filled when Compare is turned on; tapping A or B again clears it, so a slot can be empty
-    if (S.cmpFill) { S.cmp[0] = S.photos[0].id; S.cmp[1] = S.photos[S.photos.length - 1].id; S.cmpFill = false; }
-    [0, 1].forEach(k => { if (S.cmp[k] && !S.photos.find(f => f.id === S.cmp[k])) S.cmp[k] = null; });
-  }
-  if (S.cmpMode) bottom += '<p class="hint">Tap a photo to set the ' + (S.cmpNext ? 'Right' : 'Left') + ' one. Tap a big photo (or its thumbnail) to clear it and pick another. Left is the earlier one you compare against.</p>';
-  bottom += '<div class="phnear" id="phNear"></div>' + tlHtml() + tools() + '</div>';   /* Ver 0.2g timeline replaces the thumbnail strip */
-  if (S.cmpMode) {
-    const A = S.photos.find(f => f.id === S.cmp[0]), B = S.photos.find(f => f.id === S.cmp[1]);
-    if (!A || !B) {   // one or both cleared: show what is set and an empty slot to fill
-      [A, B].forEach(f => { if (f) ensureFull(f.id); });
-      h += '<div class="compare">' + [A, B].map((f, i) => '<div class="cmp-col">' + (f ? '<div class="pinfo above">' + bodyLine(f.iso, true) + '</div><div class="phbig small" data-act="cmp-clear" data-k="' + i + '" title="Tap to clear">' + (photoSrc(f.id) ? '<img src="' + photoSrc(f.id) + '" alt="Photo ' + esc(usOf(f.iso)) + '">' : '<i>Loading…</i>') + '<em>' + (i ? 'Right' : 'Left') + '</em></div><div class="pinfo"><span><b>' + esc(usOf(f.iso)) + '</b></span></div>'
-        : '<div class="phbig small cmp-empty"><i>Tap a photo below to set the ' + (i ? 'Right' : 'Left') + ' one</i></div>') + '</div>').join('') + '</div>';
-      return h + bottom;
-    }
-    [A, B].forEach(f => { if (f) ensureFull(f.id); });
-    {   // side by side only (the slider view was removed)
-      h += '<div class="compare">' + [A, B].map((f, i) => '<div class="cmp-col"><div class="pinfo above">' + bodyLine(f.iso, true) + '</div><div class="phbig small" data-act="cmp-clear" data-k="' + i + '" title="Tap to clear">' + (photoSrc(f.id) ? '<img src="' + photoSrc(f.id) + '" alt="Photo ' + esc(usOf(f.iso)) + '">' : '<i>Loading…</i>') + '<em>' + (i ? 'Right' : 'Left') + '</em></div>' +
-        '<div class="pinfo"><span><b>' + esc(usOf(f.iso)) + '</b></span></div></div>').join('') + '</div>';
-    }
-    const days = Math.round((new Date(B.iso) - new Date(A.iso)) / 864e5);
-    h += '<p class="hint">' + Math.abs(days) + ' days between Left and Right.</p>';
-    return h + bottom;
-  }
-  // single photo below the timeline
-  const i = S.photos.findIndex(f => f.id === S.sel);
-  if (i < 0) return h + '<p class="hint ph-tip">Tap a photo below to see it large.</p>' + bottom;
-  const f = S.photos[i];
-  ensureFull(f.id);
-  const R = S.recrop && S.recrop.id === f.id ? S.recrop : null;
-  const src = R && R.preview ? R.preview : photoSrc(f.id);
-  const prev = S.photos[i - 1];
-  h += '<div class="phfig"><div class="pinfo above">' + bodyLine(f.iso) + '</div>';
-  h += '<div class="phbig" id="bigPh">' + (src ? '<img src="' + src + '" alt="Photo ' + esc(usOf(f.iso)) + '" data-act="ph-tap" data-fid="' + esc(f.id) + '">' : '<i>Loading…</i>') +
-    (i > 0 ? '<button class="nav l" data-act="ph-step" data-d="-1" aria-label="Earlier photo">‹</button>' : '') +
-    (i < S.photos.length - 1 ? '<button class="nav r" data-act="ph-step" data-d="1" aria-label="Later photo">›</button>' : '') +
-    '</div>';
-  h += '<div class="pinfo"><span><b>' + esc(usOf(f.iso)) + '</b>' + (R && R.preview ? ' · cropped preview' : '') + '</span>' +
-    (prev ? '<span>' + Math.round((new Date(f.iso) - new Date(prev.iso)) / 864e5) + ' days after the previous photo</span>' : '<span>First photo</span>') + '</div>' +
-    (!R && !S.pending ? phTools(f) : '') +
-    '<p class="hint">Tap the photo to close it and pick another · hold it to see it full screen.</p></div>';
-  let acts = '';
-  if (!R && !S.pending) acts = '';   /* Replace / Delete sit in the small tool row right under the photo (phTools) */
-  else if (!R) acts = '';   /* a new or replacing photo is being added above */
-  else if (R.status === 'working') acts = '<span class="toggle">Finding you in the photo…</span>';
-  else acts = (R.rect ? '<button class="btn primary" data-act="ph-replace"' + (R.saving ? ' disabled' : '') + '>' + (R.saving ? 'Saving…' : 'Replace with cropped') + '</button>' : '') + '<button class="btn" data-act="ph-crop-cancel">Back</button>';
-  if (R && R.note) h += '<p class="hint">' + esc(R.note) + '</p>';
-  if (acts) h += '<div class="row-acts">' + acts + '</div>';
-  return h + bottom;
 }
 
 // ---------- library ----------
@@ -5235,6 +4805,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3m', '11142026', 'Matches the full app Ver 0.3k to 0.3m. Progress: the exercise picker is smaller and sits on the left, with 3M, 6M, 1Y and All on its right in the same row and at the same height (a long name wraps to a second line). Start workout: an Adjust plan link beside Current plan opens Settings › Week plan with the plan in use ready to edit; the Save session card says to tap a set row to pick its weight and reps. Empty charts show a sample: until there is something to chart, Progress shows a dimmed sample lift chart and Home › Muscles worked a sample shape, each with a SAMPLE label and what is missing; they go away as soon as your own entries are there. Code tidy: the Photos and Body tab code of the full app, which the web version never shows, was taken out.'],
   ['0.3j.1', '11142026', 'Web-only update on Ver 0.3j: Settings › Version has a Check for updates button. It reads the newest version from GitHub (not a stored copy) and says Your app is up to date, or shows Update now to Ver …, which loads the newest version straight away (your sign-in and unsaved sets on this phone are kept).'],
   ['0.3j', '11142026', 'Matches the full app Ver 0.3j, which redesigned its Photos tab (full app only). Nothing changes in the web version.'],
   ['0.3i.2', '11142026', 'Web-only fix on Ver 0.3i.1: the 0.3i.1 change made it worse (the bottom strip was hidden under a background band on short pages and only showed while scrolling), so it was taken out, with the 0.3g.1 one. Instead every page is now at least as tall as the whole screen, so short pages (Settings, Progress, Start workout) are drawn to the bottom like the long ones (Food, Library), where the strip was always right.'],
@@ -5621,21 +5192,19 @@ function spCommit(k, v, light) {   /* light: while swiping, update the large num
 // ---------- events ----------
 // Navigation: the app opens on Home (every tab as a bubble, Today in the middle). A tab page has one round button at the
 // bottom; tapping it opens the wheel (every tab on a ring, Home in the middle). Swiping left / right follows the same order.
-const NAV = [['today', 'Start workout'], ['progress', 'Progress'], ['food', 'Food'], ['body', 'Body'], ['photos', 'Photos'], ['library', 'Library'], ['settings', 'Settings']];
+const NAV = [['today', 'Start workout'], ['progress', 'Progress'], ['food', 'Food'], ['library', 'Library'], ['settings', 'Settings']];   /* Workout Lite: no Body or Photos tabs */
 const NAV_ICON = {
   home: '<path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9h12v-9"/><path d="M10 19v-5h4v5"/>',
   today: '<path d="M8 5.5v13l11-6.5z" fill="currentColor"/>',   /* Ver 0.3b: play triangle (was a dumbbell) */
   progress: '<path d="M4 19h16"/><path d="M5 15l4-4 3 3 6-7"/><path d="M15 7h3v3"/>',
   food: '<path d="M7 3v7a2 2 0 0 0 2 2v9M5 3v5M9 3v5"/><path d="M17 3c-2 2-3 5-3 8h3v10"/>',
-  body: '<circle cx="12" cy="5" r="2.2"/><path d="M6 9h12M12 8.5V15M9 21l3-6 3 6"/>',
-  photos: '<path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.2" r="3.4"/>',
   library: '<path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h10"/>',
   settings: '<circle cx="12" cy="5" r="1.7" fill="currentColor"/><circle cx="12" cy="12" r="1.7" fill="currentColor"/><circle cx="12" cy="19" r="1.7" fill="currentColor"/>'   /* three dots, one above the other */
 };
 function navIcon(k, px) { return '<svg viewBox="0 0 24 24" width="' + px + '" height="' + px + '" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (NAV_ICON[k] || NAV_ICON.home) + '</svg>'; }
 function navName(k) { return (NAV.find(t => t[0] === k) || ['', 'Home'])[1]; }
-function navList() { return NAV.filter(t => t[0] !== 'photos' && t[0] !== 'body'); }   /* Workout Lite: no Body or Photos tabs */
-function goTab(t) { closeWheel(); S.tab = t; if (t === 'photos') S.stripToEnd = true; render(); window.scrollTo(0, 0);
+function navList() { return NAV; }
+function goTab(t) { closeWheel(); S.tab = t; render(); window.scrollTo(0, 0);
   const v = $('#view'); if (v) { v.classList.remove('tab-in'); void v.offsetWidth; v.classList.add('tab-in'); v.addEventListener('animationend', () => v.classList.remove('tab-in'), { once: true }); } }   /* Ver 0.3b: soft fade-in of the new tab page */
 // ---------- Home: muscles worked (Ver 0.3b) ----------
 // Sets per muscle from the saved sessions in the last 7 or 30 days (today included). A set of an exercise counts once
@@ -5661,6 +5230,8 @@ function muscleCard() {
   let svg = '<svg viewBox="0 0 320 268" role="img" aria-label="Sets per muscle in the last ' + days + ' days: ' + MX_AXES.map(m => m + ' ' + v[m]).join(', ') + '">';
   [.25, .5, .75, 1].forEach(k => { svg += '<polygon class="mx-grid" points="' + poly(() => R * k) + '"/>'; });
   MX_AXES.forEach((m, i) => { const [x, y] = pt(i, R); svg += '<line class="mx-grid" x1="' + cx + '" y1="' + cy + '" x2="' + x.toFixed(1) + '" y2="' + y.toFixed(1) + '"/>'; });
+  const SMP = [9, 6, 8, 3, 9, 5, 11];   /* Ver 0.3m: sample shape when nothing is saved yet */
+  if (!total) svg += '<polygon class="mx-area" points="' + poly((m, i) => R * SMP[i] / 11) + '"/>';
   if (total) {
     svg += '<polygon class="mx-area" points="' + poly(m => R * Math.max(.04, v[m] / max)) + '"/>';
     MX_AXES.forEach((m, i) => { if (v[m]) { const [x, y] = pt(i, R * v[m] / max); svg += '<circle class="mx-dot" cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="4"/>'; } });
@@ -5671,10 +5242,12 @@ function muscleCard() {
       '<text class="mx-num" x="' + x.toFixed(1) + '" y="' + (y + dy + 14).toFixed(1) + '" text-anchor="' + an + '">' + v[m] + ' set' + (v[m] === 1 ? '' : 's') + '</text>';
   });
   svg += '</svg>';
+  if (!total) svg = smpWrap(svg, '', 'Each saved set lights up the muscles it trains.');
   const tops = MX_AXES.filter(m => total && v[m] === max);
   return '<div class="mx-card"><div class="mx-h"><b>Muscles worked</b><div class="seg mx-seg" role="group" aria-label="Period">' +
     [7, 30].map(d => '<button class="btn sm' + (d === days ? ' on' : '') + '" data-act="mx-days" data-d="' + d + '" aria-pressed="' + (d === days) + '">' + d + ' days</button>').join('') + '</div></div>' + svg +
     '<p class="mx-sum">' + (total ? 'Most worked: <b>' + tops.join(', ') + '</b> · ' + max + ' sets' : 'No saved sessions in the last ' + days + ' days') + '</p></div>';
+  /* the chart shown above is wrapped as a sample when nothing is saved yet */
 }
 // Home (Ver 0.3b, design B). Rings: workouts this week (saved sessions Mon-Sun against the training days of the plan in use),
 // today's calories and protein against the Food tab's targets. Tiles: body weight 7-day average with its 30-day trend line, and the next exercise.
@@ -5865,18 +5438,6 @@ const ACTIONS = {
   'retry-save'(b, it, e, act) { S.problem = null; saveSession(); },
   'pic'(b, it, e, act) { openPic(b.dataset.name); },
   'close-pic'(b, it, e, act) { $('#lightbox').hidden = true; S.lightboxId = null; },
-  'ph-up-crop'(b, it, e, act) { uploadPhoto(true); },
-  'ph-up-full'(b, it, e, act) { uploadPhoto(false); },
-  'ph-crop'(b, it, e, act) { startRecrop(b.dataset.fid); },
-  'ph-del'(b, it, e, act) {
-    {
-      const id = b.dataset.fid;
-      if (S.phDelArm !== id) { S.phDelArm = id; render(); setTimeout(() => { if (S.phDelArm === id) { S.phDelArm = null; render(); } }, 4000); return; }
-      deletePhoto(id); return;
-    }
-  },
-  'ph-replace'(b, it, e, act) { replaceWithCrop(); },
-  'ph-crop-cancel'(b, it, e, act) { S.recrop = null; render(); },
   'fd-go'(b, it, e, act) { S.foodDay = b.dataset.iso; render(); },
   'fd-today'(b, it, e, act) { wsGoToday(); },
   'fd-step'(b, it, e, act) { { const d = new Date(S.foodDay + 'T12:00:00'); d.setDate(d.getDate() + +b.dataset.d); S.foodDay = isoOf(d); render(); return; } },
@@ -5961,9 +5522,6 @@ const ACTIONS = {
   'madj-step'(b, it, e, act) { { const m = S.manualAdj || (S.manualAdj = madjBlank()); m[b.dataset.k] = Math.round(((+m[b.dataset.k] || 0) + (+b.dataset.d)) * 10) / 10; render(); return; } },
   'madj-save'(b, it, e, act) { saveManualAdj(); },
   'f-save'(b, it, e, act) { saveFood(); },
-  'metric-open'(b, it, e, act) { S.metricOpen = true; render(); { const on = document.querySelector('#sheetList .on'); if (on) on.scrollIntoView({ block: 'center' }); } },
-  'metric-close'(b, it, e, act) { S.metricOpen = false; render(); },
-  'metric-set'(b, it, e, act) { S.metric = b.dataset.col; S.metricOpen = false; render(); },
   'pick-open'(b, it, e, act) { S.pickOpen = true; render(); { const on = document.querySelector('#sheetList .on'); if (on) on.scrollIntoView({ block: 'center' }); } },
   'pick-close'(b, it, e, act) { S.pickOpen = false; render(); },
   'pick-set'(b, it, e, act) { S.pick = b.dataset.name; S.pickOpen = false; render(); },
@@ -5983,7 +5541,8 @@ const ACTIONS = {
       return; }
   },
   'pp-new'(b, it, e, act) { S.ppOpen = false; S.tab = 'settings'; S.wpEdit = null; S.wpDay = null; S.wpAsk = true; render(); window.scrollTo(0, 0); },
-  'go-plan'(b, it, e, act) { S.ppOpen = false; S.tab = 'settings'; S.wpEdit = null; S.wpDay = null; render(); window.scrollTo(0, 0); },
+  'go-plan'(b, it, e, act) {   /* Ver 0.3l: Settings › Week plan, with the plan in use open for editing */
+    const ap = planOn() ? activePlan() : null; S.ppOpen = false; store.set(K_SETOPEN, { 'Week plan': 1 }); S.tab = 'settings'; S.wpEdit = ap ? ap.id : null; S.wpDay = null; S.wpArm = null; render(); window.scrollTo(0, 0); },
   'wp-new'(b, it, e, act) { S.wpAsk = true; S.wpArm = null; render(); },
   'wp-ask-cancel'(b, it, e, act) { S.wpAsk = false; render(); },
   'wp-ask'(b, it, e, act) {
@@ -6073,19 +5632,7 @@ const ACTIONS = {
   },
   'amt-fit'(b, it, e, act) { fitAmt(+b.dataset.i); render(); },
   'f-clear'(b, it, e, act) { if (!S.clearArmed) { S.clearArmed = true; render(); setTimeout(() => { if (S.clearArmed) { S.clearArmed = false; render(); } }, 4000); } else { S.clearArmed = false; clearFoodDay(); } },
-  'th'(b, it, e, act) {
-    if (S.cmpMode) { const id = b.dataset.fid, k = S.cmp[0] === id ? 0 : S.cmp[1] === id ? 1 : -1;
-        if (k >= 0) { S.cmp[k] = null; S.cmpNext = k; }                                   // tap A or B again: clear it
-        else { const slot = !S.cmp[0] ? 0 : !S.cmp[1] ? 1 : S.cmpNext; S.cmp[slot] = id; S.cmpNext = !S.cmp[0] ? 0 : !S.cmp[1] ? 1 : 1 - slot; } }
-      else { S.sel = S.sel === b.dataset.fid ? null : b.dataset.fid; S.recrop = null; }
-      render();
-  },
-  'ph-step'(b, it, e, act) { stepPhoto(+b.dataset.d); },
-  'tl-go'(b, it, e, act) { { const el = $('#phTl'), R = tlRange(); if (el && R) el.scrollTo({ left: tlDays(R.a, b.dataset.iso) * TL_PX, behavior: 'smooth' }); return; } },
-  'ph-tap'(b, it, e, act) { if (phHeld) { phHeld = false; return; } S.sel = null; S.recrop = null; render(); },
-  'cmp-clear'(b, it, e, act) { S.cmp[+b.dataset.k] = null; S.cmpNext = +b.dataset.k; render(); },
-  'cmp-toggle'(b, it, e, act) { S.cmpMode = !S.cmpMode; S.cmpNext = 0; S.recrop = null; if (S.cmpMode) S.cmpFill = true; render(); },
-  'ph-cancel'(b, it, e, act) { S.pending = null; render(); },
+/* Ver 0.3j: tap = full screen */
   'sp-open'(b, it, e, act) { if (it) { S.sp = { id: it.id, i: +b.dataset.i }; S.active = { id: it.id, i: +b.dataset.i }; render(); } },
   'sp-close'(b, it, e, act) { S.sp = null; clearTimeout(spSaveT); saveDraft(); render(); },
   'sp-go'(b, it, e, act) { const c = spItem(); if (c) { S.sp.i = Math.max(0, Math.min(c.sets.length - 1, S.sp.i + +b.dataset.d)); S.active = { id: c.id, i: S.sp.i }; render(); } },
@@ -6130,7 +5677,7 @@ document.addEventListener('input', e => {
   // refresh only the save summary line, keep focus in the field
   const sb = document.querySelector('.savebox');
   if (sb && !S.confirm) { const n = buildEntries(S.draft).length; const p = sb.querySelector('p'); const btn = sb.querySelector('[data-act="save"]');
-    p.textContent = n ? n + ' entr' + (n === 1 ? 'y' : 'ies') + ' ready to save.' : 'Type the weight and reps you did to log a set.';
+    p.textContent = n ? n + ' entr' + (n === 1 ? 'y' : 'ies') + ' ready to save.' : 'Start an exercise and tap a set row to pick its weight and reps.';
     if (btn) btn.disabled = !n || S.saving || !S.mcp; }
 });
 document.addEventListener('input', e => {
@@ -6180,8 +5727,6 @@ document.addEventListener('change', e => {
   if (el.dataset && el.dataset.fi != null) { render(); return; }
   if (el.dataset && el.dataset.cmp) { S.cmp[+el.dataset.cmp] = el.value; render(); return; }
   if (el.id === 'phDate' && S.pending) { S.pending.date = el.value || todayIso(); return; }
-  if (el.id === 'phRep' && el.files && el.files[0]) { const id = el.dataset.fid; S.cmpMode = false; S.phDelArm = null; startPending(el.files[0], id); window.scrollTo(0, 0); return; }
-  if (el.id === 'phIn' && el.files && el.files[0]) { S.tab = 'photos'; S.sel = null; S.cmpMode = false; startPending(el.files[0]); window.scrollTo(0, 0); return; }
   if (el.id === 'planSw') { setPlanOn(el.checked); return; }
   if (el.id === 'wpName') { const p = planById(S.wpEdit); if (!p) return; const v = el.value.trim().replace(/\s+/g, ' ').slice(0, 40) || 'Untitled'; if (v === p.name) return; p.name = v; p.updated = stampNow(); render(); savePlans('The plan name'); return; }
   if (el.id === 'wpWarm') { const p = planById(S.wpEdit); if (!p) return; p.warm = el.checked; p.updated = stampNow(); if (p.active) todayFollowPlan(); render(); savePlans('The warm-up setting'); return; }
@@ -6209,7 +5754,6 @@ function openPic(name) {
     '<div class="cap"><span>' + esc(bareName(name)) + ' · start (left), end (right)<small class="pz-hint">Pinch to zoom · double-tap to reset</small></span><button class="btn" data-act="close-pic">Close</button></div></div>';
   lb.hidden = false;
 }
-function openPhoto(id) { if (!S.photoUrls.get(id)) return; S.lightboxId = id; renderLB(); $('#lightbox').hidden = false; lbPreload(); }
 // Full-screen photo: swipe left / right (not zoomed) for the next / previous photo.
 function lbPreload() { const i = (S.photos || []).findIndex(f => f.id === S.lightboxId); [i - 1, i + 1].forEach(k => { const f = S.photos[k]; if (f) ensureFull(f.id); }); }
 function lbGo(d) {
@@ -6222,11 +5766,6 @@ function lbGo(d) {
     if (S.tab === 'photos') render(); };
   setTimeout(() => { if (S.photoUrls.get(f.id)) show(); else { const cap = lb.querySelector('.cap span'); if (cap) cap.firstChild.textContent = 'Loading ' + usOf(f.iso) + '…'; ensureFull(f.id).then(u => { if (u && !lb.hidden) show(); }); } }, 170);
   return true;
-}
-function stepPhoto(d) {
-  if (!S.photos || !S.photos.length) return;
-  const i = S.photos.findIndex(f => f.id === S.sel); const n = Math.max(0, Math.min(S.photos.length - 1, (i < 0 ? S.photos.length - 1 : i) + d));
-  if (S.photos[n].id !== S.sel) { S.sel = S.photos[n].id; S.recrop = null; render(); const th = document.querySelector('.th.on'); if (th) th.scrollIntoView({ block: 'nearest', inline: 'center' }); }
 }
 // Make the photo block exactly as wide as the picture shows, so the text lines start at its left edge.
 function fitFigs() {
@@ -6440,30 +5979,9 @@ document.addEventListener('touchend', e => {
   goTab(tabs[j]);
   const v = $('#view'); v.classList.remove('sl-l', 'sl-r'); void v.offsetWidth; v.classList.add(dx < 0 ? 'sl-l' : 'sl-r');
 }, { passive: true });
-let swX = null, phHold = null, phHeld = false, phXY = null;   // big photo: a short tap closes it, holding 0.5 s opens it full screen
-document.addEventListener('pointerdown', e => { clearTimeout(phHold); phHeld = false; const im = e.target.closest('#bigPh img[data-fid]'); if (!im) return; phXY = [e.clientX, e.clientY]; phHold = setTimeout(() => { phHeld = true; openPhoto(im.dataset.fid); }, 500); }, true);
-document.addEventListener('pointermove', e => { if (phXY && Math.hypot(e.clientX - phXY[0], e.clientY - phXY[1]) > 10) { clearTimeout(phHold); phXY = null; } }, true);
-['pointerup', 'pointercancel'].forEach(t => document.addEventListener(t, () => { clearTimeout(phHold); phXY = null; }, true));
+// big photo: a short tap closes it, holding 0.5 s opens it full screen
 // Drag the big photo left / right to go to the next / previous one: the photo follows the finger,
 // past 60 px (or a quick flick) it slides out and the neighbour slides in; at the first / last photo it springs back.
-let phSw = null;
-document.addEventListener('touchstart', e => { const box = e.target.closest('#bigPh'); phSw = null; if (!box || e.touches.length !== 1 || S.cmpMode) return;
-  const im = box.querySelector('img'); if (!im) return; phSw = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now(), im, on: false, dx: 0 }; }, { passive: true });
-document.addEventListener('touchmove', e => { if (!phSw) return; const t = e.touches[0], dx = t.clientX - phSw.x, dy = t.clientY - phSw.y;
-  if (!phSw.on) { if (Math.abs(dx) < 10 || Math.abs(dx) < Math.abs(dy) * 1.2) { if (Math.abs(dy) > 12) phSw = null; return; } phSw.on = true; clearTimeout(phHold); phXY = null; }
-  e.preventDefault(); const i = S.photos.findIndex(f => f.id === S.sel), end = (dx > 0 && i <= 0) || (dx < 0 && i >= S.photos.length - 1);
-  phSw.dx = end ? dx / 3 : dx; phSw.im.style.transition = 'none'; phSw.im.style.transform = 'translateX(' + phSw.dx + 'px)'; phSw.im.style.opacity = String(1 - Math.min(.5, Math.abs(phSw.dx) / 600)); }, { passive: false });
-document.addEventListener('touchend', () => { const w = phSw; phSw = null; if (!w || !w.on) return;
-  phHeld = true; setTimeout(() => { phHeld = false; }, 350);   /* no tap-to-close after a drag */
-  const i = S.photos.findIndex(f => f.id === S.sel), d = w.dx < 0 ? 1 : -1, fast = Math.abs(w.dx) > 25 && Date.now() - w.t < 250;
-  const can = (d > 0 && i < S.photos.length - 1) || (d < 0 && i > 0), W = w.im.offsetWidth || 300;
-  if (can && (Math.abs(w.dx) > 60 || fast)) {
-    w.im.style.transition = 'transform .18s ease-in, opacity .18s'; w.im.style.transform = 'translateX(' + (d > 0 ? -W : W) + 'px)'; w.im.style.opacity = '0';
-    setTimeout(() => { stepPhoto(d); const ni = document.querySelector('#bigPh img'); if (!ni) return;
-      ni.style.transition = 'none'; ni.style.transform = 'translateX(' + (d > 0 ? W * .4 : -W * .4) + 'px)'; ni.style.opacity = '0'; void ni.offsetWidth;
-      ni.style.transition = 'transform .22s ease-out, opacity .22s'; ni.style.transform = ''; ni.style.opacity = ''; }, 170);
-  } else { w.im.style.transition = 'transform .2s ease-out, opacity .2s'; w.im.style.transform = ''; w.im.style.opacity = ''; }
-}, { passive: true });
 document.addEventListener('input', e => {
   if (e.target.id !== 'slider') return;
   S.slider = +e.target.value;
