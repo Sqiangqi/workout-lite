@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3d · 11/14/2026
+
+Matches the full app Ver 0.3d. Get started: a short questionnaire that sets up the app. It opens by itself once for someone with nothing set up (no name, no plan in use), and You (tap the logo on Home) › Set up my app opens it any time. One question per screen: your name, your weight (kg or lbs), your main goal, the days you can train, how much you have trained, how your body usually responds to food, and your weight over the past week. Then Your setup shows and applies: the body type (worked out from the answers), the carb week (2 high, 3 mid, 2 low where the days allow) and a first week plan from your Exercises list, which becomes the plan in use unless you switch that off.
+
 ## 0.3c · 11/14/2026
 
 Matches the full app Ver 0.3c. Home: tap the logo (or the pencil beside Hello) to open a You sheet: your name, your body weight (kg or lbs, the same weight and unit as Food › Weight; saving one makes Food use it, Manual) and Change the app icon, which used to open straight from the logo. Home: the Body weight tile is replaced by Last workout (Today, Yesterday or N days ago, with the date and how many exercises and sets; tap it for Progress), since most people have no weight readings.
