@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.7 · 11/14/2026
+
+[app only, no change on the web] Body tab: a kg / lbs switch right of Latest changes the top cards, the chart, the measure picker and the day cards together (body fat stays in %). It starts in your Food › Weight unit and only changes how the Body tab shows numbers.
+
 ## 0.3o.6 · 11/14/2026
 
 Matches the full app: Settings: all cards are collapsed whenever you come back to Settings; the app no longer remembers which card was open (Adjust plan and Plan my week still open their own card).
