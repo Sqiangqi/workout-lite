@@ -5034,6 +5034,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.11', '11142026', 'Matches the full app: Tab wheel: tapping a bubble opens that tab at once; turning the wheel with a swipe still opens the tab at the top after a short pause.'],
   ['0.3o.10', '11142026', 'Matches the full app: Problems (like Not saved or cannot reach Google Sheets) no longer show as a card at the top of the page: the sync pill in the header turns red (Not saved ⚠ or Problem ⚠), the message opens once in a sheet from the bottom with Retry, tapping outside closes it and tapping the red pill opens it again. Settings › Version has a Show a test problem button to see how it looks. Removed: the problem card at the top of each tab.'],
   ['0.3o.9', '11142026', 'Matches the full app: Home kcal ring: goal reached (burst and check mark) when today is within 10% of your kcal target, above or below; more than 10% over shows a full ring without the check.'],
   ['0.3o.8', '11142026', 'Matches the full app: Home rings come alive when Home opens: kcal and protein fill in small dial ticks while the numbers count up; workouts this week fills in ticks grouped into one block per training day, and each finished day merges into a solid block; a ring that reaches its goal ends with a short burst and a check mark. Plays once each time you open Home (after the loading screen) and not at all when the phone asks for reduced motion.'],
@@ -5613,8 +5614,8 @@ function viewHome() {
   const label = S.draft && S.draft.date === today && S.draft.done ? 'Workout saved ✓' : all && draftHasWork(S.draft) ? 'Continue workout' : n ? 'Start workout · ' + n + ' exercise' + (n === 1 ? '' : 's') : 'Start workout';
   return h + '<button class="hm-start" data-act="home-go" data-k="today"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>' + label + '</button>';
 }
-// The wheel. Opens with Today at the top. Drag to turn it: letting go opens the tab at the top. A tap on a bubble turns it
-// to the top and opens it; a tap on Home in the middle goes Home; a tap outside closes the wheel.
+// The wheel. Opens with Today at the top. Drag to turn it: letting go opens the tab at the top. A tap on a bubble opens
+// it at once; a tap on Home in the middle goes Home; a tap outside closes the wheel.
 const WHEEL_R = 106;
 let wheelRot = 0, wheelDrag = null, wheelTimer = 0, wheelEat = 0, wheelTabs = [];
 function wheelTop() { const n = wheelTabs.length; return ((Math.round(-wheelRot / (360 / n)) % n) + n) % n; }
@@ -5644,8 +5645,7 @@ function wheelInit() {
   w.addEventListener('pointerup', () => { if (!wheelDrag) return; const d = wheelDrag; wheelDrag = null; wheelEat = Date.now();   /* the click that follows this touch is ignored */
     if (d.moved <= 4) {   /* a tap */
       if (d.el && d.el.classList.contains('whub')) { goTab('home', d.el); return; }
-      if (d.el) { const i = +d.el.dataset.i, step = 360 / wheelTabs.length; let to = -i * step; while (to - wheelRot > 180) to -= 360; while (to - wheelRot < -180) to += 360; wheelRot = to + .0001;
-        wheelSnap(() => { wheelTimer = setTimeout(() => goTab(wheelTabs[i][0], d.el), 140); }); }
+      if (d.el) { goTab(wheelTabs[+d.el.dataset.i][0], d.el); }   /* Ver 0.3o.11: a tap opens the tab at once (no turn to the top, no wait); a swipe still turns, then opens after a short pause */
       return;
     }
     wheelSnap(() => { wheelTimer = setTimeout(() => goTab(wheelTabs[wheelTop()][0], document.querySelector('#tabWheel .wb.top')), 420); });

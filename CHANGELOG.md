@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.11 · 11/14/2026
+
+Matches the full app: Tab wheel: tapping a bubble opens that tab at once; turning the wheel with a swipe still opens the tab at the top after a short pause.
+
 ## 0.3o.10 · 11/14/2026
 
 Matches the full app: Problems (like Not saved or cannot reach Google Sheets) no longer show as a card at the top of the page: the sync pill in the header turns red (Not saved ⚠ or Problem ⚠), the message opens once in a sheet from the bottom with Retry, tapping outside closes it and tapping the red pill opens it again. Settings › Version has a Show a test problem button to see how it looks. Removed: the problem card at the top of each tab.
