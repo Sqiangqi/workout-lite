@@ -396,6 +396,13 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .sheet-list { max-height: calc(62vh - 112px); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; display: grid; gap: 4px; padding-bottom: 4px; }
 .sheet-it { text-align: left; padding: 13px 14px; border: 0; border-radius: 10px; background: var(--bg); color: var(--ink); font-size: 16px; font-weight: 600; }
 .sheet-it.on { background: var(--gold); color: var(--gold-ink); }
+.azwrap { position: relative; }
+.azwrap .sheet-list { position: relative; }
+.azwrap.has-idx .sheet-list { padding-right: 24px; }
+.az-idx { position: absolute; right: 0; top: 0; bottom: 4px; width: 22px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 2px 0; touch-action: none; user-select: none; -webkit-user-select: none; cursor: pointer; }
+.az-idx span { font-size: 10.5px; font-weight: 700; line-height: 1; color: var(--accent); padding: 0 4px; }
+.az-idx span.off { color: var(--muted); opacity: .45; }
+.az-pop { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center; background: rgba(var(--brand-rgb), .88); color: var(--gold); font-family: var(--font-display); font-size: 34px; font-weight: 700; pointer-events: none; }
 .sheet-sep { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 8px 4px 2px; }
 .switch { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 15px; color: var(--ink); cursor: pointer; }
 .switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
@@ -2549,13 +2556,13 @@ function countRows(name) {   /* [{iso, band, reps}]; old rows (count in Weight, 
 function lastBand(name) { const l = lastSession(name); if (!l) return 0; const b = countRows(name).filter(x => x.iso === l.iso && x.band > 0).map(x => x.band); return b.length ? Math.min.apply(null, b) : 0; }
 // Stopwatch exercises: Start / Stop records the seconds; a small box takes a typed time instead
 function isStopwatch(name) { return /dead.?hang/i.test(name); }
-function fmtSw(ms, tenths) { const t = Math.max(0, ms) / 1000, m = Math.floor(t / 60), sec = Math.floor(t % 60); return m + ':' + pad2(sec) + (tenths ? '.' + Math.floor((Math.max(0, ms) % 1000) / 100) : ''); }
+function fmtSw(ms, tenths) { const t = Math.max(0, ms) / 1000, m = Math.floor(t / 60), sec = Math.floor(t % 60); return m + ':' + pad2(sec) + (tenths ? '.' + pad2(Math.floor((Math.max(0, ms) % 1000) / 10)) : ''); }
 function swText(st) { return st.t0 ? fmtSw(Date.now() - st.t0, true) : fmtSw((parseFloat(st.w) || 0) * 1000); }
 function swStop(st) { if (!st || !st.t0) return false; st.w = String(Math.max(1, Math.round((Date.now() - st.t0) / 1000))); delete st.t0; return true; }
 setInterval(() => {
   const els = document.querySelectorAll('[data-sw]'); if (!els.length || !S.draft) return;
   els.forEach(el => { const [id, i] = el.dataset.sw.split('|'); const it = S.draft.items.find(x => x.id === id); const st = it && it.sets[+i]; if (st && st.t0) { const t = swText(st); if (el.textContent !== t) el.textContent = t; } });
-}, 40);   /* Ver 0.3o.13: every 40 ms so the tenths count 1, 2, 3 … (at 200 ms they jumped by two) */
+}, 16);   /* Ver 0.3o.14: hundredths while running, refreshed about every screen frame (Ver 0.3o.13: 40 ms for tenths) */
 function isFarmer(name) { return /farmer walk/i.test(name); }
 function isBench(name) { return /^(\d+ )?Bench Press/.test(name); }
 // Bench Press sets of 10 lbs or less are warm-ups (before that only 0 was skipped): left out of the chart and records.
@@ -4092,7 +4099,7 @@ function viewToday() {
     const item = n => '<button class="sheet-it" role="option" data-act="add-ex" data-name="' + esc(n) + '">' + esc(bareName(n)) + '</button>';
     const favs = names.filter(isFav).sort((a, b) => bareName(a).localeCompare(bareName(b))), plan = [], other = names.filter(n => !isFav(n)).sort((a, b) => bareName(a).localeCompare(bareName(b)));
     h += '<div class="sheet-bg" data-act="add-close"><div class="sheet" role="listbox" aria-label="Add an exercise" data-act="noop"><div class="sheet-h"><b>Add an exercise</b><button class="btn sm" data-act="add-close">Close</button></div>' +
-      '<div class="sheet-list" id="sheetList">' + (favs.length ? '<div class="sheet-sep">★ Favourites</div>' + favs.map(item).join('') : '') + (other.length ? '<div class="sheet-sep">' + (favs.length ? 'Other exercises' : 'Exercises') + '</div>' + other.map(item).join('') : '') + '</div></div></div>';
+      azBlock(other, item, favs) + '</div></div>';
   }
   const n = buildEntries(d).length;
   const LS = S.lastSave && !n ? S.lastSave : null, fresh = LS && Date.now() - LS.at < 2600;
@@ -4312,6 +4319,32 @@ function placeholder(name) {
 }
 
 // ---------- progress ----------
+// Ver 0.3o.14: exercise lists in a sheet are A to Z with letter headings and an A–Z strip on the right (like the iPhone's
+// Contacts): tap a letter or slide a finger along the strip to jump to it. favs (optional) stay on top under ★.
+const AZ = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#';
+function azKey(n) { const c = bareName(n).trim().charAt(0).toUpperCase(); return c >= 'A' && c <= 'Z' ? c : '#'; }
+function azBlock(names, item, favs) {
+  favs = favs || [];
+  const sorted = names.slice().sort((a, b) => bareName(a).localeCompare(bareName(b), undefined, { sensitivity: 'base' })), groups = new Map();
+  sorted.forEach(n => { const k = azKey(n); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(n); });
+  let list = favs.length ? '<div class="sheet-sep az-sep" data-az="★">★ Favourites</div>' + favs.map(item).join('') : '';
+  [...AZ].forEach(k => { if (groups.has(k)) list += '<div class="sheet-sep az-sep" data-az="' + k + '">' + k + '</div>' + groups.get(k).map(item).join(''); });
+  const idx = names.length + favs.length >= 8 ? '<div class="az-idx" aria-hidden="true">' + (favs.length ? '<span data-az="★">★</span>' : '') + [...AZ].map(k => '<span data-az="' + k + '"' + (groups.has(k) ? '' : ' class="off"') + '>' + k + '</span>').join('') + '</div>' : '';
+  return '<div class="azwrap' + (idx ? ' has-idx' : '') + '"><div class="sheet-list" id="sheetList">' + list + '</div>' + idx + '<div class="az-pop" id="azPop" hidden></div></div>';
+}
+let azDrag = null, azPopT = 0;
+function azJump(x, y) {
+  const el = document.elementFromPoint(x, y), sp = el && el.closest && el.closest('.az-idx [data-az]'); if (!sp || !azDrag) return;
+  const wrap = azDrag, list = wrap.querySelector('.sheet-list'), k = sp.dataset.az, order = ['★'].concat([...AZ]);
+  let sep = null; for (let i = order.indexOf(k); i < order.length && !sep; i++) sep = list.querySelector('.az-sep[data-az="' + order[i] + '"]');
+  if (!sep) for (let i = order.indexOf(k) - 1; i >= 0 && !sep; i--) sep = list.querySelector('.az-sep[data-az="' + order[i] + '"]');
+  if (sep) list.scrollTop = sep.offsetTop - list.firstElementChild.offsetTop;
+  const pop = wrap.querySelector('.az-pop'); if (pop) { pop.textContent = k; pop.hidden = false; clearTimeout(azPopT); azPopT = setTimeout(() => { pop.hidden = true; }, 600); }
+}
+document.addEventListener('pointerdown', e => { const idx = e.target.closest && e.target.closest('.az-idx'); if (!idx) return; e.preventDefault(); azDrag = idx.closest('.azwrap'); try { idx.setPointerCapture(e.pointerId); } catch (x) {} azJump(e.clientX, e.clientY); });
+document.addEventListener('pointermove', e => { if (azDrag) { e.preventDefault(); azJump(e.clientX, e.clientY); } }, { passive: false });
+document.addEventListener('pointerup', () => { azDrag = null; });
+document.addEventListener('pointercancel', () => { azDrag = null; });
 function chartNames() {
   // Ver 0.3n: every exercise with at least one entry, user 2026-11-14 (plan exercises without entries no longer listed).
   // Order: as in the Sheet, then exercises no longer in the Sheet A to Z.
@@ -4335,7 +4368,7 @@ function viewProgress() {
   if (S.pickOpen) {
     const item = n => '<button class="sheet-it' + (n === S.pick ? ' on' : '') + '" role="option" aria-selected="' + (n === S.pick) + '" data-act="pick-set" data-name="' + esc(n) + '">' + esc(bareName(n)) + '</button>';
     h += '<div class="sheet-bg" data-act="pick-close"><div class="sheet" role="listbox" aria-label="Exercise to chart" data-act="noop"><div class="sheet-h"><b>Choose exercise</b><button class="btn sm" data-act="pick-close">Close</button></div>' +
-      '<div class="sheet-list" id="sheetList">' + (withData.length ? withData.map(item).join('') : '<div class="sheet-sep">No entries yet: exercises show here once you log them</div>') + '</div></div></div>';
+      (withData.length ? azBlock(withData, item) : '<div class="sheet-list" id="sheetList"><div class="sheet-sep">No entries yet: exercises show here once you log them</div></div>') + '</div></div>';
   }
   return h;
 }
@@ -5092,6 +5125,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.14', '11142026', 'Matches the full app: Stopwatch (Dead Hang) shows hundredths of a second while it runs (0:12.34); the saved time is still whole seconds. Exercise lists (Progress › Exercise and Start workout › Choose exercise) are A to Z with a letter heading for each letter and an A–Z strip on the right, like the iPhone: tap a letter or slide a finger along it to jump there. Favourites stay on top in Choose exercise. Removed: the Sheet order of the Progress exercise list.'],
   ['0.3o.13', '11142026', 'Matches the full app: Stopwatch exercises (Dead Hang): the tenths of a second now count up one by one (they used to jump by two), so the clock runs smoothly.'],
   ['0.3o.12', '11142026', 'Matches the full app: Library: when the sides of the body figure are full, arm exercises move to the band above the figure (they used to drop under it). Add an exercise: Muscle worked is picked from chips (Chest, Shoulders, Back, Biceps, Triceps, Forearms, Quads, Glutes, Hamstrings, Calves, Core, Cardio) so a new exercise always lands in the right place; typing a name suggests common exercises (a tap fills in category, unit and muscles) and shows matching ones already in your list; a name that is nearly the same as one you have (Chest Fly / chest flys) is caught; names are saved in Title Case. Removed: the free-text Muscle worked box.'],
   ['0.3o.11', '11142026', 'Matches the full app: Tab wheel: tapping a bubble opens that tab at once; turning the wheel with a swipe still opens the tab at the top after a short pause.'],
