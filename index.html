@@ -94,6 +94,16 @@ body.no-timer main .wrap { padding-bottom: 40px; }
 .sync.prob { cursor: pointer; font-weight: 700; }
 header.top .sync.err.prob, body.home header.top .sync.err.prob { color: #fff; background: #b3261e; border-color: #ff9d93; }
 .prob-sheet .prob-txt { margin: 0; padding: 0 4px; font-size: 15px; color: var(--ink); }
+/* Ver 0.3o.25: test mode is a place: amber striped bar under the header and an amber frame while it is on */
+#tmBanner { position: fixed; left: 0; right: 0; top: calc(env(safe-area-inset-top, 0px) + var(--hdr-h, 92px)); z-index: 6; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 6px max(16px, env(safe-area-inset-right, 0px)) 6px max(16px, env(safe-area-inset-left, 0px)); color: #2a1a00;
+  background: repeating-linear-gradient(-45deg, #f2b33d 0 12px, #e8a01e 12px 24px); box-shadow: 0 2px 8px rgba(0,0,0,.25); font-size: 13px; }
+#tmBanner b { letter-spacing: .14em; font-weight: 800; }
+#tmBanner .tmb-acts { display: flex; gap: 6px; }
+#tmBanner button { border: 0; border-radius: 999px; padding: 5px 13px; font: inherit; font-weight: 700; background: #2a1a00; color: #f6c35a; cursor: pointer; }
+body.testing main .wrap { padding-top: 54px; }
+body.testing::after { content: ""; position: fixed; inset: 0; border: 3px solid #f2b33d; pointer-events: none; z-index: 60; }
+.tm-page { gap: 6px; }
 .panel.about { gap: 10px; }
 /* Ver 0.3o.24: About matches the other Settings cards: flat sections with a bold title, a thin line between them, plain rows */
 .subcard { display: grid; gap: 6px; }
@@ -3794,6 +3804,8 @@ async function saveSession() {
 
 // ---------- rendering ----------
 function render() {
+  if (S.tab === 'test' && !S.testMode) S.tab = 'settings';
+  try { renderTestBanner(); } catch (x) {}
   if (!S.problem) S.probOpen = false; else if (S.problem !== S.probSeen) { S.probSeen = S.problem; S.probOpen = true; }   /* Ver 0.3o.10: a new problem opens its sheet once */
   renderHeader(); probPill();
   renderIconSheet();
@@ -3822,6 +3834,7 @@ function render() {
   else if (S.tab === 'today') { v.innerHTML = viewToday(); renderTimer(); renderSetPick(); }
   else if (S.tab === 'progress') v.innerHTML = viewProgress();
   else if (S.tab === 'food') { v.innerHTML = viewFood() + addFoodSheet() + qfSheet() + qfTableSheet(); qfFilter(); qfFitNames(); const fi = S.faFocus && document.getElementById(S.faFocus); if (fi) { fi.focus(); S.faFocus = null; } }
+  else if (S.tab === 'test') v.innerHTML = viewTest();   /* Ver 0.3o.25 */
   else if (S.tab === 'settings') { const sb = $('#wpBody'), st = sb ? sb.scrollTop : 0; v.innerHTML = viewSettings(); if (!S.wpEdit) foldSettings(v); const nb = $('#wpBody'); if (nb) nb.scrollTop = st; }
   else { const sb = $('#nxBody'), st = sb ? sb.scrollTop : 0; v.innerHTML = viewLibrary() + addExSheet(); const nb = $('#nxBody'); if (nb) nb.scrollTop = st; }
   foodWeekBar();
@@ -5174,6 +5187,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.25', '11142026', 'Matches the full app: Test mode is now a place: Settings › About › Test mode has one row, Enter test mode, which opens a Test mode page with the tests to tap. While in test mode an amber striped bar stays under the header (Tests goes back to the list, Exit goes back to the app) and an amber frame goes around the screen. Removed: the test list inside About.'],
   ['0.3o.24', '11142026', 'Matches the full app: Settings › About now looks like the other Settings cards: Version and Test mode are flat sections with a bold title and a thin line between them, and the tests are plain rows with an arrow.'],
   ['0.3o.23', '11142026', 'Matches the full app: Settings › About: the Test mode card shows for the owner only.'],
   ['0.3o.22', '11142026', 'Matches the full app: Settings › About: the Test mode card is always there under Version (no more tapping the version line 5 times). Removed: the 5-tap switch and the Turn off test mode button.'],
@@ -5245,14 +5259,28 @@ function testCard() {   /* Ver 0.3o.20: Settings › Test mode (turn on by tappi
   /* Ver 0.3o.22: always shown in About (no 5-tap switch); Ver 0.3o.23: to the owner only */
   if (!S.isOwner) return '';
   const b = (act, lab, sub) => '<button class="tm-it" data-act="' + act + '"><b>' + lab + '</b><span>' + sub + '</span></button>';
-  return '<div class="subcard tm"><p class="sub-h">Test mode</p><p class="hint">For trying things out. Nothing here changes your data.</p>' +
-    b('tm-ob', 'New user: Get started', 'The setup questions with blank answers; finishing saves nothing') +
+  /* Ver 0.3o.25: About only has the way in; the tests are on the Test mode page (viewTest) */
+  return '<div class="subcard tm"><p class="sub-h">Test mode</p>' + b('tm-enter', 'Enter test mode', 'New-user screens, problems and animations. Nothing changes your data.') + '</div>';
+}
+function tmList() {
+  const b = (act, lab, sub) => '<button class="tm-it" data-act="' + act + '"><b>' + lab + '</b><span>' + sub + '</span></button>';
+  return b('tm-ob', 'New user: Get started', 'The setup questions with blank answers; finishing saves nothing') +
     b('tm-setup', 'New user: first open', 'The Create my folder screen; its buttons do nothing in a test') +
     b('prob-test', 'Show a problem', 'Red pill and the problem sheet; Retry clears it') +
     b('tm-notsaved', 'Show Not saved', 'The save-failed version of the problem') +
-    b('tm-anim', 'Replay Home animations', 'Rings, muscles chart and checks play again') +
-    '</div>';   /* closes .subcard */
+    b('tm-anim', 'Replay Home animations', 'Rings, muscles chart and checks play again');
 }
+function viewTest() {
+  return problemBox() + '<p class="section-h">Test mode</p><div class="panel tm-page"><p class="hint">Tap a test to try it. The amber bar stays on while you are in test mode: Tests brings you back here, Exit goes back to the app. Nothing here changes your data.</p>' + tmList() +
+    '<div class="row-acts"><button class="btn" data-act="tm-exit">Exit test mode</button></div></div>';
+}
+function renderTestBanner() {
+  let bn = document.getElementById('tmBanner'); document.body.classList.toggle('testing', !!S.testMode);
+  if (!S.testMode) { if (bn) bn.remove(); return; }
+  if (!bn) { bn = document.createElement('div'); bn.id = 'tmBanner'; bn.setAttribute('role', 'status'); document.body.appendChild(bn); }
+  bn.innerHTML = '<b>TEST MODE</b><span class="tmb-acts">' + (S.tab === 'test' && !S.setupTest ? '' : '<button data-act="tm-list">Tests</button>') + '<button data-act="tm-exit">Exit</button></span>';
+}
+
 function viewSettings() {
   if (S.wpEdit) return viewPlanEdit();
   let h = problemBox();
@@ -5617,7 +5645,7 @@ const NAV_ICON = {
   settings: '<circle cx="12" cy="5" r="1.7" fill="currentColor"/><circle cx="12" cy="12" r="1.7" fill="currentColor"/><circle cx="12" cy="19" r="1.7" fill="currentColor"/>'   /* three dots, one above the other */
 };
 function navIcon(k, px) { return '<svg viewBox="0 0 24 24" width="' + px + '" height="' + px + '" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (NAV_ICON[k] || NAV_ICON.home) + '</svg>'; }
-function navName(k) { return (NAV.find(t => t[0] === k) || ['', 'Home'])[1]; }
+function navName(k) { if (k === 'test') return 'Test mode'; return (NAV.find(t => t[0] === k) || ['', 'Home'])[1]; }
 function navList() { return NAV; }
 /* from = the tapped bubble or button: the new page grows as a circle from it, like a colour theme change (themeSwap).
    Without it (swipes), or on phones without view transitions or with Reduce Motion, the page fades in. */
@@ -5939,6 +5967,10 @@ const ACTIONS = {
   },
   'tm-tap'(b, it, e, act) { const n = Date.now(); S.tmTaps = (S.tmTaps || []).filter(t => n - t < 2500).concat(n);
     if (S.tmTaps.length >= 5) { S.tmTaps = []; const on = !store.get('wlite.testmode.v1'); store.set('wlite.testmode.v1', on ? 1 : null); if (!on) store.del('wlite.testmode.v1'); toast(on ? 'Test mode on: Settings › About, under Version.' : 'Test mode off.'); render(); } },
+  'tm-enter'(b, it, e, act) { S.testMode = true; S.tmFrom = S.tab; goTab('test', b); },
+  'tm-list'(b, it, e, act) { if (S.setupTest) { S.setupTest = null; } if (S.obTest) { S.obTest = false; S.ob = null; renderOb(); } goTab('test'); },
+  'tm-exit'(b, it, e, act) { S.testMode = false; if (S.problem && S.problem.act === 'prob-test-end') S.problem = null; if (S.obTest) { S.obTest = false; S.ob = null; renderOb(); }
+    if (S.setupTest) { S.setupTest = null; } store.set(K_SETOPEN, { 'About': 1 }); goTab('settings'); toast('Back to the app.'); },
   'tm-off'(b, it, e, act) { store.del('wlite.testmode.v1'); toast('Test mode off.'); render(); },
   'tm-anim'(b, it, e, act) { S.hmAnim = false; goTab('home', b); },
   'tm-notsaved'(b, it, e, act) { S.problem = { text: 'Not saved. Test: this is how a failed save looks. Your entries are still here.', retry: true, label: 'Save again', act: 'prob-test-end' }; render(); },

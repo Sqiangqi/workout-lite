@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.25 · 11/14/2026
+
+Matches the full app: Test mode is now a place: Settings › About › Test mode has one row, Enter test mode, which opens a Test mode page with the tests to tap. While in test mode an amber striped bar stays under the header (Tests goes back to the list, Exit goes back to the app) and an amber frame goes around the screen. Removed: the test list inside About.
+
 ## 0.3o.24 · 11/14/2026
 
 Matches the full app: Settings › About now looks like the other Settings cards: Version and Test mode are flat sections with a bold title and a thin line between them, and the tests are plain rows with an arrow.
