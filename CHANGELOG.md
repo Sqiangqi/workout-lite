@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.6 · 11/14/2026
+
+Matches the full app: Settings: all cards are collapsed whenever you come back to Settings; the app no longer remembers which card was open (Adjust plan and Plan my week still open their own card).
+
 ## 0.3o.5 · 11/14/2026
 
 Matches the full app: Food tiles: the amount (112 g, 1 pc …) is never cut off again (0.3o.4 cut it to 1… on the iPhone); when a tile is tight the kcal number gets a little smaller first, then the word kcal is left out.

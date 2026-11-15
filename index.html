@@ -3736,7 +3736,7 @@ function render() {
   if (S.tab === 'photos' || S.tab === 'body') S.tab = 'home';   /* Workout Lite has no Body or Photos tabs */
   // Home has no bottom button; a tab page has the round button with its own icon and the tab's name under it
   document.body.classList.toggle('home', S.tab === 'home');
-  if (S.tab !== 'settings') S.planFrom = null;   /* Ver 0.3o.1: the return button to Start workout is only for a Week plan opened from there */
+  if (S.tab !== 'settings') { S.planFrom = null; const so = store.get(K_SETOPEN); if (so && Object.keys(so).length) store.set(K_SETOPEN, {}); }   /* Ver 0.3o.6: leaving Settings closes its cards, so Settings always opens with all cards collapsed */   /* Ver 0.3o.1: the return button to Start workout is only for a Week plan opened from there */
   { const bk = $('#dockBack'), pf = S.tab === 'settings' && S.planFrom === 'today'; if (bk) { bk.hidden = !(pf || (S.tab === 'today' && S.draft && S.draft.items.some(x => x.open)));
     const lb = pf ? 'Back to Start workout' : 'Back to all of today’s exercises (keeps what you typed)'; bk.setAttribute('aria-label', lb); bk.title = pf ? 'Back to Start workout' : 'Back to all exercises'; } }
   { const db = $('#dockBtn'); if (db) { db.innerHTML = navIcon('home', 26); db.setAttribute('aria-label', 'Home (now on ' + navName(S.tab) + ')'); } }
@@ -5002,6 +5002,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.6', '11142026', 'Matches the full app: Settings: all cards are collapsed whenever you come back to Settings; the app no longer remembers which card was open (Adjust plan and Plan my week still open their own card).'],
   ['0.3o.5', '11142026', 'Matches the full app: Food tiles: the amount (112 g, 1 pc …) is never cut off again (0.3o.4 cut it to 1… on the iPhone); when a tile is tight the kcal number gets a little smaller first, then the word kcal is left out.'],
   ['0.3o.4', '11142026', 'Matches the full app: Food tiles: the amount (100 g, 1 pc …) and the kcal sit in one row that keeps them apart, so the amount no longer runs under the kcal number; a long amount ends in … instead.'],
   ['0.3o.3', '11142026', 'Matches the full app: Day cards under the Body and Progress charts: the number is a little smaller and the unit (kg, lbs, %, reps) is small, grey and not bold.'],
