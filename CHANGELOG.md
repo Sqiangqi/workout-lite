@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.2 · 11/14/2026
+
+Matches the full app: Home, Last workout tile: the muscle names are a little smaller and both columns stay inside the card; a name that still does not fit makes the names step down in size instead of being cut off.
+
 ## 0.3o.1 · 11/14/2026
 
 Matches the full app: Exercise pictures follow proper form: Lat Pulldown thighs touch the pad, bar passes in front of the face, elbows drive down; Bulgarian split squat and Barbell back squat keep the feet planted (bar over mid-foot, rear knee just above the floor); Chest fly lowers only to chest level; Incline rear delt raise shown from the front with the arms going out to the sides; Preacher curl stops before vertical; Leg press ends with soft knees; Overhead triceps extension in a split stance with a slight lean. Week plan opened from Start workout (Adjust plan, Edit plans or + New plan) shows a return arrow at the lower right that goes back to Start workout.

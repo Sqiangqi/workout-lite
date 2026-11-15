@@ -1165,8 +1165,8 @@ body.home main .wrap { gap: 10px; padding-bottom: calc(var(--tabbar-h) + 20px); 
 .hm-tiles .tile .val.nm { font-size: clamp(17px, 4.8vw, 21px); white-space: normal; line-height: 1.1; }
 .hm-tiles .chg.dn { color: var(--good); } .hm-tiles .chg.upw { color: var(--warn); }
 .hm-spark { display: block; width: 100%; height: 26px; margin-top: 2px; }
-.hm-mus { display: grid; grid-template-columns: max-content minmax(0, auto); justify-content: start; gap: 4px clamp(5px, 2.4vw, 10px); margin: 2px 0 1px; }   /* Ver 0.3g: two columns, each as wide as its longest name */   /* Ver 0.3f: muscles of the last workout, each with a green check */
-.hm-mus i { display: flex; align-items: center; gap: 4px; min-width: 0; font-style: normal; font-family: var(--font-display); font-size: clamp(13.5px, 3.95vw, 15.5px); letter-spacing: .01em; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hm-mus { display: grid; grid-template-columns: repeat(2, minmax(0, max-content)); justify-content: start; gap: 4px clamp(5px, 2vw, 8px); margin: 2px 0 1px; }   /* Ver 0.3g: two columns, each as wide as its longest name */   /* Ver 0.3f: muscles of the last workout, each with a green check */
+.hm-mus i { display: flex; align-items: center; gap: 4px; min-width: 0; font-style: normal; font-family: var(--font-display); font-size: clamp(12.5px, 3.7vw, 15px); letter-spacing: .01em; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hm-mus i b { flex: none; width: 15px; height: 15px; font-size: 9.5px; }
 .hm-mus i b { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: var(--good); color: var(--surface); font-size: 10px; font-weight: 800; }
 .hm-start { position: sticky; bottom: calc(var(--tabbar-h) + 10px); z-index: 3; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 2px; padding: 14px 12px; border: 0; border-radius: 12px; background: var(--gold); color: var(--gold-ink); font-family: var(--font-display); font-size: 19px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; box-shadow: 0 6px 18px rgba(0, 0, 0, .25); }
@@ -3735,7 +3735,7 @@ function render() {
   { const hd = document.querySelector('header.top'); if (hd) document.documentElement.style.setProperty('--hdr-h', hd.offsetHeight + 'px'); }
   document.body.classList.toggle('setup', S.tab === 'setup');
   if (S.tab === 'setup') { v.classList.remove('today-view'); v.innerHTML = viewSetup(); return; }   /* Workout Lite: first open, no Sheet yet */
-  if (S.tab === 'home') { v.innerHTML = viewHome(); setTimeout(obAuto, 400); snapSoon(); }
+  if (S.tab === 'home') { v.innerHTML = viewHome(); hmFitMus(); setTimeout(obAuto, 400); snapSoon(); }
   else if (S.tab === 'today') { v.innerHTML = viewToday(); renderTimer(); renderSetPick(); }
   else if (S.tab === 'progress') v.innerHTML = viewProgress();
   else if (S.tab === 'food') { v.innerHTML = viewFood() + addFoodSheet() + qfSheet() + qfTableSheet(); qfFilter(); qfFitNames(); const fi = S.faFocus && document.getElementById(S.faFocus); if (fi) { fi.focus(); S.faFocus = null; } }
@@ -4990,6 +4990,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.2', '11142026', 'Matches the full app: Home, Last workout tile: the muscle names are a little smaller and both columns stay inside the card; a name that still does not fit makes the names step down in size instead of being cut off.'],
   ['0.3o.1', '11142026', 'Matches the full app: Exercise pictures follow proper form: Lat Pulldown thighs touch the pad, bar passes in front of the face, elbows drive down; Bulgarian split squat and Barbell back squat keep the feet planted (bar over mid-foot, rear knee just above the floor); Chest fly lowers only to chest level; Incline rear delt raise shown from the front with the arms going out to the sides; Preacher curl stops before vertical; Leg press ends with soft knees; Overhead triceps extension in a split stance with a slight lean. Week plan opened from Start workout (Adjust plan, Edit plans or + New plan) shows a return arrow at the lower right that goes back to Start workout.'],
   ['0.3o', '11142026', 'Matches the full app Ver 0.3o (its 0.3n.1 to 0.3n.15). Loading screen: the app opens at once on a loading screen with the app icon, a greeting for the time of day (with your name) and the date, in the colours of your style and theme, and fades into Home when Home is ready. Quick start: a copy of the Home page as you last saw it shows the moment the app opens, then the live page takes its place. Faster start: the page no longer waits for the Go Blue fonts, and the stick-figure pictures are kept in a smaller form. Styles: Settings › Appearance › Style chooses Go Blue (the app as it was) or Studio (plain and quiet: the phone’s own font, white cards without borders, round pill buttons, one accent colour from the color theme). Moving exercise pictures: the stick figures move from START to END and back (switch in Settings › Appearance; still with Reduce Motion). Lat Pulldown and Incline bench press now have stick-figure pictures too. Rest timer ring: shows the time left and drains back to the top; orange with beating numbers in the last 10 seconds; green with a ripple and Rest over at the end. Changing tabs from Home, the wheel or the Home button opens the new page as a circle growing from where you tapped. Settings are kept in your food Sheet too (Food settings tab): your name, the questionnaire answers, style, color theme, dark mode, moving pictures, weight mode and a few view choices, read back if the phone loses its stored data. Starter foods for new people: names follow one style, the food first and the kind in brackets (Pasta (dry), White rice (cooked), Milk (2%) …); chicken thighs and beef sausage are entered in grams; new foods Potato (boiled) and Tomato (raw).'],
   ['0.3n', '11142026', 'Matches the full app Ver 0.3n. Progress exercise list: shows every exercise that has entries (also ones no longer in a plan or the Sheet), and no longer lists exercises without entries.'],
@@ -5418,6 +5419,12 @@ function snapSoon() {
       logo: lg ? lg.getAttribute('src') : '', user: userName(), ring: v('--gold'), style: styleOf() })); } catch (e) {}
   }, 1500);
 }
+// Ver 0.3o.2: Last workout tile: muscle names step down in size until each fits its column (a wider font, e.g. while Barlow is not loaded, used to push the second column out of the card)
+function hmFitMus() {
+  document.querySelectorAll('.hm-mus').forEach(g => { const is = [...g.children]; is.forEach(i => { i.style.fontSize = ''; });
+    let px = is.length ? parseFloat(getComputedStyle(is[0]).fontSize) : 0;
+    while (px > 10.5 && (g.scrollWidth > g.clientWidth + 1 || is.some(i => i.scrollWidth > i.clientWidth + 1))) { px -= .5; is.forEach(i => { i.style.fontSize = px + 'px'; }); } }); }
+try { document.fonts && document.fonts.ready.then(() => hmFitMus()); window.addEventListener('resize', () => hmFitMus()); } catch (x) {}
 function goTab(t, from) {
   const go = () => { closeWheel(); S.tab = t; render(); window.scrollTo(0, 0); };
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
