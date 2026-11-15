@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.24 · 11/14/2026
+
+Matches the full app: Settings › About now looks like the other Settings cards: Version and Test mode are flat sections with a bold title and a thin line between them, and the tests are plain rows with an arrow.
+
 ## 0.3o.23 · 11/14/2026
 
 Matches the full app: Settings › About: the Test mode card shows for the owner only.

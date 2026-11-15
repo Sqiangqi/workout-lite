@@ -95,13 +95,16 @@ body.no-timer main .wrap { padding-bottom: 40px; }
 header.top .sync.err.prob, body.home header.top .sync.err.prob { color: #fff; background: #b3261e; border-color: #ff9d93; }
 .prob-sheet .prob-txt { margin: 0; padding: 0 4px; font-size: 15px; color: var(--ink); }
 .panel.about { gap: 10px; }
-.subcard { display: grid; gap: 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); }
-.subcard .sub-h { margin: 0; font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+/* Ver 0.3o.24: About matches the other Settings cards: flat sections with a bold title, a thin line between them, plain rows */
+.subcard { display: grid; gap: 6px; }
+.subcard + .subcard { border-top: 1px solid var(--line); padding-top: 10px; }
+.subcard .sub-h { margin: 0; font-size: 15px; font-weight: 700; color: var(--ink); }
 .subcard .ver { margin: 0; }
-.subcard.tm .tm-it { background: var(--surface); }
-.tm { gap: 8px; }
-.tm-it { display: grid; gap: 1px; text-align: left; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); font: inherit; cursor: pointer; }
-.tm-it b { font-size: 15px; } .tm-it span { font-size: 12.5px; color: var(--muted); }
+.tm { gap: 6px; }
+.tm-it { position: relative; display: grid; gap: 1px; text-align: left; padding: 9px 26px 9px 0; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: none; color: var(--ink); font: inherit; cursor: pointer; }
+.tm-it::after { content: ""; position: absolute; right: 6px; top: 50%; width: 8px; height: 8px; border-right: 2.5px solid var(--muted); border-bottom: 2.5px solid var(--muted); transform: translateY(-50%) rotate(-45deg); }
+.tm-it:active { background: rgba(var(--gold-rgb), .12); }
+.tm-it b { font-size: 15px; font-weight: 600; } .tm-it span { font-size: 12px; color: var(--muted); }
 .tm-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; margin-bottom: 10px; border-radius: 10px; background: rgba(var(--gold-rgb), .22); border: 1px dashed var(--gold); }
 .prob-acts { justify-content: flex-end; padding: 4px 2px 2px; }
 
@@ -5171,6 +5174,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.24', '11142026', 'Matches the full app: Settings › About now looks like the other Settings cards: Version and Test mode are flat sections with a bold title and a thin line between them, and the tests are plain rows with an arrow.'],
   ['0.3o.23', '11142026', 'Matches the full app: Settings › About: the Test mode card shows for the owner only.'],
   ['0.3o.22', '11142026', 'Matches the full app: Settings › About: the Test mode card is always there under Version (no more tapping the version line 5 times). Removed: the 5-tap switch and the Turn off test mode button.'],
   ['0.3o.21', '11142026', 'Matches the full app: Settings: the Version card is now called About; inside it, Version is the first card and Test mode (when turned on) the second.'],
