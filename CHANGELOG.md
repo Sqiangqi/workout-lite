@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.23 · 11/14/2026
+
+Matches the full app: Settings › About: the Test mode card shows for the owner only.
+
 ## 0.3o.22 · 11/14/2026
 
 Matches the full app: Settings › About: the Test mode card is always there under Version (no more tapping the version line 5 times). Removed: the 5-tap switch and the Turn off test mode button.
