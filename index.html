@@ -1171,6 +1171,13 @@ body.home main .wrap { padding-top: 4px; padding-bottom: 20px; }
 .mx-num { font-family: var(--font-body); font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; }
 .mx-sum { margin: 0; text-align: center; font-size: 13px; color: var(--muted); }
 .mx-sum b { color: var(--ink); }
+/* Ver 0.3o.15: when Home opens, the gold area grows out of the centre with a small spring and the dots pop in one by one */
+.mx-card.anim .mx-area { animation: mxGrow 1.1s cubic-bezier(.22, 1.2, .36, 1) .3s both; }
+.mx-card.anim .mx-dot { transform-box: fill-box; transform-origin: center; animation: mxDot .35s cubic-bezier(.3, 1.6, .5, 1) both; animation-delay: calc(1s + var(--k, 0) * 70ms); }
+.mx-card.hold * { animation-play-state: paused !important; }
+@keyframes mxGrow { 0% { transform: scale(0); opacity: 0; } 35% { opacity: 1; } 100% { transform: none; opacity: 1; } }
+@keyframes mxDot { from { transform: scale(0); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .mx-card.anim .mx-area, .mx-card.anim .mx-dot { animation: none; } }
 @keyframes mxIn { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .mx-area { animation: none; } }
 /* Ver 0.3b: new Home (design B): compact header, three rings, Muscles worked, two tiles, Start workout pinned above the strip */
@@ -5125,6 +5132,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.15', '11142026', 'Matches the full app: Home, Muscles worked: when Home opens (first open or coming back from another tab), the gold area grows out of the centre with a small spring and the dots pop in one by one, together with the rings.'],
   ['0.3o.14', '11142026', 'Matches the full app: Stopwatch (Dead Hang) shows hundredths of a second while it runs (0:12.34); the saved time is still whole seconds. Exercise lists (Progress › Exercise and Start workout › Choose exercise) are A to Z with a letter heading for each letter and an A–Z strip on the right, like the iPhone: tap a letter or slide a finger along it to jump there. Favourites stay on top in Choose exercise. Removed: the Sheet order of the Progress exercise list.'],
   ['0.3o.13', '11142026', 'Matches the full app: Stopwatch exercises (Dead Hang): the tenths of a second now count up one by one (they used to jump by two), so the clock runs smoothly.'],
   ['0.3o.12', '11142026', 'Matches the full app: Library: when the sides of the body figure are full, arm exercises move to the band above the figure (they used to drop under it). Add an exercise: Muscle worked is picked from chips (Chest, Shoulders, Back, Biceps, Triceps, Forearms, Quads, Glutes, Hamstrings, Calves, Core, Cardio) so a new exercise always lands in the right place; typing a name suggests common exercises (a tap fills in category, unit and muscles) and shows matching ones already in your list; a name that is nearly the same as one you have (Chest Fly / chest flys) is caught; names are saved in Title Case. Removed: the free-text Muscle worked box.'],
@@ -5606,7 +5614,7 @@ function muscleCard() {
   if (!total) svg += '<polygon class="mx-area" points="' + poly((m, i) => R * SMP[i] / 11) + '"/>';
   if (total) {
     svg += '<polygon class="mx-area" points="' + poly(m => R * Math.max(.04, v[m] / max)) + '"/>';
-    MX_AXES.forEach((m, i) => { if (v[m]) { const [x, y] = pt(i, R * v[m] / max); svg += '<circle class="mx-dot" cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="4"/>'; } });
+    MX_AXES.forEach((m, i) => { if (v[m]) { const [x, y] = pt(i, R * v[m] / max); svg += '<circle class="mx-dot" style="--k:' + i + '" cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="4"/>'; } });
   }
   MX_AXES.forEach((m, i) => {   /* axis name with its set count under it */
     const [x, y] = pt(i, R + 20), c = Math.cos(ang(i)), an = Math.abs(c) < .2 ? 'middle' : c > 0 ? 'start' : 'end', dy = Math.sin(ang(i)) < -.5 ? -8 : 0;
@@ -5616,7 +5624,7 @@ function muscleCard() {
   svg += '</svg>';
   if (!total) svg = smpWrap(svg, '', 'Each saved set lights up the muscles it trains.');
   const tops = MX_AXES.filter(m => total && v[m] === max);
-  return '<div class="mx-card"><div class="mx-h"><b>Muscles worked</b><div class="seg mx-seg" role="group" aria-label="Period">' +
+  return '<div class="mx-card' + (S.hmAnim ? '' : ' anim hold') + '"><div class="mx-h"><b>Muscles worked</b><div class="seg mx-seg" role="group" aria-label="Period">' +
     [7, 30].map(d => '<button class="btn sm' + (d === days ? ' on' : '') + '" data-act="mx-days" data-d="' + d + '" aria-pressed="' + (d === days) + '">' + d + ' days</button>').join('') + '</div></div>' + svg +
     '<p class="mx-sum">' + (total ? 'Most worked: <b>' + tops.join(', ') + '</b> · ' + max + ' sets' : 'No saved sessions in the last ' + days + ' days') + '</p></div>';
   /* the chart shown above is wrapped as a sample when nothing is saved yet */
@@ -5662,7 +5670,7 @@ function hmCountUp() {
       b.textContent = t >= 1 ? fin : tpl.replace('#', Math.round(n * e2).toLocaleString('en-US')); if (t < 1) requestAnimationFrame(step); })(performance.now());
   });
 }
-function hmStart() { const r = document.querySelector('.hm-rings.hold'); if (!r || splashUp) return; r.classList.remove('hold'); hmCountUp(); }
+function hmStart() { const r = document.querySelectorAll('#view .hold'); if (!r.length || splashUp) return; r.forEach(x => x.classList.remove('hold')); hmCountUp(); }   /* rings and the muscles chart (Ver 0.3o.15) */
 function hmNum(x) { return Math.round(x).toLocaleString('en-US'); }
 function viewHome() {
   const today = todayIso(), wk = Object.values(weekIsos(today)).sort(), mon = wk[0], sun = wk[6];

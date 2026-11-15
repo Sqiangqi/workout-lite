@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.15 · 11/14/2026
+
+Matches the full app: Home, Muscles worked: when Home opens (first open or coming back from another tab), the gold area grows out of the centre with a small spring and the dots pop in one by one, together with the rings.
+
 ## 0.3o.14 · 11/14/2026
 
 Matches the full app: Stopwatch (Dead Hang) shows hundredths of a second while it runs (0:12.34); the saved time is still whole seconds. Exercise lists (Progress › Exercise and Start workout › Choose exercise) are A to Z with a letter heading for each letter and an A–Z strip on the right, like the iPhone: tap a letter or slide a finger along it to jump there. Favourites stay on top in Choose exercise. Removed: the Sheet order of the Progress exercise list.
