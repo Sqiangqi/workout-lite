@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.3 · 11/14/2026
+
+Matches the full app: Day cards under the Body and Progress charts: the number is a little smaller and the unit (kg, lbs, %, reps) is small, grey and not bold.
+
 ## 0.3o.2 · 11/14/2026
 
 Matches the full app: Home, Last workout tile: the muscle names are a little smaller and both columns stay inside the card; a name that still does not fit makes the names step down in size instead of being cut off.

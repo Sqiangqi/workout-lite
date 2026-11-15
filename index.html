@@ -463,7 +463,8 @@ header.top .sync.saved { color: #8fe0ad; border-color: #8fe0ad; font-weight: 600
 .drday { display: grid; gap: 2px; align-content: start; text-align: left; min-width: 0; min-height: 74px; padding: 8px 9px; border-radius: 10px; border: 1px solid var(--line); background: transparent; font-variant-numeric: tabular-nums; transition: border-color .15s, background .15s; }
 .drday.on { border-color: var(--gold); box-shadow: inset 0 0 0 1px var(--gold); background: var(--bg); }
 .drday .drd { font-size: 10.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.drday b { font-family: var(--font-display); font-weight: 700; font-size: 21px; line-height: 1.1; color: var(--ink); }
+.drday b { font-family: var(--font-display); font-weight: 700; font-size: 19px; line-height: 1.1; color: var(--ink); }
+.drday b small { font-family: var(--font-body); font-size: 12px; font-weight: 500; color: var(--muted); margin-left: 3px; }   /* Ver 0.3o.3: the unit (kg, lbs, %, reps) small and not bold */
 .drday span { font-size: 13px; color: var(--ink); overflow-wrap: anywhere; }
 .drday .drl { font-size: 12px; color: var(--muted); }
 /* Today in the middle of the tab bar, raised like a main button */
@@ -4381,8 +4382,8 @@ function chart(name, ctl) {
   h += '<div style="overflow-x:auto">' + svg + '</div></div>' + ctl;
   // the days of this exercise on a date ruler: the three closest to the centre line show as tiles
   h += drHtml('p|' + name + '|' + S.range, ser.map(d => ({ iso: d.iso, html: isCount(name)
-    ? '<b>' + fmt(d.top.weight) + ' reps</b><span>Sets ' + esc(d.top.reps) + '</span>'
-    : '<b>' + fmt(d.top.weight) + ' ' + unit + '</b><span>' + esc(splitReps(d.top.reps, farmer).join('/')) + '</span>' +
+    ? '<b>' + fmt(d.top.weight) + '<small>reps</small></b><span>Sets ' + esc(d.top.reps) + '</span>'
+    : '<b>' + fmt(d.top.weight) + '<small>' + unit + '</small></b><span>' + esc(splitReps(d.top.reps, farmer).join('/')) + '</span>' +
       d.lighter.map(l => '<span class="drl">' + fmt(l.weight) + ' · ' + esc(splitReps(l.reps, farmer).join('/')) + '</span>').join('') })), 'Heaviest set of the day first, lighter sets under it.');
   return h;
 }
@@ -4418,7 +4419,7 @@ function chartCount(name, ctl) {
     h += '<div class="legend"><span><i style="background:var(--gold);box-shadow:0 0 0 2px var(--accent)"></i>Weight you pulled (lbs): body weight − band help · labels = reps</span>' + (goal ? '<span><i style="background:var(--gold);height:3px;border-radius:0"></i>Dashed: your body weight now = no band</span>' : '') + '</div>';
     h += '<div style="overflow-x:auto">' + svg + '</svg></div>';
   }
-  h += '</div>' + ctl + drHtml('p|' + name + '|' + S.range, ser.map(d => ({ iso: d.iso, html: '<b>' + (d.pulled != null ? fmt(d.pulled) + ' lbs' : '–') + '</b><span>' + esc(d.reps.join('/')) + ' (' + d.tot + ')</span>' +
+  h += '</div>' + ctl + drHtml('p|' + name + '|' + S.range, ser.map(d => ({ iso: d.iso, html: '<b>' + (d.pulled != null ? fmt(d.pulled) + '<small>lbs</small>' : '–') + '</b><span>' + esc(d.reps.join('/')) + ' (' + d.tot + ')</span>' +
     '<span class="drl">' + (d.band == null ? 'Band –' : d.band > 0 ? 'Band ' + fmt(d.band) + ' lbs' : 'No band') + '</span>' })), 'Weight pulled, then the reps of each set (total).');
   return h;
 }
@@ -4990,6 +4991,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.3', '11142026', 'Matches the full app: Day cards under the Body and Progress charts: the number is a little smaller and the unit (kg, lbs, %, reps) is small, grey and not bold.'],
   ['0.3o.2', '11142026', 'Matches the full app: Home, Last workout tile: the muscle names are a little smaller and both columns stay inside the card; a name that still does not fit makes the names step down in size instead of being cut off.'],
   ['0.3o.1', '11142026', 'Matches the full app: Exercise pictures follow proper form: Lat Pulldown thighs touch the pad, bar passes in front of the face, elbows drive down; Bulgarian split squat and Barbell back squat keep the feet planted (bar over mid-foot, rear knee just above the floor); Chest fly lowers only to chest level; Incline rear delt raise shown from the front with the arms going out to the sides; Preacher curl stops before vertical; Leg press ends with soft knees; Overhead triceps extension in a split stance with a slight lean. Week plan opened from Start workout (Adjust plan, Edit plans or + New plan) shows a return arrow at the lower right that goes back to Start workout.'],
   ['0.3o', '11142026', 'Matches the full app Ver 0.3o (its 0.3n.1 to 0.3n.15). Loading screen: the app opens at once on a loading screen with the app icon, a greeting for the time of day (with your name) and the date, in the colours of your style and theme, and fades into Home when Home is ready. Quick start: a copy of the Home page as you last saw it shows the moment the app opens, then the live page takes its place. Faster start: the page no longer waits for the Go Blue fonts, and the stick-figure pictures are kept in a smaller form. Styles: Settings › Appearance › Style chooses Go Blue (the app as it was) or Studio (plain and quiet: the phone’s own font, white cards without borders, round pill buttons, one accent colour from the color theme). Moving exercise pictures: the stick figures move from START to END and back (switch in Settings › Appearance; still with Reduce Motion). Lat Pulldown and Incline bench press now have stick-figure pictures too. Rest timer ring: shows the time left and drains back to the top; orange with beating numbers in the last 10 seconds; green with a ripple and Rest over at the end. Changing tabs from Home, the wheel or the Home button opens the new page as a circle growing from where you tapped. Settings are kept in your food Sheet too (Food settings tab): your name, the questionnaire answers, style, color theme, dark mode, moving pictures, weight mode and a few view choices, read back if the phone loses its stored data. Starter foods for new people: names follow one style, the food first and the kind in brackets (Pasta (dry), White rice (cooked), Milk (2%) …); chicken thighs and beef sausage are entered in grams; new foods Potato (boiled) and Tomato (raw).'],
