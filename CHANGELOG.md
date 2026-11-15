@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.19 · 11/14/2026
+
+Matches the full app: Home, Muscles worked: all points now move out from the centre together, start and arrive at the same time, smoothly and more slowly (1.5 seconds), so you can watch the dots travel and the counts go up.
+
 ## 0.3o.18 · 11/14/2026
 
 Home, Muscles worked: when Home opens, each point starts in the centre and travels out along its line to its value, one after another, and the gold area grows with them. Each muscle’s set count counts up from 0 as its point moves out. Home, Last workout: each green check ends with the goal-reached burst (a ring and sparks). Matches the full app: Home, Muscles worked: the 7 days / 30 days choice is remembered like your other settings (on this phone and in the Food settings tab of your Sheet), so Home opens on the one you used last.

@@ -5160,6 +5160,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.19', '11142026', 'Matches the full app: Home, Muscles worked: all points now move out from the centre together, start and arrive at the same time, smoothly and more slowly (1.5 seconds), so you can watch the dots travel and the counts go up.'],
   ['0.3o.18', '11142026', 'Home, Muscles worked: when Home opens, each point starts in the centre and travels out along its line to its value, one after another, and the gold area grows with them. Each muscle’s set count counts up from 0 as its point moves out. Home, Last workout: each green check ends with the goal-reached burst (a ring and sparks). Matches the full app: Home, Muscles worked: the 7 days / 30 days choice is remembered like your other settings (on this phone and in the Food settings tab of your Sheet), so Home opens on the one you used last.'],
   ['0.3o.17', '11142026', 'Matches the full app: Home, Last workout: when Home opens, the muscle names slide in and their green checks pop one by one, after the rings; the card shows at most 6 muscles.'],
   ['0.3o.16', '11142026', 'Matches the full app: A–Z strip on exercise lists works better on the iPhone: the letter comes from where your finger is on the strip (the gaps between letters count too), so a tap, a hold or a slide always picks a letter; the strip is wider, lights up while you touch it, and the iPhone press-and-hold menu no longer gets in the way.'],
@@ -5712,7 +5713,7 @@ function mxTravel() {
   const to = area.dataset.to.split(' ').map(p => p.split(',').map(Number)), cx = 160, cy = 132, n = to.length;
   const nums = [...card.querySelectorAll('.mx-num[data-n]')];   /* each muscle's set count counts up with its point */
   const dots = [...card.querySelectorAll('.mx-dot[data-i]')], reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const D0 = 250, STEP = 90, DUR = 650, back = t => { const c = 1.5; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+  const D0 = 250, STEP = 0, DUR = 1500,   /* Ver 0.3o.19: all points move together, slower so the dots can be seen moving */ back = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;   /* smooth start and finish, same time for every point */
   const t0 = performance.now();
   (function frame(now) {
     if (!area.isConnected) return;
