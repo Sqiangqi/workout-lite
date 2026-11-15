@@ -101,7 +101,7 @@ header.top .sync.err.prob, body.home header.top .sync.err.prob { color: #fff; ba
 #tmBanner b { letter-spacing: .14em; font-weight: 800; }
 #tmBanner .tmb-acts { display: flex; gap: 6px; }
 #tmBanner button { border: 0; border-radius: 999px; padding: 5px 13px; font: inherit; font-weight: 700; background: #2a1a00; color: #f6c35a; cursor: pointer; }
-body.testing main .wrap { padding-top: 54px; }
+body.testing main .wrap { padding-top: 54px !important; }   /* Ver 0.3p.4: also on Home, so the amber bar never covers the rings */
 body.testing::after { content: ""; position: fixed; inset: 0; border: 3px solid #f2b33d; pointer-events: none; z-index: 60; }
 .tm-page { gap: 6px; }
 .panel.about { gap: 10px; }
@@ -1194,12 +1194,9 @@ body.home main .wrap { padding-top: 4px; padding-bottom: 20px; }
 .mx-num { font-family: var(--font-body); font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; }
 .mx-sum { margin: 0; text-align: center; font-size: 13px; color: var(--muted); }
 .mx-sum b { color: var(--ink); }
-/* Ver 0.3o.15: when Home opens, the gold area grows out of the centre with a small spring and the dots pop in one by one */
-.mx-card.anim .mx-area { animation: none; }   /* Ver 0.3o.18: the points are moved by mxTravel() instead */
+/* Home open: the chart points are moved out by mxTravel() (Ver 0.3o.18); the area's own short grow-in (mxIn) is for 7 / 30 day changes */
+.mx-card.anim .mx-area { animation: none; }
 .mx-card.hold * { animation-play-state: paused !important; }
-@keyframes mxGrow { 0% { transform: scale(0); opacity: 0; } 35% { opacity: 1; } 100% { transform: none; opacity: 1; } }
-@keyframes mxDot { from { transform: scale(0); opacity: 0; } to { transform: none; opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .mx-card.anim .mx-area, .mx-card.anim .mx-dot { animation: none; } }
 @keyframes mxIn { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .mx-area { animation: none; } }
 /* Ver 0.3b: new Home (design B): compact header, three rings, Muscles worked, two tiles, Start workout pinned above the strip */
@@ -1214,6 +1211,7 @@ body.home main .wrap { gap: 10px; padding-bottom: calc(var(--tabbar-h) + 20px); 
 .hm-rbg { fill: none; stroke: var(--line); stroke-width: 9; }
 /* Ver 0.3o.8: dial rings (ticks, day blocks, goal burst); animated only while .hm-rings has .anim, paused while .hold (loading screen up) */
 .hm-tk, .hm-blk, .hm-bbg { fill: none; stroke-width: 9; }
+.hm-lap { stroke: var(--bad) !important; filter: drop-shadow(0 0 1.5px rgba(0,0,0,.45)); }   /* Ver 0.3p.5: second lap in red, a thin shadow so it reads on top of the first lap */
 .hm-bbg { stroke: var(--line) !important; }
 .hm-burst line { stroke-width: 3; stroke-linecap: round; opacity: 0; }
 .hm-chk { fill: none; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
@@ -3067,9 +3065,9 @@ function clock12(ms) { const d = new Date(ms), h = d.getHours(); return ((h + 11
 // The loading screen goes away when Home has its fresh data from the Sheets (the first Synced / error), at most 2.5 s
 // after the app started; Home from the phone's copy is already drawn under it.
 let splashUp = true;
-function splashOff() { if (!splashUp) return; splashUp = false; setTimeout(hmStart, 200); const d = document.getElementById('splash'); if (!d) return; d.classList.add('off'); setTimeout(() => d.remove(), 450); }
+function splashOff() { if (!splashUp) return; splashUp = false; setTimeout(hmStart, 480);   /* Ver 0.3p.2: after the fade (.35 s) and removal (450 ms) */ const d = document.getElementById('splash'); if (!d) return; d.classList.add('off'); setTimeout(() => d.remove(), 450); }
 setTimeout(splashOff, 2500);
-function setSync(state, text) { if (state !== 'busy' && state !== 'wait' && !/^Connecting|^Loading|^Reading/.test(text)) setTimeout(splashOff, 120); if (state === 'ok' && S.savedSync && /^Synced/.test(text)) { state = 'saved'; text = S.savedSync; } S.sync = { state, text }; const el = $('#sync'); el.className = 'sync ' + state; el.textContent = text; probPill(); }
+function setSync(state, text) { if (state !== 'busy' && state !== 'wait' && !/^Connecting|^Loading|^Reading/.test(text)) setTimeout(splashOff, 120); if (state === 'ok' && S.savedSync && /^Synced/.test(text)) { state = 'saved'; text = S.savedSync; } S.sync = { state, text }; if (!S.hmAnim && S.tab === 'home') setTimeout(hmStart, 0); const el = $('#sync'); el.className = 'sync ' + state; el.textContent = text; probPill(); }
 
 // ---------- body metrics ----------
 function num(v) { if (v == null) return null; const s = String(v).trim(); if (s === '' || s === '--') return null; const n = Number(s); return isNaN(n) ? null : n; }
@@ -3805,6 +3803,7 @@ async function saveSession() {
 // ---------- rendering ----------
 function render() {
   if (S.tab === 'test' && !S.testMode) S.tab = 'settings';
+  if (S.tab !== 'home' || !S.testMode) S.tmHome = null;   /* the made-up Home numbers end when you leave Home or test mode */
   try { renderTestBanner(); } catch (x) {}
   if (!S.problem) S.probOpen = false; else if (S.problem !== S.probSeen) { S.probSeen = S.problem; S.probOpen = true; }   /* Ver 0.3o.10: a new problem opens its sheet once */
   renderHeader(); probPill();
@@ -3830,7 +3829,7 @@ function render() {
   document.body.classList.toggle('setup', S.tab === 'setup');
   if (S.tab === 'setup') { v.classList.remove('today-view'); v.innerHTML = viewSetup(); return; }   /* Workout Lite: first open, no Sheet yet */
   if (S.tab !== 'home') S.hmAnim = false;
-  if (S.tab === 'home') { v.innerHTML = viewHome(); hmFitMus(); if (!S.hmAnim) { S.hmAnim = true; hmStart(); } setTimeout(obAuto, 400); snapSoon(); }
+  if (S.tab === 'home') { v.innerHTML = viewHome(); hmFitMus(); if (!S.hmAnim) hmStart(); setTimeout(obAuto, 400); snapSoon(); }
   else if (S.tab === 'today') { v.innerHTML = viewToday(); renderTimer(); renderSetPick(); }
   else if (S.tab === 'progress') v.innerHTML = viewProgress();
   else if (S.tab === 'food') { v.innerHTML = viewFood() + addFoodSheet() + qfSheet() + qfTableSheet(); qfFilter(); qfFitNames(); const fi = S.faFocus && document.getElementById(S.faFocus); if (fi) { fi.focus(); S.faFocus = null; } }
@@ -5187,6 +5186,12 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3p.6', '11142026', 'Matches the full app: Code tidy (no visible change): removed the red-notch styles (replaced by the second lap), the old spider-chart grow-in, and the old Test mode 5-tap switch and Turn off actions.'],
+  ['0.3p.5', '11142026', 'Matches the full app: Home kcal and protein rings: more than 10% over the target now shows a second lap: after the ring fills, the ticks keep going round in red on top of it, as far as you are over (135% = 35% of a lap). Removed: the red notch above the ring (0.3p.1).'],
+  ['0.3p.4', '11142026', 'Matches the full app: Test mode: three Home tests with made-up numbers (nothing saved): under target (rings part filled), just fit (checks and bursts) and over target (red notches); the amber bar shows which one is on. Replay Home animations keeps your real numbers.'],
+  ['0.3p.3', '11142026', 'Matches the full app: Home protein ring works like kcal: within 10% of your protein target gets the check and burst, more than 10% over gets the red notch above the ring (longer the more you are over).'],
+  ['0.3p.2', '11142026', 'Matches the full app: Home animations (rings, muscles chart, Last workout checks) now start only after the loading screen is completely gone and your data has loaded, so they play once with your real numbers instead of partly behind the loading screen.'],
+  ['0.3p.1', '11142026', 'Matches the full app: Home kcal ring: when today is more than 10% over your kcal target, a red notch sticks out above the top of the ring, longer the more you are over (it grows in after the ring fills).'],
   ['0.3p', '11142026', 'Matches the full app Ver 0.3p (its 0.3o.1 to 0.3o.25). Home: rings fill as dial ticks with counting numbers, workouts this week in one block per training day, goal-reached burst and check (kcal within 10% counts); Muscles worked chart: points travel out from the centre together and slow into place while each count goes up, 7 or 30 days remembered; Last workout: up to 6 muscles that fit the card, checks pop in with a burst. Problems show in a red sync pill with a sheet and Retry instead of a card at the top. Start workout: return arrow from Week plan. Library: arm exercises move above the figure; Add an exercise has muscle chips, name suggestions, near-duplicate check and Title Case names. Exercise lists A to Z with an A–Z strip. Tab wheel: a tap opens the tab at once. Stopwatch shows hundredths. Food tiles keep the amount readable. Settings cards start collapsed; About holds Version and the owner’s Test mode (enter it, run tests, amber bar with Tests and Exit).'],
   ['0.3o.25', '11142026', 'Matches the full app: Test mode is now a place: Settings › About › Test mode has one row, Enter test mode, which opens a Test mode page with the tests to tap. While in test mode an amber striped bar stays under the header (Tests goes back to the list, Exit goes back to the app) and an amber frame goes around the screen. Removed: the test list inside About.'],
   ['0.3o.24', '11142026', 'Matches the full app: Settings › About now looks like the other Settings cards: Version and Test mode are flat sections with a bold title and a thin line between them, and the tests are plain rows with an arrow.'],
@@ -5269,7 +5274,10 @@ function tmList() {
     b('tm-setup', 'New user: first open', 'The Create my folder screen; its buttons do nothing in a test') +
     b('prob-test', 'Show a problem', 'Red pill and the problem sheet; Retry clears it') +
     b('tm-notsaved', 'Show Not saved', 'The save-failed version of the problem') +
-    b('tm-anim', 'Replay Home animations', 'Rings, muscles chart and checks play again');
+    b('tm-anim', 'Replay Home animations', 'Your real numbers: rings, muscles chart and checks play again') +
+    '<button class="tm-it" data-act="tm-home" data-v="under"><b>Home: under target</b><span>1 workout, kcal about 55%, protein about 40%: rings part filled</span></button>' +
+    '<button class="tm-it" data-act="tm-home" data-v="fit"><b>Home: just fit</b><span>All workouts, kcal 100%, protein 98%: checks and bursts</span></button>' +
+    '<button class="tm-it" data-act="tm-home" data-v="over"><b>Home: over target</b><span>One extra workout, kcal 135%, protein 125%: red second lap</span></button>';
 }
 function viewTest() {
   return problemBox() + '<p class="section-h">Test mode</p><div class="panel tm-page"><p class="hint">Tap a test to try it. The amber bar stays on while you are in test mode: Tests brings you back here, Exit goes back to the app. Nothing here changes your data.</p>' + tmList() +
@@ -5279,7 +5287,7 @@ function renderTestBanner() {
   let bn = document.getElementById('tmBanner'); document.body.classList.toggle('testing', !!S.testMode);
   if (!S.testMode) { if (bn) bn.remove(); return; }
   if (!bn) { bn = document.createElement('div'); bn.id = 'tmBanner'; bn.setAttribute('role', 'status'); document.body.appendChild(bn); }
-  bn.innerHTML = '<b>TEST MODE</b><span class="tmb-acts">' + (S.tab === 'test' && !S.setupTest ? '' : '<button data-act="tm-list">Tests</button>') + '<button data-act="tm-exit">Exit</button></span>';
+  bn.innerHTML = '<b>TEST MODE' + (S.tmHome ? ' · ' + ({ under: 'UNDER', fit: 'JUST FIT', over: 'OVER' }[S.tmHome] || '') : '') + '</b><span class="tmb-acts">' + (S.tab === 'test' && !S.setupTest ? '' : '<button data-act="tm-list">Tests</button>') + '<button data-act="tm-exit">Exit</button></span>';
 }
 
 function viewSettings() {
@@ -5748,6 +5756,11 @@ function hmRing(q, color, val, lab, k, o) {
     svg += '<circle class="hm-rbg" cx="50" cy="50" r="40"/>';
     for (let j = 0; j < kk; j++) svg += arc(seg - 2.2, j * seg, 'hm-tk', ' style="--d:' + (base + j * T) + 'ms"');
     end = base + kk * T;
+    if (o && o.over > 0) {   /* Ver 0.3p.5: more than 10% over: the ticks go round a second time in red, on top, as far as you are over (135% = 35% of a lap) */
+      const k2 = Math.max(1, Math.round(Math.min(1, o.over) * N));
+      for (let j = 0; j < k2; j++) svg += arc(seg - 2.2, j * seg, 'hm-tk hm-lap', ' style="--d:' + (end + 120 + j * T) + 'ms"');
+      end += 120 + k2 * T;
+    }
   } else svg += '<circle class="hm-rbg" cx="50" cy="50" r="40"/>';
   if (o && o.hit != null ? o.hit : f >= 1) {   /* Ver 0.3o.9: o.hit lets a ring decide (kcal: within 10% of the target) */
     svg += '<g class="hm-burst">';
@@ -5766,7 +5779,10 @@ function hmCountUp() {
       b.textContent = t >= 1 ? fin : tpl.replace('#', Math.round(n * e2).toLocaleString('en-US')); if (t < 1) requestAnimationFrame(step); })(performance.now());
   });
 }
-function hmStart() { const r = document.querySelectorAll('#view .hold'); if (!r.length || splashUp) return; r.forEach(x => x.classList.remove('hold')); hmCountUp(); mxTravel(); }
+// Ver 0.3p.2: the Home animation starts only when the loading screen is gone AND the first sync has finished (ok or a problem),
+// so it plays once with the real numbers; until then Home keeps its starting state even if it is drawn again.
+function hmReady() { return !splashUp && !document.getElementById('splash') && !!S.sync && S.sync.state !== 'busy' && S.sync.state !== 'wait' && !/^(Connecting|Loading|Reading)/.test(S.sync.text || ''); }
+function hmStart() { const r = document.querySelectorAll('#view .hold'); if (!r.length || !hmReady()) return; S.hmAnim = true; r.forEach(x => x.classList.remove('hold')); hmCountUp(); mxTravel(); }
 // Ver 0.3o.18: Muscles worked chart: each point starts in the centre and travels out along its axis to its value (one after
 // another, with a small overshoot); the gold area follows the points, so the full shape builds up.
 function mxTravel() {
@@ -5796,12 +5812,16 @@ function viewHome() {
   const ap = activePlan(); let plan = 0; if (ap) wk.forEach(iso => { const d = planDay(ap, iso); if (d && d.type !== 'Rest' && d.items && d.items.length) plan++; });
   const goal = plan || 4;
   // food today
-  const lw = foodWeight(), Tg = lw ? targetsFor(dayKind(today), lw.kg) : null;
-  const got = S.food.filter(x => x.iso === today).reduce((o, x) => ({ kcal: o.kcal + x.kcal, p: o.p + x.p }), { kcal: 0, p: 0 });
+  const lw = foodWeight(); let Tg = lw ? targetsFor(dayKind(today), lw.kg) : null;
+  let got = S.food.filter(x => x.iso === today).reduce((o, x) => ({ kcal: o.kcal + x.kcal, p: o.p + x.p }), { kcal: 0, p: 0 }), nDone = done.size;
+  if (S.testMode && S.tmHome) {   /* Ver 0.3p.4: Test mode › Home under / just fit / over: made-up numbers for the rings, nothing saved */
+    const sc = { under: [1, .55, .4], fit: [goal, 1, .98], over: [goal + 1, 1.35, 1.25] }[S.tmHome] || [0, 0, 0];
+    Tg = Object.assign({}, Tg || { kcal: 2200, p: 150 }); nDone = sc[0]; got = { kcal: Tg.kcal * sc[1], p: Tg.p * sc[2] };
+  }
   let h = problemBox() + '<div class="hm-rings' + (S.hmAnim ? '' : ' anim hold') + '">' +
-    hmRing(done.size / goal, 'var(--gold)', done.size + ' / ' + goal, 'workouts this week', 'progress', { i: 0, blocks: goal, done: done.size, num: done.size, tpl: '# / ' + goal }) +
-    hmRing(Tg ? got.kcal / Tg.kcal : 0, 'var(--cw-high)', hmNum(got.kcal), Tg ? 'of ' + hmNum(Tg.kcal) + ' kcal' : 'kcal today', 'food', { i: 1, num: Math.round(got.kcal), tpl: '#', hit: !!Tg && Math.abs(got.kcal / Tg.kcal - 1) <= .1 + 1e-9 }) +
-    hmRing(Tg ? got.p / Tg.p : 0, 'var(--cw-low)', hmNum(got.p) + ' g', Tg ? 'of ' + hmNum(Tg.p) + ' g protein' : 'protein today', 'food', { i: 2, num: Math.round(got.p), tpl: '# g' }) + '</div>';
+    hmRing(nDone / goal, 'var(--gold)', nDone + ' / ' + goal, 'workouts this week', 'progress', { i: 0, blocks: goal, done: nDone, num: nDone, tpl: '# / ' + goal }) +
+    hmRing(Tg ? got.kcal / Tg.kcal : 0, 'var(--cw-high)', hmNum(got.kcal), Tg ? 'of ' + hmNum(Tg.kcal) + ' kcal' : 'kcal today', 'food', { i: 1, num: Math.round(got.kcal), tpl: '#', hit: !!Tg && Math.abs(got.kcal / Tg.kcal - 1) <= .1 + 1e-9, over: Tg && got.kcal / Tg.kcal > 1.1 + 1e-9 ? got.kcal / Tg.kcal - 1 : 0 }) +
+    hmRing(Tg ? got.p / Tg.p : 0, 'var(--cw-low)', hmNum(got.p) + ' g', Tg ? 'of ' + hmNum(Tg.p) + ' g protein' : 'protein today', 'food', { i: 2, num: Math.round(got.p), tpl: '# g', hit: !!Tg && Math.abs(got.p / Tg.p - 1) <= .1 + 1e-9, over: Tg && got.p / Tg.p > 1.1 + 1e-9 ? got.p / Tg.p - 1 : 0 })   /* Ver 0.3p.3: same rule as kcal */ + '</div>';
   if (S.exercises && S.exercises.length) h += muscleCard();
   // last workout tile (Ver 0.3f): the muscles the latest saved session trained, each with a green check
   let wt = '<span class="lab">Last workout</span><span class="val nm">None yet</span><span class="chg">your first saved session shows here</span>';
@@ -5966,14 +5986,12 @@ const ACTIONS = {
     try { if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) jobs.push(navigator.serviceWorker.getRegistrations().then(rs => Promise.all(rs.map(r => r.unregister())))); } catch (x) {}
     Promise.all(jobs).catch(() => {}).then(go);
   },
-  'tm-tap'(b, it, e, act) { const n = Date.now(); S.tmTaps = (S.tmTaps || []).filter(t => n - t < 2500).concat(n);
-    if (S.tmTaps.length >= 5) { S.tmTaps = []; const on = !store.get('wlite.testmode.v1'); store.set('wlite.testmode.v1', on ? 1 : null); if (!on) store.del('wlite.testmode.v1'); toast(on ? 'Test mode on: Settings › About, under Version.' : 'Test mode off.'); render(); } },
   'tm-enter'(b, it, e, act) { S.testMode = true; S.tmFrom = S.tab; goTab('test', b); },
   'tm-list'(b, it, e, act) { if (S.setupTest) { S.setupTest = null; } if (S.obTest) { S.obTest = false; S.ob = null; renderOb(); } goTab('test'); },
   'tm-exit'(b, it, e, act) { S.testMode = false; if (S.problem && S.problem.act === 'prob-test-end') S.problem = null; if (S.obTest) { S.obTest = false; S.ob = null; renderOb(); }
     if (S.setupTest) { S.setupTest = null; } store.set(K_SETOPEN, { 'About': 1 }); goTab('settings'); toast('Back to the app.'); },
-  'tm-off'(b, it, e, act) { store.del('wlite.testmode.v1'); toast('Test mode off.'); render(); },
-  'tm-anim'(b, it, e, act) { S.hmAnim = false; goTab('home', b); },
+  'tm-home'(b, it, e, act) { S.tmHome = b.dataset.v; S.hmAnim = false; goTab('home', b); },
+  'tm-anim'(b, it, e, act) { S.tmHome = null; S.hmAnim = false; goTab('home', b); },
   'tm-notsaved'(b, it, e, act) { S.problem = { text: 'Not saved. Test: this is how a failed save looks. Your entries are still here.', retry: true, label: 'Save again', act: 'prob-test-end' }; render(); },
   'tm-ob'(b, it, e, act) { S.obTest = true; obStart(); if (S.ob) { Object.assign(S.ob.a, { name: '', kg: '', goal: '', exp: '', build: '', trend: '', days: ['Mon', 'Wed', 'Fri'], plan: true }); renderOb(); } },
   'tm-setup'(b, it, e, act) { S.setupTest = { tab: S.tab }; S.tab = 'setup'; render(); window.scrollTo(0, 0); },
