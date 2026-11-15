@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.18 · 11/14/2026
+
+Home, Muscles worked: when Home opens, each point starts in the centre and travels out along its line to its value, one after another, and the gold area grows with them. Each muscle’s set count counts up from 0 as its point moves out. Home, Last workout: each green check ends with the goal-reached burst (a ring and sparks). Matches the full app: Home, Muscles worked: the 7 days / 30 days choice is remembered like your other settings (on this phone and in the Food settings tab of your Sheet), so Home opens on the one you used last.
+
 ## 0.3o.17 · 11/14/2026
 
 Matches the full app: Home, Last workout: when Home opens, the muscle names slide in and their green checks pop one by one, after the rings; the card shows at most 6 muscles.
