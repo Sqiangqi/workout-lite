@@ -2554,8 +2554,8 @@ function swText(st) { return st.t0 ? fmtSw(Date.now() - st.t0, true) : fmtSw((pa
 function swStop(st) { if (!st || !st.t0) return false; st.w = String(Math.max(1, Math.round((Date.now() - st.t0) / 1000))); delete st.t0; return true; }
 setInterval(() => {
   const els = document.querySelectorAll('[data-sw]'); if (!els.length || !S.draft) return;
-  els.forEach(el => { const [id, i] = el.dataset.sw.split('|'); const it = S.draft.items.find(x => x.id === id); const st = it && it.sets[+i]; if (st) el.textContent = swText(st); });
-}, 200);
+  els.forEach(el => { const [id, i] = el.dataset.sw.split('|'); const it = S.draft.items.find(x => x.id === id); const st = it && it.sets[+i]; if (st && st.t0) { const t = swText(st); if (el.textContent !== t) el.textContent = t; } });
+}, 40);   /* Ver 0.3o.13: every 40 ms so the tenths count 1, 2, 3 … (at 200 ms they jumped by two) */
 function isFarmer(name) { return /farmer walk/i.test(name); }
 function isBench(name) { return /^(\d+ )?Bench Press/.test(name); }
 // Bench Press sets of 10 lbs or less are warm-ups (before that only 0 was skipped): left out of the chart and records.
@@ -5092,6 +5092,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.13', '11142026', 'Matches the full app: Stopwatch exercises (Dead Hang): the tenths of a second now count up one by one (they used to jump by two), so the clock runs smoothly.'],
   ['0.3o.12', '11142026', 'Matches the full app: Library: when the sides of the body figure are full, arm exercises move to the band above the figure (they used to drop under it). Add an exercise: Muscle worked is picked from chips (Chest, Shoulders, Back, Biceps, Triceps, Forearms, Quads, Glutes, Hamstrings, Calves, Core, Cardio) so a new exercise always lands in the right place; typing a name suggests common exercises (a tap fills in category, unit and muscles) and shows matching ones already in your list; a name that is nearly the same as one you have (Chest Fly / chest flys) is caught; names are saved in Title Case. Removed: the free-text Muscle worked box.'],
   ['0.3o.11', '11142026', 'Matches the full app: Tab wheel: tapping a bubble opens that tab at once; turning the wheel with a swipe still opens the tab at the top after a short pause.'],
   ['0.3o.10', '11142026', 'Matches the full app: Problems (like Not saved or cannot reach Google Sheets) no longer show as a card at the top of the page: the sync pill in the header turns red (Not saved ⚠ or Problem ⚠), the message opens once in a sheet from the bottom with Retry, tapping outside closes it and tapping the red pill opens it again. Settings › Version has a Show a test problem button to see how it looks. Removed: the problem card at the top of each tab.'],
