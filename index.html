@@ -5019,6 +5019,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.9', '11142026', 'Matches the full app: Home kcal ring: goal reached (burst and check mark) when today is within 10% of your kcal target, above or below; more than 10% over shows a full ring without the check.'],
   ['0.3o.8', '11142026', 'Matches the full app: Home rings come alive when Home opens: kcal and protein fill in small dial ticks while the numbers count up; workouts this week fills in ticks grouped into one block per training day, and each finished day merges into a solid block; a ring that reaches its goal ends with a short burst and a check mark. Plays once each time you open Home (after the loading screen) and not at all when the phone asks for reduced motion.'],
   ['0.3o.7', '11142026', '[app only, no change on the web] Body tab: a kg / lbs switch right of Latest changes the top cards, the chart, the measure picker and the day cards together (body fat stays in %). It starts in your Food › Weight unit and only changes how the Body tab shows numbers.'],
   ['0.3o.6', '11142026', 'Matches the full app: Settings: all cards are collapsed whenever you come back to Settings; the app no longer remembers which card was open (Adjust plan and Plan my week still open their own card).'],
@@ -5533,7 +5534,7 @@ function hmRing(q, color, val, lab, k, o) {
     for (let j = 0; j < kk; j++) svg += arc(seg - 2.2, j * seg, 'hm-tk', ' style="--d:' + (base + j * T) + 'ms"');
     end = base + kk * T;
   } else svg += '<circle class="hm-rbg" cx="50" cy="50" r="40"/>';
-  if (f >= 1) {
+  if (o && o.hit != null ? o.hit : f >= 1) {   /* Ver 0.3o.9: o.hit lets a ring decide (kcal: within 10% of the target) */
     svg += '<g class="hm-burst">';
     for (let j = 0; j < 10; j++) { const a2 = j * 36 * Math.PI / 180; svg += '<line stroke="' + color + '" style="--d:' + (end + 150) + 'ms" x1="' + (50 + 50 * Math.cos(a2)).toFixed(1) + '" y1="' + (50 + 50 * Math.sin(a2)).toFixed(1) + '" x2="' + (50 + 58 * Math.cos(a2)).toFixed(1) + '" y2="' + (50 + 58 * Math.sin(a2)).toFixed(1) + '"/>'; }
     svg += '</g><path class="hm-chk" stroke="' + color + '" d="M36 51 l9 9 l19 -20" style="--d:' + (end + 250) + 'ms"/>';
@@ -5564,7 +5565,7 @@ function viewHome() {
   const got = S.food.filter(x => x.iso === today).reduce((o, x) => ({ kcal: o.kcal + x.kcal, p: o.p + x.p }), { kcal: 0, p: 0 });
   let h = problemBox() + '<div class="hm-rings' + (S.hmAnim ? '' : ' anim hold') + '">' +
     hmRing(done.size / goal, 'var(--gold)', done.size + ' / ' + goal, 'workouts this week', 'progress', { i: 0, blocks: goal, done: done.size, num: done.size, tpl: '# / ' + goal }) +
-    hmRing(Tg ? got.kcal / Tg.kcal : 0, 'var(--cw-high)', hmNum(got.kcal), Tg ? 'of ' + hmNum(Tg.kcal) + ' kcal' : 'kcal today', 'food', { i: 1, num: Math.round(got.kcal), tpl: '#' }) +
+    hmRing(Tg ? got.kcal / Tg.kcal : 0, 'var(--cw-high)', hmNum(got.kcal), Tg ? 'of ' + hmNum(Tg.kcal) + ' kcal' : 'kcal today', 'food', { i: 1, num: Math.round(got.kcal), tpl: '#', hit: !!Tg && Math.abs(got.kcal / Tg.kcal - 1) <= .1 + 1e-9 }) +
     hmRing(Tg ? got.p / Tg.p : 0, 'var(--cw-low)', hmNum(got.p) + ' g', Tg ? 'of ' + hmNum(Tg.p) + ' g protein' : 'protein today', 'food', { i: 2, num: Math.round(got.p), tpl: '# g' }) + '</div>';
   if (S.exercises && S.exercises.length) h += muscleCard();
   // last workout tile (Ver 0.3f): the muscles the latest saved session trained, each with a green check
