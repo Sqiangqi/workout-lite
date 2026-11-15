@@ -478,6 +478,12 @@ header.top .sync.saved { color: #8fe0ad; border-color: #8fe0ad; font-weight: 600
 .nxsheet .fld { display: grid; gap: 5px; font-size: 13px; color: var(--muted); }
 .nxsheet .fld input, .nxsheet .fld textarea { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); font-size: 16px; font-family: inherit; }
 .nxseg { flex-wrap: wrap; }
+.nxmus, .nxsug { display: flex; flex-wrap: wrap; gap: 6px; }
+.nxmus .qchip, .nxsug .qchip { padding: 6px 11px; font-size: 14px; }
+.nxsugbox:empty { display: none; }
+.nxsugbox { display: grid; gap: 6px; margin-top: -4px; }
+.nxwarn { margin: 0; font-size: 13px; color: var(--muted); }
+.nxwarn b { color: var(--ink); }
 .nxseg .btn { flex: 1 1 auto; padding: 8px 6px; font-size: 15px; }
 .nxfoot { display: flex; gap: 8px; padding: 8px 4px 0; border-top: 1px solid var(--line); }
 .nxfoot .btn { flex: 1; padding-block: 12px; }
@@ -4944,7 +4950,7 @@ function bodyMap(list, sel, act, plus) {   /* plus: html of the + button (Librar
   // beside it; when the sides would run past the figure, whole areas move under it (or above it), legs first.
   const zone = { head: 'top', shoulders: 'mid', chest: 'mid', arms: 'mid', waist: 'mid', legs: 'mid' }, regs = Object.keys(LM_ANCHOR);
   const items = list.map(e => ({ e, r: libRegion(e) })), cap = 2 * (Math.floor((LM_HAND[0] - LM_PILL / 2 - 2) / LM_STEP) + 1 + Math.floor((LM_FIG_H - LM_PILL / 2 - LM_HAND[1]) / LM_STEP) + 1);
-  for (const [r, to] of [['legs', 'bot'], ['waist', 'bot'], ['shoulders', 'top'], ['arms', 'bot'], ['chest', 'top']]) { if (items.filter(x => zone[x.r] === 'mid').length <= cap) break; zone[r] = to; }
+  for (const [r, to] of [['legs', 'bot'], ['waist', 'bot'], ['shoulders', 'top'], ['arms', 'top'], ['chest', 'top']])   /* Ver 0.3o.12: arms move up, not down */ { if (items.filter(x => zone[x.r] === 'mid').length <= cap) break; zone[r] = to; }
   const inZone = z => items.filter(x => zone[x.r] === z).sort((p, q) => regs.indexOf(p.r) - regs.indexOf(q.r));
   const hasTop = inZone('top').length > 0, L = libLayout(inZone('mid').map(x => x.e), plus && !hasTop ? 32 + 6 + LM_PILL / 2 : 0);
   const pill = (x, sd) => { const e = x.e, f = isFav(e.name), on = sel && sel.has(e.name), ins = sd ? lmInset(x.y) : 0;
@@ -4982,24 +4988,76 @@ function addExSheet() {
     '<div class="sheet-h"><b>Add an exercise</b><button class="btn sm" data-act="nx-hide">Close</button></div>' +
     '<div class="nxbody" id="nxBody">' +
     (S.newExMsg ? '<div class="notice err" role="alert"><div>' + esc(S.newExMsg) + '</div></div>' : '') +
-    '<label class="fld"><span>Exercise name</span><input id="nx-name" data-nx="name" autocomplete="off" value="' + esc(f.name) + '" placeholder="e.g. Cable Crunch"></label>' +
+    '<label class="fld"><span>Exercise name</span><input id="nx-name" data-nx="name" autocomplete="off" autocapitalize="words" value="' + esc(f.name) + '" placeholder="e.g. Cable Crunch"></label><div id="nxSug" class="nxsugbox">' + nxSugHtml() + '</div>' +
     '<div class="fld"><span>Category</span>' + chips('nx-cat', CATS.map(c => [c, c]), v => v === f.cat) + '</div>' +
+    '<div class="fld"><span>Muscle worked (tap all that apply)</span><div class="nxmus">' + NX_MUS.map(m => { const on = nxMusOn(f, m); return '<button class="qchip' + (on ? ' on' : '') + '" data-act="nx-mus" data-v="' + m + '" aria-pressed="' + on + '">' + m + '</button>'; }).join('') + '</div></div>' +
     '<div class="fld"><span>Unit</span>' + chips('nx-unit', UNITS.map(u => [u, u]), v => v === f.unit) + '</div>' +
     '<label class="switch nxfav"><span>★ Favourite</span><input type="checkbox" role="switch" id="nxFav"' + (f.fav ? ' checked' : '') + '><i aria-hidden="true"></i></label>' +
-    '<label class="fld"><span>Muscle worked (optional)</span><input id="nx-muscle" data-nx="muscle" autocomplete="off" value="' + esc(f.muscle) + '"></label>' +
+    
     '<p class="hint">lbs = weight and reps; mins or seconds = one time entry (like Warm-up or Battle Ropes); reps = count only (like Pull Up), the chart adds up the day. Category decides Upper or Lower Body Day when saving. Put it on a day in Settings › Week plan.</p>' +
     '</div>' +
     '<div class="nxfoot"><button class="btn primary" data-act="nx-save"' + (busy || !S.mcp ? ' disabled' : '') + '>' + (busy ? 'Adding…' : 'Add to the list') + '</button>' +
     '<button class="btn" data-act="nx-cancel"' + (busy ? ' disabled' : '') + '>Cancel</button></div></div></div>';
 }
+// Ver 0.3o.12: Add an exercise keeps names and muscles in one style. Muscle worked is picked from chips (so the Library
+// always knows where the exercise belongs), the name gets suggestions from your list and a built-in list of common
+// exercises (a suggestion also fills in category, unit and muscles), a name that is nearly the same as one you have
+// is caught, and the name is saved in Title Case.
+const NX_MUS = ['Chest', 'Shoulders', 'Back', 'Biceps', 'Triceps', 'Forearms', 'Quads', 'Glutes', 'Hamstrings', 'Calves', 'Core', 'Cardio'];
+const NX_COMMON = [
+  ['Bench Press', 'push', 'Chest, Triceps'], ['Incline Bench Press', 'push', 'Chest, Shoulders'], ['Dumbbell Bench Press', 'push', 'Chest, Triceps'], ['Incline Dumbbell Press', 'push', 'Chest, Shoulders'],
+  ['Chest Fly', 'push', 'Chest'], ['Cable Crossover', 'push', 'Chest'], ['Push Up', 'push', 'Chest, Triceps', 'reps'], ['Dip', 'push', 'Chest, Triceps', 'reps'],
+  ['Overhead Press', 'push', 'Shoulders, Triceps'], ['Seated Dumbbell Press', 'push', 'Shoulders, Triceps'], ['Arnold Press', 'push', 'Shoulders'], ['Dumbbell Lateral Raise', 'push', 'Shoulders'],
+  ['Cable Lateral Raise', 'push', 'Shoulders'], ['Front Raise', 'push', 'Shoulders'], ['Triceps Pushdown', 'push', 'Triceps'], ['Overhead Triceps Extension', 'push', 'Triceps'],
+  ['Skull Crusher', 'push', 'Triceps'], ['Close-Grip Bench Press', 'push', 'Triceps, Chest'],
+  ['Pull Up', 'pull', 'Back, Biceps', 'reps'], ['Chin Up', 'pull', 'Back, Biceps', 'reps'], ['Lat Pulldown', 'pull', 'Back, Biceps'], ['Seated Cable Row', 'pull', 'Back, Biceps'],
+  ['Barbell Row', 'pull', 'Back, Biceps'], ['One-Arm Dumbbell Row', 'pull', 'Back, Biceps'], ['Face Pull', 'pull', 'Shoulders, Back'], ['Rear Delt Fly', 'pull', 'Shoulders, Back'],
+  ['Straight-Arm Pulldown', 'pull', 'Back'], ['Deadlift', 'pull', 'Back, Hamstrings, Glutes'], ['Barbell Curl', 'pull', 'Biceps'], ['Dumbbell Curl', 'pull', 'Biceps'],
+  ['Hammer Curl', 'pull', 'Biceps, Forearms'], ['Preacher Curl', 'pull', 'Biceps'], ['Cable Curl', 'pull', 'Biceps'], ['Wrist Curl', 'pull', 'Forearms'],
+  ['Farmer Walk', 'pull', 'Forearms, Core'], ['Dead Hang', 'pull', 'Forearms, Back', 'seconds'],
+  ['Barbell Back Squat', 'legs', 'Quads, Glutes'], ['Front Squat', 'legs', 'Quads, Glutes'], ['Goblet Squat', 'legs', 'Quads, Glutes'], ['Leg Press', 'legs', 'Quads, Glutes'],
+  ['Bulgarian Split Squat', 'legs', 'Quads, Glutes'], ['Walking Lunge', 'legs', 'Quads, Glutes'], ['Romanian Deadlift', 'legs', 'Hamstrings, Glutes'], ['Leg Extension', 'legs', 'Quads'],
+  ['Seated Leg Curl', 'legs', 'Hamstrings'], ['Lying Leg Curl', 'legs', 'Hamstrings'], ['Hip Thrust', 'legs', 'Glutes'], ['Standing Calf Raise', 'legs', 'Calves'], ['Seated Calf Raise', 'legs', 'Calves'],
+  ['Plank', 'core & cardio', 'Core', 'seconds'], ['Cable Crunch', 'core & cardio', 'Core'], ['Hanging Leg Raise', 'core & cardio', 'Core', 'reps'], ['Russian Twist', 'core & cardio', 'Core', 'reps'],
+  ['Ab Wheel Rollout', 'core & cardio', 'Core', 'reps'], ['Treadmill', 'core & cardio', 'Cardio', 'mins'], ['Stationary Bike', 'core & cardio', 'Cardio', 'mins'], ['Rowing Machine', 'core & cardio', 'Cardio', 'mins'],
+  ['Battle Ropes', 'core & cardio', 'Cardio', 'seconds'], ['Stair Climber', 'core & cardio', 'Cardio', 'mins']
+];
+const NX_SMALL = new Set(['a', 'an', 'and', 'of', 'to', 'with', 'on', 'in', 'the', 'for', 'or', 'at']);
+function nxTitle(s) {
+  return String(s || '').trim().replace(/\s+/g, ' ').split(' ').map((w, i) => w.split('-').map((p, j) => {
+    const lead = (p.match(/^[^A-Za-z]*/) || [''])[0], rest = p.slice(lead.length);
+    if (!rest) return p;
+    if (/[A-Z]/.test(rest.slice(1))) return p;   /* keep EZ, TRX, McGill */
+    if ((i || j) && NX_SMALL.has(rest.toLowerCase())) return lead + rest.toLowerCase();
+    return lead + rest.charAt(0).toUpperCase() + rest.slice(1).toLowerCase();
+  }).join('-')).join(' ');
+}
+function nxNorm(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').trim().split(/\s+/).map(w => w.replace(/(e?s)$/, '')).join(''); }
+function nxSame(name) { const k = nxNorm(name); return k ? (S.exercises || []).find(e => nxNorm(bareName(e.name)) === k) : null; }
+function nxMusList(f) { return String(f.muscle || '').split(/\s*,\s*/).filter(Boolean); }
+function nxMusOn(f, m) { const t = String(f.muscle || '').toLowerCase(); return new RegExp('\\b' + m.toLowerCase().replace(/s$/, '') + 's?\\b').test(t); }
+function nxSugHtml() {
+  const f = S.newEx; if (!f) return '';
+  const q = String(f.name || '').trim(); if (q.length < 2) return '';
+  const same = nxSame(q);
+  if (same) return '<p class="nxwarn">Already in your list as <b>' + esc(bareName(same.name)) + '</b>.</p>';
+  const have = new Set((S.exercises || []).map(e => nxNorm(bareName(e.name)))), seen = new Set(), out = [];
+  NX_COMMON.forEach(c => { const k = nxNorm(c[0]); if (have.has(k) || seen.has(k) || k === nxNorm(q) || !qMatch(q, c[0])) return; seen.add(k); out.push(c); });
+  const mine = (S.exercises || []).filter(e => !NOT_EX.test(bareName(e.name)) && qMatch(q, bareName(e.name))).slice(0, 3);
+  if (!out.length && !mine.length) return '';
+  return (mine.length ? '<p class="nxwarn">In your list: ' + mine.map(e => '<b>' + esc(bareName(e.name)) + '</b>').join(', ') + '</p>' : '') +
+    (out.length ? '<div class="nxsug" role="list" aria-label="Suggested names">' + out.slice(0, 5).map(c => '<button class="qchip" role="listitem" data-act="nx-sug" data-n="' + esc(c[0]) + '">' + esc(c[0]) + '</button>').join('') + '</div>' : '');
+}
+function nxSugUpdate() { const b = document.getElementById('nxSug'); if (b) b.innerHTML = nxSugHtml(); }
 function nxCheck(f) {
-  const name = String(f.name || '').trim().replace(/\s+/g, ' ');
+  const name = nxTitle(f.name);
   if (!name) return { err: 'Type the exercise name.' };
   if (/^\d+ /.test(name)) return { err: 'Don\'t start the name with a number.' };
   if (NOT_EX.test(name) || /^warm.?up$/i.test(name)) return { err: 'That name is reserved. Choose another name.' };
   const full = name;
   const clash = S.exercises.find(e => bareName(e.name).toLowerCase() === name.toLowerCase());
   if (clash) return { err: '"' + bareName(clash.name) + '" is already in the list' + (prefixOf(clash.name) ? ' (as ' + clash.name + ')' : '') + '.' };
+  { const sm = nxSame(name); if (sm) return { err: 'This looks like "' + bareName(sm.name) + '", which is already in the list.' }; }
   if (!CATS.includes(f.cat) || !UNITS.includes(f.unit)) return { err: 'Choose a category and a unit.' };
   return { row: ['', f.cat, full, String(f.muscle || '').trim(), '', f.unit], full };
 }
@@ -5034,6 +5092,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.12', '11142026', 'Matches the full app: Library: when the sides of the body figure are full, arm exercises move to the band above the figure (they used to drop under it). Add an exercise: Muscle worked is picked from chips (Chest, Shoulders, Back, Biceps, Triceps, Forearms, Quads, Glutes, Hamstrings, Calves, Core, Cardio) so a new exercise always lands in the right place; typing a name suggests common exercises (a tap fills in category, unit and muscles) and shows matching ones already in your list; a name that is nearly the same as one you have (Chest Fly / chest flys) is caught; names are saved in Title Case. Removed: the free-text Muscle worked box.'],
   ['0.3o.11', '11142026', 'Matches the full app: Tab wheel: tapping a bubble opens that tab at once; turning the wheel with a swipe still opens the tab at the top after a short pause.'],
   ['0.3o.10', '11142026', 'Matches the full app: Problems (like Not saved or cannot reach Google Sheets) no longer show as a card at the top of the page: the sync pill in the header turns red (Not saved ⚠ or Problem ⚠), the message opens once in a sheet from the bottom with Retry, tapping outside closes it and tapping the red pill opens it again. Settings › Version has a Show a test problem button to see how it looks. Removed: the problem card at the top of each tab.'],
   ['0.3o.9', '11142026', 'Matches the full app: Home kcal ring: goal reached (burst and check mark) when today is within 10% of your kcal target, above or below; more than 10% over shows a full ring without the check.'],
@@ -5707,6 +5766,9 @@ const ACTIONS = {
     if (!S.newExBusy) { S.newExOpen = false; render(); }                  // typed values are kept until Cancel or Add
   },
   'nx-cancel'(b, it, e, act) { S.newEx = null; S.newExOpen = false; S.newExMsg = ''; render(); },
+  'nx-mus'(b, it, e, act) { if (!S.newEx) return; const l = nxMusList(S.newEx).filter(x => x.toLowerCase().replace(/s$/, '') !== b.dataset.v.toLowerCase().replace(/s$/, ''));
+    if (!nxMusOn(S.newEx, b.dataset.v)) l.push(b.dataset.v); S.newEx.muscle = NX_MUS.filter(m => l.some(x => x.toLowerCase() === m.toLowerCase())).concat(l.filter(x => !NX_MUS.some(m => m.toLowerCase() === x.toLowerCase()))).join(', '); render(); },
+  'nx-sug'(b, it, e, act) { const c = NX_COMMON.find(x => x[0] === b.dataset.n); if (!c || !S.newEx) return; Object.assign(S.newEx, { name: c[0], cat: c[1], muscle: c[2], unit: c[3] || 'lbs' }); render(); },
   'nx-cat'(b, it, e, act) { if (S.newEx) { S.newEx.cat = b.dataset.v; render(); } },
   'nx-unit'(b, it, e, act) { if (S.newEx) { S.newEx.unit = b.dataset.v; render(); } },
   'nx-save'(b, it, e, act) { addExercise(); },
@@ -6009,7 +6071,7 @@ document.addEventListener('input', e => {
 document.addEventListener('change', e => { const el = e.target; if (el.dataset && el.dataset.ai != null && S.est) { setAmt(+el.dataset.ai, parseFloat(el.value) || 0); render(); } });
 document.addEventListener('change', e => { const el = e.target; if (!el.dataset || !el.dataset.madj || !S.manualAdj) return;   /* Ver 0.1z manual adjustment: typed grams, minus allowed */
   const v = parseFloat(String(el.value).replace(',', '.').replace('−', '-')); S.manualAdj[el.dataset.madj] = isFinite(v) ? Math.round(v * 10) / 10 : 0; render(); });
-document.addEventListener('input', e => { const el = e.target; if (el.dataset && el.dataset.nx && S.newEx) S.newEx[el.dataset.nx] = el.value; });
+document.addEventListener('input', e => { const el = e.target; if (el.dataset && el.dataset.nx && S.newEx) { S.newEx[el.dataset.nx] = el.value; if (el.dataset.nx === 'name') nxSugUpdate(); } });
 document.addEventListener('input', e => {   // Add food sheet: keep typed values, refresh the calories line without re-rendering
   const el = e.target; if (!el.dataset || !el.dataset.fa || !S.addFood) return;
   const k = el.dataset.fa;

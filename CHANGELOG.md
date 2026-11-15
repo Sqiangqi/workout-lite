@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.12 · 11/14/2026
+
+Matches the full app: Library: when the sides of the body figure are full, arm exercises move to the band above the figure (they used to drop under it). Add an exercise: Muscle worked is picked from chips (Chest, Shoulders, Back, Biceps, Triceps, Forearms, Quads, Glutes, Hamstrings, Calves, Core, Cardio) so a new exercise always lands in the right place; typing a name suggests common exercises (a tap fills in category, unit and muscles) and shows matching ones already in your list; a name that is nearly the same as one you have (Chest Fly / chest flys) is caught; names are saved in Title Case. Removed: the free-text Muscle worked box.
+
 ## 0.3o.11 · 11/14/2026
 
 Matches the full app: Tab wheel: tapping a bubble opens that tab at once; turning the wheel with a swipe still opens the tab at the top after a short pause.
