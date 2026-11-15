@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o · 11/14/2026
+
+Matches the full app Ver 0.3o (its 0.3n.1 to 0.3n.15). Loading screen: the app opens at once on a loading screen with the app icon, a greeting for the time of day (with your name) and the date, in the colours of your style and theme, and fades into Home when Home is ready. Quick start: a copy of the Home page as you last saw it shows the moment the app opens, then the live page takes its place. Faster start: the page no longer waits for the Go Blue fonts, and the stick-figure pictures are kept in a smaller form. Styles: Settings › Appearance › Style chooses Go Blue (the app as it was) or Studio (plain and quiet: the phone’s own font, white cards without borders, round pill buttons, one accent colour from the color theme). Moving exercise pictures: the stick figures move from START to END and back (switch in Settings › Appearance; still with Reduce Motion). Lat Pulldown and Incline bench press now have stick-figure pictures too. Rest timer ring: shows the time left and drains back to the top; orange with beating numbers in the last 10 seconds; green with a ripple and Rest over at the end. Changing tabs from Home, the wheel or the Home button opens the new page as a circle growing from where you tapped. Settings are kept in your food Sheet too (Food settings tab): your name, the questionnaire answers, style, color theme, dark mode, moving pictures, weight mode and a few view choices, read back if the phone loses its stored data. Starter foods for new people: names follow one style, the food first and the kind in brackets (Pasta (dry), White rice (cooked), Milk (2%) …); chicken thighs and beef sausage are entered in grams; new foods Potato (boiled) and Tomato (raw).
+
 ## 0.3n · 11/14/2026
 
 Matches the full app Ver 0.3n. Progress exercise list: shows every exercise that has entries (also ones no longer in a plan or the Sheet), and no longer lists exercises without entries.
