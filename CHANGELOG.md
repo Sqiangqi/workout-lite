@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.21 · 11/14/2026
+
+Matches the full app: Settings: the Version card is now called About; inside it, Version is the first card and Test mode (when turned on) the second.
+
 ## 0.3o.20 · 11/14/2026
 
 Matches the full app: Home, Muscles worked: the dots now leave the centre quickly and slow down as they reach their place (all still stop together), so the move has momentum. Settings › Test mode (tap the version line in Settings › Version 5 times to turn it on or off): preview the new-user Get started questions and the first-open screen, show a problem or a Not saved problem, and replay the Home animations. Nothing in a test changes your data. Removed: the Show a test problem button under Version (now in Test mode).

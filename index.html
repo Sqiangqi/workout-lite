@@ -94,6 +94,11 @@ body.no-timer main .wrap { padding-bottom: 40px; }
 .sync.prob { cursor: pointer; font-weight: 700; }
 header.top .sync.err.prob, body.home header.top .sync.err.prob { color: #fff; background: #b3261e; border-color: #ff9d93; }
 .prob-sheet .prob-txt { margin: 0; padding: 0 4px; font-size: 15px; color: var(--ink); }
+.panel.about { gap: 10px; }
+.subcard { display: grid; gap: 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); }
+.subcard .sub-h { margin: 0; font-family: var(--font-display); font-size: 15px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.subcard .ver { margin: 0; }
+.subcard.tm .tm-it { background: var(--surface); }
 .tm { gap: 8px; }
 .tm-it { display: grid; gap: 1px; text-align: left; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); font: inherit; cursor: pointer; }
 .tm-it b { font-size: 15px; } .tm-it span { font-size: 12.5px; color: var(--muted); }
@@ -3833,6 +3838,7 @@ const SET_ICON = (() => {
     'Carb week': s('<path d="M3 12h18a9 9 0 0 1-18 0z"/><path d="M8 8c0-2 2-2 2-4M13 8c0-2 2-2 2-4"/>'),
     'Appearance': s('<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor"/>'),
     'Renpho import': s('<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M8.5 10a4.5 4.5 0 0 1 7 0"/><path d="M12 10l1.4-1.8"/>'),
+    'About': s('<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6" fill="currentColor"/>'),
     'Version': s('<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".6" fill="currentColor"/>'),
     'Your workout Sheet': s('<rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M4 9h16M4 14.5h16M10 9v11.5"/>'),
     'Your food Sheet': s('<path d="M7 3v8a2 2 0 0 0 4 0V3M9 11v10M16.5 21V3c-2 1-3 3.5-3 7 0 1.5 1 2.5 3 2.5"/>'),
@@ -5165,6 +5171,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.21', '11142026', 'Matches the full app: Settings: the Version card is now called About; inside it, Version is the first card and Test mode (when turned on) the second.'],
   ['0.3o.20', '11142026', 'Matches the full app: Home, Muscles worked: the dots now leave the centre quickly and slow down as they reach their place (all still stop together), so the move has momentum. Settings › Test mode (tap the version line in Settings › Version 5 times to turn it on or off): preview the new-user Get started questions and the first-open screen, show a problem or a Not saved problem, and replay the Home animations. Nothing in a test changes your data. Removed: the Show a test problem button under Version (now in Test mode).'],
   ['0.3o.19', '11142026', 'Matches the full app: Home, Muscles worked: all points now move out from the centre together, start and arrive at the same time, smoothly and more slowly (1.5 seconds), so you can watch the dots travel and the counts go up.'],
   ['0.3o.18', '11142026', 'Home, Muscles worked: when Home opens, each point starts in the centre and travels out along its line to its value, one after another, and the gold area grows with them. Each muscle’s set count counts up from 0 as its point moves out. Home, Last workout: each green check ends with the goal-reached burst (a ring and sparks). Matches the full app: Home, Muscles worked: the 7 days / 30 days choice is remembered like your other settings (on this phone and in the Food settings tab of your Sheet), so Home opens on the one you used last.'],
@@ -5231,13 +5238,13 @@ const APP_VERSIONS = [
 function testCard() {   /* Ver 0.3o.20: Settings › Test mode (turn on by tapping the version line 5 times). Every test is a preview: nothing is saved. */
   if (!store.get('wlite.testmode.v1')) return '';
   const b = (act, lab, sub) => '<button class="tm-it" data-act="' + act + '"><b>' + lab + '</b><span>' + sub + '</span></button>';
-  return '<p class="section-h">Test mode</p><div class="panel tm"><p class="hint">For trying things out. Nothing here changes your data.</p>' +
+  return '<div class="subcard tm"><p class="sub-h">Test mode</p><p class="hint">For trying things out. Nothing here changes your data.</p>' +
     b('tm-ob', 'New user: Get started', 'The setup questions with blank answers; finishing saves nothing') +
     b('tm-setup', 'New user: first open', 'The Create my folder screen; its buttons do nothing in a test') +
     b('prob-test', 'Show a problem', 'Red pill and the problem sheet; Retry clears it') +
     b('tm-notsaved', 'Show Not saved', 'The save-failed version of the problem') +
     b('tm-anim', 'Replay Home animations', 'Rings, muscles chart and checks play again') +
-    '<div class="row-acts"><button class="btn sm" data-act="tm-off">Turn off test mode</button></div></div>';
+    '<div class="row-acts"><button class="btn sm" data-act="tm-off">Turn off test mode</button></div></div>';   /* closes .subcard */
 }
 function viewSettings() {
   if (S.wpEdit) return viewPlanEdit();
@@ -5268,7 +5275,8 @@ function viewSettings() {
     '<p>' + (S.email ? 'Signed in as <b>' + esc(S.email) + '</b>' : 'Signed in with Google') + '</p>' +
     '<div class="row-acts"><button class="btn' + (S.outArmed ? ' danger' : '') + '" data-act="sign-out">' + (S.outArmed ? 'Tap again to sign out' : 'Sign out / switch account') + '</button></div>' +
     '<p class="hint">Signing out removes your data from this phone only; everything stays in your Google Drive. Save your session first: unsaved sets are cleared.</p></div>';
-  h += testCard() + '<p class="section-h">Version</p><div class="panel"><p class="ver" data-act="tm-tap"><b>Ver ' + esc(v) + '</b> · ' + esc(d) + '</p>' +
+  /* Ver 0.3o.21: the Version card is now About, with Version and (when on) Test mode as cards inside it */
+  h += '<p class="section-h">About</p><div class="panel about"><div class="subcard"><p class="sub-h">Version</p><p class="ver" data-act="tm-tap"><b>Ver ' + esc(v) + '</b> · ' + esc(d) + '</p>' +
     (window.__liteSrc ? '<p class="hint">' + (window.__liteSrc === 'github' ? 'Page loaded from GitHub (updates on its own).' : 'GitHub could not be reached: using the built-in copy of the page.') + '</p>' : '') +
     // only the latest two updates here, a few lines each; the full list is CHANGELOG.md on GitHub (user, 2026-11-07)
     '<p class="hint">Latest updates</p><ul class="verlist recent">' + APP_VERSIONS.slice(0, 2).map(([a, b, c]) => '<li><b>' + esc(a) + '</b> · ' + esc(b) + ' — ' + esc(c) + '</li>').join('') + '</ul>' +
@@ -5276,7 +5284,7 @@ function viewSettings() {
     // Web 0.3j.1: check GitHub for a newer version and load it
     '<div class="row-acts">' + (S.upd && S.upd.newer ? '<button class="btn primary" data-act="upd-go">Update now to Ver ' + esc(S.upd.newer) + '</button>' :
       '<button class="btn primary" data-act="upd-check"' + (S.upd && S.upd.busy ? ' disabled' : '') + '>' + (S.upd && S.upd.busy ? 'Checking…' : 'Check for updates') + '</button>') + '</div>' +
-    (S.upd && S.upd.msg ? '<p class="hint upd-msg' + (S.upd.ok ? ' ok' : '') + '">' + esc(S.upd.msg) + '</p>' : '') + '</div>';
+    (S.upd && S.upd.msg ? '<p class="hint upd-msg' + (S.upd.ok ? ' ok' : '') + '">' + esc(S.upd.msg) + '</p>' : '') + '</div>' + testCard() + '</div>';
   return h;
 }
 // First open: make a Sheet, or point the app at one that already exists.
@@ -5923,7 +5931,7 @@ const ACTIONS = {
     Promise.all(jobs).catch(() => {}).then(go);
   },
   'tm-tap'(b, it, e, act) { const n = Date.now(); S.tmTaps = (S.tmTaps || []).filter(t => n - t < 2500).concat(n);
-    if (S.tmTaps.length >= 5) { S.tmTaps = []; const on = !store.get('wlite.testmode.v1'); store.set('wlite.testmode.v1', on ? 1 : null); if (!on) store.del('wlite.testmode.v1'); toast(on ? 'Test mode on (Settings, above Version).' : 'Test mode off.'); render(); } },
+    if (S.tmTaps.length >= 5) { S.tmTaps = []; const on = !store.get('wlite.testmode.v1'); store.set('wlite.testmode.v1', on ? 1 : null); if (!on) store.del('wlite.testmode.v1'); toast(on ? 'Test mode on: Settings › About, under Version.' : 'Test mode off.'); render(); } },
   'tm-off'(b, it, e, act) { store.del('wlite.testmode.v1'); toast('Test mode off.'); render(); },
   'tm-anim'(b, it, e, act) { S.hmAnim = false; goTab('home', b); },
   'tm-notsaved'(b, it, e, act) { S.problem = { text: 'Not saved. Test: this is how a failed save looks. Your entries are still here.', retry: true, label: 'Save again', act: 'prob-test-end' }; render(); },
