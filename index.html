@@ -1166,6 +1166,22 @@ body.home main .wrap { gap: 10px; padding-bottom: calc(var(--tabbar-h) + 20px); 
 .hm-ring { display: grid; justify-items: center; gap: 1px; text-align: center; min-width: 0; background: none; border: 0; padding: 0; color: var(--ink); font: inherit; }
 .hm-ring svg { width: min(86px, 24vw); height: auto; margin-bottom: 4px; }
 .hm-rbg { fill: none; stroke: var(--line); stroke-width: 9; }
+/* Ver 0.3o.8: dial rings (ticks, day blocks, goal burst); animated only while .hm-rings has .anim, paused while .hold (loading screen up) */
+.hm-tk, .hm-blk, .hm-bbg { fill: none; stroke-width: 9; }
+.hm-bbg { stroke: var(--line) !important; }
+.hm-burst line { stroke-width: 3; stroke-linecap: round; opacity: 0; }
+.hm-chk { fill: none; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+.hm-ring svg { overflow: visible; }
+.hm-rings.anim .hm-tk { opacity: 0; animation: hmTick .25s ease-out var(--d) forwards; }
+.hm-rings.anim .hm-blk { opacity: 0; animation: hmMerge .4s ease-out var(--d) forwards; }
+.hm-rings.anim .hm-burst line { transform-box: view-box; transform-origin: 50px 50px; animation: hmBurst .7s ease-out var(--d) both; }
+.hm-rings.anim .hm-chk { stroke-dasharray: 40; stroke-dashoffset: 40; animation: hmDraw .4s ease-out var(--d) forwards; }
+.hm-rings.hold * { animation-play-state: paused !important; }
+@keyframes hmTick { from { opacity: 0; stroke-width: 3; } to { opacity: 1; stroke-width: 9; } }
+@keyframes hmMerge { 0% { opacity: 0; stroke-width: 9; } 60% { opacity: 1; stroke-width: 12; } 100% { opacity: 1; stroke-width: 9; } }
+@keyframes hmBurst { 0% { opacity: 0; transform: scale(.7); } 30% { opacity: 1; } 100% { opacity: 0; transform: scale(1.18); } }
+@keyframes hmDraw { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { .hm-rings.anim .hm-tk, .hm-rings.anim .hm-blk { animation: none; opacity: 1; } .hm-rings.anim .hm-burst line { animation: none; } .hm-rings.anim .hm-chk { animation: none; stroke-dashoffset: 0; } }
 .hm-ring b { font-family: var(--font-display); font-size: 20px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .hm-ring span { font-size: 11.5px; line-height: 1.25; color: var(--muted); }
 .hm-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -2988,7 +3004,7 @@ function clock12(ms) { const d = new Date(ms), h = d.getHours(); return ((h + 11
 // The loading screen goes away when Home has its fresh data from the Sheets (the first Synced / error), at most 2.5 s
 // after the app started; Home from the phone's copy is already drawn under it.
 let splashUp = true;
-function splashOff() { if (!splashUp) return; splashUp = false; const d = document.getElementById('splash'); if (!d) return; d.classList.add('off'); setTimeout(() => d.remove(), 450); }
+function splashOff() { if (!splashUp) return; splashUp = false; setTimeout(hmStart, 200); const d = document.getElementById('splash'); if (!d) return; d.classList.add('off'); setTimeout(() => d.remove(), 450); }
 setTimeout(splashOff, 2500);
 function setSync(state, text) { if (state !== 'busy' && state !== 'wait' && !/^Connecting|^Loading|^Reading/.test(text)) setTimeout(splashOff, 120); if (state === 'ok' && S.savedSync && /^Synced/.test(text)) { state = 'saved'; text = S.savedSync; } S.sync = { state, text }; const el = $('#sync'); el.className = 'sync ' + state; el.textContent = text; }
 
@@ -3747,7 +3763,8 @@ function render() {
   { const hd = document.querySelector('header.top'); if (hd) document.documentElement.style.setProperty('--hdr-h', hd.offsetHeight + 'px'); }
   document.body.classList.toggle('setup', S.tab === 'setup');
   if (S.tab === 'setup') { v.classList.remove('today-view'); v.innerHTML = viewSetup(); return; }   /* Workout Lite: first open, no Sheet yet */
-  if (S.tab === 'home') { v.innerHTML = viewHome(); hmFitMus(); setTimeout(obAuto, 400); snapSoon(); }
+  if (S.tab !== 'home') S.hmAnim = false;
+  if (S.tab === 'home') { v.innerHTML = viewHome(); hmFitMus(); if (!S.hmAnim) { S.hmAnim = true; hmStart(); } setTimeout(obAuto, 400); snapSoon(); }
   else if (S.tab === 'today') { v.innerHTML = viewToday(); renderTimer(); renderSetPick(); }
   else if (S.tab === 'progress') v.innerHTML = viewProgress();
   else if (S.tab === 'food') { v.innerHTML = viewFood() + addFoodSheet() + qfSheet() + qfTableSheet(); qfFilter(); qfFitNames(); const fi = S.faFocus && document.getElementById(S.faFocus); if (fi) { fi.focus(); S.faFocus = null; } }
@@ -5002,6 +5019,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.8', '11142026', 'Matches the full app: Home rings come alive when Home opens: kcal and protein fill in small dial ticks while the numbers count up; workouts this week fills in ticks grouped into one block per training day, and each finished day merges into a solid block; a ring that reaches its goal ends with a short burst and a check mark. Plays once each time you open Home (after the loading screen) and not at all when the phone asks for reduced motion.'],
   ['0.3o.7', '11142026', '[app only, no change on the web] Body tab: a kg / lbs switch right of Latest changes the top cards, the chart, the measure picker and the day cards together (body fat stays in %). It starts in your Food › Weight unit and only changes how the Body tab shows numbers.'],
   ['0.3o.6', '11142026', 'Matches the full app: Settings: all cards are collapsed whenever you come back to Settings; the app no longer remembers which card was open (Adjust plan and Plan my week still open their own card).'],
   ['0.3o.5', '11142026', 'Matches the full app: Food tiles: the amount (112 g, 1 pc …) is never cut off again (0.3o.4 cut it to 1… on the iPhone); when a tile is tight the kcal number gets a little smaller first, then the word kcal is left out.'],
@@ -5493,12 +5511,46 @@ function muscleCard() {
 }
 // Home (Ver 0.3b, design B). Rings: workouts this week (saved sessions Mon-Sun against the training days of the plan in use),
 // today's calories and protein against the Food tab's targets. Tiles: body weight 7-day average with its 30-day trend line, and the next exercise.
-function hmRing(q, color, val, lab, k) {
-  const C = 2 * Math.PI * 40, f = Math.max(0, Math.min(1, q || 0));
-  return '<button class="hm-ring" data-act="home-go" data-k="' + k + '"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="hm-rbg" cx="50" cy="50" r="40"/>' +
-    (f ? '<circle cx="50" cy="50" r="40" fill="none" stroke="' + color + '" stroke-width="9" stroke-linecap="round" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + (C * (1 - f)).toFixed(1) + '" transform="rotate(-90 50 50)"/>' : '') +
-    '</svg><b>' + val + '</b><span>' + lab + '</span></button>';
+// Ver 0.3o.8: dial rings. kcal and protein fill in small ticks while the number counts up; workouts this week fills in
+// small ticks grouped into one block per training day, and each block then merges into a solid block. A ring that
+// reaches its goal ends with a short burst and a check mark. Plays once each time Home opens (after the loading screen).
+function hmRing(q, color, val, lab, k, o) {
+  const C = 2 * Math.PI * 40, f = Math.max(0, Math.min(1, q || 0)), i = (o && o.i) || 0, base = i * 140, T = 38;
+  const arc = (len, at, cls, extra) => '<circle class="' + cls + '" cx="50" cy="50" r="40" stroke="' + color + '" stroke-dasharray="' + Math.max(.1, len).toFixed(2) + ' ' + C.toFixed(1) + '" stroke-dashoffset="' + (-at).toFixed(2) + '" transform="rotate(-90 50 50)"' + (extra || '') + '/>';
+  let svg = '', end = base;
+  if (o && o.blocks) {   /* workouts: one block per training day, built from small ticks */
+    const G = Math.max(1, o.blocks), gB = G > 1 ? 7 : 0, L = (C - G * gB) / G, t = Math.max(2, Math.round(24 / G)), tg = 1.6, tl = (L - (t - 1) * tg) / t, n = Math.min(G, o.done || 0);
+    for (let b = 0; b < G; b++) svg += arc(L, gB / 2 + b * (L + gB), 'hm-bbg');
+    let j = 0;
+    for (let b = 0; b < n; b++) {
+      const s0 = gB / 2 + b * (L + gB);
+      for (let m = 0; m < t; m++, j++) svg += arc(tl, s0 + m * (tl + tg), 'hm-tk', ' style="--d:' + (base + j * T) + 'ms"');
+      end = base + j * T + 120; svg += arc(L, s0, 'hm-blk', ' style="--d:' + end + 'ms"');
+    }
+  } else if (f) {
+    const N = 24, seg = C / N, kk = Math.max(1, Math.round(f * N));
+    svg += '<circle class="hm-rbg" cx="50" cy="50" r="40"/>';
+    for (let j = 0; j < kk; j++) svg += arc(seg - 2.2, j * seg, 'hm-tk', ' style="--d:' + (base + j * T) + 'ms"');
+    end = base + kk * T;
+  } else svg += '<circle class="hm-rbg" cx="50" cy="50" r="40"/>';
+  if (f >= 1) {
+    svg += '<g class="hm-burst">';
+    for (let j = 0; j < 10; j++) { const a2 = j * 36 * Math.PI / 180; svg += '<line stroke="' + color + '" style="--d:' + (end + 150) + 'ms" x1="' + (50 + 50 * Math.cos(a2)).toFixed(1) + '" y1="' + (50 + 50 * Math.sin(a2)).toFixed(1) + '" x2="' + (50 + 58 * Math.cos(a2)).toFixed(1) + '" y2="' + (50 + 58 * Math.sin(a2)).toFixed(1) + '"/>'; }
+    svg += '</g><path class="hm-chk" stroke="' + color + '" d="M36 51 l9 9 l19 -20" style="--d:' + (end + 250) + 'ms"/>';
+  }
+  const cu = o && o.num != null ? ' data-cu="' + o.num + '" data-tpl="' + esc(o.tpl) + '" data-ms="' + Math.max(400, end - base) + '" data-d="' + base + '"' : '';
+  return '<button class="hm-ring" data-act="home-go" data-k="' + k + '"><svg viewBox="0 0 100 100" aria-hidden="true">' + svg + '</svg><b' + cu + '>' + val + '</b><span>' + lab + '</span></button>';
 }
+function hmCountUp() {
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.hm-rings.anim b[data-cu]').forEach(b => {
+    const n = +b.dataset.cu, tpl = b.dataset.tpl, ms = +b.dataset.ms, t0 = performance.now() + (+b.dataset.d || 0), fin = b.textContent;
+    if (reduce || !n) return; b.textContent = tpl.replace('#', '0');
+    (function step(now) { if (!b.isConnected) return; const t = Math.max(0, Math.min(1, (now - t0) / ms)), e2 = 1 - Math.pow(1 - t, 2);
+      b.textContent = t >= 1 ? fin : tpl.replace('#', Math.round(n * e2).toLocaleString('en-US')); if (t < 1) requestAnimationFrame(step); })(performance.now());
+  });
+}
+function hmStart() { const r = document.querySelector('.hm-rings.hold'); if (!r || splashUp) return; r.classList.remove('hold'); hmCountUp(); }
 function hmNum(x) { return Math.round(x).toLocaleString('en-US'); }
 function viewHome() {
   const today = todayIso(), wk = Object.values(weekIsos(today)).sort(), mon = wk[0], sun = wk[6];
@@ -5510,10 +5562,10 @@ function viewHome() {
   // food today
   const lw = foodWeight(), Tg = lw ? targetsFor(dayKind(today), lw.kg) : null;
   const got = S.food.filter(x => x.iso === today).reduce((o, x) => ({ kcal: o.kcal + x.kcal, p: o.p + x.p }), { kcal: 0, p: 0 });
-  let h = problemBox() + '<div class="hm-rings">' +
-    hmRing(done.size / goal, 'var(--gold)', done.size + ' / ' + goal, 'workouts this week', 'progress') +
-    hmRing(Tg ? got.kcal / Tg.kcal : 0, 'var(--cw-high)', hmNum(got.kcal), Tg ? 'of ' + hmNum(Tg.kcal) + ' kcal' : 'kcal today', 'food') +
-    hmRing(Tg ? got.p / Tg.p : 0, 'var(--cw-low)', hmNum(got.p) + ' g', Tg ? 'of ' + hmNum(Tg.p) + ' g protein' : 'protein today', 'food') + '</div>';
+  let h = problemBox() + '<div class="hm-rings' + (S.hmAnim ? '' : ' anim hold') + '">' +
+    hmRing(done.size / goal, 'var(--gold)', done.size + ' / ' + goal, 'workouts this week', 'progress', { i: 0, blocks: goal, done: done.size, num: done.size, tpl: '# / ' + goal }) +
+    hmRing(Tg ? got.kcal / Tg.kcal : 0, 'var(--cw-high)', hmNum(got.kcal), Tg ? 'of ' + hmNum(Tg.kcal) + ' kcal' : 'kcal today', 'food', { i: 1, num: Math.round(got.kcal), tpl: '#' }) +
+    hmRing(Tg ? got.p / Tg.p : 0, 'var(--cw-low)', hmNum(got.p) + ' g', Tg ? 'of ' + hmNum(Tg.p) + ' g protein' : 'protein today', 'food', { i: 2, num: Math.round(got.p), tpl: '# g' }) + '</div>';
   if (S.exercises && S.exercises.length) h += muscleCard();
   // last workout tile (Ver 0.3f): the muscles the latest saved session trained, each with a green check
   let wt = '<span class="lab">Last workout</span><span class="val nm">None yet</span><span class="chg">your first saved session shows here</span>';

@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.8 · 11/14/2026
+
+Matches the full app: Home rings come alive when Home opens: kcal and protein fill in small dial ticks while the numbers count up; workouts this week fills in ticks grouped into one block per training day, and each finished day merges into a solid block; a ring that reaches its goal ends with a short burst and a check mark. Plays once each time you open Home (after the loading screen) and not at all when the phone asks for reduced motion.
+
 ## 0.3o.7 · 11/14/2026
 
 [app only, no change on the web] Body tab: a kg / lbs switch right of Latest changes the top cards, the chart, the measure picker and the day cards together (body fat stays in %). It starts in your Food › Weight unit and only changes how the Body tab shows numbers.
