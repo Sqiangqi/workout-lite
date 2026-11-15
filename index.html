@@ -398,9 +398,10 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .sheet-it.on { background: var(--gold); color: var(--gold-ink); }
 .azwrap { position: relative; }
 .azwrap .sheet-list { position: relative; }
-.azwrap.has-idx .sheet-list { padding-right: 24px; }
-.az-idx { position: absolute; right: 0; top: 0; bottom: 4px; width: 22px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 2px 0; touch-action: none; user-select: none; -webkit-user-select: none; cursor: pointer; }
-.az-idx span { font-size: 10.5px; font-weight: 700; line-height: 1; color: var(--accent); padding: 0 4px; }
+.azwrap.has-idx .sheet-list { padding-right: 30px; }
+.az-idx { -webkit-touch-callout: none; border-radius: 14px; transition: background .15s; position: absolute; right: 0; top: 0; bottom: 4px; width: 28px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 2px 0; touch-action: none; user-select: none; -webkit-user-select: none; cursor: pointer; }
+.az-idx.on { background: rgba(var(--gold-rgb), .16); }
+.az-idx span { pointer-events: none; font-size: 11px; font-weight: 700; line-height: 1; color: var(--accent); padding: 0 4px; }
 .az-idx span.off { color: var(--muted); opacity: .45; }
 .az-pop { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center; background: rgba(var(--brand-rgb), .88); color: var(--gold); font-family: var(--font-display); font-size: 34px; font-weight: 700; pointer-events: none; }
 .sheet-sep { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 8px 4px 2px; }
@@ -4339,19 +4340,30 @@ function azBlock(names, item, favs) {
   const idx = names.length + favs.length >= 8 ? '<div class="az-idx" aria-hidden="true">' + (favs.length ? '<span data-az="★">★</span>' : '') + [...AZ].map(k => '<span data-az="' + k + '"' + (groups.has(k) ? '' : ' class="off"') + '>' + k + '</span>').join('') + '</div>' : '';
   return '<div class="azwrap' + (idx ? ' has-idx' : '') + '"><div class="sheet-list" id="sheetList">' + list + '</div>' + idx + '<div class="az-pop" id="azPop" hidden></div></div>';
 }
-let azDrag = null, azPopT = 0;
+// Ver 0.3o.16: the letter comes from the finger's height on the strip (gaps between letters count too), so a tap,
+// a hold or a slide always lands on a letter; touch events are used on the iPhone so the hold menu and scrolling stay out.
+let azDrag = null, azPopT = 0, azLast = '';
 function azJump(x, y) {
-  const el = document.elementFromPoint(x, y), sp = el && el.closest && el.closest('.az-idx [data-az]'); if (!sp || !azDrag) return;
-  const wrap = azDrag, list = wrap.querySelector('.sheet-list'), k = sp.dataset.az, order = ['★'].concat([...AZ]);
-  let sep = null; for (let i = order.indexOf(k); i < order.length && !sep; i++) sep = list.querySelector('.az-sep[data-az="' + order[i] + '"]');
+  if (!azDrag) return;
+  const wrap = azDrag, idx = wrap.querySelector('.az-idx'), list = wrap.querySelector('.sheet-list'); if (!idx || !list) return;
+  const spans = [...idx.querySelectorAll('[data-az]')], r = idx.getBoundingClientRect(); if (!spans.length || !r.height) return;
+  const k = spans[Math.max(0, Math.min(spans.length - 1, Math.floor((y - r.top) / r.height * spans.length)))].dataset.az;
+  const pop = wrap.querySelector('.az-pop'); if (pop) { pop.textContent = k; pop.hidden = false; clearTimeout(azPopT); azPopT = setTimeout(() => { pop.hidden = true; }, 700); }
+  if (k === azLast) return; azLast = k;
+  const order = ['★'].concat([...AZ]); let sep = null;
+  for (let i = order.indexOf(k); i < order.length && !sep; i++) sep = list.querySelector('.az-sep[data-az="' + order[i] + '"]');
   if (!sep) for (let i = order.indexOf(k) - 1; i >= 0 && !sep; i--) sep = list.querySelector('.az-sep[data-az="' + order[i] + '"]');
   if (sep) list.scrollTop = sep.offsetTop - list.firstElementChild.offsetTop;
-  const pop = wrap.querySelector('.az-pop'); if (pop) { pop.textContent = k; pop.hidden = false; clearTimeout(azPopT); azPopT = setTimeout(() => { pop.hidden = true; }, 600); }
+  try { if (navigator.vibrate) navigator.vibrate(5); } catch (x) {}
 }
-document.addEventListener('pointerdown', e => { const idx = e.target.closest && e.target.closest('.az-idx'); if (!idx) return; e.preventDefault(); azDrag = idx.closest('.azwrap'); try { idx.setPointerCapture(e.pointerId); } catch (x) {} azJump(e.clientX, e.clientY); });
-document.addEventListener('pointermove', e => { if (azDrag) { e.preventDefault(); azJump(e.clientX, e.clientY); } }, { passive: false });
-document.addEventListener('pointerup', () => { azDrag = null; });
-document.addEventListener('pointercancel', () => { azDrag = null; });
+function azStart(t, x, y) { const idx = t && t.closest && t.closest('.az-idx'); if (!idx) return false; azDrag = idx.closest('.azwrap'); azLast = ''; idx.classList.add('on'); azJump(x, y); return true; }
+function azEnd() { if (azDrag) { const i = azDrag.querySelector('.az-idx'); if (i) i.classList.remove('on'); } azDrag = null; }
+document.addEventListener('touchstart', e => { const t = e.touches[0]; if (azStart(e.target, t.clientX, t.clientY)) e.preventDefault(); }, { passive: false });
+document.addEventListener('touchmove', e => { if (!azDrag) return; e.preventDefault(); const t = e.touches[0]; azJump(t.clientX, t.clientY); }, { passive: false });
+document.addEventListener('touchend', azEnd); document.addEventListener('touchcancel', azEnd);
+document.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') return; if (azStart(e.target, e.clientX, e.clientY)) { e.preventDefault(); try { e.target.setPointerCapture(e.pointerId); } catch (x) {} } });
+document.addEventListener('pointermove', e => { if (e.pointerType !== 'touch' && azDrag) azJump(e.clientX, e.clientY); });
+document.addEventListener('pointerup', e => { if (e.pointerType !== 'touch') azEnd(); }); document.addEventListener('pointercancel', e => { if (e.pointerType !== 'touch') azEnd(); });
 function chartNames() {
   // Ver 0.3n: every exercise with at least one entry, user 2026-11-14 (plan exercises without entries no longer listed).
   // Order: as in the Sheet, then exercises no longer in the Sheet A to Z.
@@ -5132,6 +5144,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.16', '11142026', 'Matches the full app: A–Z strip on exercise lists works better on the iPhone: the letter comes from where your finger is on the strip (the gaps between letters count too), so a tap, a hold or a slide always picks a letter; the strip is wider, lights up while you touch it, and the iPhone press-and-hold menu no longer gets in the way.'],
   ['0.3o.15', '11142026', 'Matches the full app: Home, Muscles worked: when Home opens (first open or coming back from another tab), the gold area grows out of the centre with a small spring and the dots pop in one by one, together with the rings.'],
   ['0.3o.14', '11142026', 'Matches the full app: Stopwatch (Dead Hang) shows hundredths of a second while it runs (0:12.34); the saved time is still whole seconds. Exercise lists (Progress › Exercise and Start workout › Choose exercise) are A to Z with a letter heading for each letter and an A–Z strip on the right, like the iPhone: tap a letter or slide a finger along it to jump there. Favourites stay on top in Choose exercise. Removed: the Sheet order of the Progress exercise list.'],
   ['0.3o.13', '11142026', 'Matches the full app: Stopwatch exercises (Dead Hang): the tenths of a second now count up one by one (they used to jump by two), so the clock runs smoothly.'],
