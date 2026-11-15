@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.4 · 11/14/2026
+
+Matches the full app: Food tiles: the amount (100 g, 1 pc …) and the kcal sit in one row that keeps them apart, so the amount no longer runs under the kcal number; a long amount ends in … instead.
+
 ## 0.3o.3 · 11/14/2026
 
 Matches the full app: Day cards under the Body and Progress charts: the number is a little smaller and the unit (kg, lbs, %, reps) is small, grey and not bold.
