@@ -91,6 +91,10 @@ body.no-timer main .wrap { padding-bottom: 40px; }
 .notice { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--warn); border-radius: var(--r); padding: 10px 12px; display: grid; gap: 8px; }
 .notice.err { border-left-color: var(--bad); }
 .notice .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.sync.prob { cursor: pointer; font-weight: 700; }
+header.top .sync.err.prob, body.home header.top .sync.err.prob { color: #fff; background: #b3261e; border-color: #ff9d93; }
+.prob-sheet .prob-txt { margin: 0; padding: 0 4px; font-size: 15px; color: var(--ink); }
+.prob-acts { justify-content: flex-end; padding: 4px 2px 2px; }
 
 /* Exercise card */
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px; display: grid; gap: 10px; }
@@ -3006,7 +3010,7 @@ function clock12(ms) { const d = new Date(ms), h = d.getHours(); return ((h + 11
 let splashUp = true;
 function splashOff() { if (!splashUp) return; splashUp = false; setTimeout(hmStart, 200); const d = document.getElementById('splash'); if (!d) return; d.classList.add('off'); setTimeout(() => d.remove(), 450); }
 setTimeout(splashOff, 2500);
-function setSync(state, text) { if (state !== 'busy' && state !== 'wait' && !/^Connecting|^Loading|^Reading/.test(text)) setTimeout(splashOff, 120); if (state === 'ok' && S.savedSync && /^Synced/.test(text)) { state = 'saved'; text = S.savedSync; } S.sync = { state, text }; const el = $('#sync'); el.className = 'sync ' + state; el.textContent = text; }
+function setSync(state, text) { if (state !== 'busy' && state !== 'wait' && !/^Connecting|^Loading|^Reading/.test(text)) setTimeout(splashOff, 120); if (state === 'ok' && S.savedSync && /^Synced/.test(text)) { state = 'saved'; text = S.savedSync; } S.sync = { state, text }; const el = $('#sync'); el.className = 'sync ' + state; el.textContent = text; probPill(); }
 
 // ---------- body metrics ----------
 function num(v) { if (v == null) return null; const s = String(v).trim(); if (s === '' || s === '--') return null; const n = Number(s); return isNaN(n) ? null : n; }
@@ -3741,7 +3745,8 @@ async function saveSession() {
 
 // ---------- rendering ----------
 function render() {
-  renderHeader();
+  if (!S.problem) S.probOpen = false; else if (S.problem !== S.probSeen) { S.probSeen = S.problem; S.probOpen = true; }   /* Ver 0.3o.10: a new problem opens its sheet once */
+  renderHeader(); probPill();
   renderIconSheet();
   // Add-exercise bubble: Library tab only, hidden while its sheet is open
   document.body.classList.toggle('lib', S.tab === 'library');
@@ -4020,10 +4025,20 @@ function renderHeader() {
   const ap = activePlan(); if (ap) { const dd = planDay(ap, iso); lab = dd ? typeLabel(dd.type) : 'No plan today'; }
   $('#daySub').textContent = (home ? WEEKDAYS[wd] + ' · ' : '') + usOf(iso) + (planOn() ? ' · ' + lab : '');
 }
+// Ver 0.3o.10: a problem no longer shows as a card at the top of the page. The sync pill in the header turns red
+// (Not saved ⚠ / Problem ⚠); a new problem opens a sheet from the bottom once, tapping outside it closes it, and
+// tapping the red pill opens it again. Retry stays in the sheet.
 function problemBox() {
-  if (!S.problem) return '';
-  return '<div class="notice err" role="alert"><div>' + esc(S.problem.text) + '</div>' +
-    (S.problem.retry ? '<div class="acts"><button class="btn" data-act="' + (S.problem.act || 'retry') + '">' + esc(S.problem.label || 'Retry') + '</button></div>' : '') + '</div>';
+  if (!S.problem || !S.probOpen) return '';
+  return '<div class="sheet-bg" data-act="prob-close"><div class="sheet prob-sheet" role="alertdialog" aria-label="Problem" data-act="noop"><div class="sheet-h"><b>' + esc(probLabel()) + '</b></div>' +
+    '<p class="prob-txt">' + esc(S.problem.text) + '</p><div class="row-acts prob-acts"><button class="btn" data-act="prob-close">Close</button>' +
+    (S.problem.retry ? '<button class="btn primary" data-act="' + (S.problem.act || 'retry') + '">' + esc(S.problem.label || 'Retry') + '</button>' : '') + '</div></div></div>';
+}
+function probLabel() { return /^Not saved/i.test((S.problem && S.problem.text) || '') ? 'Not saved' : 'Problem'; }
+function probPill() {
+  const el = document.getElementById('sync'); if (!el) return;
+  if (S.problem) { el.className = 'sync err prob'; el.textContent = probLabel() + ' ⚠'; el.dataset.act = 'prob-open'; el.setAttribute('role', 'button'); el.tabIndex = 0; el.setAttribute('aria-label', probLabel() + '. Tap to see the problem.'); }
+  else if (el.dataset.act) { delete el.dataset.act; el.removeAttribute('role'); el.removeAttribute('tabindex'); el.removeAttribute('aria-label'); if (S.sync) { el.className = 'sync ' + S.sync.state; el.textContent = S.sync.text; } }
 }
 function planPill() {
   const ap = planOn() ? activePlan() : null;
@@ -5019,6 +5034,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.10', '11142026', 'Matches the full app: Problems (like Not saved or cannot reach Google Sheets) no longer show as a card at the top of the page: the sync pill in the header turns red (Not saved ⚠ or Problem ⚠), the message opens once in a sheet from the bottom with Retry, tapping outside closes it and tapping the red pill opens it again. Settings › Version has a Show a test problem button to see how it looks. Removed: the problem card at the top of each tab.'],
   ['0.3o.9', '11142026', 'Matches the full app: Home kcal ring: goal reached (burst and check mark) when today is within 10% of your kcal target, above or below; more than 10% over shows a full ring without the check.'],
   ['0.3o.8', '11142026', 'Matches the full app: Home rings come alive when Home opens: kcal and protein fill in small dial ticks while the numbers count up; workouts this week fills in ticks grouped into one block per training day, and each finished day merges into a solid block; a ring that reaches its goal ends with a short burst and a check mark. Plays once each time you open Home (after the loading screen) and not at all when the phone asks for reduced motion.'],
   ['0.3o.7', '11142026', '[app only, no change on the web] Body tab: a kg / lbs switch right of Latest changes the top cards, the chart, the measure picker and the day cards together (body fat stays in %). It starts in your Food › Weight unit and only changes how the Body tab shows numbers.'],
@@ -5104,7 +5120,7 @@ function viewSettings() {
     (window.__liteSrc ? '<p class="hint">' + (window.__liteSrc === 'github' ? 'Page loaded from GitHub (updates on its own).' : 'GitHub could not be reached: using the built-in copy of the page.') + '</p>' : '') +
     // only the latest two updates here, a few lines each; the full list is CHANGELOG.md on GitHub (user, 2026-11-07)
     '<p class="hint">Latest updates</p><ul class="verlist recent">' + APP_VERSIONS.slice(0, 2).map(([a, b, c]) => '<li><b>' + esc(a) + '</b> · ' + esc(b) + ' — ' + esc(c) + '</li>').join('') + '</ul>' +
-    '<div class="row-acts"><a class="btn" href="https://github.com/Sqiangqi/workout-lite/blob/main/CHANGELOG.md" target="_blank" rel="noopener">View full version history</a></div>' +
+    '<div class="row-acts"><a class="btn" href="https://github.com/Sqiangqi/workout-lite/blob/main/CHANGELOG.md" target="_blank" rel="noopener">View full version history</a><button class="btn sm" data-act="prob-test">Show a test problem</button></div>' +
     // Web 0.3j.1: check GitHub for a newer version and load it
     '<div class="row-acts">' + (S.upd && S.upd.newer ? '<button class="btn primary" data-act="upd-go">Update now to Ver ' + esc(S.upd.newer) + '</button>' :
       '<button class="btn primary" data-act="upd-check"' + (S.upd && S.upd.busy ? ' disabled' : '') + '>' + (S.upd && S.upd.busy ? 'Checking…' : 'Check for updates') + '</button>') + '</div>' +
@@ -5729,6 +5745,10 @@ const ACTIONS = {
     try { if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) jobs.push(navigator.serviceWorker.getRegistrations().then(rs => Promise.all(rs.map(r => r.unregister())))); } catch (x) {}
     Promise.all(jobs).catch(() => {}).then(go);
   },
+  'prob-open'(b, it, e, act) { S.probOpen = true; render(); },
+  'prob-close'(b, it, e, act) { S.probOpen = false; render(); },
+  'prob-test'(b, it, e, act) { S.problem = { text: 'Test: this is how a problem looks. Nothing is wrong; Retry just clears it.', retry: true, label: 'Retry', act: 'prob-test-end' }; render(); },
+  'prob-test-end'(b, it, e, act) { S.problem = null; render(); toast('Test problem cleared.'); },
   'retry'(b, it, e, act) { S.problem = null; readSheet(); if (S.wp.state === 'err') readPlans(); },
   'retry-save'(b, it, e, act) { S.problem = null; saveSession(); },
   'pic'(b, it, e, act) { openPic(b.dataset.name); },
