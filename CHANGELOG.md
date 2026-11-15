@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3p · 11/14/2026
+
+Matches the full app Ver 0.3p (its 0.3o.1 to 0.3o.25). Home: rings fill as dial ticks with counting numbers, workouts this week in one block per training day, goal-reached burst and check (kcal within 10% counts); Muscles worked chart: points travel out from the centre together and slow into place while each count goes up, 7 or 30 days remembered; Last workout: up to 6 muscles that fit the card, checks pop in with a burst. Problems show in a red sync pill with a sheet and Retry instead of a card at the top. Start workout: return arrow from Week plan. Library: arm exercises move above the figure; Add an exercise has muscle chips, name suggestions, near-duplicate check and Title Case names. Exercise lists A to Z with an A–Z strip. Tab wheel: a tap opens the tab at once. Stopwatch shows hundredths. Food tiles keep the amount readable. Settings cards start collapsed; About holds Version and the owner’s Test mode (enter it, run tests, amber bar with Tests and Exit).
+
 ## 0.3o.25 · 11/14/2026
 
 Matches the full app: Test mode is now a place: Settings › About › Test mode has one row, Enter test mode, which opens a Test mode page with the tests to tap. While in test mode an amber striped bar stays under the header (Tests goes back to the list, Exit goes back to the app) and an amber frame goes around the screen. Removed: the test list inside About.
