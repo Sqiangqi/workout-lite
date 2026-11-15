@@ -1216,6 +1216,13 @@ body.home main .wrap { gap: 10px; padding-bottom: calc(var(--tabbar-h) + 20px); 
 .hm-spark { display: block; width: 100%; height: 26px; margin-top: 2px; }
 .hm-mus { display: grid; grid-template-columns: repeat(2, minmax(0, max-content)); justify-content: start; gap: 4px clamp(5px, 2vw, 8px); margin: 2px 0 1px; }   /* Ver 0.3g: two columns, each as wide as its longest name */   /* Ver 0.3f: muscles of the last workout, each with a green check */
 .hm-mus i { display: flex; align-items: center; gap: 4px; min-width: 0; font-style: normal; font-family: var(--font-display); font-size: clamp(12.5px, 3.7vw, 15px); letter-spacing: .01em; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Ver 0.3o.17: when Home opens, the muscle names slide in and their green checks pop one by one */
+.hm-tiles.anim .hm-mus i { animation: musIn .3s ease-out both; animation-delay: calc(.9s + var(--k, 0) * 110ms); }
+.hm-tiles.anim .hm-mus i b { animation: chkPop .4s cubic-bezier(.3, 1.7, .5, 1) both; animation-delay: calc(1s + var(--k, 0) * 110ms); }
+.hm-tiles.hold * { animation-play-state: paused !important; }
+@keyframes musIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+@keyframes chkPop { 0% { transform: scale(0) rotate(-30deg); } 100% { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .hm-tiles.anim .hm-mus i, .hm-tiles.anim .hm-mus i b { animation: none; } }
 .hm-mus i b { flex: none; width: 15px; height: 15px; font-size: 9.5px; }
 .hm-mus i b { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: var(--good); color: var(--surface); font-size: 10px; font-weight: 800; }
 .hm-start { position: sticky; bottom: calc(var(--tabbar-h) + 10px); z-index: 3; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 2px; padding: 14px 12px; border: 0; border-radius: 12px; background: var(--gold); color: var(--gold-ink); font-family: var(--font-display); font-size: 19px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; box-shadow: 0 6px 18px rgba(0, 0, 0, .25); }
@@ -5144,6 +5151,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.17', '11142026', 'Matches the full app: Home, Last workout: when Home opens, the muscle names slide in and their green checks pop one by one, after the rings; the card shows at most 6 muscles.'],
   ['0.3o.16', '11142026', 'Matches the full app: A–Z strip on exercise lists works better on the iPhone: the letter comes from where your finger is on the strip (the gaps between letters count too), so a tap, a hold or a slide always picks a letter; the strip is wider, lights up while you touch it, and the iPhone press-and-hold menu no longer gets in the way.'],
   ['0.3o.15', '11142026', 'Matches the full app: Home, Muscles worked: when Home opens (first open or coming back from another tab), the gold area grows out of the centre with a small spring and the dots pop in one by one, together with the rings.'],
   ['0.3o.14', '11142026', 'Matches the full app: Stopwatch (Dead Hang) shows hundredths of a second while it runs (0:12.34); the saved time is still whole seconds. Exercise lists (Progress › Exercise and Start workout › Choose exercise) are A to Z with a letter heading for each letter and an A–Z strip on the right, like the iPhone: tap a letter or slide a finger along it to jump there. Favourites stay on top in Choose exercise. Removed: the Sheet order of the Progress exercise list.'],
@@ -5713,7 +5721,7 @@ function viewHome() {
       c1.forEach((m, i) => { list.push(m); if (c2[i]) list.push(c2[i]); });
       const days = Math.round((new Date(today + 'T12:00:00') - new Date(last + 'T12:00:00')) / 864e5), d = new Date(last + 'T12:00:00');
       wt = '<span class="lab">Last workout · ' + (days === 0 ? 'today' : days === 1 ? 'yesterday' : days + ' days ago') + '</span>' +
-        (list.length ? '<span class="hm-mus">' + list.map(m => '<i><b aria-hidden="true">✓</b>' + esc(m) + '</i>').join('') + '</span>' : '<span class="val nm">Done</span>') +
+        (list.length ? '<span class="hm-mus">' + list.slice(0, 6).map((m, k) => '<i style="--k:' + k + '"><b aria-hidden="true">✓</b>' + esc(m) + '</i>').join('') + '</span>' : '<span class="val nm">Done</span>') +
         '<span class="chg">' + esc(WEEKDAYS[d.getDay()].slice(0, 3)) + ' ' + esc(usOf(last).replace(/\/\d{4}$/, '')) + ' · ' + nSets + ' set' + (nSets === 1 ? '' : 's') + '</span>';
     } }
   // next exercise: the first one not finished on today's list, or the plan's first
@@ -5723,7 +5731,7 @@ function viewHome() {
   if (names.length) { const n0 = names[0], l = lastSession(n0), r0 = l && l.rows && l.rows[0];
     nx += '<span class="val nm">' + esc(bareName(n0)) + '</span><span class="chg">' + (r0 ? 'last ' + esc(r0.weight == null ? '–' : fmt(r0.weight)) + (splitReps(r0.reps).length ? ' × ' + esc(splitReps(r0.reps, isFarmer(n0)).join('/')) : '') : 'no earlier entries') + '</span>'; }
   else nx += '<span class="val nm">' + (items.length ? 'All done' : 'Nothing planned') + '</span><span class="chg">' + (items.length ? 'every exercise finished' : 'add exercises on Start workout') + '</span>';
-  h += '<div class="hm-tiles"><button class="tile" data-act="home-go" data-k="progress">' + wt + '</button><button class="tile" data-act="home-go" data-k="today">' + nx + '</button></div>';
+  h += '<div class="hm-tiles' + (S.hmAnim ? '' : ' anim hold') + '"><button class="tile" data-act="home-go" data-k="progress">' + wt + '</button><button class="tile" data-act="home-go" data-k="today">' + nx + '</button></div>';
   // Start workout, pinned above the bottom strip
   const all = S.draft && S.draft.date === today ? S.draft.items : null, n = all ? all.length : planNames(today).length;
   const label = S.draft && S.draft.date === today && S.draft.done ? 'Workout saved ✓' : all && draftHasWork(S.draft) ? 'Continue workout' : n ? 'Start workout · ' + n + ' exercise' + (n === 1 ? '' : 's') : 'Start workout';

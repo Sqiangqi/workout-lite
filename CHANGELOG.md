@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3o.17 · 11/14/2026
+
+Matches the full app: Home, Last workout: when Home opens, the muscle names slide in and their green checks pop one by one, after the rings; the card shows at most 6 muscles.
+
 ## 0.3o.16 · 11/14/2026
 
 Matches the full app: A–Z strip on exercise lists works better on the iPhone: the letter comes from where your finger is on the strip (the gaps between letters count too), so a tap, a hold or a slide always picks a letter; the strip is wider, lights up while you touch it, and the iPhone press-and-hold menu no longer gets in the way.
