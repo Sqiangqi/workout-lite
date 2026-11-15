@@ -5171,6 +5171,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3o.22', '11142026', 'Matches the full app: Settings › About: the Test mode card is always there under Version (no more tapping the version line 5 times). Removed: the 5-tap switch and the Turn off test mode button.'],
   ['0.3o.21', '11142026', 'Matches the full app: Settings: the Version card is now called About; inside it, Version is the first card and Test mode (when turned on) the second.'],
   ['0.3o.20', '11142026', 'Matches the full app: Home, Muscles worked: the dots now leave the centre quickly and slow down as they reach their place (all still stop together), so the move has momentum. Settings › Test mode (tap the version line in Settings › Version 5 times to turn it on or off): preview the new-user Get started questions and the first-open screen, show a problem or a Not saved problem, and replay the Home animations. Nothing in a test changes your data. Removed: the Show a test problem button under Version (now in Test mode).'],
   ['0.3o.19', '11142026', 'Matches the full app: Home, Muscles worked: all points now move out from the centre together, start and arrive at the same time, smoothly and more slowly (1.5 seconds), so you can watch the dots travel and the counts go up.'],
@@ -5236,7 +5237,7 @@ const APP_VERSIONS = [
   ['0.1', '11012026', 'First version of Workout Lite: runs on Google Apps Script without Claude. Today, Progress, Library and Settings from QS Workout Ver 0.1g; each person signs in with Google and saves to their own Sheet.']
 ];
 function testCard() {   /* Ver 0.3o.20: Settings › Test mode (turn on by tapping the version line 5 times). Every test is a preview: nothing is saved. */
-  if (!store.get('wlite.testmode.v1')) return '';
+  /* Ver 0.3o.22: always shown in About (it used to need 5 taps on the version line, and that switch could be lost) */
   const b = (act, lab, sub) => '<button class="tm-it" data-act="' + act + '"><b>' + lab + '</b><span>' + sub + '</span></button>';
   return '<div class="subcard tm"><p class="sub-h">Test mode</p><p class="hint">For trying things out. Nothing here changes your data.</p>' +
     b('tm-ob', 'New user: Get started', 'The setup questions with blank answers; finishing saves nothing') +
@@ -5244,7 +5245,7 @@ function testCard() {   /* Ver 0.3o.20: Settings › Test mode (turn on by tappi
     b('prob-test', 'Show a problem', 'Red pill and the problem sheet; Retry clears it') +
     b('tm-notsaved', 'Show Not saved', 'The save-failed version of the problem') +
     b('tm-anim', 'Replay Home animations', 'Rings, muscles chart and checks play again') +
-    '<div class="row-acts"><button class="btn sm" data-act="tm-off">Turn off test mode</button></div></div>';   /* closes .subcard */
+    '</div>';   /* closes .subcard */
 }
 function viewSettings() {
   if (S.wpEdit) return viewPlanEdit();
@@ -5276,7 +5277,7 @@ function viewSettings() {
     '<div class="row-acts"><button class="btn' + (S.outArmed ? ' danger' : '') + '" data-act="sign-out">' + (S.outArmed ? 'Tap again to sign out' : 'Sign out / switch account') + '</button></div>' +
     '<p class="hint">Signing out removes your data from this phone only; everything stays in your Google Drive. Save your session first: unsaved sets are cleared.</p></div>';
   /* Ver 0.3o.21: the Version card is now About, with Version and (when on) Test mode as cards inside it */
-  h += '<p class="section-h">About</p><div class="panel about"><div class="subcard"><p class="sub-h">Version</p><p class="ver" data-act="tm-tap"><b>Ver ' + esc(v) + '</b> · ' + esc(d) + '</p>' +
+  h += '<p class="section-h">About</p><div class="panel about"><div class="subcard"><p class="sub-h">Version</p><p class="ver"><b>Ver ' + esc(v) + '</b> · ' + esc(d) + '</p>' +
     (window.__liteSrc ? '<p class="hint">' + (window.__liteSrc === 'github' ? 'Page loaded from GitHub (updates on its own).' : 'GitHub could not be reached: using the built-in copy of the page.') + '</p>' : '') +
     // only the latest two updates here, a few lines each; the full list is CHANGELOG.md on GitHub (user, 2026-11-07)
     '<p class="hint">Latest updates</p><ul class="verlist recent">' + APP_VERSIONS.slice(0, 2).map(([a, b, c]) => '<li><b>' + esc(a) + '</b> · ' + esc(b) + ' — ' + esc(c) + '</li>').join('') + '</ul>' +
