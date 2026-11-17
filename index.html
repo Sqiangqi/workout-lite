@@ -121,6 +121,7 @@ body.testing::after { content: ""; position: fixed; inset: 0; border: 3px solid 
 .us-t { display: grid; gap: 1px; padding: 7px 6px; border-radius: 10px; background: rgba(var(--gold-rgb), .14); text-align: center; min-width: 0; }
 .us-t b { font-family: var(--font-display); font-size: 22px; line-height: 1.05; font-variant-numeric: tabular-nums; }
 .us-t span { font-size: 10.5px; color: var(--muted); line-height: 1.2; }
+.mode-seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }   /* Ver 0.3q.4 */
 /* Ver 0.3q.3: switch inside a Settings row */
 .setsw { flex: none; margin-left: auto; }
 .setsw i { display: block; position: relative; width: 50px; height: 30px; border-radius: 15px; background: var(--line); transition: background .15s; }
@@ -4042,9 +4043,6 @@ const SET_ICON = (() => {
   return {
     'Week plan': s('<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/>'),
     'Carb week': s('<path d="M3 12h18a9 9 0 0 1-18 0z"/><path d="M8 8c0-2 2-2 2-4M13 8c0-2 2-2 2-4"/>'),
-    'Dark mode': s('<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>'),
-    'Style': s('<rect x="3.5" y="4" width="17" height="16" rx="2.5"/><path d="M3.5 9h17M9 9v11"/>'),
-    'Color theme': s('<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor"/>'),
     'Moving exercise pictures': s('<circle cx="12" cy="4.5" r="2"/><path d="M12 7v6l-3 7M12 13l3 7M8 10l4-2 4 2"/>'),
     'Appearance': s('<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor"/>'),
     'Update body metrics': s('<circle cx="12" cy="4.6" r="2" fill="currentColor"/><path d="M12 7.4V15M12 9.6H6.8V5.4M12 9.6h5.2V5.4M8 9.6c.4-1.6 2.3-1.6 2.7 0M13.3 9.6c.4-1.6 2.3-1.6 2.7 0M12 15l-3 5.6M12 15l3 5.6"/>'),   /* 0.3p.46: flexing figure */
@@ -5629,6 +5627,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3q.4', '11172026', 'Matches the full app: Settings: Appearance is one row again, like most apps: its page has Mode (Light, Dark or Auto, which follows the phone), then Style, then Color theme; the row shows your choice on the right (e.g. Auto · Studio · Navy). Moving exercise pictures stays its own switch row below it, without the START to END line. Removed: the separate Dark mode, Style and Color theme rows, and the Dark mode and Follow the phone setting switches (now the Mode buttons).'],
   ['0.3q.3', '11172026', 'Matches the full app: Settings: Appearance is split into its own rows: Dark mode, Style and Color theme (each opens its own page; Style and Color theme show the current choice on the right). Moving exercise pictures is a row below them with a switch you tap right in the list. Removed: the App icon row (change your icon on the Profile page or by tapping the logo).'],
   ['0.3q.2', '11172026', 'Matches the full app: Appearance: the style you pick is always the one you see. Changing the color theme no longer flips the Style buttons to Go Blue while the screen stays Studio; Go Blue is now saved as a choice (before, it was saved as no choice, so an older Studio copy in your food Sheet could come back); a look left over from an unfinished Get started or Test mode no longer hides your saved one; and when the phone will not keep a setting, it is still used until you close the app and saved to your food Sheet.'],
   ['0.3q.1', '11172026', 'Matches the full app: Usage count is on: the web version (GitHub) now sends its once-a-day anonymous ping (a random code for the phone and the app version, no name or email), and Settings › About › Usage shows the real counts.'],
@@ -5887,10 +5886,8 @@ function viewSettings() {
   /* 0.3p.46: Profile is a normal row at the top of the Settings list (added in foldSettings), no separate card */
   const [v, d] = APP_VERSIONS[0];
   const dark = document.documentElement.getAttribute('data-theme') === 'dark', chosen = !!store.get(K_THEME);
-  /* Ver 0.3q.3: Appearance is now Dark mode, Style and Color theme, each its own row; Moving exercise pictures is a row with a switch */
-  h += '<p class="section-h">Dark mode</p><div class="panel"><label class="switch' + (chosen ? '' : ' dis') + '"><span>Dark mode</span><input type="checkbox" role="switch" id="themeSw"' + (dark ? ' checked' : '') + (chosen ? '' : ' disabled aria-disabled="true"') + '><i aria-hidden="true"></i></label>' +
-    '<label class="switch"><span>Follow the phone setting</span><input type="checkbox" role="switch" id="themeAutoSw"' + (chosen ? '' : ' checked') + '><i aria-hidden="true"></i></label>' +
-    '<p class="hint">' + (chosen ? 'Your choice is kept on this phone.' : 'Light or dark follows your phone’s setting.') + '</p></div>' + appearanceExtra();
+  /* Ver 0.3q.4: one Appearance row (Mode, Style, Color theme on its page), then the Moving exercise pictures switch row */
+  h += appearanceExtra();
   h += '<p class="section-h">Your workout Sheet</p><div class="panel">' +
     '<p>Sessions are saved to <b>' + esc(S.sheetTitle || 'your Sheet') + '</b>' + (S.sheetTab ? ' › ' + esc(S.sheetTab) : '') + ' (columns J to M).</p>' +
     '<div class="row-acts">' + (S.sheetUrl ? '<a class="btn" href="' + esc(S.sheetUrl) + '" target="_blank" rel="noopener">Open the Sheet</a>' : '') +
@@ -6587,6 +6584,7 @@ const ACTIONS = {
     Promise.all(jobs).catch(() => {}).then(go);
   },
   'usage-reload'(b, it, e, act) { S.usage = null; render(); },
+  'mode'(b, it, e, act) { const k = b.dataset.k; themeSwap(() => { if (k === 'auto') store.del(K_THEME); else store.set(K_THEME, k); applyTheme(); render(); }, b); },
   'anim-tog'(b, it, e, act) { store.set(K_ANIM, animOn() ? 'still' : 'move'); render(); toast(animOn() ? 'Exercise pictures move.' : 'Exercise pictures stay still.'); },
   'tm-enter'(b, it, e, act) { S.testMode = true; S.tmFrom = S.tab; goTab('test', b); },
   'tm-look'(b, it, e, act) { LOOK_PV = { style: styleOf(), pal: palOf().k, theme: document.documentElement.getAttribute('data-theme'), src: 'test' }; S.tmLook = true; render(); window.scrollTo(0, 0); },
@@ -7375,13 +7373,17 @@ function applyStyle() {
   splashSave();
 }
 // Settings > Appearance, under the dark mode switch: theme buttons, then the icon row
-function appearanceExtra() {   /* Ver 0.3q.3: Style, Color theme and Moving exercise pictures sections (the App icon row is gone: change it on Profile) */
-  const cur = palOf().k, sty = styleOf(), sn = (STYLES.find(s => s.k === sty) || STYLES[0]).n, pn = (PALS.find(p => p.k === cur) || PALS[0]).n;
-  return '<div class="sec-row"><p class="section-h">Style</p><span class="sec-side">' + esc(sn) + '</span></div><div class="panel"><div class="stylerow">' + STYLES.map(s => '<button class="stybtn sty-' + s.k + (s.k === sty ? ' on' : '') + '" data-act="sty" data-k="' + s.k + '" aria-pressed="' + (s.k === sty) + '"><span class="sty-pv" aria-hidden="true"><b>Today</b><i></i><i></i></span>' + esc(s.n) + '</button>').join('') + '</div>' +
-    '<p class="hint">' + (sty === 'studio' ? 'Studio: system font, white cards, round buttons and one accent colour from the color theme.' : 'Go Blue: the app’s own look, with navy and gold.') + ' Kept on this phone.</p></div>' +
-    '<div class="sec-row"><p class="section-h">Color theme</p><span class="sec-side">' + esc(pn) + '</span></div><div class="panel"><div class="palrow">' + PALS.map(p => '<button class="palbtn' + (p.k === cur ? ' on' : '') + '" data-act="pal" data-k="' + p.k + '" aria-pressed="' + (p.k === cur) + '"><span class="sw2" aria-hidden="true"><i style="background:' + p.b + '"></i><i style="background:' + p.g + '"></i></span>' + esc(p.n) + '</button>').join('') + '</div>' +
-    '<p class="hint">' + (sty === 'studio' ? 'In Studio the theme gives the accent colour: its dark colour in light mode, its light colour in dark mode.' : 'Changes every navy and gold in the app, in light and dark mode.') + ' Kept on this phone.</p></div>' +
-    '<p class="section-h">Moving exercise pictures</p><div class="panel"><p class="hint">' + (animOn() ? 'The stick figures move from START to END and back.' : 'The stick figures show START and END side by side.') + '</p></div>';
+function appearanceExtra() {   /* Ver 0.3q.4: Appearance page: Mode (Light / Dark / Auto), Style, Color theme; Moving exercise pictures row after it */
+  const cur = palOf().k, sty = styleOf(), sn = (STYLES.find(s => s.k === sty) || STYLES[0]).n, p0 = PALS.find(p => p.k === cur) || PALS[0];
+  const t = store.get(K_THEME), mode = t === 'dark' ? 'dark' : t === 'light' ? 'light' : 'auto', MN = { light: 'Light', dark: 'Dark', auto: 'Auto' };
+  return '<div class="sec-row"><p class="section-h">Appearance</p><span class="sec-side">' + esc(MN[mode] + ' · ' + sn + ' · ' + p0.n.split(' + ')[0]) + '</span></div><div class="panel">' +
+    '<p class="setlab">Mode</p><div class="seg mode-seg" role="group" aria-label="Light, dark or automatic">' + ['light', 'dark', 'auto'].map(k => '<button class="btn' + (k === mode ? ' on' : '') + '" data-act="mode" data-k="' + k + '" aria-pressed="' + (k === mode) + '">' + MN[k] + '</button>').join('') + '</div>' +
+    '<p class="hint">' + (mode === 'auto' ? 'Auto follows your phone’s light or dark setting.' : 'Always ' + MN[mode].toLowerCase() + ', whatever the phone does.') + ' Kept on this phone.</p>' +
+    '<p class="setlab">Style</p><div class="stylerow">' + STYLES.map(s => '<button class="stybtn sty-' + s.k + (s.k === sty ? ' on' : '') + '" data-act="sty" data-k="' + s.k + '" aria-pressed="' + (s.k === sty) + '"><span class="sty-pv" aria-hidden="true"><b>Today</b><i></i><i></i></span>' + esc(s.n) + '</button>').join('') + '</div>' +
+    '<p class="hint">' + (sty === 'studio' ? 'Studio: system font, white cards, round buttons and one accent colour from the color theme.' : 'Go Blue: the app’s own look, with navy and gold.') + '</p>' +
+    '<p class="setlab">Color theme</p><div class="palrow">' + PALS.map(p => '<button class="palbtn' + (p.k === cur ? ' on' : '') + '" data-act="pal" data-k="' + p.k + '" aria-pressed="' + (p.k === cur) + '"><span class="sw2" aria-hidden="true"><i style="background:' + p.b + '"></i><i style="background:' + p.g + '"></i></span>' + esc(p.n) + '</button>').join('') + '</div>' +
+    '<p class="hint">' + (sty === 'studio' ? 'In Studio the theme gives the accent colour: its dark colour in light mode, its light colour in dark mode.' : 'Changes every navy and gold in the app, in light and dark mode.') + '</p></div>' +
+    '<p class="section-h">Moving exercise pictures</p><div class="panel"></div>';   /* the row is a switch; no text under it */
 }
 function openIconSheet() {
   if (!S.mcp) { toast('Still connecting to Google Drive. Try again in a moment.'); return; }
