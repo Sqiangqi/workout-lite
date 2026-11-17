@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3q.10 · 11/17/2026
+
+Matches the full app: Settings › Appearance in the iPhone Settings style: small grey headings over separate cards with space between, and smaller text. The first card has just Light and Dark pictures with round buttons, and an Automatic switch under them (follows the phone; tapping Light or Dark turns it off). Style and Color theme are back to their earlier buttons, each in its own card. Removed: the Auto picture and the Style and Color theme pictures.
+
 ## 0.3q.9 · 11/17/2026
 
 Matches the full app: Settings › Appearance looks like the phone’s own Appearance page: Mode (Light, Dark, Auto), Style (Go Blue, Studio) and Color theme each show small pictures of the app, a short name and, a little lower, a small round button that fills gold with a check; Exercise pictures uses the same smaller names and buttons. Removed: the hint lines under each choice.

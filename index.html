@@ -122,6 +122,16 @@ body.testing::after { content: ""; position: fixed; inset: 0; border: 3px solid 
 .us-t b { font-family: var(--font-display); font-size: 22px; line-height: 1.05; font-variant-numeric: tabular-nums; }
 .us-t span { font-size: 10.5px; color: var(--muted); line-height: 1.2; }
 .mode-seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }   /* Ver 0.3q.4 */
+/* Ver 0.3q.10: Appearance page in the iPhone Settings style: small grey headings, separate cards with space between, smaller text */
+.panel.ap-page { background: none; border: 0; padding: 0; gap: 0; box-shadow: none; }
+.ios-h { margin: 18px 14px 6px; font-size: 12px; font-weight: 500; letter-spacing: .03em; text-transform: uppercase; color: var(--muted); }
+.ios-h:first-child { margin-top: 2px; }
+.ios-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.ios-card .xp-opts { padding: 6px 0 0; }
+.ios-card .xp-opts .pv { width: 70px; }
+.ios-row { margin: 12px -14px 0; padding: 10px 14px 0; border-top: 1px solid var(--line); font-size: 15px; }
+.ap-page .stybtn, .ap-page .palbtn { font-size: 12px; font-weight: 500; }
+.ap-page .stybtn .sty-pv b { font-size: 11px; }
 /* Ver 0.3q.9: Appearance choices use the same look: small phone pictures, name, round button */
 .xp-opts .pv { display: block; width: 62px; height: auto; border-radius: 10px; box-shadow: 0 0 0 1px var(--line); }
 .xp-opts + .setlab { margin-top: 16px; }
@@ -5688,6 +5698,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3q.10', '11172026', 'Matches the full app: Settings › Appearance in the iPhone Settings style: small grey headings over separate cards with space between, and smaller text. The first card has just Light and Dark pictures with round buttons, and an Automatic switch under them (follows the phone; tapping Light or Dark turns it off). Style and Color theme are back to their earlier buttons, each in its own card. Removed: the Auto picture and the Style and Color theme pictures.'],
   ['0.3q.9', '11172026', 'Matches the full app: Settings › Appearance looks like the phone’s own Appearance page: Mode (Light, Dark, Auto), Style (Go Blue, Studio) and Color theme each show small pictures of the app, a short name and, a little lower, a small round button that fills gold with a check; Exercise pictures uses the same smaller names and buttons. Removed: the hint lines under each choice.'],
   ['0.3q.8', '11172026', 'Matches the full app: Loading screen to Home: the app icon on the loading screen shrinks and flies up into the icon at the top left, the greeting fades away, and Home rises in behind it (before, the loading screen just faded). With Reduce Motion on it still simply fades.'],
   ['0.3q.7', '11172026', 'Matches the full app: Settings › Exercise pictures looks like the phone’s own Appearance choice: each option is just its picture, its name and a round button under it; the chosen one fills gold with a check. Removed: the Start / End / Moving captions, the lines under the names and the boxes around the options.'],
@@ -7458,15 +7469,15 @@ function xpOpt(act, k, on, pic, name) {   /* one picture choice: picture, name, 
   return '<button class="xp-opt' + (on ? ' on' : '') + '" role="radio" aria-checked="' + on + '" aria-label="' + esc(name) + '" data-act="' + act + '" data-k="' + k + '">' +
     '<span class="xp-pics">' + pic + '</span><b>' + esc(name) + '</b><i class="xp-dot" aria-hidden="true"></i></button>';
 }
-function appearanceExtra() {   /* Ver 0.3q.9: Mode, Style and Color theme as picture choices like the phone's own Appearance page; no hint lines */
-  const cur = palOf(), sty = styleOf(), sn = (STYLES.find(s => s.k === sty) || STYLES[0]).n, dark = document.documentElement.getAttribute('data-theme') === 'dark';
-  const t = store.get(K_THEME), mode = t === 'dark' ? 'dark' : t === 'light' ? 'light' : 'auto', MN = { light: 'Light', dark: 'Dark', auto: 'Auto' };
+function appearanceExtra() {   /* Ver 0.3q.10: iPhone Settings style: small grey headings over separate cards; Light / Dark pictures with an Automatic switch; Style and Color theme as before */
+  const cur = palOf(), sty = styleOf(), sn = (STYLES.find(s => s.k === sty) || STYLES[0]).n, auto = !store.get(K_THEME), dark = document.documentElement.getAttribute('data-theme') === 'dark';
   const short = p => p.n.split(' + ')[0].replace(/^Soft /, '').replace(/^\w/, c => c.toUpperCase());
-  const grp = (lab, html, cls) => '<p class="setlab">' + lab + '</p><div class="xp-opts' + (cls ? ' ' + cls : '') + '" role="radiogroup" aria-label="' + lab + '">' + html + '</div>';
-  return '<div class="sec-row"><p class="section-h">Appearance</p><span class="sec-side">' + esc(MN[mode] + ' · ' + sn + ' · ' + short(cur)) + '</span></div><div class="panel ap-page">' +
-    grp('Mode', ['light', 'dark', 'auto'].map(k => xpOpt('mode', k, k === mode, phonePv(k === 'dark', sty === 'studio', cur.b, cur.g, k === 'auto'), MN[k])).join('')) +
-    grp('Style', STYLES.map(s => xpOpt('sty', s.k, s.k === sty, phonePv(dark, s.k === 'studio', cur.b, cur.g), s.n)).join('')) +
-    grp('Color theme', PALS.map(p => xpOpt('pal', p.k, p.k === cur.k, phonePv(dark, sty === 'studio', p.b, p.g), short(p))).join(''), 'xp-sm') + '</div>' +
+  return '<div class="sec-row"><p class="section-h">Appearance</p><span class="sec-side">' + esc((auto ? 'Auto' : dark ? 'Dark' : 'Light') + ' · ' + sn + ' · ' + short(cur)) + '</span></div><div class="panel ap-page">' +
+    '<p class="ios-h">Appearance</p><div class="ios-card"><div class="xp-opts" role="radiogroup" aria-label="Light or dark">' +
+    [['light', 'Light'], ['dark', 'Dark']].map(([k, n]) => xpOpt('mode', k, (k === 'dark') === dark, phonePv(k === 'dark', sty === 'studio', cur.b, cur.g), n)).join('') + '</div>' +
+    '<label class="switch ios-row"><span>Automatic</span><input type="checkbox" role="switch" id="themeAutoSw"' + (auto ? ' checked' : '') + '><i aria-hidden="true"></i></label></div>' +
+    '<p class="ios-h">Style</p><div class="ios-card"><div class="stylerow">' + STYLES.map(s => '<button class="stybtn sty-' + s.k + (s.k === sty ? ' on' : '') + '" data-act="sty" data-k="' + s.k + '" aria-pressed="' + (s.k === sty) + '"><span class="sty-pv" aria-hidden="true"><b>Today</b><i></i><i></i></span>' + esc(s.n) + '</button>').join('') + '</div></div>' +
+    '<p class="ios-h">Color theme</p><div class="ios-card"><div class="palrow">' + PALS.map(p => '<button class="palbtn' + (p.k === cur.k ? ' on' : '') + '" data-act="pal" data-k="' + p.k + '" aria-pressed="' + (p.k === cur.k) + '"><span class="sw2" aria-hidden="true"><i style="background:' + p.b + '"></i><i style="background:' + p.g + '"></i></span>' + esc(p.n) + '</button>').join('') + '</div></div></div>' +
     xpSection();
 }
 function openIconSheet() {
