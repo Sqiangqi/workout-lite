@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3q.6 · 11/17/2026
+
+Matches the full app: Settings: Moving exercise pictures is now Exercise pictures; its row shows Still or Moving and opens a page with the two choices side by side: Still (a start and an end picture) and Moving (the picture looping), each with a round button that fills gold when chosen. The samples are a new barbell overhead press drawing, still and moving. Removed: the on / off switch in the row.
+
 ## 0.3q.5 · 11/17/2026
 
 Matches the full app: Settings: the Moving exercise pictures row is now the same height as the other rows (an empty box under it made it taller).
