@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3q.2 · 11/17/2026
+
+Matches the full app: Appearance: the style you pick is always the one you see. Changing the color theme no longer flips the Style buttons to Go Blue while the screen stays Studio; Go Blue is now saved as a choice (before, it was saved as no choice, so an older Studio copy in your food Sheet could come back); a look left over from an unfinished Get started or Test mode no longer hides your saved one; and when the phone will not keep a setting, it is still used until you close the app and saved to your food Sheet.
+
 ## 0.3q.1 · 11/17/2026
 
 Matches the full app: Usage count is on: the web version (GitHub) now sends its once-a-day anonymous ping (a random code for the phone and the app version, no name or email), and Settings › About › Usage shows the real counts.
