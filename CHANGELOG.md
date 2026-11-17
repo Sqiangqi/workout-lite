@@ -2,6 +2,14 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3q.9 · 11/17/2026
+
+Matches the full app: Settings › Appearance looks like the phone’s own Appearance page: Mode (Light, Dark, Auto), Style (Go Blue, Studio) and Color theme each show small pictures of the app, a short name and, a little lower, a small round button that fills gold with a check; Exercise pictures uses the same smaller names and buttons. Removed: the hint lines under each choice.
+
+## 0.3q.8 · 11/17/2026
+
+Matches the full app: Loading screen to Home: the app icon on the loading screen shrinks and flies up into the icon at the top left, the greeting fades away, and Home rises in behind it (before, the loading screen just faded). With Reduce Motion on it still simply fades.
+
 ## 0.3q.7 · 11/17/2026
 
 Matches the full app: Settings › Exercise pictures looks like the phone’s own Appearance choice: each option is just its picture, its name and a round button under it; the chosen one fills gold with a check. Removed: the Start / End / Moving captions, the lines under the names and the boxes around the options.
