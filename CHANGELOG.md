@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3q.1 · 11/17/2026
+
+Matches the full app: Usage count is on: the web version (GitHub) now sends its once-a-day anonymous ping (a random code for the phone and the app version, no name or email), and Settings › About › Usage shows the real counts.
+
 ## 0.3q · 11/17/2026
 
 Matches the full app Ver 0.3q (its 0.3p.7 to 0.3p.51; 0.3p.1 to 0.3p.6 were already here). Profile page (was Me: your icon, name, Weight / Body type / Goal tiles, My week with each day’s workout and carbs, the week plans); every Settings row opens its own page; Library: Tidy exercise names renames in the log, week plans and Exercises list, swipe between exercise cards, new and moving pictures (Warm-up run, Farmer Walk, Pull Up, Incline Bench Press and more); Get started picks your look and Test mode has a look and loading-screen page; Progress charts draw in from left to right and bodyweight exercises chart total reps; Food bars fill up when the tab opens; Muscles worked 7 / 30 is one toggle that slides; newest weight entry wins; settings kept safer in the food Sheet; A-Z strips land under your finger and lists have search boxes with a clear button; rest timer fills up again and closes with a tap anywhere; the set wheel enters the value you left alone. New: Settings › About › Usage (owner only) shows how many people use the web version: people, last 7 and 30 days, new this week, and versions. Web: once a day after sign-in the app sends an anonymous usage ping (a random code for this phone and the app version, no name or email; About says so); Tidy exercise names works through the web’s own Sheet access; the starter exercise list uses the tidied names. Left out (full app only): Body tab changes and Renpho import names.
