@@ -2,6 +2,178 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3q · 11/17/2026
+
+Matches the full app Ver 0.3q (its 0.3p.7 to 0.3p.51; 0.3p.1 to 0.3p.6 were already here). Profile page (was Me: your icon, name, Weight / Body type / Goal tiles, My week with each day’s workout and carbs, the week plans); every Settings row opens its own page; Library: Tidy exercise names renames in the log, week plans and Exercises list, swipe between exercise cards, new and moving pictures (Warm-up run, Farmer Walk, Pull Up, Incline Bench Press and more); Get started picks your look and Test mode has a look and loading-screen page; Progress charts draw in from left to right and bodyweight exercises chart total reps; Food bars fill up when the tab opens; Muscles worked 7 / 30 is one toggle that slides; newest weight entry wins; settings kept safer in the food Sheet; A-Z strips land under your finger and lists have search boxes with a clear button; rest timer fills up again and closes with a tap anywhere; the set wheel enters the value you left alone. New: Settings › About › Usage (owner only) shows how many people use the web version: people, last 7 and 30 days, new this week, and versions. Web: once a day after sign-in the app sends an anonymous usage ping (a random code for this phone and the app version, no name or email; About says so); Tidy exercise names works through the web’s own Sheet access; the starter exercise list uses the tidied names. Left out (full app only): Body tab changes and Renpho import names.
+
+## 0.3p.51 · 11/16/2026
+
+Matches the full app: Progress and Body pickers: the A-Z strip lands on the letter under your finger, and a letter with nothing under it goes to the nearest letter that has names (P now shows Pull Up). Body › Choose measure now has the A-Z strip too, in A-Z order. Both lists have a search box at the top: type any part of the name.
+
+## 0.3p.50 · 11/16/2026
+
+Matches the full app: Progress chart: exercises you log without weight (every set 0 or blank, such as Core Trainer) now chart the total reps of the day, all sets added up, like Pull Up. Once you log a weight for one, it goes back to the heaviest-set chart.
+
+## 0.3p.49 · 11/16/2026
+
+Matches the full app: Rest timer: when the rest is over, tap anywhere on the timer to close it, not only on the Close word.
+
+## 0.3p.48 · 11/16/2026
+
+Matches the full app: Set wheel: when you change only the reps (or only the weight) on a later set, the other value you left alone is now entered too, taken from the set before. Before, the weight stayed empty even though the wheel showed it.
+
+## 0.3p.47 · 11/16/2026
+
+Matches the full app: Warm-up: the rest timer is gone from the warm-up page, since a warm-up needs no rest. Its sets use the full width.
+
+## 0.3p.46 · 11/16/2026
+
+Matches the full app: Settings: Profile is now a normal row at the top of the list, with a person icon, like the other rows (it was a separate card that made the page wider than the screen). Update body metrics has a flexing-arms icon. No page needs a sideways swipe to see everything.
+
+## 0.3p.44 · 11/16/2026
+
+Matches the full app: The Me page is now called Profile. In Settings its row reads Profile, with just your name under it.
+
+## 0.3p.43 · 11/16/2026
+
+Matches the full app: Search boxes (Library, week-plan day page, Food list): a small round x at the right clears what you typed at once; it shows only while there is text.
+
+## 0.3p.42 · 11/16/2026
+
+Matches the full app: Farmer Walk picture: the arms and dumbbells stay still at the sides while the legs walk (as with heavy dumbbells).
+
+## 0.3p.41 · 11/16/2026
+
+Matches the full app: Farmer Walk picture: the arms and dumbbells now swing with each step (opposite to the legs).
+
+## 0.3p.40 · 11/16/2026
+
+Matches the full app: Library: the page behind an open exercise card no longer scrolls.
+
+## 0.3p.39 · 11/16/2026
+
+Matches the full app: Pull Up picture: the whole bar is drawn, running away from you, with both hands on it.
+
+## 0.3p.38 · 11/16/2026
+
+Matches the full app: Incline Bench Press picture: he now lies with his back on the backrest (the backrest was drawn on his chest).
+
+## 0.3p.37 · 11/16/2026
+
+Matches the full app: Pictures: Farmer Walk now walks (a looping stride, dumbbells at the sides); Cable face pull keeps the elbows pointing down as the rope comes to the face; Dead Hang bends the knees forward with the feet back and down; Pull Up faces the bar (the bar is seen end-on) and the chest comes up to it; Battle Ropes whip in fast, big waves; Seated Dumbbell Press has an upright (90 degree) seat back. Names: Exercise names: the Tidy card in the Library now also fixes spelling, so all names match: Incline Bench Press, Cable Lateral Raise, Core Trainer, Cable Face Pull, Chest Fly, Decline Medicine Ball Sit-Up, Triceps Pushdown, Low-to-High Cable Chest Fly. Pictures stay with the renamed exercises. Names you hid before show up again.
+
+## 0.3p.36 · 11/16/2026
+
+Matches the full app: Library: in an exercise card, swipe left or right (or tap the small arrows next to the muscle line) for the next or previous exercise. While a search or keyword is on, it steps through the matches only.
+
+## 0.3p.35 · 11/16/2026
+
+Matches the full app: Settings: every row (Appearance, Body metrics, About) now opens its own page instead of folding open; the return button at the bottom right (Settings icon) takes you back to Settings.
+
+## 0.3p.33 · 11/16/2026
+
+Matches the full app: Me page: a return button at the bottom right shows the icon of the page you came from (house for Home, gear for Settings, and so on) and takes you back there.
+
+## 0.3p.32 · 11/16/2026
+
+Matches the full app: Warm-up picture: now really runs. The moving picture loops a running stride on the treadmill (feet land, push back with the belt, heels fold up, knees drive forward, arms swing opposite); the still shows two points of the stride.
+
+## 0.3p.31 · 11/16/2026
+
+Matches the full app: Home, Muscles worked: "days" is outside the pills again (30 · 7 · days); the pills stay bigger, the chosen one in front.
+
+## 0.3p.30 · 11/16/2026
+
+Matches the full app: Home, Muscles worked: 30 is now on the left and 7 on the right.
+
+## 0.3p.29 · 11/16/2026
+
+Matches the full app: Home, Muscles worked: the chosen pill is bigger and now reads "7 days" or "30 days"; the other number sits small and half hidden behind it. Tapping swaps them with a smooth slide.
+
+## 0.3p.28 · 11/16/2026
+
+Matches the full app: Home, Muscles worked: the same for 30: when 7 days is on, the 30 pill sits half hidden behind 7. The back number always stays partly visible.
+
+## 0.3p.27 · 11/16/2026
+
+Matches the full app: Home, Muscles worked: when 30 days is on, the 7 pill moves back and sits half hidden behind 30.
+
+## 0.3p.26 · 11/16/2026
+
+Matches the full app: Home, Muscles worked: the 7 / 30 switch no longer swings out and back; the tapped pill just grows to the front and the other shrinks behind it, with no step backward at the end.
+
+## 0.3p.25 · 11/16/2026
+
+Matches the full app: Home header: the sync pill sits right after the date instead of on its own row, so the header is one line shorter.
+
+## 0.3p.24 · 11/16/2026
+
+Matches the full app: Home: the name still ended in "…" on the iPhone (the size was worked out before the app's font loaded). Now the name never gets cut: it shrinks to fit one line, re-checked once the font loads, and otherwise goes on two lines.
+
+## 0.3p.23 · 11/16/2026
+
+Matches the full app: Home: the whole name shows (the greeting shrinks to fit, then uses two lines). Tap the logo or the name to open the Me page; the pencil is now a tiny mark at the name's upper right. Weight: the newest entry always wins, whether it is a Renpho reading or a weight typed on the Food tab, the Me page, Get started or the Pull Up card (no 7-day average, no Auto / Manual).
+
+## 0.3p.22 · 11/15/2026
+
+Matches the full app: Home, Muscles worked: 7 / 30 days is one toggle now: tap anywhere on it (either number or the word days) to switch, with the same carousel move.
+
+## 0.3p.21 · 11/15/2026
+
+Matches the full app: Home, Muscles worked: the 7 / 30 switch no longer flips; the pills move like a carousel instead: the one you tap swings forward to the front and grows, the other swings backward and shrinks behind it.
+
+## 0.3p.20 · 11/15/2026
+
+Matches the full app: Home, Muscles worked: switching between 7 and 30 days now turns the two pills around each other like a little carousel: the tapped one spins forward through the middle and grows, the other spins backward and shrinks behind it (about half a second).
+
+## 0.3p.19 · 11/15/2026
+
+Matches the full app: Home, Muscles worked: the period switch is now two stacked pills, 7 and 30, with "days" on the right. The chosen one is bigger and in front; the other sits smaller behind it, still showing its pill and colour. Tapping the back one brings it forward with a short bounce while the other slips behind, then the chart changes.
+
+## 0.3p.18 · 11/15/2026
+
+Matches the full app: Your name and the other app settings are kept safer in your food Sheet: if the Sheet could not be read when the app opened, the app no longer saves over it (that could replace your saved name with an empty one); it tries reading again instead. A setting missing on the phone keeps the Sheet’s copy; only clearing it yourself removes it. Type your name once more on the Me page; from then on it comes back after updates.
+
+## 0.3p.17 · 11/15/2026
+
+Matches the full app: Me page: the Goal tile no longer says Not set for someone already set up: it shows the goal from Get started, or, when the questions were never answered, the same goal Get started would fill in (Get fitter). Tap it to change.
+
+## 0.3p.16 · 11/15/2026
+
+Matches the full app: Get started: the plain "Quit · don’t save" text at the top right is now a round pill button with an × and Quit, so it is clear it can be tapped (it still leaves without saving anything).
+
+## 0.3p.15 · 11/15/2026
+
+Matches the full app: New Me page, opened by tapping the logo (or Settings › Me): your icon (tap to change), name, and tiles for Weight, Body type and Goal; My week lists Monday to Sunday with each day’s workout from the plan in use and its carb level (High / Mid / Low); tap a day for one sheet with its exercises (Edit workout opens the day editor and comes back) and its carbs, with the grams for your weight. Quick set and Redo setup sit under the week, and the week plans (Edit, Use this plan, New plan, Start each day with the plan) are on this page now. Settings keeps a Me row on top; Week plan and Carb week moved out of it. Food › Plan my week and the plan pill on Start workout lead to the Me page.
+
+## 0.3p.14 · 11/15/2026
+
+Matches the full app: Food tab: the nutrition bars (Calories, Carbs, Protein, Fat, Fiber) fill up from empty when the tab opens, one after another, quick at first and slowing down a lot at the end; after you add or remove food they glide to the new length the same way.
+
+## 0.3p.13 · 11/15/2026
+
+Matches the full app: Rest timer: the ring fills up as the rest goes by again (since 0.3n.2 it emptied); the gold dot leads the filling edge.
+
+## 0.3p.11 · 11/15/2026
+
+Matches the full app: Progress and Body: the exercise / measure picker is a box of one fixed size; the name stays on one line and its letters get smaller to fit, so the card looks the same for short and long names. The unit shows in small text under the box (e.g. Unit: lbs, Unit: kg); Body names no longer carry the unit in brackets. Chart draw-in: the dot moves slower (about 2-3 s) and slows down a lot as it reaches the end.
+
+## 0.3p.10 · 11/15/2026
+
+Matches the full app: Charts on Progress and Body draw in when they show up: the line grows smoothly from left to right behind a glowing gold dot, each point and its label appear as the dot passes, and when the dot stops the latest value shows as a number next to the last point (new on Progress, e.g. 20 lbs). It plays again for a new exercise, measure or range, or when you come back to the tab; off with Reduce Motion.
+
+## 0.3p.9 · 11/15/2026
+
+Matches the full app: Look: Get started has a new second step, Pick your look: tap a style (Go Blue or Studio) and a color theme and the app behind changes at once; Use this setup keeps it, Quit puts the old look back. The loading screen now takes its colours from the look as soon as it changes (it used to wait until Home had been open a moment). Test mode › Look and loading screen: try style, color theme and light or dark on one page, Play loading screen shows it once in that look (tap to end it early), Keep this look saves it; leaving the page puts your look back.
+
+## 0.3p.8 · 11/15/2026
+
+Matches the full app: Library: the Tidy exercise names card has a Hide button that keeps the names as they are; the card comes back only if a new name in another style is added. Words in brackets are left alone, e.g. Farmer Walk (weight per hand).
+
+## 0.3p.7 · 11/14/2026
+
+Matches the full app: Library: a Tidy exercise names card appears when some names are in another style (Chest fly): Review lists each change (Chest fly → Chest Fly) with a tick to leave any out, and Rename changes them in your workout log, week plans and favourites, the Exercises list and today’s unsaved session; past sessions keep their history. Exercise pictures are now found whatever the upper and lower case of the name.
+
 ## 0.3p.6 · 11/14/2026
 
 Matches the full app: Code tidy (no visible change): removed the red-notch styles (replaced by the second lap), the old spider-chart grow-in, and the old Test mode 5-tap switch and Turn off actions.
