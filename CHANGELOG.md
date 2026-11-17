@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3q.3 · 11/17/2026
+
+Matches the full app: Settings: Appearance is split into its own rows: Dark mode, Style and Color theme (each opens its own page; Style and Color theme show the current choice on the right). Moving exercise pictures is a row below them with a switch you tap right in the list. Removed: the App icon row (change your icon on the Profile page or by tapping the logo).
+
 ## 0.3q.2 · 11/17/2026
 
 Matches the full app: Appearance: the style you pick is always the one you see. Changing the color theme no longer flips the Style buttons to Go Blue while the screen stays Studio; Go Blue is now saved as a choice (before, it was saved as no choice, so an older Studio copy in your food Sheet could come back); a look left over from an unfinished Get started or Test mode no longer hides your saved one; and when the phone will not keep a setting, it is still used until you close the app and saved to your food Sheet.
