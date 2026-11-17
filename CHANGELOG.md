@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3q.5 · 11/17/2026
+
+Matches the full app: Settings: the Moving exercise pictures row is now the same height as the other rows (an empty box under it made it taller).
+
 ## 0.3q.4 · 11/17/2026
 
 Matches the full app: Settings: Appearance is one row again, like most apps: its page has Mode (Light, Dark or Auto, which follows the phone), then Style, then Color theme; the row shows your choice on the right (e.g. Auto · Studio · Navy). Moving exercise pictures stays its own switch row below it, without the START to END line. Removed: the separate Dark mode, Style and Color theme rows, and the Dark mode and Follow the phone setting switches (now the Mode buttons).
