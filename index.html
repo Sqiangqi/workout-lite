@@ -122,17 +122,15 @@ body.testing::after { content: ""; position: fixed; inset: 0; border: 3px solid 
 .us-t b { font-family: var(--font-display); font-size: 22px; line-height: 1.05; font-variant-numeric: tabular-nums; }
 .us-t span { font-size: 10.5px; color: var(--muted); line-height: 1.2; }
 .mode-seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }   /* Ver 0.3q.4 */
-/* Ver 0.3q.6: Settings › Exercise pictures choice cards */
-.xp-opts { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 8px; }
-.xp-opt { display: grid; gap: 8px; align-content: start; padding: 8px; border: 1.5px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink); font: inherit; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.xp-opt.on { border-color: var(--gold); background: rgba(var(--gold-rgb), .1); }
-.xp-pics { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
-.xp-f { display: grid; gap: 3px; justify-items: center; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.xp-f img { width: 100%; aspect-ratio: 1; border-radius: 8px; display: block; }
-.xp-lab { display: flex; align-items: center; gap: 8px; } .xp-lab b { font-size: 15px; }
-.xp-dot { flex: none; width: 20px; height: 20px; box-sizing: border-box; border-radius: 50%; border: 2px solid var(--lighter); transition: background .15s, border-color .15s; }
+/* Ver 0.3q.7: Settings › Exercise pictures, in the style of the phone's Appearance choice */
+.xp-opts { display: flex; justify-content: space-evenly; align-items: flex-end; gap: 12px; padding: 8px 0 4px; }
+.xp-opt { display: grid; justify-items: center; gap: 10px; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.xp-pics { display: flex; gap: 4px; }
+.xp-pics img { width: min(24vw, 96px); aspect-ratio: 1; border-radius: 14px; display: block; box-shadow: 0 0 0 1px var(--line); }
+.xp-opt b { font-size: 17px; font-weight: 500; }
+.xp-dot { position: relative; width: 28px; height: 28px; box-sizing: border-box; border-radius: 50%; border: 2px solid var(--lighter); transition: background .15s, border-color .15s; }
 .xp-opt.on .xp-dot { background: var(--gold); border-color: var(--gold); }
-.xp-sub { font-size: 12px; color: var(--muted); line-height: 1.25; }
+.xp-opt.on .xp-dot::after { content: ""; position: absolute; left: 8px; top: 4px; width: 7px; height: 12px; border: solid var(--gold-ink); border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); }
 /* Ver 0.3p.15: Me page */
 .me-hero { background: var(--brand); color: var(--on-brand); border-radius: var(--r); padding: 14px; display: grid; gap: 12px; margin-bottom: 14px; }
 .me-top { display: flex; align-items: center; gap: 14px; }
@@ -4515,14 +4513,12 @@ function liftPic(kind) {
   s += '</svg>';
   return (liftCache[kind] = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s).replace(/'/g, '%27'));
 }
-function xpSection() {   /* Ver 0.3q.6: Exercise pictures page: Still (start and end) or Moving */
-  const mv = animOn(), opt = (k, on, pics, name, sub) => '<button class="xp-opt' + (on ? ' on' : '') + '" role="radio" aria-checked="' + on + '" data-act="xp-set" data-k="' + k + '">' +
-    '<span class="xp-pics">' + pics.map(([src, cap]) => '<span class="xp-f"><img src="' + src + '" alt="">' + cap + '</span>').join('') + '</span>' +
-    '<span class="xp-lab"><i class="xp-dot" aria-hidden="true"></i><b>' + name + '</b></span><small class="xp-sub">' + sub + '</small></button>';
+function xpSection() {   /* Ver 0.3q.7: like the phone's own Appearance choice: picture, name, round button; no extra text */
+  const mv = animOn(), opt = (k, on, pics, name) => '<button class="xp-opt' + (on ? ' on' : '') + '" role="radio" aria-checked="' + on + '" aria-label="' + name + '" data-act="xp-set" data-k="' + k + '">' +
+    '<span class="xp-pics">' + pics.map(src => '<img src="' + src + '" alt="">').join('') + '</span><b>' + name + '</b><i class="xp-dot" aria-hidden="true"></i></button>';
   return '<div class="sec-row"><p class="section-h">Exercise pictures</p><span class="sec-side">' + (mv ? 'Moving' : 'Still') + '</span></div><div class="panel">' +
     '<div class="xp-opts" role="radiogroup" aria-label="Exercise pictures">' +
-    opt('still', !mv, [[liftPic('start'), 'Start'], [liftPic('end'), 'End']], 'Still', 'Start and end side by side') +
-    opt('move', mv, [[liftPic('move'), 'Moving']], 'Moving', 'Loops start to end') + '</div></div>';
+    opt('still', !mv, [liftPic('start'), liftPic('end')], 'Still') + opt('move', mv, [liftPic('move')], 'Moving') + '</div></div>';
 }
 function animOn() { const v = store.get(K_ANIM); if (v) return v === 'move'; return !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
 // Ver 0.3p.7: Tidy exercise names. Names in another style (Chest fly) can be renamed to Title Case (Chest Fly) everywhere
@@ -5673,6 +5669,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3q.7', '11172026', 'Matches the full app: Settings › Exercise pictures looks like the phone’s own Appearance choice: each option is just its picture, its name and a round button under it; the chosen one fills gold with a check. Removed: the Start / End / Moving captions, the lines under the names and the boxes around the options.'],
   ['0.3q.6', '11172026', 'Matches the full app: Settings: Moving exercise pictures is now Exercise pictures; its row shows Still or Moving and opens a page with the two choices side by side: Still (a start and an end picture) and Moving (the picture looping), each with a round button that fills gold when chosen. The samples are a new barbell overhead press drawing, still and moving. Removed: the on / off switch in the row.'],
   ['0.3q.5', '11172026', 'Matches the full app: Settings: the Moving exercise pictures row is now the same height as the other rows (an empty box under it made it taller).'],
   ['0.3q.4', '11172026', 'Matches the full app: Settings: Appearance is one row again, like most apps: its page has Mode (Light, Dark or Auto, which follows the phone), then Style, then Color theme; the row shows your choice on the right (e.g. Auto · Studio · Navy). Moving exercise pictures stays its own switch row below it, without the START to END line. Removed: the separate Dark mode, Style and Color theme rows, and the Dark mode and Follow the phone setting switches (now the Mode buttons).'],
