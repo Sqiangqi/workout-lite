@@ -43,7 +43,7 @@
   --push: #3d6fb6; --pull: #6b7480; --legs: #b38a12; --core: #7a5aa6;
   --font-display: "Barlow Condensed", "Arial Narrow", "PingFang SC", "Noto Sans SC", sans-serif;
   --font-body: "Barlow", system-ui, -apple-system, "Segoe UI", "PingFang SC", "Noto Sans SC", sans-serif;
-  --r: 10px;
+  --r: 12px;   /* Ver 0.3r.6: one corner size for cards everywhere (was 10, 12 or 14) */
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #0b1420; --surface: #13202f; --ink: #e8edf3; --muted: #9aa8b8; --line: #263548;
@@ -150,7 +150,7 @@ body.testing::after { content: ""; position: fixed; inset: 0; border: 3px solid 
 .xp-opt.on .xp-dot { background: var(--gold); border-color: var(--gold); }
 .xp-opt.on .xp-dot::after { content: ""; position: absolute; left: 6.5px; top: 3px; width: 5px; height: 10px; border: solid var(--gold-ink); border-width: 0 2px 2px 0; transform: rotate(45deg); }
 /* Ver 0.3p.15: Me page */
-.me-hero { background: var(--brand); color: var(--on-brand); border-radius: var(--r); padding: 14px; display: grid; gap: 12px; margin-bottom: 14px; }
+.me-hero { background: var(--brand); color: var(--on-brand); border-radius: var(--r); padding: 14px; display: grid; gap: 12px; }
 .me-top { display: flex; align-items: center; gap: 14px; }
 .me-pic { position: relative; flex: none; width: 72px; height: 72px; padding: 0; border: 0; background: none; border-radius: 50%; }
 .me-pic img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; display: block; box-shadow: 0 0 0 2px var(--gold); }
@@ -180,7 +180,7 @@ body.testing::after { content: ""; position: fixed; inset: 0; border: 3px solid 
 .me-cb b { font-size: 15px; } .me-cb small { font-size: 11.5px; color: var(--muted); }
 .me-cb.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); } .me-cb.on small { color: var(--gold); }
 .me-cnt { margin: 0; padding: 8px 12px; border-radius: 12px; background: rgba(var(--gold-rgb), .12); font-size: 13px; color: var(--muted); } .me-cnt.ok { color: var(--ink); }
-.me-link { width: 100%; display: grid; grid-template-columns: 48px minmax(0, 1fr) 10px; align-items: center; gap: 12px; padding: 10px 12px; margin-bottom: 14px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); color: var(--ink); text-align: left; font: inherit; }
+.me-link { width: 100%; display: grid; grid-template-columns: 48px minmax(0, 1fr) 10px; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); color: var(--ink); text-align: left; font: inherit; }
 .me-link img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
 .me-link span { display: grid; gap: 2px; min-width: 0; } .me-link b { font-size: 17px; } .me-link small { font-size: 13px; color: var(--muted); }
 .me-link i { width: 7px; height: 7px; border-right: 2px solid var(--lighter); border-bottom: 2px solid var(--lighter); transform: rotate(-45deg); }
@@ -199,6 +199,8 @@ body.testing::after { content: ""; position: fixed; inset: 0; border: 3px solid 
 .tm-look { display: grid; gap: 8px; } .lk-seg { display: grid; grid-template-columns: 1fr 1fr; }
 .tm-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; margin-bottom: 10px; border-radius: 10px; background: rgba(var(--gold-rgb), .22); border: 1px dashed var(--gold); }
 .prob-acts { justify-content: flex-end; padding: 4px 2px 2px; }
+.ob-foot .ob-skip { background: none; border-color: transparent; color: var(--muted); font-weight: 500; padding-inline: 10px; }   /* Ver 0.3r.8 */
+.ob-foot:has(.ob-skip) { grid-template-columns: 1fr auto 2fr; }
 
 /* Exercise card */
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px; display: grid; gap: 10px; }
@@ -293,6 +295,9 @@ body.testing::after { content: ""; position: fixed; inset: 0; border: 3px solid 
 .run-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .run-btn { border: 0; border-radius: 8px; background: var(--brand); color: var(--gold); font-weight: 700; font-size: 14px; padding: 7px 18px; letter-spacing: .3px; }
 .run-btn.fin { background: var(--gold); color: var(--brand); }
+/* Ver 0.3r.1: in dark mode the navy Start / Edit button disappeared into the dark card; there it is gold-outlined */
+:root[data-theme="dark"]:not([data-style="studio"]) .run-btn:not(.fin) { background: rgba(var(--gold-rgb), .14); color: var(--gold); box-shadow: inset 0 0 0 1.5px var(--gold); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]):not([data-style="studio"]) .run-btn:not(.fin) { background: rgba(var(--gold-rgb), .14); color: var(--gold); box-shadow: inset 0 0 0 1.5px var(--gold); } }
 .done-tag { font-size: 13px; font-weight: 600; color: var(--good); }
 .done-tag.part { color: var(--muted); font-weight: 500; }
 .card.done { opacity: .72; }
@@ -373,7 +378,7 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .tile .val { font-family: var(--font-display); font-weight: 600; font-size: clamp(17px, 4.8vw, 20px); line-height: 1.05; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .tile .val small { font-size: .65em; font-weight: 500; color: var(--muted); margin-left: 1px; }
 .tile .chg { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; line-height: 1.25; }
-.section-h { font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 8px 0 0; }
+.section-h { font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 10px 0 -4px; }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px; display: grid; gap: 10px; }
 .panel p { margin: 0; font-size: 14px; color: var(--muted); }
 .row-acts { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
@@ -572,7 +577,7 @@ body.home .fweek, body.wheel-on .tabbar { display: none !important; }
 header.top .sync.saved { color: #8fe0ad; border-color: #8fe0ad; font-weight: 600; }
 .sync.saved { color: var(--good); border-color: currentColor; }
 @media (prefers-reduced-motion: reduce) { .savebox.just, .savebox.just .okbadge, .savebox.just .okbadge path { animation: none; stroke-dashoffset: 0; } }
-.sec-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-top: 8px; }
+.sec-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 10px 0 -4px; }
 .sec-row .section-h { margin: 0; }
 .sec-side { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 /* Date ruler on Progress and Body: the Photos timeline ruler with day tiles under it */
@@ -973,8 +978,7 @@ a.btn { text-decoration: none; color: inherit; display: inline-block; }
 #view .sw-back::after { transition: width .22s ease; }
 /* Food tab rows that swipe (0.2e): a solid background while moving so they read as a strip */
 #view [data-rm].swiping { background: var(--surface); z-index: 2; }
-/* Removable hint: a very thin red line on the right edge of everything that can be swiped away */
-#view .card[data-id], #view [data-rm] { box-shadow: inset -1px 0 0 var(--bad); box-shadow: inset -1px 0 0 color-mix(in srgb, var(--bad) 75%, transparent); }
+/* Ver 0.3r.4: the thin red line that marked swipe-to-remove is gone, to see whether people find the swipe without it */
 #view [data-rm] { padding-right: 8px; }
 #view .wprow[data-rm].swiping { background: var(--accent-soft); }   /* week-plan rows keep their own colour while swiping */
 #view .wprow[data-rm].dragging { box-shadow: 0 8px 22px rgba(0,0,0,.25); }
@@ -1076,11 +1080,11 @@ a.btn { text-decoration: none; color: inherit; display: inline-block; }
 :root[data-pal="steel"] .switch input:checked + i, :root[data-pal="steel"] .wh-band { text-shadow: none; }
 :root[data-pal="steel"] header.top { border-bottom: 3px solid transparent; border-image: var(--metal-line) 1; }
 /* Settings as one grouped list, iPhone style */
-.setgroup { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; margin-top: 10px; }
+.setgroup { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); margin-top: 10px; }
 .setrow { position: relative; min-width: 0; display: flex; align-items: center; gap: 14px; min-height: 54px; padding: 8px 14px; cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; }
 .setgroup > .setsec + .setsec > .setrow::before { content: ""; position: absolute; top: 0; left: 60px; right: 0; border-top: 1px solid var(--line); }
 .setrow:active { background: var(--accent-soft); }
-.setgroup > .setsec:first-child > .setrow { border-radius: 14px 14px 0 0; }
+.setgroup > .setsec:first-child > .setrow { border-radius: var(--r) var(--r) 0 0; }
 .setsec.on { border: 2px solid var(--gold); border-radius: 12px; margin: 4px; }
 .setsec.on > .setrow { padding-left: 10px; padding-right: 10px; border-radius: 10px 10px 0 0; }
 .setsec.on > .setrow::before, .setsec.on + .setsec > .setrow::before { display: none; }
@@ -1308,7 +1312,7 @@ body.home main .wrap { padding-top: 4px; padding-bottom: 20px; }
 #view .card[data-id].focus .fx-row { margin-top: auto; }
 #view .card[data-id].focus .fx-row .add-set, #view .card[data-id].focus .fx-fin { min-height: clamp(44px, 7dvh, 60px); font-size: clamp(14.5px, 2.2dvh, 18px); }
 /* Ver 0.3b: Home: spider chart of the muscles worked in the last 7 or 30 days (sets per muscle) */
-.mx-card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 12px 10px; display: grid; gap: 4px; margin-top: 6px; }
+.mx-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 12px 10px; display: grid; gap: 4px; margin-top: 6px; }
 .mx-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .mx-h b { font-family: var(--font-display); font-size: 16px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
 .mx-seg { gap: 0; padding: 2px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); }
@@ -1352,7 +1356,7 @@ body.home .logo { width: 52px; height: 52px; }
 body.home .day { font-size: 30px; }
 body.home header.top .day small { margin-top: 4px; font-size: 14px; }
 body.home main .wrap { gap: 10px; padding-bottom: calc(var(--tabbar-h) + 20px); }
-.hm-rings { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 12px 8px 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+.hm-rings { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 12px 8px 10px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
 .hm-ring { display: grid; justify-items: center; gap: 1px; text-align: center; min-width: 0; background: none; border: 0; padding: 0; color: var(--ink); font: inherit; }
 .hm-ring svg { width: min(86px, 24vw); height: auto; margin-bottom: 4px; }
 .hm-rbg { fill: none; stroke: var(--line); stroke-width: 9; }
@@ -1448,7 +1452,7 @@ body.home header.top .sync { order: 4; flex: none; align-self: center; margin-to
 body.home .mx-card { padding: 10px 10px 6px; gap: 0; }
 body.home .mx-card svg { max-width: min(250px, 31dvh); }
 body.home .mx-card { margin-top: 0; }
-body.home main .wrap { gap: 8px; }
+body.home main .wrap { gap: 12px; }
 body.home .hm-tiles .tile { padding: 8px 10px; }
 
 body.home .mx-sum { font-size: 12.5px; }
@@ -1707,7 +1711,6 @@ body { min-height: calc(100vh + env(safe-area-inset-top, 0px) + 1px); }
 #view .card.closed[data-id] > .run-row { grid-area: btn; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; margin: 0; padding: 0; }
 #view .card.closed[data-id] .run-btn { min-height: 34px; padding: 0 16px; font-size: 14px; border-radius: 17px; }
 #view .card.closed[data-id] .done-tag { font-size: 11px; white-space: nowrap; }
-#view .card.closed[data-id] + .card { margin-top: 8px; }
 
 /* Ver 0.3q.30: warm-up choices are small tabs under the Warm-up title; the warm-up card is as small as the others */
 #view .card.closed[data-id] > .wu-tabs { grid-area: last; margin: 3px 0 0; align-self: start; }
@@ -1723,6 +1726,21 @@ body { min-height: calc(100vh + env(safe-area-inset-top, 0px) + 1px); }
 #view .card.closed[data-id] { box-sizing: border-box; height: 78px; grid-template-columns: 62px minmax(0, 1fr) 80px; align-content: center; padding-block: 6px; }
 #view .card.closed[data-id] .done-tag { max-width: 100%; overflow: hidden; text-align: right; line-height: 1.2; }
 #view .card.closed[data-id] .titles .meta { flex-wrap: nowrap; } #view .card.closed[data-id] .titles .meta .chip { flex: none; }   /* one line; a long muscle list shrinks */
+/* Ver 0.3r.2: Go Blue headings in the iPhone Settings style (small grey capitals in the normal font, more room above
+   than below), like Settings › Appearance; Studio keeps its own large headings */
+:root:not([data-style="studio"]) .section-h { font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: .04em; }
+:root:not([data-style="studio"]) .mx-h b { font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--muted); }
+:root:not([data-style="studio"]) .fday b { font-family: var(--font-body); font-size: 17px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+/* Ver 0.3r.3: Start workout on Home in normal letters and a little lower; the day type in lighter text */
+:root:not([data-style="studio"]) .hm-start { padding: 11px 12px; font-family: var(--font-body); font-size: 17px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.hm-st-t small { font-weight: 500; letter-spacing: 0; text-transform: none; opacity: .7; }
+/* Ver 0.3r.5: Today's plan row is one plain row: a small grey Plan label, the plan name in a rounded box with a chevron,
+   Adjust plan as plain text */
+.pprow .pp-label { font-family: var(--font-body); font-size: 13px; font-weight: 500; letter-spacing: 0; text-transform: none; }
+.pprow .planpill { flex: 1 1 auto; justify-content: space-between; border-color: var(--line); border-radius: 10px; padding: 7px 10px 7px 12px; }
+.pprow .planpill b { font-family: var(--font-body); font-size: 15px; font-weight: 600; letter-spacing: 0; }
+.pprow .pp-go { font-size: 11px; }
+.pp-adj { text-decoration: none; font-size: 14px; font-weight: 600; }
 /* Ver 0.3q.11: Week builder (Test mode) */
 .wb-tag { font-size: 10px; font-weight: 700; letter-spacing: .08em; padding: 2px 6px; border-radius: 6px; background: #f2b84b; color: #3a2a00; vertical-align: 2px; margin-left: 4px; }
 
@@ -4483,7 +4501,7 @@ function foldSettings(v) {
   { const g = v.querySelector('.setgroup'); if (g) {   /* Ver 0.3p.46: Profile row, same look as the others, opens the Profile page */
       const sec = document.createElement('div'); sec.className = 'setsec';
       sec.innerHTML = '<div class="setrow" data-act="me-open" role="button" tabindex="0"><span class="seticon">' + SET_ICON['Profile'] + '</span><span class="settitle">Profile</span>' +
-        (userName() ? '<span class="setside">' + esc(userName()) + '</span>' : '') + '<span class="setchev" aria-hidden="true"></span></div>';
+        (shownName() ? '<span class="setside">' + esc(shownName()) + '</span>' : '') + '<span class="setchev" aria-hidden="true"></span></div>';
       g.prepend(sec); } }
 }
 // Border light on the picker cards: one lap every 5 s at a STEADY speed along the border.
@@ -4530,7 +4548,12 @@ function startGlows() {
 window.addEventListener('resize', () => { if (document.querySelector('.ctlcard.glow, .btn.glowbtn')) startGlows(); });
 // Ver 0.3b: the user's name for the Home greeting, kept on this phone (Home › pencil to change it)
 const K_UNAME = 'wlite.name.v1';
-function userName() { const n = store.get(K_UNAME); return typeof n === 'string' ? n : ''; }
+function userName() { const n = store.get(K_UNAME); return typeof n === 'string' ? n : ''; }   /* the name the person chose (empty = not chosen yet) */
+/* Ver 0.3r.7: until a name is chosen, the app calls you by the first part of your sign-in email (shaoqiangqiang@gmail.com ->
+   shaoqiangqiang). It is worked out each time and never saved, so choosing a name (or the Get started guide) still works as before. */
+function nameFromEmail(e) { const m = String(e || '').trim().match(/^([^@+\s]+)@/); return m ? m[1].slice(0, 30) : ''; }
+function defName() { return S.defName || ''; }
+function shownName() { return userName() || defName(); }
 function nmWeightHint() {   /* what the Food tab uses now, shown under the weight box */
   const lw = foodWeight(); if (!lw) return 'Used for your Food targets and Pull Up. No weight yet.';
   return 'Now ' + wShow(lw.kg) + ' (' + wSrc(lw).toLowerCase() + '). Your newest weight is used for Food targets and Pull Up, whether you type it here, on the Food tab or it comes from Renpho.';
@@ -4540,19 +4563,22 @@ function nmWeightHint() {   /* what the Food tab uses now, shown under the weigh
 // It opens once by itself when nothing is set up yet; You (tap the logo on Home) › Set up my app opens it again any time.
 const K_ONB = 'wlite.onboard.v1';   /* date the questionnaire was finished or put off */
 const OB_DAYS = [['Mon', 1], ['Tue', 2], ['Wed', 3], ['Thu', 4], ['Fri', 5], ['Sat', 6], ['Sun', 0]];   /* plan day key, JS weekday */
-const OB_STEPS = ['hi', 'look', 'name', 'weight', 'goal', 'days', 'exp', 'build', 'trend', 'sum'];   /* Ver 0.3p.9: look = style and colours */
+/* Ver 0.3r.8: name, weight, light or dark, style, color theme, the week plan (days, experience), the food plan (goal, body,
+   weight trend), then the summary; every question can be skipped, and the whole guide can be skipped for now */
+const OB_STEPS = ['hi', 'name', 'weight', 'mode', 'style', 'theme', 'days', 'exp', 'goal', 'build', 'trend', 'sum'];
+const OB_SKIP = { exp: 'some', goal: 'fit', build: 'same', trend: 'same' };   /* a skipped question with no answer yet takes the usual one */
 const K_OBA = 'wlite.obanswers.v1';   /* Ver 0.3f: the last answers given, to fill the questionnaire in next time */
 function obStart() {   /* Ver 0.3f: filled in from what this person has now (plan, weight, body type and units read from their Sheets) */
   const ap = activePlan(), saved = store.get(K_OBA) || {}, u = wUnit(), lw = foodWeight();
   const days = ap ? OB_DAYS.filter(([k]) => { const d = ap.days[k]; return d && d.type !== 'Rest' && d.items.length; }).map(([k]) => k) : [];
   const per = ap ? (() => { const n = OB_DAYS.map(([k]) => ap.days[k]).filter(d => d && d.type !== 'Rest' && d.items.length).map(d => d.items.length); return n.length ? n.reduce((x, y) => x + y, 0) / n.length : 0; })() : 0;
   const soma = store.get(K_SOMA) ? somaKey() : '';
-  const a = { name: userName(), kg: lw ? String(Math.round((u === 'lbs' ? lw.kg * LB : lw.kg) * 10) / 10) : '', unit: u,
+  const a = { name: shownName(), kg: lw ? String(Math.round((u === 'lbs' ? lw.kg * LB : lw.kg) * 10) / 10) : '', unit: u,
     goal: saved.goal || (soma || ap || userName() ? 'fit' : ''),   /* Ver 0.3p.17: same as the Me page Goal tile */ exp: saved.exp || (per ? (per <= 4.4 ? 'new' : per < 5.6 ? 'some' : 'pro') : ''),
     build: saved.build || ({ ecto: 'lean', meso: 'same', endo: 'gain' }[soma] || ''), trend: saved.trend || (soma ? 'same' : ''),
     days: days.length ? days : ['Mon', 'Wed', 'Fri'], plan: !ap && S.wp.plans.length < MAX_PLANS };
-  LOOK_PV = { style: styleOf(), pal: palOf().k, src: 'ob' };   /* Ver 0.3p.9: the Look step tries colours live; Quit puts them back */
-  S.ob = { step: 0, a, init: { kg: a.kg, unit: a.unit, goal: a.goal, build: a.build, trend: a.trend, days: days.slice().sort().join(','), soma, hasWeek: !!store.get(K_WEEK), hasPlan: !!ap } };
+  LOOK_PV = { style: styleOf(), pal: palOf().k, theme: store.get(K_THEME) || 'auto', src: 'ob' };   /* Ver 0.3p.9: the Look step tries colours live; Quit puts them back */
+  S.ob = { step: 0, a, look: Object.assign({}, LOOK_PV), init: { name: a.name, kg: a.kg, unit: a.unit, goal: a.goal, build: a.build, trend: a.trend, days: days.slice().sort().join(','), soma, hasWeek: !!store.get(K_WEEK), hasPlan: !!ap } };
   renderOb();
 }
 // what stays as it is: the body type when the answers behind it did not change; the carb week and the plan when the training days did not change
@@ -4613,9 +4639,13 @@ function renderOb() {
   if (!S.ob) { box.innerHTML = ''; if (LOOK_PV && LOOK_PV.src === 'ob') lookEnd(false); return; }
   const st = OB_STEPS[S.ob.step], a = S.ob.a, u = a.unit || wUnit(), lw = foodWeight();
   let q = '', sub = '', body = '', next = 'Next', ok = true;
-  if (st === 'hi') { q = 'Let’s set up your app'; sub = 'A few quick questions, about a minute. They set your food targets, your carb days and a first week plan. Your current answers are filled in: change only what you want. Nothing changes until the last step, and you can quit any time without saving. Later, tap the logo on Home to come back.'; next = 'Start'; }
-  if (st === 'look') { q = 'Pick your look'; sub = 'Tap a style and a color theme to see them on the app behind. You can change them any time in Settings › Appearance.'; body = '<div class="ob-look">' + lookPicker(false) + '</div>'; }
-  if (st === 'name') { q = 'What should we call you?'; body = '<input class="ob-in" id="obName" maxlength="30" autocomplete="given-name" placeholder="Your first name" value="' + esc(a.name) + '">'; }
+  if (st === 'hi') { q = 'Let’s set up your app'; sub = 'About a minute: your name, weight, look, week plan and food plan. Your current answers are filled in, so change only what you want. Skip any question, or skip it all for now and come back from Profile › Redo setup. Nothing is saved until the last step.'; next = 'Start'; }
+  if (st === 'mode') { const th = (LOOK_PV && LOOK_PV.theme) || 'auto', cur = palOf(), studio = styleOf() === 'studio';
+    q = 'Light or dark?'; sub = 'Automatic follows your phone. Change it any time in Settings › Appearance.';
+    body = '<div class="xp-opts" role="radiogroup" aria-label="Light or dark">' + [['light', 'Light', false, false], ['dark', 'Dark', true, false], ['auto', 'Automatic', false, true]].map(([k, n, d, hf]) => xpOpt('lk-th', k, th === k, phonePv(d, studio, cur.b, cur.g, hf), n)).join('') + '</div>'; }
+  if (st === 'style') { q = 'Pick a style'; sub = 'Tap one to see it on the app behind.'; body = '<div class="ob-look">' + lookStyles() + '</div>'; }
+  if (st === 'theme') { q = 'Pick a color theme'; sub = 'Tap one to see it on the app behind.'; body = '<div class="ob-look">' + lookPals() + '</div>'; }
+  if (st === 'name') { q = 'What should we call you?'; sub = defName() && a.name === defName() ? 'From your sign-in email. Type the name you like.' : ''; body = '<input class="ob-in" id="obName" maxlength="30" autocomplete="given-name" placeholder="Your first name" value="' + esc(a.name) + '">'; }
   if (st === 'weight') { q = 'What do you weigh?'; sub = lw ? 'Now ' + wShow(lw.kg) + '. Leave it empty to keep it.' : 'Your daily food targets are worked out from it. A rough number is fine.';
     body = '<div class="nm-w"><input class="ob-in" id="obKg" inputmode="decimal" autocomplete="off" placeholder="' + (u === 'lbs' ? 'e.g. 153' : 'e.g. 69.5') + '" value="' + esc(a.kg) + '"><div class="seg nm-u" role="group" aria-label="Unit">' +
       ['kg', 'lbs'].map(k => '<button class="btn' + (k === u ? ' on' : '') + '" data-act="ob-unit" data-k="' + k + '">' + k + '</button>').join('') + '</div></div>'; }
@@ -4630,7 +4660,7 @@ function renderOb() {
     const same = '<span class="ob-same">Same as now</span>';
     q = (a.name ? a.name + ', here' : 'Here') + ' is your setup'; next = 'Use this setup';
     const why = { ecto: 'You stay lean easily, so your days get more carbs to fuel training and growth.', meso: 'Your weight holds steady, so your carbs sit in the middle.', endo: 'You gain easily, so your days get fewer carbs; protein stays high.' }[so];
-    body = '<div class="ob-sum"><div class="ob-card"><span class="lab">Look</span><b class="big">' + esc((STYLES.find(x => x.k === styleOf()) || STYLES[0]).n) + ' · ' + esc(palOf().n) + '</b></div><div class="ob-card"><span class="lab">Body type' + (keepSo ? same : '') + '</span><b class="big">' + SO.en + '</b><p>' + why + ' Carbs about ' + SO.carb + ' g per kg a day over the week, protein 1.5 g per kg every day.</p></div>' +
+    body = '<div class="ob-sum"><div class="ob-card"><span class="lab">Look</span><b class="big">' + esc({ light: 'Light', dark: 'Dark' }[LOOK_PV && LOOK_PV.theme] || 'Automatic') + ' · ' + esc((STYLES.find(x => x.k === styleOf()) || STYLES[0]).n) + ' · ' + esc(palOf().n) + '</b></div><div class="ob-card"><span class="lab">Body type' + (keepSo ? same : '') + '</span><b class="big">' + SO.en + '</b><p>' + why + ' Carbs about ' + SO.carb + ' g per kg a day over the week, protein 1.5 g per kg every day.</p></div>' +
       '<div class="ob-card"><span class="lab">Carb week' + (keepWk ? same : '') + '</span><div class="ob-wk">' + OB_DAYS.map(([k, d]) => '<div class="' + wk[d] + '"><span>' + k.slice(0, 2) + '</span><b>' + wk[d][0].toUpperCase() + '</b></div>').join('') + '</div><p>High carbs on hard training days, low on rest days. Change any day on the Food tab.</p></div>' +
       '<div class="ob-card"><span class="lab">' + (keepPl ? 'Week plan' + same : 'Week plan') + '</span><div class="ob-pl">' + OB_DAYS.map(([k]) => { const d = keepPl ? (activePlan().days[k] || { type: 'Rest', items: [] }) : pl[k]; return '<div><b>' + k + '</b><span>' + (d.type === 'Rest' ? 'Rest' : esc(typeLabel(d.type)) + ' · ' + (d.items.length ? esc(d.items.slice(0, 3).join(', ')) + (d.items.length > 3 ? ' +' + (d.items.length - 3) : '') : 'no exercises found')) + '</span></div>'; }).join('') + '</div>' +
       (S.wp.plans.length >= MAX_PLANS && !activePlan() ? '<p>You already have 3 week plans, so no new one is made.</p>' :
@@ -4638,10 +4668,10 @@ function renderOb() {
   }
   const n = OB_STEPS.length;
   box.innerHTML = '<div class="sheet-bg" data-act="noop"><div class="sheet ob-sheet" role="dialog" aria-label="Get started" data-act="noop">' +
-    '<div class="ob-top"><div class="ob-dots" aria-hidden="true">' + OB_STEPS.map((x, i) => '<i class="' + (i <= S.ob.step ? 'on' : '') + '"></i>').join('') + '</div><button class="ob-x" data-act="ob-close" aria-label="Quit without saving"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>Quit</button></div>' +
+    '<div class="ob-top"><div class="ob-dots" aria-hidden="true">' + OB_STEPS.map((x, i) => '<i class="' + (i <= S.ob.step ? 'on' : '') + '"></i>').join('') + '</div><button class="ob-x" data-act="ob-close" aria-label="Quit without saving"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>Skip for now</button></div>' +
     '<div><p class="ob-q">' + q + '</p>' + (sub ? '<p class="ob-sub">' + sub + '</p>' : '') + '</div>' +
     '<div class="ob-body">' + body + '</div>' +
-    '<div class="ob-foot">' + (S.ob.step ? '<button class="btn" data-act="ob-back">Back</button>' : '') + '<button class="btn primary' + (S.ob.step ? '' : ' only') + '" data-act="ob-next"' + (ok ? '' : ' disabled') + '>' + next + '</button></div></div></div>';
+    '<div class="ob-foot">' + (S.ob.step ? '<button class="btn" data-act="ob-back">Back</button>' : '') + (st !== 'hi' && st !== 'sum' ? '<button class="btn ob-skip" data-act="ob-skip">Skip</button>' : '') + '<button class="btn primary' + (S.ob.step ? '' : ' only') + '" data-act="ob-next"' + (ok ? '' : ' disabled') + '>' + next + '</button></div></div></div>';
   const inp = $('#obName') || $('#obKg'); if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); ACTIONS['ob-next'](); } });
 }
 function obKeep() {   /* keep what was typed before the sheet is drawn again */
@@ -4652,7 +4682,7 @@ function obApply() {
   if (S.obTest) { S.obTest = false; S.ob = null; renderOb(); toast('Test finished: nothing was saved.'); return; }   /* Ver 0.3o.20; the look goes back too */
   lookEnd(true);   /* Ver 0.3p.9: the look picked on the Look step */
   const a = S.ob.a;
-  if (a.name) store.set(K_UNAME, a.name);
+  if (a.name && a.name !== defName()) store.set(K_UNAME, a.name);   /* 0.3r.7: the email name stays a default, not a choice */
   if (a.unit) store.set(K_WUNIT, a.unit);
   if (a.kg && (a.kg !== S.ob.init.kg || a.unit !== S.ob.init.unit)) { let kg = parseFloat(a.kg); if (wUnit() === 'lbs') kg = kg / LB; setTypedKg(kg); }
   store.set(K_SOMA, obSomaFor(a)); store.set(K_WEEK, obWeekFor(a)); store.set(K_OBA, { goal: a.goal, exp: a.exp, build: a.build, trend: a.trend }); saveFoodSet();
@@ -4674,7 +4704,7 @@ function renderNameSheet() {   /* Ver 0.3c: the You sheet: name, body weight and
   box.innerHTML = '<div class="sheet-bg" data-act="name-cancel"><div class="sheet nm-sheet" role="dialog" aria-label="You" data-act="noop">' +
     '<div class="sheet-h"><b>You</b></div>' +
     '<div class="nm-grid"><div class="nm-fields">' +   /* Ver 0.3e: smaller fields, the icon to their right */
-    '<label class="fld" for="nmInput">Name<input id="nmInput" maxlength="30" autocomplete="given-name" value="' + esc(userName()) + '" placeholder="e.g. Qiang"></label>' +
+    '<label class="fld" for="nmInput">Name<input id="nmInput" maxlength="30" autocomplete="given-name" value="' + esc(shownName()) + '" placeholder="e.g. Qiang"></label>' +
     '<div class="fld"><label for="nmKg">Body weight</label><div class="nm-w"><input id="nmKg" inputmode="decimal" autocomplete="off" placeholder="' + (u === 'lbs' ? 'e.g. 153' : 'e.g. 69.5') + '">' +
     '<div class="seg nm-u" role="group" aria-label="Unit">' + ['kg', 'lbs'].map(k => '<button class="btn' + (k === u ? ' on' : '') + '" data-act="nm-unit" data-k="' + k + '" aria-pressed="' + (k === u) + '">' + k + '</button>').join('') + '</div></div></div></div>' +
     '<button class="nm-ic" data-act="nm-icon" aria-label="Change the app icon"><img src="' + esc(iconSrc()) + '" alt=""><span>Change</span></button></div>' +
@@ -4710,7 +4740,7 @@ function renderHeader() {
   const iso = S.draft ? S.draft.date : todayIso();
   const d = new Date(iso + 'T12:00:00');
   const wd = d.getDay();
-  const home = S.tab === 'home', nm = userName();
+  const home = S.tab === 'home', nm = shownName();
   $('#dayName').textContent = home ? (nm ? 'Hello, ' + nm : 'Hello') : WEEKDAYS[wd];
   { const ne = $('#nameEdit'); if (ne) ne.hidden = !home; }
   { const dt = $('#dayTitle'); if (dt) { if (home) { dt.dataset.act = 'me-open'; dt.setAttribute('role', 'button'); dt.title = 'Profile: your name, weight, icon and week'; } else { delete dt.dataset.act; dt.removeAttribute('role'); dt.removeAttribute('title'); } } }
@@ -4737,7 +4767,7 @@ function probPill() {
 function planPill() {
   const ap = planOn() ? activePlan() : null;
   const txt = !planOn() ? 'Plan off' : ap ? ap.name : 'Choose a plan';
-  let x = '<div class="pprow"><span class="pp-label">Current plan</span><button class="planpill' + (ap ? '' : ' off') + '" data-act="pp-open" aria-haspopup="listbox" aria-label="Week plan: ' + esc(txt) + '. Tap to switch."><b>' + esc(txt) + '</b><span class="pp-go" aria-hidden="true">▾</span></button><button class="pp-adj" data-act="go-plan">Adjust plan<span aria-hidden="true"> ›</span></button></div>';   /* Ver 0.3l: a link to edit the week plan */
+  let x = '<div class="pprow"><span class="pp-label">Plan</span><button class="planpill' + (ap ? '' : ' off') + '" data-act="pp-open" aria-haspopup="listbox" aria-label="Week plan: ' + esc(txt) + '. Tap to switch."><b>' + esc(txt) + '</b><span class="pp-go" aria-hidden="true">▾</span></button><button class="pp-adj" data-act="go-plan">Adjust plan<span aria-hidden="true"> ›</span></button></div>';   /* Ver 0.3l: a link to edit the week plan */
   if (S.ppOpen) {
     const it = (act, id, name, sub, on) => '<button class="sheet-it' + (on ? ' on' : '') + '" role="option" aria-selected="' + on + '" data-act="' + act + '"' + (id ? ' data-id="' + esc(id) + '"' : '') + '>' + esc(name) + (sub ? '<span class="pp-sub">' + esc(sub) + '</span>' : '') + '</button>';
     x += '<div class="sheet-bg" data-act="pp-close"><div class="sheet" role="listbox" aria-label="Switch week plan" data-act="noop"><div class="sheet-h"><b>Week plan</b><button class="btn sm" data-act="pp-close">Close</button></div><div class="sheet-list">' +
@@ -6045,6 +6075,14 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3r.8', '11202026', 'Matches the full app: Get started guide for a new person, in this order: name, weight, light or dark (with Automatic), style, color theme, week plan (training days, experience), food plan (goal, body, weight trend), then your setup. Every question has Skip (keeps what you have now, or the usual answer), and Quit is now Skip for now (come back from Profile › Redo setup). Removed: the combined Look step.'],
+  ['0.3r.7', '11202026', 'Matches the full app: Until you choose a name, the app calls you by the first part of your Google sign-in email (for example shaoqiangqiang from shaoqiangqiang@gmail.com): Home, Profile, Settings and the name question start with it. It is not saved as your name.'],
+  ['0.3r.6', '11202026', 'Matches the full app: One corner size for every card (12 px; cards had 10, 12 or 14) and one spacing: 12 px between cards on every tab, Home included; headings have more room above than below; Start workout cards no longer have extra space between them.'],
+  ['0.3r.5', '11202026', 'Matches the full app: Start workout: the plan row is one plain row: a small grey Plan label, the plan name in a rounded box with a small arrow, and Adjust plan as plain text (no underline).'],
+  ['0.3r.4', '11202026', 'Matches the full app: The thin red line on the right edge of things you can swipe away is gone (a test: does the swipe still feel natural without it?). Removed: the red swipe-to-remove line.'],
+  ['0.3r.3', '11202026', 'Matches the full app: Home: Start workout is in normal letters instead of capitals, a little lower, and the day type under it is lighter.'],
+  ['0.3r.2', '11202026', 'Matches the full app: Go Blue headings (My foods, Eaten, My week, Week plan, Latest, Muscles worked) are small grey capitals in the normal font, like Settings › Appearance; the Food date title is in normal letters. Studio keeps its own headings.'],
+  ['0.3r.1', '11202026', 'Matches the full app: Dark mode: the Start / Edit buttons on Start workout are gold-outlined, so they no longer disappear into the dark card.'],
   ['0.3r', '11202026', 'Matches the full app Ver 0.3r (its 0.3q.11 to 0.3q.33; 0.3q.1 to 0.3q.10 were already here): Settings › Appearance in the iPhone Settings style (Light / Dark pictures with an Automatic switch, Style and Color theme cards) and Settings › Exercise pictures (Still / Moving); the loading screen’s logo flies to the header logo; usage count on; Front Squat, Stationary Bike, Elliptical and Stair Climber added; Forest + Mint colour theme; Home test switch (Under / Fit / Over) in Test mode; week plans made with the calendar builder (workday templates to drag onto days, Repeat and Warm-up pills, plan templates from your saved plans), and a plan in use always fills Today; My week calendar with body icons and carb pills; body type pictures; pick up to two warm-ups, shown as small tabs on the warm-up card; compact Today cards, all the same size, with long names in a smaller font instead of cut off; calmer highlight numbers in tiles and cards; faster start (the copy on the phone shows Home at once, picture data read only when needed); a tab always opens in its starting state.'],
   ['0.3q.33', '11202026', 'Matches the full app: Faster start, part 3: the exercise picture data (about a third of the page) is read only when a picture is first shown, so the app has much less to read before Home appears; with the phone’s copy the loading screen leaves as soon as Home is laid out (was a fixed wait); Home fits the muscle names in one step instead of many. Removed: unused code and styles left from earlier versions. Settings › About says whether this start used the copy on the phone.'],
   ['0.3q.32', '11202026', 'Matches the full app: Calmer highlights: the big numbers and words in tiles and cards (Home rings and Next up, Body and Progress values and day cards, Profile name and tiles, Today plan picker, Usage, set page and Week builder headings) are smaller and semi-bold, about one and a half times their labels instead of twice, with units a little larger; they still stand out.'],
@@ -6677,7 +6715,7 @@ function viewMe() {
   const gk = oba.goal || (store.get(K_SOMA) || ap || userName() ? 'fit' : ''), goal = (OB_TXT.goal.find(g => g[0] === gk) || [])[1] || 'Not set';
   const tile = (act, k, lab, val, sub) => '<button class="me-tile" data-act="' + act + '"' + (k ? ' data-k="' + k + '"' : '') + '><span class="lab">' + lab + '</span><b>' + esc(val) + '</b><small>' + esc(sub) + '</small></button>';
   let h = problemBox() + '<div class="me-hero"><div class="me-top"><button class="me-pic" data-act="icon-open" aria-label="Change your app icon"><img src="' + esc(iconSrc()) + '" alt=""><span class="me-pen">' + ME_PEN + '</span></button>' +
-    '<button class="me-name" data-act="name-edit"><b>' + esc(userName() || 'Add your name') + '</b><small>Tap to change your name</small></button></div>' +
+    '<button class="me-name" data-act="name-edit"><b>' + esc(shownName() || 'Add your name') + '</b><small>Tap to change your name</small></button></div>' +
     '<div class="me-tiles">' + tile('fs-open', 'w', 'Weight', lw ? wShow(lw.kg) : 'Not set', lw ? wSrc(lw).replace('7-day avg', '7d avg') : 'Tap to enter') +
     tile('fs-open', 'b', 'Body type', so.en.replace('morph', ''), 'Carbs ' + so.carb + ' g/kg') + tile('ob-open', '', 'Goal', goal.replace('Build muscle', 'Muscle').replace('Lose fat', 'Lose fat').replace('Get fitter', 'Fitter'), 'Protein ' + CYC.prot + ' g/kg') + '</div></div>';
   h += meCal(ap, td);   /* 0.3q.23: My week is a calendar */
@@ -6789,6 +6827,7 @@ function viewSetup() {
 function startWith(r) {
   // r = result of api_init after setup or on open
   S.email = r.email || S.email;
+  S.defName = nameFromEmail(S.email);   /* Ver 0.3r.7: the default name until one is chosen */
   S.isOwner = !!r.owner; S.ownerKnown = true;                 // exercise notes show only to the owner (Lite 0.1f)
   store.del('wlite.full.v1');
   if (!r.cfg) { CFG = null; S.mcp = null; S.tab = 'setup'; S.initState = 'ready'; setSync('busy', 'Not set up'); render(); return; }
@@ -7514,7 +7553,15 @@ const ACTIONS = {
     const h = document.querySelector('.nm-hint'); if (h) h.innerHTML = nmWeightHint();
   },
   'ob-open'(b, it, e, act) { S.nameOpen = false; renderNameSheet(); obStart(); },
-  'ob-close'(b, it, e, act) { if (S.obTest) { S.obTest = false; S.ob = null; renderOb(); toast('Test closed.'); return; } if (!store.get(K_ONB)) store.set(K_ONB, 'later'); S.ob = null; renderOb(); toast('Nothing was changed.'); },   /* quit without saving: the answers are dropped */
+  'ob-close'(b, it, e, act) { if (S.obTest) { S.obTest = false; S.ob = null; renderOb(); toast('Test closed.'); return; } if (!store.get(K_ONB)) store.set(K_ONB, 'later'); S.ob = null; renderOb(); toast('Skipped for now. Set up any time: Profile › Redo setup.'); },
+  'ob-skip'(b, it, e, act) {   /* Ver 0.3r.8: skip one question: it keeps what you have now (or the usual answer) */
+    if (!S.ob) return; obKeep(); const st = OB_STEPS[S.ob.step], a = S.ob.a, i = S.ob.init;
+    if (st === 'name') a.name = i.name; if (st === 'weight') { a.kg = i.kg; a.unit = i.unit; }
+    if ((st === 'mode' || st === 'style' || st === 'theme') && LOOK_PV) { const k = { mode: 'theme', style: 'style', theme: 'pal' }[st]; LOOK_PV[k] = S.ob.look[k]; applyLook(); render(); }
+    if (st === 'days' && !a.days.length) a.days = ['Mon', 'Wed', 'Fri'];
+    if (OB_SKIP[st] && !a[st]) a[st] = OB_SKIP[st];
+    S.ob.step++; renderOb();
+  },   /* quit without saving: the answers are dropped */
   'ob-back'(b, it, e, act) { obKeep(); if (S.ob && S.ob.step > 0) { S.ob.step--; renderOb(); } },
   'ob-next'(b, it, e, act) {
     if (!S.ob) return; obKeep(); const st = OB_STEPS[S.ob.step];
@@ -8147,7 +8194,7 @@ const sysDark = () => !!(window.matchMedia && window.matchMedia('(prefers-color-
 // Ver 0.3p.9: a look being tried (Get started, Test mode › Look) without saving it: { style, pal, theme, src: 'ob' | 'test' }
 var LOOK_PV = null;
 function applyTheme() {
-  const t = LOOK_PV && LOOK_PV.theme ? LOOK_PV.theme : store.get(K_THEME); const dark = t ? t === 'dark' : sysDark();
+  const t = LOOK_PV && LOOK_PV.theme ? LOOK_PV.theme : store.get(K_THEME); const dark = t && t !== 'auto' ? t === 'dark' : sysDark();   /* 0.3r.8: auto = follow the phone */
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
   splashSave();
 }
@@ -8180,10 +8227,12 @@ function lookEnd(keep) {   /* keep = save the look being tried; otherwise go bac
   if (keep) {
     store.set(K_STYLE, pv.style === 'studio' ? 'studio' : 'go');
     store.set(K_PAL, pv.pal);
-    if (pv.theme) store.set(K_THEME, pv.theme);
+    if (pv.theme === 'auto') store.del(K_THEME); else if (pv.theme) store.set(K_THEME, pv.theme);
   }
   LOOK_PV = null; applyLook();
 }
+function lookStyles() { const sty = styleOf(); return '<div class="stylerow">' + STYLES.map(s => '<button class="stybtn sty-' + s.k + (s.k === sty ? ' on' : '') + '" data-act="lk-sty" data-k="' + s.k + '" aria-pressed="' + (s.k === sty) + '"><span class="sty-pv" aria-hidden="true"><b>Today</b><i></i><i></i></span>' + esc(s.n) + '</button>').join('') + '</div>'; }
+function lookPals() { const cur = palOf().k; return '<div class="palrow">' + PALS.map(p => '<button class="palbtn' + (p.k === cur ? ' on' : '') + '" data-act="lk-pal" data-k="' + p.k + '" aria-pressed="' + (p.k === cur) + '"><span class="sw2" aria-hidden="true"><i style="background:' + p.b + '"></i><i style="background:' + p.g + '"></i></span>' + esc(p.n) + '</button>').join('') + '</div>'; }
 function lookPicker(withTheme) {   /* style cards and colour themes, the same as Settings › Appearance; taps only try the look */
   const sty = styleOf(), cur = palOf().k, dark = document.documentElement.getAttribute('data-theme') === 'dark';
   return '<p class="setlab">Style</p><div class="stylerow">' + STYLES.map(s => '<button class="stybtn sty-' + s.k + (s.k === sty ? ' on' : '') + '" data-act="lk-sty" data-k="' + s.k + '" aria-pressed="' + (s.k === sty) + '"><span class="sty-pv" aria-hidden="true"><b>Today</b><i></i><i></i></span>' + esc(s.n) + '</button>').join('') + '</div>' +

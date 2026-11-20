@@ -2,6 +2,38 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3r.8 · 11/20/2026
+
+Matches the full app: Get started guide for a new person, in this order: name, weight, light or dark (with Automatic), style, color theme, week plan (training days, experience), food plan (goal, body, weight trend), then your setup. Every question has Skip (keeps what you have now, or the usual answer), and Quit is now Skip for now (come back from Profile › Redo setup). Removed: the combined Look step.
+
+## 0.3r.7 · 11/20/2026
+
+Matches the full app: Until you choose a name, the app calls you by the first part of your Google sign-in email (for example shaoqiangqiang from shaoqiangqiang@gmail.com): Home, Profile, Settings and the name question start with it. It is not saved as your name.
+
+## 0.3r.6 · 11/20/2026
+
+Matches the full app: One corner size for every card (12 px; cards had 10, 12 or 14) and one spacing: 12 px between cards on every tab, Home included; headings have more room above than below; Start workout cards no longer have extra space between them.
+
+## 0.3r.5 · 11/20/2026
+
+Matches the full app: Start workout: the plan row is one plain row: a small grey Plan label, the plan name in a rounded box with a small arrow, and Adjust plan as plain text (no underline).
+
+## 0.3r.4 · 11/20/2026
+
+Matches the full app: The thin red line on the right edge of things you can swipe away is gone (a test: does the swipe still feel natural without it?). Removed: the red swipe-to-remove line.
+
+## 0.3r.3 · 11/20/2026
+
+Matches the full app: Home: Start workout is in normal letters instead of capitals, a little lower, and the day type under it is lighter.
+
+## 0.3r.2 · 11/20/2026
+
+Matches the full app: Go Blue headings (My foods, Eaten, My week, Week plan, Latest, Muscles worked) are small grey capitals in the normal font, like Settings › Appearance; the Food date title is in normal letters. Studio keeps its own headings.
+
+## 0.3r.1 · 11/20/2026
+
+Matches the full app: Dark mode: the Start / Edit buttons on Start workout are gold-outlined, so they no longer disappear into the dark card.
+
 ## 0.3r · 11/20/2026
 
 Matches the full app Ver 0.3r (its 0.3q.11 to 0.3q.33; 0.3q.1 to 0.3q.10 were already here): Settings › Appearance in the iPhone Settings style (Light / Dark pictures with an Automatic switch, Style and Color theme cards) and Settings › Exercise pictures (Still / Moving); the loading screen’s logo flies to the header logo; usage count on; Front Squat, Stationary Bike, Elliptical and Stair Climber added; Forest + Mint colour theme; Home test switch (Under / Fit / Over) in Test mode; week plans made with the calendar builder (workday templates to drag onto days, Repeat and Warm-up pills, plan templates from your saved plans), and a plan in use always fills Today; My week calendar with body icons and carb pills; body type pictures; pick up to two warm-ups, shown as small tabs on the warm-up card; compact Today cards, all the same size, with long names in a smaller font instead of cut off; calmer highlight numbers in tiles and cards; faster start (the copy on the phone shows Home at once, picture data read only when needed); a tab always opens in its starting state.
