@@ -2,6 +2,102 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3r · 11/20/2026
+
+Matches the full app Ver 0.3r (its 0.3q.11 to 0.3q.33; 0.3q.1 to 0.3q.10 were already here): Settings › Appearance in the iPhone Settings style (Light / Dark pictures with an Automatic switch, Style and Color theme cards) and Settings › Exercise pictures (Still / Moving); the loading screen’s logo flies to the header logo; usage count on; Front Squat, Stationary Bike, Elliptical and Stair Climber added; Forest + Mint colour theme; Home test switch (Under / Fit / Over) in Test mode; week plans made with the calendar builder (workday templates to drag onto days, Repeat and Warm-up pills, plan templates from your saved plans), and a plan in use always fills Today; My week calendar with body icons and carb pills; body type pictures; pick up to two warm-ups, shown as small tabs on the warm-up card; compact Today cards, all the same size, with long names in a smaller font instead of cut off; calmer highlight numbers in tiles and cards; faster start (the copy on the phone shows Home at once, picture data read only when needed); a tab always opens in its starting state.
+
+## 0.3q.33 · 11/20/2026
+
+Matches the full app: Faster start, part 3: the exercise picture data (about a third of the page) is read only when a picture is first shown, so the app has much less to read before Home appears; with the phone’s copy the loading screen leaves as soon as Home is laid out (was a fixed wait); Home fits the muscle names in one step instead of many. Removed: unused code and styles left from earlier versions. Settings › About says whether this start used the copy on the phone.
+
+## 0.3q.32 · 11/20/2026
+
+Matches the full app: Calmer highlights: the big numbers and words in tiles and cards (Home rings and Next up, Body and Progress values and day cards, Profile name and tiles, Today plan picker, Usage, set page and Week builder headings) are smaller and semi-bold, about one and a half times their labels instead of twice, with units a little larger; they still stand out.
+
+## 0.3q.31 · 11/20/2026
+
+Matches the full app: Start workout: every closed exercise card is the same size (the warm-up card too); a long name, muscle line or last-session line gets a smaller font so it fits instead of being cut off, and Finished / sets entered sits under the button on two short lines.
+
+## 0.3q.30 · 11/20/2026
+
+Matches the full app: Today: your one or two warm-ups are small tabs under the Warm-up title (closed card and exercise page), so the warm-up card is as small as the other cards.
+
+## 0.3q.29 · 11/20/2026
+
+Matches the full app: Today: the warm-up card keeps the title Warm-up when you switch between your warm-ups; the tabs show which one.
+
+## 0.3q.28 · 11/20/2026
+
+Matches the full app: A week plan in use now always fills its workout days on Today; the Start each day with the plan switch is gone. On Today, + New plan and Edit plans open the new calendar builder. Today cards are compact rows (small picture, name, last session, Start on the right), so many more fit on the screen.
+
+## 0.3q.27 · 11/20/2026
+
+Matches the full app: New and edited week plans start with the workout days of your saved plans as ready templates. The calendar figure flexes both biceps and is drawn with thinner lines. Switching tabs always shows the tab as it starts: everything opened on the last visit (sections, sheets, sub-pages, the open exercise page, searches) is closed again, and the Food tab is back on today. Your typed sets stay.
+
+## 0.3q.26 · 11/20/2026
+
+Matches the full app: Profile calendar: one body figure for every workout day: the top half in gold on upper body days, the legs in gold on lower body days, and the whole figure in gold on combined days (the rest stays grey).
+
+## 0.3q.25 · 11/20/2026
+
+Matches the full app: Body type: choose from three figure pictures (Ecto, Meso, Endo) with a round check under each, like Light / Dark; under them, what the chosen type means (for example: hard to gain weight whatever you eat) and its daily carbs, protein and fat per kg.
+
+## 0.3q.24 · 11/20/2026
+
+Matches the full app: Week plans are made with the new builder: on your profile, + New plan and Edit open the calendar builder (plan name at the top, workday templates to drag onto days, Repeat and Warm-up pills, Save plan). Tapping Edit workout on a day opens it there. A new plan is put in use. Gold pills and this week’s band show real gold in Studio too.
+
+## 0.3q.23 · 11/20/2026
+
+Matches the full app: Me page: My week is a calendar of last, this and next week (this week highlighted, the others grey) with an upper / lower / combined body icon on workout days and an H / M / L carb pill under each day; tap a day as before. Repeat and Warm-up are gold pills under it (tap to turn on or off; a plan can now run once); your warm-ups are listed beside the pill in small text. Week plan cards show only the plan name. The Week builder uses the same gold pills.
+
+## 0.3q.22 · 11/20/2026
+
+Matches the full app: Week builder: Repeat and Warm-up are two slim rows inside the calendar card, each with an on/off switch on the right; your warm-ups are listed beside Warm-up, one per line in small text (tap to change).
+
+## 0.3q.21 · 11/20/2026
+
+Matches the full app: Week builder: Repeat and Warm-up are two toggle pills inside the calendar card (no separate card). Settings that vanish from the phone storage while the app is open are now put back at once (the style kept jumping from Studio to Go Blue on a tab change); if it happens, Settings › About › Version says so.
+
+## 0.3q.20 · 11/20/2026
+
+Matches the full app: Warm-up picker is one compact list (Cardio / All switch, picks numbered in place, Create your own as the last row); the Week builder’s Repeat and Warm up switches share one card, and its calendar shows the days around your range in grey. Readable picks in dark mode: the chosen warm-ups (and the picked exercises, muscle chips and warm-up tabs) use the theme’s accent colours, so their text no longer disappears on a gold pill.
+
+## 0.3q.19 · 11/20/2026
+
+Matches the full app: Warm-up your way: pick up to two warm-ups (Treadmill, Stationary Bike, Elliptical, Stair Climber, any other exercise, or create your own); the plan puts the first one on Today, and tabs at the top of the warm-up card switch between them. Change them on that card, in the plan editor under Warm-up first, or in the Week builder (test), which also has a Warm up first switch to skip it. Stationary Bike, Elliptical and Stair Climber added to the exercise list. New colour theme Forest + Mint (green).
+
+## 0.3q.18 · 11/20/2026
+
+Matches the full app: Week builder: the highlight of a selected workday template now covers the whole row, edge to edge.
+
+## 0.3q.17 · 11/20/2026
+
+Matches the full app: Week builder: times now count the rest between sets (about 12 min per exercise plus 10 min warm-up, so a 5-exercise day is about 70 min); time choices 45 / 60 / 90 minutes. [app only: a saved copy for Home in the app’s own store, Exercises and log read at the same time]
+
+## 0.3q.16 · 11/20/2026
+
+Matches the full app: Test mode › Week builder: the calendar starts today and shows only the number of days you choose, each under its weekday. The New workday steps look like the iPhone: a large question, one rounded list of choices with icons and a checkmark, a thin progress bar and Back / Cancel at the top; options A / B / C in a segmented switch; Use this workday as one big button. Picking exercises yourself uses the same list with round + buttons, and the picked ones show as small pills you tap to remove.
+
+## 0.3q.15 · 11/20/2026
+
+Matches the full app: Faster start: when the phone has a copy of your data, the loading screen leaves as soon as Home is drawn (before, it waited for the Sheets, up to 2.5 s) and its fly-to-the-logo is shorter (0.46 s instead of 0.78 s). Fresh data from the Sheets still updates Home a moment later. The very first open on a phone still waits for the Sheets.
+
+## 0.3q.14 · 11/20/2026
+
+Matches the full app: Test mode › Week builder looks like a real calendar: two weeks in a 7-column grid (Mon-Sun) with each day showing its workout as a coloured block and its time; days after the cycle are faded repeats. The days in the cycle are set with a small − / + stepper (2-10) instead of a row of numbers. Workday templates are an iPhone-style list under the calendar: hold one and drag it onto a day, or tap it then tap a day; Edit on each row. Cleaner Apple-style cards and buttons.
+
+## 0.3q.13 · 11/20/2026
+
+Matches the full app: Test mode: the three Home tests (under target, just fit, over target) are one test; on Home the amber bar has an Under / Fit / Over switch to change between them.
+
+## 0.3q.12 · 11/20/2026
+
+Matches the full app: Front Squat added to the exercise list (legs, weight and reps) with its own picture and moving picture: bar on the front of the shoulders, elbows high, torso upright, hips straight down to thighs about level.
+
+## 0.3q.11 · 11/20/2026
+
+Matches the full app: Test mode › Week builder (new, nothing saved): build a day by muscle with Assistant mode (what to train, which muscles, where, how much time, then 2-3 options with coach notes and the estimated time) or Pick myself (muscle chips, tap exercises, the time adds up as you pick). Built days sit as cards above a calendar of 2-10 days; drag a card onto a date (hold, then move) or tap it and tap a date. An empty date offers Build a new day, Copy an existing day (also from the plan in use) or Rest day. Repeat as my routine switch.
+
 ## 0.3q.10 · 11/17/2026
 
 Matches the full app: Settings › Appearance in the iPhone Settings style: small grey headings over separate cards with space between, and smaller text. The first card has just Light and Dark pictures with round buttons, and an Automatic switch under them (follows the phone; tapping Light or Dark turns it off). Style and Color theme are back to their earlier buttons, each in its own card. Removed: the Auto picture and the Style and Color theme pictures.
