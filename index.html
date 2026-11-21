@@ -128,7 +128,7 @@ body.testing::after { content: ""; position: fixed; inset: 0; border: 3px solid 
 .ios-card .xp-opts { padding: 6px 0 0; }
 .ios-card .xp-opts .pv { width: 70px; }
 
-.ap-page .stybtn, .ap-page .palbtn { font-size: 13px; font-weight: 500; }
+.ap-page .stybtn { font-size: 13px; font-weight: 500; }
 .ap-page .stybtn .sty-pv b { font-size: 11px; }
 /* Ver 0.3q.9: Appearance choices use the same look: small phone pictures, name, round button */
 .xp-opts .pv { display: block; width: 62px; height: auto; border-radius: 10px; box-shadow: 0 0 0 1px var(--line); }
@@ -321,20 +321,12 @@ body.testing::after { content: ""; position: fixed; inset: 0; border: 3px solid 
 :root[data-theme="dark"] .btn.danger { background: #c62828; border-color: #ff8a80; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.danger { background: #c62828; border-color: #ff8a80; } }
 details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padding: 6px 2px; }
-.wstrip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-.wstrip.wscroll { display: flex; gap: 4px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; padding: 2px 0; }
-.wstrip.wscroll::-webkit-scrollbar { display: none; }
-.wstrip.wscroll .wd { flex: 0 0 calc((100% - 24px) / 7); scroll-snap-align: start; }
-.wstrip .wd span small { font-size: 9.5px; margin-left: 1px; opacity: .85; }
-.wstrip .wd { display: grid; gap: 1px; justify-items: center; padding: 3px 0; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); font-size: 11px; color: var(--muted); line-height: 1.15; }
-.wstrip .wd b { font-size: 13px; }
-.wstrip .wd.high b { color: var(--brand); } .wstrip .wd.mid b { color: var(--accent); } .wstrip .wd.low b { color: var(--muted); }
-.wstrip .wd.high { background: rgba(var(--gold-rgb),.22); }
-.wstrip .wd.today span { font-weight: 700; color: var(--ink); }
-.wstrip .wd.on { outline: 2px solid var(--brand); outline-offset: -1px; }
+
+  
+
 .pend { border-top: 1px solid var(--line); padding-top: 6px; display: grid; gap: 8px; }
-.wstrip .dot { width: 6px; height: 6px; border-radius: 50%; background: transparent; }
-.wstrip .dot.ok { background: var(--good); } .wstrip .dot.over { background: var(--bad); } .wstrip .dot.under { background: var(--muted); opacity: .6; }
+
+  
 .wlegend { display: flex; align-items: center; justify-content: center; gap: 5px; margin: 5px 0 0; font-size: 11px; color: var(--muted); }
 .wlegend .wl { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-left: 6px; }
 .wlegend .wl:first-child { margin-left: 0; }
@@ -345,9 +337,10 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 #view.tab-in { animation: tabIn .38s cubic-bezier(.2, .7, .3, 1); }   /* Ver 0.3b: tab opened from Home or the wheel */
 @keyframes tabIn { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { #view.tab-in { animation: none; } }
-#view.sl-l { animation: slL .22s ease-out; } #view.sl-r { animation: slR .22s ease-out; }
-@keyframes slL { from { transform: translateX(36px); opacity: .3; } to { transform: none; opacity: 1; } }
-@keyframes slR { from { transform: translateX(-36px); opacity: .3; } to { transform: none; opacity: 1; } }
+/* Ver 0.3s.15: one page slide for opening a page deeper in (from the right) and going back (from the left) */
+#view.sl-l { animation: slL .28s cubic-bezier(.2, .7, .3, 1); } #view.sl-r { animation: slR .28s cubic-bezier(.2, .7, .3, 1); }
+@keyframes slL { from { transform: translateX(40px); opacity: .2; } to { transform: none; opacity: 1; } }
+@keyframes slR { from { transform: translateX(-40px); opacity: .2; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { #view.sl-l, #view.sl-r { animation: none; } }
 /* Quick foods */
 .qchip { border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 999px; padding: 6px 12px; font-size: 15px; }
@@ -377,8 +370,8 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 /* Food */
 .fday { justify-content: space-between; flex-wrap: nowrap; }
 .fday-t { min-width: 0; border: 0; background: none; color: var(--ink); padding: 4px 6px; border-radius: 8px; font: inherit; cursor: pointer; }
-.fday-t:active, .fwk-day:active { background: rgba(var(--gold-rgb), .2); }
-.fwk-day { cursor: pointer; border-radius: 6px; }
+.fday-t:active { background: rgba(var(--gold-rgb), .2); }
+
 .fday b { font-family: var(--font-display); font-size: 17px; letter-spacing: .04em; text-transform: uppercase; }
 .seg .btn { flex: 1; }
 #foodText { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: inherit; resize: vertical; }
@@ -404,25 +397,14 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .hist tr.on td { background: var(--accent-soft); font-weight: 600; }
 
 .seg { display: flex; gap: 6px; }
-.fset { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 8px 0 4px; }
-.fset-it { display: grid; gap: 1px; text-align: left; padding: 6px 7px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); font: inherit; cursor: pointer; min-width: 0; }
-.fset-it > * { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.fset-l { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
-.fset-it b { font-size: 15px; letter-spacing: -.01em; }
+
 /* Weight not set yet: gold box that pulses so the first step is obvious */
-.fset-it.need { border: 2px solid var(--gold); background: rgba(var(--gold-rgb),.2); animation: needPulse 1.8s ease-in-out infinite; }
-.fset-it.need b { color: var(--accent); }
-.fset-it.need .fset-s { color: var(--ink); font-weight: 600; }
+
 @keyframes needPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(var(--gold-rgb),.55); } 50% { box-shadow: 0 0 0 6px rgba(var(--gold-rgb),0); } }
-@media (prefers-reduced-motion: reduce) { .fset-it.need { animation: none; } }
+
 .needw { border: 1px dashed var(--gold); border-radius: 10px; padding: 10px 12px; display: grid; gap: 8px; margin-top: 8px; background: rgba(var(--gold-rgb),.08); }
 .needw p { margin: 0; font-size: 15px; color: var(--ink); }
-.fset-go { font-size: 10px; color: var(--muted); margin-left: 4px; }
-.fset-s { font-size: 11px; color: var(--muted); }
-.fset-v { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 4px; white-space: normal !important; }
-.fset-it { align-content: start; }
-.fset-v .fset-s { font-size: 11px; }
-.fset-v b, .fset-v .fset-s { white-space: nowrap; }
+
 .fsh-note { padding: 0 2px 6px; }
 .fkgrow { align-items: center; flex-wrap: nowrap; margin-top: 8px; }
 /* Plan my week sheet */
@@ -513,7 +495,7 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 .dockrow { display: flex; align-items: center; }
 .dock-btn { pointer-events: auto; flex: none; padding: 0; border-radius: 50%; border: 2.5px solid var(--gold); background: var(--brand); color: var(--gold); display: grid; place-items: center; }
 .dock-btn:active { transform: scale(.95); }
-body.home .fweek, body.wheel-on .tabbar { display: none !important; }
+body.wheel-on .tabbar { display: none !important; }
 /* The wheel: every tab as a bubble on a ring; the one at the top is the choice; Home in the middle */
 .wveil { position: fixed; inset: 0; z-index: 30; background: rgba(10, 18, 36, .6); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); touch-action: none; }
 .twheel { position: absolute; left: 50%; bottom: calc(26px + env(safe-area-inset-bottom, 0px)); width: 300px; height: 300px; margin-left: -150px; border-radius: 50%; touch-action: none; animation: wheelPop .22s cubic-bezier(.3, 1.4, .5, 1); }
@@ -625,7 +607,6 @@ body.lib main .wrap { padding-bottom: calc(var(--tabbar-h) + 96px); }
 .qfg + .qfg { margin-top: 8px; }
 .qft-m { grid-column: 3; grid-row: 1 / 3; align-self: center; display: grid; gap: 0; justify-items: end; font-size: 11px; font-weight: 600; line-height: 1.15; font-variant-numeric: tabular-nums; white-space: nowrap; padding-left: 7px; border-left: 1px solid var(--line); }
 .qft-m b { font-size: 13px; font-weight: 700; }
-.qft.on .qft-m span { color: var(--gold) !important; }
 .qft-a { grid-column: 1; grid-row: 2; align-self: center; justify-self: start; font-size: 11px; font-weight: 600; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
 /* Paint texture on the food tiles (like a painting, short dabs and brush strokes). The texture is a separate
  see-through layer (faint white and dark dabs drawn by an SVG filter) between the tile colour and the text. No blend mode: the first try used
@@ -637,7 +618,7 @@ body.lib main .wrap { padding-bottom: calc(var(--tabbar-h) + 96px); }
 /* Dark mode: light strokes only (dark dabs on a dark tile looked dirty), small, few and faint so they read as a lighter shade of the colour, not white paint */
 :root[data-theme="dark"] { --qpaint: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='160'%3E%3Cfilter id='p' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.06 0.11' numOctaves='3' seed='7' stitchTiles='stitch' result='dab'/%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.06 0.6' numOctaves='2' seed='3' stitchTiles='stitch' result='hair'/%3E%3CfeComposite in='dab' in2='hair' operator='arithmetic' k1='0' k2='0.8' k3='0.3' k4='-0.05' result='mix'/%3E%3CfeComponentTransfer in='mix' result='n'%3E%3CfeFuncR type='linear' slope='1.5' intercept='-0.25'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.4 0 0 0 -0.24'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E"); }
 .qft.pressing { transform: scale(.96); }
-.qft.on { background: var(--brand) !important; border-color: var(--brand); }
+.qft.on { background: var(--gold) !important; border-color: var(--gold); }   /* 0.3s.10: was navy with gold text, which some themes turned gold on gold */
 /* Ver 0.3o.4: amount and kcal share one flex row, so the amount pill shrinks (ends in …) instead of running under the kcal on the iPhone */
 .qft-r { grid-column: 1 / 3; grid-row: 2; display: flex; align-items: center; gap: 6px; min-width: 0; }
 .qft-r .qft-a { flex: none; max-width: none; overflow: visible; }   /* Ver 0.3o.5: the amount is never cut; the kcal gives way instead */
@@ -645,8 +626,8 @@ body.lib main .wrap { padding-bottom: calc(var(--tabbar-h) + 96px); }
 .qft-k small { font-size: inherit; }
 .qft-r.t1 { gap: 4px; } .qft-r.t1 .qft-a { padding: 1px 6px; } .qft-r.t1 .qft-k b { font-size: 13px; }
 .qft-r.t2 .qft-k small { display: none; }
-.qft.on, .qft.on .qft-n, .qft.on .qft-k, .qft.on .qft-k b, .qft.on .qft-a { color: var(--gold) !important; }
-.qft.on .qft-a { background: transparent; border-color: rgba(var(--gold-rgb), .5); }
+.qft.on, .qft.on :is(.qft-n, .qft-k, .qft-k b, .qft-k small, .qft-a, .qft-m, .qft-m b, .qft-m span) { color: var(--gold-ink) !important; }
+.qft.on .qft-a { background: transparent; border-color: currentColor; }
 .qfl-tip { margin: 6px 2px 0; font-size: 11px; color: var(--muted); text-align: center; }
 .sugt { border-style: solid; }   /* same thin border as Quick add (was dashed) */
 .qfgs:not(.all):not(.srching) .qfr.more, .qfgs .qfr.miss { display: none; }
@@ -705,13 +686,8 @@ body.lib main .wrap { padding-bottom: calc(var(--tabbar-h) + 96px); }
 .facalc b { color: var(--ink); }
 /* Week bar on the Food tab: the week calendar shows again just above the tab bar once the top one scrolls away,
  so the week and the Eaten list are on the same screen; within thumb reach */
-.fweek { position: fixed; left: 0; right: 0; bottom: var(--tabbar-h); z-index: 6; background: var(--surface); border-top: 1px solid var(--line); box-shadow: 0 -4px 14px rgba(0,0,0,.12); }
-.fweek .wrap { padding-block: 6px 8px; display: grid; gap: 4px; }
-.fwk-line { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.fwk-mid { flex: 1; min-width: 0; display: flex; justify-content: space-between; gap: 8px; white-space: nowrap; }
-.fwk-arr { flex: none; width: 44px; padding: 4px 0; font-size: 20px; line-height: 1.1; }
-.fwk-line b { color: var(--ink); }
-body.food.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + var(--fwk-h, 76px) + 96px); }
+
+body.food.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + 24px); }   /* 0.3s.17: no week bar at the bottom any more */
 
 /* Rest timer */
 
@@ -977,7 +953,7 @@ html.lockscroll, html.lockscroll body { overflow: hidden; overscroll-behavior: n
 .planpill.off:not(:has(.pp-lab)) { padding: 6px 12px; }
 
 /* Workout Lite: setup screen */
-body.setup .tabbar, body.setup .fweek { display: none !important; }
+body.setup .tabbar { display: none !important; }
 body.setup main .wrap { padding-bottom: 40px; }
 .setup-hero h1 { font-family: var(--font-display); font-size: 30px; margin: 6px 0 4px; letter-spacing: .02em; text-transform: uppercase; }
 .setup-hero p { margin: 0; color: var(--muted); }
@@ -1144,11 +1120,18 @@ a.btn { text-decoration: none; color: inherit; display: inline-block; }
 /* the logo opens the App icon sheet; a picture of your own shows as a circle */
 img.logo { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 img.logo.custom { border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); box-sizing: border-box; }
-.palrow { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }   /* 2 x 2 since the 4th theme */
-.palbtn { display: grid; justify-items: center; gap: 6px; padding: 10px 4px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--ink); font-size: 13px; font-weight: 600; }
-.palbtn.on { border: 2px solid var(--accent); padding: 9px 3px; }
-.palbtn .sw2 { display: flex; } .palbtn .sw2 i { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,.12); }
-.palbtn .sw2 i + i { margin-left: -6px; }
+.paldots { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 6px; justify-items: center; padding: 4px 0; }
+.paldot { width: 48px; height: 48px; padding: 0; border: 0; border-radius: 50%; background: none; position: relative; -webkit-tap-highlight-color: transparent; }
+.paldot i { position: absolute; inset: 2px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(127,127,127,.35); }
+.paldot.on i { box-shadow: 0 0 0 2.5px var(--surface), 0 0 0 4.5px var(--gold); }
+.paldot.on::after { content: ""; position: absolute; left: 18px; top: 12px; width: 9px; height: 17px; border: solid #fff; border-width: 0 3px 3px 0; transform: rotate(45deg); filter: drop-shadow(0 0 1.5px rgba(0,0,0,.6)); }
+.paldot:active i { transform: scale(.93); }
+.paldot-n { margin: 6px 0 0; text-align: center; font-size: 13px; font-weight: 600; color: var(--ink); }
+.pal-h { display: flex; justify-content: space-between; align-items: baseline; } .pal-h b { text-transform: none; letter-spacing: 0; font-weight: 600; color: var(--ink); }
+   /* 2 x 2 since the 4th theme */
+
+ 
+
 .setlab { font-size: 15px; font-weight: 600; margin: 4px 0 0; }
 
 /* Ver 0.3r.59 (user: the top of the App icon page was cut off): the sheet scrolls inside the screen */
@@ -1161,6 +1144,44 @@ label.sheet-it { display: block; cursor: pointer; }
 .switch.dis { opacity: .45; pointer-events: none; }   /* Dark mode greyed out while Follow the phone setting is on */
 .switch.dis input:checked + i { background: var(--muted); }   /* no gold while it cannot be used; gold returns when Follow is off */
 
+/* Ver 0.3s.9: Food tab idea A: round week days, calorie ring beside the bars, one settings line, Add food sheet */
+.fweeks { display: flex; margin-top: 2px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+.fweeks::-webkit-scrollbar { display: none; }
+.fdots { flex: 0 0 100%; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; scroll-snap-align: start; scroll-snap-stop: always; }
+.fdot { display: grid; justify-items: center; gap: 3px; padding: 2px 0; border: 0; background: none; color: var(--muted); font: inherit; font-size: 11px; line-height: 1.1; -webkit-tap-highlight-color: transparent; }
+.fdot b { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 600; background: var(--bg); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); transition: background .15s, color .15s; }
+.fdot.high b { background: rgba(var(--gold-rgb), .22); }
+.fdot.today span { color: var(--ink); font-weight: 700; }
+.fdot.on b { background: var(--gold); color: var(--gold-ink); box-shadow: none; }
+.fdot .dot { width: 5px; height: 5px; border-radius: 50%; } .fdot .dot.ok { background: var(--good); } .fdot .dot.over { background: var(--bad); } .fdot .dot.under { background: var(--muted); opacity: .6; }
+.fsum { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 14px; align-items: center; margin-top: 4px; }
+.fsum .nbars { gap: 10px; min-width: 0; }
+.fsum .nbar { grid-template-columns: 52px minmax(0, 1fr) 46px; gap: 6px; }
+.fring { position: relative; width: 112px; height: 112px; }
+.fring svg { display: block; transform: rotate(-90deg); }
+.fring circle { fill: none; stroke-width: 9; }
+.fr-bg { stroke: rgba(var(--brand-rgb), .08); }
+:root[data-theme="dark"] .fr-bg { stroke: rgba(255,255,255,.08); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .fr-bg { stroke: rgba(255,255,255,.08); } }
+.fr-e, .fr-p { stroke: var(--accent); stroke-linecap: round; } .fr-p { opacity: .38; } .fring circle.z { stroke-linecap: butt; }
+.fring.over .fr-e, .fring.over .fr-p { stroke: var(--bad); opacity: 1; }
+.fr-t { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; line-height: 1.15; }
+.fr-t b { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; } .fring.over .fr-t b { color: var(--bad); }
+.fr-t small { font-size: 11px; color: var(--muted); } .fr-t .fr-of { font-variant-numeric: tabular-nums; }
+.finfo { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0 2px; font-size: 13px; color: var(--muted); }
+.finfo-b { border: 0; background: none; padding: 5px 6px; border-radius: 8px; color: var(--ink); font: inherit; font-weight: 600; }
+.finfo-b.need { color: var(--bad); }
+.finfo-b:active { background: rgba(var(--gold-rgb), .2); }
+/* Ver 0.3s.12: Add food in the bottom strip, right side: bowl in a gold circle with a small label (was a big bar pinned over the page) */
+.dock-add { position: absolute; right: max(12px, env(safe-area-inset-right, 0px)); bottom: 0; pointer-events: auto; display: grid; justify-items: center; gap: 1px; min-width: 56px; padding: 0 2px 1px; border: 0; background: none; color: var(--ink); font: inherit; -webkit-tap-highlight-color: transparent; }
+.dock-add .da-c { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--gold); color: var(--gold-ink); box-shadow: 0 2px 6px rgba(var(--gold-rgb), .35); transition: transform .12s; }
+.dock-add .da-t { font-size: 10px; font-weight: 600; letter-spacing: .01em; line-height: 1.2; }
+.dock-add:active .da-c { transform: scale(.92); }
+.fadd-sheet { max-height: 88vh; grid-template-rows: auto minmax(0, 1fr) auto; }
+.fadd-body { overflow-y: auto; display: grid; gap: 10px; padding: 2px; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.fadd-body .section-h { margin-top: 4px; }
+.fadd-body > .panel { padding: 0 2px; background: none; border: 0; box-shadow: none; }   /* 0.3s.10: lined up with the headings, no inner box */
+.fadd-done { width: 100%; padding: 11px; }
 /* Food tab nutrition bars (bars instead of the Target / Left number lines) */
 .nbars { display: grid; gap: 7px; }
 .nbar { display: grid; grid-template-columns: 62px 1fr 62px; align-items: center; gap: 10px; font-size: 13px; }
@@ -1178,7 +1199,7 @@ label.sheet-it { display: block; cursor: pointer; }
 .nbar.over .ne, .nbar.over .np { background: var(--bad); opacity: 1; }
 .n-kcal { --nc: var(--accent); } .n-c { --nc: var(--m-c); } .n-p { --nc: var(--m-p); } .n-f { --nc: var(--m-f); } .n-fib { --nc: var(--push); }
 .nbar.n-kcal .nt { height: 12px; }
-.nhead { display: flex; justify-content: space-between; margin: 0 0 -2px; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+
 :root[data-theme="dark"] .n-kcal { --nc: var(--ink); }
 
 /* Today: the page of a started exercise (only this exercise shows). Compact: it should fit one phone screen without scrolling. */
@@ -1394,7 +1415,9 @@ body.home main .wrap { padding-top: 4px; }
 .mxd-l { margin-left: 1px; font-size: 15px; font-weight: 600; color: var(--muted); }   /* 0.3p.31: "days" outside the pills again (user) */
 :root[data-style="studio"][data-style] .mxd-b.on { background: var(--accent); color: var(--on-acc, #fff); }
 .mx-card svg { display: block; width: 100%; max-width: 360px; height: auto; margin: 0 auto; }
-.mx-grid { fill: none; stroke: var(--line); stroke-width: 1; }
+.mx-grid { fill: none; stroke: var(--muted); stroke-opacity: .38; stroke-width: 1; }   /* Ver 0.3s.16: was --line, too faint on the phone */
+.mx-grid.out { stroke-opacity: .6; stroke-width: 1.5; }
+.mx-ring { font-family: var(--font-body); font-size: 12px; fill: var(--muted); font-variant-numeric: tabular-nums; }
 .mx-area { fill: rgba(var(--gold-rgb), .28); stroke: var(--gold); stroke-width: 2; stroke-linejoin: round; transform-origin: 160px 132px; animation: mxIn .45s cubic-bezier(.2, .7, .3, 1); }
 .mx-dot { fill: var(--gold); stroke: var(--surface); stroke-width: 2; }
 .mx-lab { font-family: var(--font-body); font-weight: 600; fill: var(--ink); }
@@ -1643,7 +1666,6 @@ body { min-height: calc(100vh + env(safe-area-inset-top, 0px) + 1px); }
 :root[data-style="studio"] :is(.run-btn, .qb.fit, .qchip.on, .qfchip.on, .wp-grp.on, .planpill .pp-lab, .toast .undo, .sw-btn, .seticon, .rt-opt, .sp-band.on, .mx-seg .btn.on, .nm-u .btn.on, .ob-day.on, .lm-add, .run-btn.fin, .savebox .okbadge, .lm-add:active, .lm-side) { color: var(--on-acc); }
 :root[data-style="studio"] .rt .rt-opt.alt.alt { color: var(--ink); }   /* raised above the accent-text list (which holds .mx-seg .btn.on) */
 :root[data-style="studio"] .lm-side { border-color: transparent; }
-:root[data-style="studio"] .qft.on :is(.qft-n, .qft-k, .qft-k b, .qft-m span) { color: var(--on-acc); }
 :root[data-style="studio"] .lm-add { border-color: transparent; }
 :root[data-style="studio"] .lm-add::before, :root[data-style="studio"] .ctlcard.glow::before, :root[data-style="studio"] .ctlcard.glow::after,
 :root[data-style="studio"] .btn.glowbtn::before, :root[data-style="studio"] .btn.glowbtn::after { display: none; }
@@ -1674,8 +1696,7 @@ body { min-height: calc(100vh + env(safe-area-inset-top, 0px) + 1px); }
 :root[data-style="studio"] #view .card[data-id].focus > .pic { border-radius: 16px; box-shadow: none; }
 :root[data-style="studio"] #view .card[data-id].focus .set.sprow { border-color: transparent; background: var(--st-fill); box-shadow: none; }
 :root[data-style="studio"] .run-btn { border-radius: 999px; }
-:root[data-style="studio"] .palbtn { border-color: transparent; background: var(--st-fill); border-radius: 14px; }
-:root[data-style="studio"] .palbtn.on { border: 2px solid var(--accent); }
+
 :root[data-style="studio"] img.logo.custom { border-color: var(--line); }
 /* the wheel: plain bubbles with clear icons (the gold icons on the pale bubbles were hard to read in dark mode) */
 :root[data-style="studio"][data-style] .twheel .wb:not(.top) { background: #ffffff; border-color: rgba(0, 0, 0, .06); color: var(--accent); box-shadow: 0 2px 10px rgba(0, 0, 0, .18); }
@@ -2106,7 +2127,11 @@ body.wb-dragging { -webkit-user-select: none; user-select: none; }
 .a2-steps small svg { vertical-align: -2px; }
 .a2-ok { font-size: 17px; }
 .a2-acts { display: flex; gap: 8px; } .a2-acts .btn { flex: 1; padding: 11px 12px; }
-.a2-go { width: 100%; padding: 12px; }
+.a2-go { width: 100%; padding: 13px; font-size: 17px; }
+.share-msg { margin: 6px 2px 2px; font-size: 13px; line-height: 1.45; color: var(--muted); overflow-wrap: anywhere; }   /* Ver 0.3s.19 */
+.a2-or { margin: 2px 2px -4px; font-size: 13px; color: var(--muted); }   /* Ver 0.3s.18 */
+.a2-link { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--brand) 7%, var(--surface)); }
+.a2-link span { flex: 1; min-width: 0; font-size: 13px; color: var(--ink); overflow-wrap: anywhere; }
 /* Ver 0.3r.66 Delete all my data */
 .subcard.delc .btn.danger { margin-top: 2px; }
 .sheet.delsh { display: grid; gap: 10px; text-align: center; padding-bottom: max(18px, env(safe-area-inset-bottom, 0px)); }
@@ -2204,7 +2229,7 @@ body:not(.home) #tmBanner { top: env(safe-area-inset-top, 0px); }
 
 /* Ver 0.3r.87 (user): bigger text on the Muscles worked spider chart (the svg is drawn small on Home, so 17 / 14 here is
    about 12.5 / 10.5 px on screen; was about 9.4 / 8.6) */
-.mx-lab { font-size: 17px; } .mx-num { font-size: 15px; }
+.mx-lab { font-size: 19px; } .mx-num { font-size: 15px; }   /* Ver 0.3s.16: names a little bigger (were 17) */
 /* Ver 0.3r.88 (user): the shortcuts tile is two icon buttons side by side, one word under each icon */
 body.home .hm-tiles .tile.hm-sc, .hm-tiles .tile.hm-sc { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-content: stretch; padding: 8px; }
 .hm-sc-b { display: grid; justify-items: center; align-content: center; gap: 6px; width: 100%; margin: 0; padding: 8px 4px; border-radius: 14px; background: color-mix(in srgb, var(--soft-c, var(--gold)) 7%, transparent); }
@@ -2213,7 +2238,7 @@ body.home .hm-tiles .tile.hm-sc, .hm-tiles .tile.hm-sc { display: grid; grid-tem
 /* ===== Ver 0.3s.1 look: one type scale, rounded numbers, numbers that do not jiggle ===== */
 :root { --font-num: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif; }
 body { font-variant-numeric: tabular-nums; }
-:is(.hm-ring b, .tile .val, .me-tile b, .me-d b, .hm-sc-l + b, .cd-main b, .sw b, .rt-t, .sp-sum, .sp-it, .pu-val, .mx-num, .fnum input, .wstrip .wd b, .set .n, .field input, .drl b, .dr-b b) { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+:is(.hm-ring b, .tile .val, .me-tile b, .me-d b, .hm-sc-l + b, .cd-main b, .sw b, .rt-t, .sp-sum, .sp-it, .pu-val, .mx-num, .fnum input, .set .n, .field input, .drl b, .dr-b b) { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
 /* ===== Ver 0.3s.2 look: large page titles and a slim bar on scroll; section headings indented like iPhone Settings ===== */
 .lt { margin: 2px 2px -4px; font-size: 34px; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; color: var(--ink); }
 :root[data-style="studio"] .lt { color: var(--brand); } :root[data-theme="dark"][data-style="studio"] .lt { color: var(--gold); }
@@ -2303,11 +2328,11 @@ body.home .hm-rings > .hm-ring:not(:first-child) span { align-self: start; }
 <div class="tabbar" id="dock"><div class="wrap dockrow">
   <button class="dock-go" id="dockGo" data-act="wheel-open" aria-label="Go to: open the tab wheel" title="Go to"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><circle cx="12.0" cy="4.0" r="1.9" fill="currentColor"/><circle cx="18.9" cy="8.0" r="1.9" fill="currentColor"/><circle cx="18.9" cy="16.0" r="1.9" fill="currentColor"/><circle cx="12.0" cy="20.0" r="1.9" fill="currentColor"/><circle cx="5.1" cy="16.0" r="1.9" fill="currentColor"/><circle cx="5.1" cy="8.0" r="1.9" fill="currentColor"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
   <button class="dock-btn" id="dockBtn" data-act="dock-home" aria-label="Home"></button>
+  <button class="dock-add" id="dockAdd" data-act="fadd-open" hidden><span class="da-c" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19"><path d="M3 11h18a9 9 0 0 1-18 0Z M8 7c0-2 2-2 2-4 M12 7c0-2 2-2 2-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="da-t">Add food</span></button>
   <button class="dock-back" id="dockBack" data-act="dock-back" aria-label="Back to all of today’s exercises (keeps what you typed)" title="Back to all exercises" hidden><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 14 4 9l5-5M4 9h10.5a5.5 5.5 0 0 1 0 11H11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 </div></div>
 <div class="wveil" id="wveil" hidden><div class="wname"><b id="wName"></b><small>Drag the wheel, or tap a bubble</small></div><div class="twheel" id="tabWheel"></div></div>
 
-<div class="fweek" id="fweek" hidden><div class="wrap"></div></div>
 <div class="lightbox" id="lightbox" hidden></div>
 <div class="toast" id="toast" hidden></div>
 <div id="iconSheet"></div>
@@ -3304,7 +3329,7 @@ function runner() {
 }
 window.google = window.google || {};
 window.google.script = { get run() { return runner(); } };
-window.__wweb = { signIn, signOut, token, minutesLeft, sheets: sheetsCall, starterFoods: STARTER_FOODS };   // starterFoods: for the My foods starter button (Web 0.2j.1)
+window.__wweb = { signIn, signOut, token, minutesLeft, sheets: sheetsCall, starterFoods: STARTER_FOODS, starterEx: STARTER_EXERCISES };   // starterEx: new-user walkthrough (Web 0.3s.19)   // starterFoods: for the My foods starter button (Web 0.2j.1)
 
 // ---------- start ----------
 const got = takeTokenFromUrl();
@@ -3420,7 +3445,8 @@ function rawGet(k) { if (k in MEM) return MEM[k] == null ? null : JSON.stringify
    only a newer copy may replace it. */
 const LOOK_KEYS = ['wlite.theme.v1', 'wlite.style.v1', 'wlite.pal.v1', 'wlite.iconpre.v1'];
 let lookRestoring = false, lookSaveT = 0;
-function lookStamp() { const t = Date.now(); try { localStorage.setItem('wlite.lookat.v1', JSON.stringify(t)); } catch (e) {} SESS['wlite.lookat.v1'] = JSON.stringify(t);
+let NU = null;   /* Ver 0.3s.14: the new-user walkthrough in Test mode is running (nothing may be saved) */
+function lookStamp() { if (NU) return; const t = Date.now(); try { localStorage.setItem('wlite.lookat.v1', JSON.stringify(t)); } catch (e) {} SESS['wlite.lookat.v1'] = JSON.stringify(t);
   if (typeof appSync !== 'undefined' && appSync.on && !appSync.quiet) saveFoodSet(); clearTimeout(lookSaveT); lookSaveT = setTimeout(() => lookDbSave(), 300); }
 function lookNow() { return { pal: store.get('wlite.pal.v1'), style: store.get('wlite.style.v1'), theme: store.get('wlite.theme.v1'), icon: store.get('wlite.iconpre.v1'), at: store.get('wlite.lookat.v1') || 0 }; }
 function lookPut(lk) {   /* put a stored look back without stamping it as a new choice */
@@ -3428,11 +3454,13 @@ function lookPut(lk) {   /* put a stored look back without stamping it as a new 
   try { [['wlite.pal.v1', lk.pal], ['wlite.style.v1', lk.style], ['wlite.theme.v1', lk.theme], ['wlite.iconpre.v1', lk.icon]].forEach(([k, v]) => { if (v == null || v === 'auto') { if (k === 'wlite.theme.v1') store.del(k); } else store.set(k, v); });
     if (lk.at) store.set('wlite.lookat.v1', lk.at); } finally { lookRestoring = false; }
 }
-async function lookDbSave() { try { if (!(window.claude && window.claude.use)) return; const db = await window.claude.use('db'), u = await window.claude.use('user'), id = u && u.id ? await u.id() : null; if (db && id) await db.doc('data/users/' + id + '/look').set(lookNow()); } catch (e) {} }
+async function lookDbSave() { if (NU) return; try { if (!(window.claude && window.claude.use)) return; const db = await window.claude.use('db'), u = await window.claude.use('user'), id = u && u.id ? await u.id() : null; if (db && id) await db.doc('data/users/' + id + '/look').set(lookNow()); } catch (e) {} }
 const store = {
   get(k) { if (k in MEM) return MEM[k]; try { const v = lsGet(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } },
-  set(k, v) { const t = JSON.stringify(v); if (LOOK_KEYS.includes(k) && !lookRestoring && rawGet(k) !== t) lookStamp(); SESS[k] = t; try { localStorage.setItem(k, t); delete MEM[k]; } catch (e) { MEM[k] = v; } if (SNAP_KEYS.includes(k)) hsnapLater(); if (appSync.on && !appSync.quiet && SYNC_KEYS.includes(k)) saveFoodSet(); },
-  del(k) { if (LOOK_KEYS.includes(k) && !lookRestoring && rawGet(k) != null) lookStamp(); delete MEM[k]; delete SESS[k]; try { localStorage.removeItem(k); } catch (e) {} if (SYNC_KEYS.includes(k) && !appSync.quiet) fsDel.add(k); if (appSync.on && !appSync.quiet && SYNC_KEYS.includes(k)) saveFoodSet(); }
+  set(k, v) { if (NU) { MEM[k] = v; return; }   /* 0.3s.14: walkthrough: kept in memory only */
+    const t = JSON.stringify(v); if (LOOK_KEYS.includes(k) && !lookRestoring && rawGet(k) !== t) lookStamp(); SESS[k] = t; try { localStorage.setItem(k, t); delete MEM[k]; } catch (e) { MEM[k] = v; } if (SNAP_KEYS.includes(k)) hsnapLater(); if (appSync.on && !appSync.quiet && SYNC_KEYS.includes(k)) saveFoodSet(); },
+  del(k) { if (NU) { MEM[k] = null; return; }
+    if (LOOK_KEYS.includes(k) && !lookRestoring && rawGet(k) != null) lookStamp(); delete MEM[k]; delete SESS[k]; try { localStorage.removeItem(k); } catch (e) {} if (SYNC_KEYS.includes(k) && !appSync.quiet) fsDel.add(k); if (appSync.on && !appSync.quiet && SYNC_KEYS.includes(k)) saveFoodSet(); }
 };
 /* Ver 0.3q.17: a saved copy of what Home needs, kept in the app's own store (db, private to each person) so a phone whose
    storage was cleared still starts at once. Written a few seconds after the phone copy changes, only when it differs. */
@@ -3447,7 +3475,7 @@ async function hsnapDoc() {
   return (hsnapRef = db.doc('data/users/' + id + '/home'));
 }
 function hsnapLater() { clearTimeout(hsnapT); hsnapT = setTimeout(hsnapSave, 5000); }
-async function hsnapSave() {
+async function hsnapSave() { if (NU) return;
   try {
     const c = store.get('wlite.cache.v1'); if (!c || !c.ex) return;
     const cut = (() => { const d = new Date(); d.setDate(d.getDate() - 35); return isoOf(d); })();
@@ -3775,7 +3803,7 @@ function planRows() {
   return rows;
 }
 // Google re-reads the Plan tab, keeps other log tabs' rows, writes this person's rows and reads them back (Lite 0.1f)
-async function writePlansRemote() { await gs('api_plansSave', planRows()); }
+async function writePlansRemote() { if (NU) return; await gs('api_plansSave', planRows()); }
 // Each change is kept on the phone first, then written; writes run one after another.
 let planQ = Promise.resolve();
 function savePlans(what) {
@@ -3921,7 +3949,9 @@ function archiveNamesOn(iso) {   /* exercise names in the Sheet's block for that
 function draftHasWork(d) { return !!(d && d.items.some(it => filledSets(it).length && !isWu(it))); }
 
 // ---------- Google (Apps Script) ----------
+const GS_WRITE = /^api_(addExercise|create|deleteAll|draftSet|foodCreate|foodForget|foodUse|forget|iconDel|iconSet|plansSave|save|signOut|tidyNames|useExisting)$/;
 function gs(fn) {
+  if (NU) { const a = arguments; if (GS_WRITE.test(fn)) return Promise.resolve({}); return NU.wait.then(() => gs.apply(null, a)); }   /* Web 0.3s.19: new-user walkthrough */
   const args = Array.prototype.slice.call(arguments, 1);
   return new Promise((ok, no) => {
     if (!(window.google && google.script && google.script.run)) { no({ code: 'nogs', message: 'This page only works from its Workout Lite link.' }); return; }
@@ -3962,6 +3992,7 @@ async function readSheet() {
 }
 // The food code of the full app calls the Claude connector; in the web version these go to the Google Sheets API (webapi.js).
 async function call(tool, input) {
+  if (NU) { if (/^(update|append|batch_clear|create|trash)/.test(tool)) return {}; await NU.wait; }   /* walkthrough: no writes; reads run after it ends */
   if (!(window.__wweb && window.__wweb.sheets)) throw { code: 'nogs', message: 'The Food tab works in the web version of Workout Lite.' };
   return window.__wweb.sheets(tool, input);
 }
@@ -4166,7 +4197,7 @@ async function readFoodSet() {
    (that also fills the Sheet the first time and keeps what was changed during the start). */
 function appSyncReady(read) { if (appSync.on) return; appSync.on = true; if (read) saveFoodSet(); }
 function saveFoodSet() { clearTimeout(fsTimer); fsTimer = setTimeout(() => { writeFoodSet().catch(e => toast('Food settings were not saved to your Sheet: ' + codeText(e).text)); }, 800); }
-async function writeFoodSet() {
+async function writeFoodSet() { if (NU) return;
   if (!S.mcp || !PRIV_ID || !appSync.on) return;   /* never before the Sheet copy was read: it could wipe the saved settings */
   const w = weekPlan(), o = store.get(K_CDAY) || {}, m = store.get(K_MKG), lo = isoOf(new Date(Date.now() - 60 * 864e5));
   Object.keys(o).forEach(k => { if (k < lo) delete o[k]; }); store.set(K_CDAY, o);   // one-day changes older than 60 days are dropped
@@ -4354,7 +4385,7 @@ function viewQuick() {
   S.qf.forEach((q, i) => { const g = qfGroup(q); (byG[g] = byG[g] || []).push(i); });
   const groups = QF_GROUPS.filter(([g]) => byG[g]);
   let h = S.qf.length > 8 ? searchBox('qfQ', S.qfQ, 'Search ' + S.qf.length + ' foods') : '';
-  h += '<div class="qfchips">' + [['', 'All', '']].concat(groups).map(([g, lab, col]) => '<button class="qfchip' + (g === sel ? ' on' : '') + '" data-act="qf-grp" data-g="' + g + '">' +
+  h += '<div class="qfchips">' + groups.map(([g, lab, col]) => '<button class="qfchip' + (g === sel ? ' on' : '') + '" data-act="qf-grp" data-g="' + g + '" aria-pressed="' + (g === sel) + '">' +
     (col ? '<i style="background:' + col + '"></i>' : '') + lab + (g ? ' <small>' + byG[g].length + '</small>' : '') + '</button>').join('') + '</div>';
   let hidden = 0;
   h += '<div class="qfgs' + (S.qfAll || sel ? ' all' : '') + '" id="qfList">' + groups.filter(([g]) => !sel || g === sel).map(([g, lab, col]) => {
@@ -4545,7 +4576,7 @@ async function addFoodManual() {
   }
   render();
 }
-async function saveFood() {
+async function saveFood() { if (NU) { toast('Test: nothing is saved in the new-user walkthrough.'); return; }
   const E = S.est; if (!E || S.foodSaving || !S.mcp) return;
   const items = E.items.filter(x => x.name.trim() && (x.kcal || x.c || x.p || x.f));
   if (!items.length) { toast('Nothing to add: each item needs a name and some numbers.'); return; }
@@ -4715,7 +4746,7 @@ function mergeIntoArchive(rows, entries, iso) {
   for (let i = 0; i < rows.length; i++) { const k = isHeader(rows[i]) ? keyOf(rows[i]) : ''; if (k !== '' && k < key) { at = i; break; } }
   return rows.slice(0, at).concat(block, rows.slice(at));
 }
-async function saveSession() {
+async function saveSession() { if (NU) { toast('Test: nothing is saved in the new-user walkthrough.'); return; }
   if (S.saving || !S.mcp) return;
   const d = S.draft;
   const entries = buildEntries(d);
@@ -4754,6 +4785,7 @@ async function saveSession() {
 
 // ---------- rendering ----------
 function render() { const rf = rtSpot(); try { render0(); } finally { renderTimer(); rtFly(rf); } }   /* Ver 0.3r.47: the rest timer flies between the dial and the small timer */
+const DOCK_ADD = '<button class="dock-add" id="dockAdd" data-act="fadd-open" hidden><span class="da-c" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19"><path d="M3 11h18a9 9 0 0 1-18 0Z M8 7c0-2 2-2 2-4 M12 7c0-2 2-2 2-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="da-t">Add food</span></button>';
 function render0() {
   if (S.tab === 'test' && !S.testMode) S.tab = 'settings';
   if (S.tab !== 'test' || !S.testMode) { S.tmLook = false; S.tmWb = false; }
@@ -4785,6 +4817,8 @@ function render0() {
     bk.classList.toggle('from', !!to);
     bk.innerHTML = to ? navIcon(to, 22) + '<svg class="db-arr" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M9 14 4 9l5-5M4 9h10.5a5.5 5.5 0 0 1 0 11H11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>' : bk.dataset.orig;
     const lb = to ? 'Back to ' + (to === 'home' ? 'Home' : navName(to)) : 'Back to all of today’s exercises (keeps what you typed)'; bk.setAttribute('aria-label', lb); bk.title = to ? lb : 'Back to all exercises'; } }
+  { let ad = $('#dockAdd'); const db0 = $('#dockBtn'); if (!ad && db0) { db0.insertAdjacentHTML('afterend', DOCK_ADD); ad = $('#dockAdd'); }   /* a quick-start copy of the strip from before 0.3s.12 has no button */
+    if (ad) ad.hidden = !(S.tab === 'food' && !foodFuture() && PRIV_ID); }   /* web: not before the food Sheet is set up */   /* Ver 0.3s.12: Add food lives in the bottom strip on the Food tab */
   { const db = $('#dockBtn'); if (db) { db.innerHTML = navIcon('home', 26); db.setAttribute('aria-label', 'Home (now on ' + navName(S.tab) + ')'); } }
   if (S.tab !== 'today' && S.sp) renderSetPick();   /* Ver 0.3b: the set picker closes when you leave Today */
   const v = $('#view');
@@ -4794,18 +4828,18 @@ function render0() {
   document.body.classList.toggle('setup', S.tab === 'setup');
   if (S.tab === 'setup') { v.classList.remove('today-view'); v.innerHTML = viewSetup(); return; }   /* Workout Lite: first open, no Sheet yet */
   if (S.tab !== 'home') S.hmAnim = false;
-  if (S.tab === 'home') { v.innerHTML = viewHome(); hmFitMus(); hmFitScreen(); if (!S.hmAnim) hmStart(); setTimeout(obAuto, 400); setTimeout(a2hsAuto, 1600); snapSoon(); }
+  if (S.tab === 'home') { v.innerHTML = viewHome(); hmFitMus(); mxFit(); hmFitScreen(); if (!S.hmAnim) hmStart(); setTimeout(obAuto, 400); setTimeout(a2hsAuto, 1600); snapSoon(); }
   else if (S.tab === 'today') { v.innerHTML = viewToday() + wuSheet(); renderTimer(); renderSetPick(); tcFit(); setPop(); }
   else if (S.tab === 'progress') v.innerHTML = viewProgress();
   else if (S.tab === 'food') { v.innerHTML = viewFood() + addFoodSheet() + qfSheet() + qfTableSheet(); qfFilter(); qfFitNames(); const fi = S.faFocus && document.getElementById(S.faFocus); if (fi) { fi.focus(); S.faFocus = null; } }
+
   else if (S.tab === 'test') v.innerHTML = viewTest() + wuSheet();   /* Ver 0.3o.25 */
   else if (S.tab === 'me') { const sb = $('#wpBody'), st = sb ? sb.scrollTop : 0; v.innerHTML = viewMe() + wuSheet(); const nb = $('#wpBody'); if (nb) nb.scrollTop = st; }   /* Ver 0.3p.15 */
   else if (S.tab === 'settings') { const sb = $('#wpBody'), st = sb ? sb.scrollTop : 0; v.innerHTML = viewSettings() + wuSheet(); if (!S.wpEdit) foldSettings(v); const nb = $('#wpBody'); if (nb) nb.scrollTop = st; }
   else { const sb = $('#nxBody'), st = sb ? sb.scrollTop : 0; v.innerHTML = viewLibrary() + addExSheet(); const nb = $('#nxBody'); if (nb) nb.scrollTop = st; }
   ltTitle(v);   /* Ver 0.3s.2 */
-  foodWeekBar();
   document.documentElement.classList.toggle('lockscroll', S.tab === 'library' && !!S.libSel && !!document.querySelector('.lib-sheet'));   /* Ver 0.3p.40 */
-  if (S.tab === 'food') { wsInit(); foodBarsAnim(); }
+  if (S.tab === 'food') { fdInit(); foodBarsAnim(); }
   startGlows();
   if (S.tab === 'progress' || S.tab === 'body') { drInit(); fitPicks(); chartAnim(); if (S.azQ) azFilter(); }
 }
@@ -5843,6 +5877,9 @@ function foodBarsAnim() {
       try { el.animate([{ width: from[j] }, { width: to[j] }], { duration: 1500, delay: ri * 70, easing: 'cubic-bezier(.22, .61, .12, 1)', fill: 'backwards' }); } catch (e) {}
       start++; });
   });
+  { const rg = document.querySelector('#view .fring'); if (rg) {   /* Ver 0.3s.9: the calorie ring fills like the bars */
+    const cs = [...rg.querySelectorAll('.fr-p, .fr-e')], to = cs.map(c => c.getAttribute('stroke-dasharray')), from = fbPrev.ring || to.map(v => '0 ' + v.split(' ')[1]); next.ring = to;
+    if (!reduce && from.join() !== to.join()) cs.forEach((c, j) => { try { c.animate([{ strokeDasharray: from[j] }, { strokeDasharray: to[j] }], { duration: 1500, easing: 'cubic-bezier(.22, .61, .12, 1)', fill: 'backwards' }); } catch (e) {} }); } }
   fbTab = S.tab; fbPrev = next;
 }
 function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw || 1))); const n = raw / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p; }
@@ -5934,7 +5971,7 @@ function manualAdjSheet() {
     '<div class="row-acts"><button class="btn primary" data-act="madj-save"' + (!any || S.foodSaving || !S.mcp ? ' disabled' : '') + '>' + (S.foodSaving ? 'Saving…' : 'Add to ' + (S.foodDay === todayIso() ? 'today' : usOf(S.foodDay))) + '</button><button class="btn" data-act="madj-cancel">Cancel</button></div>' +
     (!S.mcp ? '<p class="hint">Saving needs the Google Sheets connection.</p>' : '') + '</div></div>';
 }
-async function saveManualAdj() {
+async function saveManualAdj() { if (NU) { toast('Test: nothing is saved in the new-user walkthrough.'); return; }
   const m = S.manualAdj; if (!m || S.foodSaving || !S.mcp) return;
   const now = new Date(), time = "'" + pad2(now.getHours()) + ':' + pad2(now.getMinutes());
   const rows = ADJ.filter(([k]) => +m[k]).map(([k, l, , kc]) => { const v = Math.round(+m[k] * 10) / 10;
@@ -5949,7 +5986,7 @@ async function saveManualAdj() {
   } catch (err) { S.problem = { text: 'The adjustment may or may not have been saved; check the Eaten list before adding it again. ' + codeText(err).text, retry: false }; }
   S.foodSaving = false; render();
 }
-function viewPlan(T, got, mid) {
+function viewPlan(T, got, mid, info) {
   const pend = (S.est && S.est.items) ? S.est.items.reduce((a, x) => ({ kcal: a.kcal + (+x.kcal || 0), c: a.c + (+x.c || 0), p: a.p + (+x.p || 0), f: a.f + (+x.f || 0), fib: a.fib + (+x.fib || 0) }), { kcal: 0, c: 0, p: 0, f: 0, fib: 0 }) : { kcal: 0, c: 0, p: 0, f: 0, fib: 0 };
   const fibLeft = (T.fib || 0) - (got.fib || 0) - pend.fib;
   const room = { kcal: T.kcal - got.kcal - pend.kcal, c: T.c - got.c - pend.c, p: T.p - got.p - pend.p, f: T.f - got.f - pend.f }; S.planRoom = room;
@@ -5961,10 +5998,16 @@ function viewPlan(T, got, mid) {
     return '<div class="nbar n-' + k + (over ? ' over' : '') + (met ? ' met' : '') + '" title="' + label + ': ' + Math.round(have + add) + ' of ' + Math.round(tgt) + (unit ? ' ' + unit : '') + '">' +
       '<span class="nl">' + label + '</span><span class="nt"><i class="ne" style="width:' + (a * 100).toFixed(1) + '%"></i><i class="np" style="width:' + (b * 100).toFixed(1) + '%"></i></span><span class="nr">' + right + '</span></div>';
   };
-  let h = '<div class="nbars" aria-label="What is left of today’s targets"><p class="nhead"><span>Target ' + Math.round(T.kcal) + ' kcal</span><span>Left</span></p>' +
-    bar('kcal', 'Calories', T.kcal, got.kcal, pend.kcal, 'kcal') + bar('c', 'Carbs', T.c, got.c, pend.c, 'g') + bar('p', 'Protein', T.p, got.p, pend.p, 'g') +
+  /* Ver 0.3s.9 (Food idea A): calories as a ring (eaten solid, Adding lighter, red when over), what is left in the middle */
+  const C = 2 * Math.PI * 42, tk = Math.max(T.kcal || 0, 1), ra = Math.min(got.kcal / tk, 1), rb = Math.min((got.kcal + pend.kcal) / tk, 1), kl = T.kcal - got.kcal - pend.kcal, ko = kl < -0.5;
+  const arc = (cls, f) => '<circle class="' + cls + (f <= 0 ? ' z' : '') + '" cx="50" cy="50" r="42" stroke-dasharray="' + (f * C).toFixed(1) + ' ' + C.toFixed(1) + '"/>';
+  const ring = '<div class="fring' + (ko ? ' over' : '') + '" role="img" aria-label="Calories: ' + Math.round(got.kcal + pend.kcal) + ' of ' + Math.round(T.kcal) + ' kcal, ' + (ko ? Math.round(-kl) + ' over' : Math.round(kl) + ' left') + '">' +
+    '<svg viewBox="0 0 100 100" width="112" height="112" aria-hidden="true"><circle class="fr-bg" cx="50" cy="50" r="42"/>' + arc('fr-p', rb) + arc('fr-e', ra) + '</svg>' +
+    '<span class="fr-t" aria-hidden="true"><b>' + (ko ? '+' + Math.round(-kl) : Math.round(kl)) + '</b><small>' + (ko ? 'kcal over' : 'kcal left') + '</small><small class="fr-of">of ' + Math.round(T.kcal) + '</small></span></div>';
+  let h = '<div class="fsum">' + ring + '<div class="nbars" aria-label="What is left of today’s targets">' +
+    bar('c', 'Carbs', T.c, got.c, pend.c, 'g') + bar('p', 'Protein', T.p, got.p, pend.p, 'g') +
     bar('f', 'Fat', T.f, got.f, pend.f, 'g') + bar('fib', 'Fiber', T.fib || 0, got.fib || 0, pend.fib, 'g') +
-    '</div>' + (mid || '');
+    '</div></div>' + (info || '') + (mid || '');
   if (room.kcal < 50 && room.p < 5) return h + '<p class="hint">You have reached the day’s targets.</p>';
   if (!S.qf.length) return h + '<p class="hint">Add foods to My foods to get suggestions.</p>';
   if (foodFuture()) return h;   /* Ver 0.3r.53: nothing to add on a future day */
@@ -5977,75 +6020,44 @@ function viewPlan(T, got, mid) {
   return h;
 }
 // Mon..Sun of the shown day's week: weekday letter over H / M / L; tap a day to open it.
-function weekStrip(plan, iso) {
-  const d0 = new Date(iso + 'T12:00:00'); const mon = new Date(d0); mon.setDate(d0.getDate() - ((d0.getDay() + 6) % 7));
-  const L = { high: 'H', mid: 'M', low: 'L' }; const lw0 = foodWeight(), lwKg = lw0 && lw0.kg;
-  // the strip scrolls sideways by hand (8 weeks back and ahead of the selected week), 7 days in view,
-  // snapping softly to a day; tap a day to pick it. wsInit places it on the selected week after each render.
-  const WS_WK = 8; mon.setDate(mon.getDate() - WS_WK * 7);
-  let h = '<div class="wstrip wscroll">';
-  for (let k = 0; k < (2 * WS_WK + 1) * 7; k++) { const d = new Date(mon); d.setDate(mon.getDate() + k); const di = isoOf(d), wd = d.getDay(), t = dayKind(di);
-    const eaten = S.food.filter(x => x.iso === di).reduce((a, x) => a + x.kcal, 0); let dot = '', dl = '';
-    if (eaten > 0 && lwKg) { const tk = targetsFor(t, lwKg).kcal, r = eaten / tk; dot = r > 1.1 ? 'over' : r >= 0.9 ? 'ok' : 'under'; dl = ', ' + Math.round(eaten) + ' of ' + Math.round(tk) + ' kcal'; }
-    h += '<button class="wd ' + t + (di === iso ? ' on' : '') + (di === todayIso() ? ' today' : '') + '" data-act="fd-go" data-iso="' + di + '" aria-label="' + WEEKDAYS[wd] + ', ' + DAYTYPE[t].name + dl + '"><span>' + 'SMTWTFS'[wd] + '<small>' + d.getDate() + '</small></span><b>' + L[t] + '</b><i class="dot ' + dot + '"></i></button>'; }
-  return h + '</div>';
-}
 // Back to today: tap the date at the top (fd-today); today goes in the middle of the strip.
 function wsMon(iso) { const d = new Date(iso + 'T12:00:00'); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return isoOf(d); }
-// The position is remembered as the first day in view (S.wsFirst), because the strip's range moves with the selected week.
-function wsFirstOf(el) { const step = el.firstElementChild.offsetWidth + 4; return el.children[Math.max(0, Math.min(el.children.length - 1, Math.round(el.scrollLeft / step)))].dataset.iso; }
-function wsPlace(el) {
-  if (!el || !el.clientWidth) return; const first = S.wsFirst, inView = first && S.foodDay >= first && tlDays(first, S.foodDay) <= 6;
-  const tgt = el.querySelector('.wd[data-iso="' + (inView ? first : wsMon(S.foodDay)) + '"]'); if (!tgt) return;
-  el.style.scrollSnapType = 'none'; el.scrollLeft = tgt.offsetLeft - el.firstElementChild.offsetLeft; el.style.scrollSnapType = '';
+/* Ver 0.3s.9 (Food idea A): the shown day's week as 7 round day buttons (weekday letter over H / M / L, calorie dot under).
+   Ver 0.3s.11 (user: swiping felt like one day at a time): the row is three weeks side by side that slide with the finger and
+   snap to a whole week; when it settles on the week before or after, the page moves to that week (same weekday) and re-centres. */
+function weekDots(iso) {
+  const lw = foodWeight(), kg = lw && lw.kg, L = { high: 'H', mid: 'M', low: 'L' }, eat = {}, td = todayIso(), WORD = { ok: 'on target', over: 'over', under: 'under' };
+  const mon = wsMon(iso), first = tlAdd(mon, -7), last = tlAdd(mon, 13);
+  S.food.forEach(x => { if (x.iso >= first && x.iso <= last) eat[x.iso] = (eat[x.iso] || 0) + x.kcal; });
+  const day = di => { const t = dayKind(di), wd = new Date(di + 'T12:00:00').getDay(), e = eat[di] || 0; let dot = '', dl = '';
+    if (e > 0 && kg) { const tk = targetsFor(t, kg).kcal, r = e / tk; dot = r > 1.1 ? 'over' : r >= 0.9 ? 'ok' : 'under'; dl = ', ' + Math.round(e) + ' of ' + Math.round(tk) + ' kcal, ' + WORD[dot]; }
+    return '<button class="fdot ' + t + (di === iso ? ' on' : '') + (di === td ? ' today' : '') + '" data-act="fd-go" data-iso="' + di + '" aria-label="' + WEEKDAYS[wd] + ' ' + esc(usOf(di)) + ', ' + DAYTYPE[t].name + dl + '"' + (di === iso ? ' aria-current="date"' : '') + '><span>' + 'SMTWTFS'[wd] + '</span><b>' + L[t] + '</b><i class="dot ' + dot + '"></i></button>'; };
+  const week = (m, cur) => { let h = '<div class="fdots"' + (cur ? ' role="group" aria-label="Week of ' + esc(usOf(m)) + '. Swipe for another week."' : ' aria-hidden="true"') + '>'; for (let k = 0; k < 7; k++) h += day(tlAdd(m, k)); return h + '</div>'; };
+  return '<div class="fweeks">' + week(tlAdd(mon, -7)) + week(mon, true) + week(tlAdd(mon, 7)) + '</div>';
 }
-// Back to today with a smooth slide: the strips glide to today and the outline moves to it first,
-// then the page updates for today without moving the strip again. Falls back to a plain jump when today is outside the strip's range.
-function wsGoToday() {
-  const t = todayIso(), first = tlAdd(t, -3); let moved = 0;
-  document.querySelectorAll('.wscroll').forEach(el => {
-    const d = el.querySelector('.wd[data-iso="' + t + '"]'), f = el.querySelector('.wd[data-iso="' + first + '"]');
-    el.querySelectorAll('.wd.on').forEach(x => x.classList.remove('on')); if (d) d.classList.add('on');
-    if (f && el.clientWidth) { el.style.scrollSnapType = 'none'; el.scrollTo({ left: f.offsetLeft - el.firstElementChild.offsetLeft, behavior: 'smooth' }); moved++; }
-  });
-  let fired = false; const done = () => { if (fired) return; fired = true; S.foodDay = t; S.wsFirst = first; render(); };
-  if (!moved) return done();
-  const el = [...document.querySelectorAll('.wscroll')].find(x => x.clientWidth);
-  if (el && 'onscrollend' in window) el.addEventListener('scrollend', done, { once: true });
-  setTimeout(done, 'onscrollend' in window ? 900 : 480);   /* fallback when scrollend is missing or the strip was already in place */
+function fdInit() {
+  const el = document.querySelector('#view .fweeks'); if (!el || !el.clientWidth) return;
+  el.style.scrollSnapType = 'none'; el.scrollLeft = el.clientWidth; el.style.scrollSnapType = '';
+  let t = null, done = false;
+  const settle = () => { if (done || !el.isConnected) return; const pg = Math.round(el.scrollLeft / el.clientWidth); if (pg === 1) return;
+    done = true; S.foodDay = tlAdd(S.foodDay, (pg - 1) * 7); render(); };
+  if ('onscrollend' in window) el.addEventListener('scrollend', settle);
+  el.addEventListener('scroll', () => { clearTimeout(t); t = setTimeout(settle, 160); }, { passive: true });   /* fallback when scrollend is missing */
 }
-function wsInit() {
-  const first = S.wsFirst, inView = first && S.foodDay >= first && tlDays(first, S.foodDay) <= 6;
-  let next = null;
-  document.querySelectorAll('.wscroll').forEach(el => {
-    const tgt = el.querySelector('.wd[data-iso="' + (inView ? first : wsMon(S.foodDay)) + '"]'); if (!tgt) return;
-    el.style.scrollSnapType = 'none'; el.scrollLeft = tgt.offsetLeft - el.firstElementChild.offsetLeft; el.style.scrollSnapType = '';
-    if (next == null && el.clientWidth > 0) next = wsFirstOf(el);
-    el.addEventListener('scroll', () => { if (el.clientWidth > 0) S.wsFirst = wsFirstOf(el); }, { passive: true });
-  });
-  if (next) S.wsFirst = next;
+// Carb day · Weight · Body type on one line; each part opens its own sheet (three tiles before 0.3s.9)
+function foodInfoLine(lw, kind) {
+  const b = (k, txt, lab, need) => '<button class="finfo-b' + (need ? ' need' : '') + '" data-act="fs-open" data-k="' + k + '" aria-haspopup="dialog" aria-label="' + lab + ': ' + txt + '">' + txt + '</button>';
+  return '<div class="finfo">' + b('c', DAYTYPE[kind].zh, 'Carb day') + '<span aria-hidden="true">·</span>' + b('w', lw ? wShow(lw.kg) : 'Enter weight', 'Weight', !lw) + '<span aria-hidden="true">·</span>' + b('b', SOMA[somaKey()].en, 'Body type') + '</div>';
 }
-// Week bar at the bottom of the Food tab: same week strip as the top panel, shown only while the top one is out of view.
-let fwObs = null;
-function fwShow(on) {
-  const bar = $('#fweek'); if (!bar) return;
-  bar.hidden = !on; document.body.classList.toggle('fwk-on', on);
-  if (on) { document.documentElement.style.setProperty('--fwk-h', bar.offsetHeight + 'px'); wsPlace(bar.querySelector('.wscroll')); }   /* a hidden strip cannot be scrolled; place it when it appears */
-}
-function foodWeekBar() {
-  const bar = $('#fweek'); if (!bar) return;
-  if (fwObs) { fwObs.disconnect(); fwObs = null; }
-  const lw = foodWeight(), top = S.tab === 'food' && document.querySelector('#view .wstrip');
-  if (S.tab !== 'food' || !lw || !S.foodDay || !top) { fwShow(false); return; }
-  const plan = weekPlan(), wd = new Date(S.foodDay + 'T12:00:00').getDay(), T = targetsFor(dayKind(S.foodDay), lw.kg);
-  const eaten = S.food.filter(x => x.iso === S.foodDay).reduce((a, x) => a + x.kcal, 0);
-  bar.querySelector('.wrap').innerHTML = '<div class="fwk-line"><button class="btn fwk-arr" data-act="fd-step" data-d="-1" aria-label="Previous day">‹</button>' +
-    '<span class="fwk-mid"><span class="fwk-day" data-act="fd-today" role="button" tabindex="0"><b>' + (S.foodDay === todayIso() ? 'Today' : esc(WEEKDAYS[wd])) + '</b> · ' + esc(usOf(S.foodDay).replace(/\/\d{4}$/, '')) + ' · ' + DAYTYPE[dayKind(S.foodDay)].zh + '</span>' +
-    '<span><b>' + Math.round(eaten) + '</b> of ' + Math.round(T.kcal) + ' kcal</span></span><button class="btn fwk-arr" data-act="fd-step" data-d="1" aria-label="Next day">›</button></div>' + weekStrip(plan, S.foodDay);
-  if (!('IntersectionObserver' in window)) { fwShow(true); return; }
-  const hh = (document.querySelector('header.top') || {}).offsetHeight || 0;
-  fwObs = new IntersectionObserver(es => { const e = es[es.length - 1]; fwShow(!e.isIntersecting); }, { rootMargin: '-' + hh + 'px 0px 0px 0px' });
-  fwObs.observe(top);
+// One Add food button opens this sheet: My foods, Describe food and Manual adjustment (they used to fill the page)
+function foodAddSheet() {
+  if (!S.fAddOpen || foodFuture()) return '';
+  const n = S.est && S.est.items ? S.est.items.length : 0;
+  return '<div class="sheet-bg" data-act="fadd-close"><div class="sheet fadd-sheet" role="dialog" aria-label="Add food" data-act="noop"><div class="sheet-h"><b>Add food</b><button class="btn sm" data-act="fadd-close">' + (n ? 'Done' : 'Close') + '</button></div><div class="fadd-body">' +
+    '<div class="hrow"><p class="section-h">My foods</p><button class="btn sm" data-act="qf-table">Full list</button></div><div class="panel">' + viewQuick() + '</div>' +
+    '<p class="section-h">Add food</p><div class="panel"><div class="row-acts"><button class="btn glowbtn" data-act="fa-manual">Enter myself</button><span class="hint">Type the name, calories and macros of a food</span></div></div>' +
+    madjButton() + '</div>' +
+    (n ? '<button class="btn primary fadd-done" data-act="fadd-close">Review ' + n + ' to add ›</button>' : '') + '</div></div>';
 }
 function viewFood() {
   if (!S.foodPhoto && S.foodPhotoUrl) { URL.revokeObjectURL(S.foodPhotoUrl); S.foodPhotoUrl = null; }
@@ -6058,25 +6070,21 @@ function viewFood() {
   const plan = weekPlan(); const wd = new Date(S.foodDay + 'T12:00:00').getDay(); const kind = dayKind(S.foodDay), wIso = weekIsos(S.foodDay);
   const dayHead = '<div class="row-acts fday"><button class="btn" data-act="fd-step" data-d="-1" aria-label="Previous day">‹</button>' +
     '<button class="fday-t" data-act="fd-today" title="Tap to go back to today"><b>' + (S.foodDay === todayIso() ? 'Today' : esc(WEEKDAYS[wd])) + ' · ' + esc(usOf(S.foodDay)) + '</b></button>' +   /* tap the date = back to today */
-    '<button class="btn" data-act="fd-step" data-d="1" aria-label="Next day">›</button></div>' + weekStrip(plan, S.foodDay) +
-    '<p class="wlegend"><i class="wl ok"></i>on target ±10% <i class="wl over"></i>over <i class="wl under"></i>under <span class="wl-note">(calories)</span></p>' + foodSetRow(lw, kind, wd);
+    '<button class="btn" data-act="fd-step" data-d="1" aria-label="Next day">›</button></div>' + weekDots(S.foodDay);
   const day = S.food.filter(x => x.iso === S.foodDay);
   const got = day.reduce((a, x) => ({ kcal: a.kcal + x.kcal, c: a.c + x.c, p: a.p + x.p, f: a.f + x.f, fib: a.fib + (x.fib || 0) }), { kcal: 0, c: 0, p: 0, f: 0, fib: 0 });
   // day header with date stepping and the day type
-  if (lw) h += '<div class="panel">' + dayHead + viewPlan(targetsFor(kind, lw.kg), got, pendingHtml()) + madjButton() + '</div>' + foodSetSheet(lw, kind, wd) + manualAdjSheet();
+  if (lw) h += '<div class="panel fpanel">' + dayHead + viewPlan(targetsFor(kind, lw.kg), got, pendingHtml(), foodInfoLine(lw, kind)) + '</div>' + foodSetSheet(lw, kind, wd) + manualAdjSheet();
   else {
     // no weight yet: everything below still shows; this card says why there are no targets
     h += '<div class="panel">' + dayHead + '<div class="needw"><p><b>Enter your weight to see your daily targets.</b> Carbs, protein, fat and calories for each day are worked out from your body weight. ' +
       'You can already log food below; the targets fill in as soon as a weight is set.</p>' +
       '<div class="row-acts"><button class="btn primary" data-act="fs-open" data-k="w">Enter my weight</button>' +
       (day.length ? '<span class="hint">' + Math.round(got.kcal) + ' kcal logged so far</span>' : '') + '</div></div>' +
-      pendingHtml() + madjButton() + '</div>' + foodSetSheet(lw, kind, wd) + manualAdjSheet();
+      foodInfoLine(lw, kind) + pendingHtml() + '</div>' + foodSetSheet(lw, kind, wd) + manualAdjSheet();
   }
   if (foodFuture()) h += '<div class="notice fut-note"><div><b>' + esc(usOf(S.foodDay)) + ' is still ahead.</b> Food can be logged only for today or an earlier day. <button class="lnk" data-act="fd-today">Go to today</button></div></div>';   /* Ver 0.3r.53 (user): no editing future days */
-  else {
-  h += '<div class="hrow"><p class="section-h">My foods</p><button class="btn sm" data-act="qf-table">Full list</button></div><div class="panel">' + viewQuick() + '</div>';   /* 'Quick add' renamed (user 2026-11-12) */
-  h += '<p class="section-h">Add food</p><div class="panel"><div class="row-acts"><button class="btn glowbtn" data-act="fa-manual">Enter myself</button><span class="hint">Type the name, calories and macros of a food</span></div></div>';   // web: no Claude estimates, so only Enter myself (full app Ver 0.1v)
-  }
+
   // the day's log
   h += '<div class="hrow"><p class="section-h">Eaten · ' + day.length + '</p>' + (day.length || (S.est && S.est.items.length) ? '<button class="btn sm' + (S.clearArmed ? ' danger' : '') + '" data-act="f-clear"' + (S.foodSaving || !S.mcp ? ' disabled' : '') + '>' + (S.clearArmed ? 'Tap again to clear the day' : 'Reset day') + '</button>' : '') + '</div>';
   if (S.foodState === 'err') h += '<div class="notice err">The Food log could not be read. ' + esc(S.foodMsg) + '</div>';
@@ -6088,18 +6096,19 @@ function viewFood() {
         '</div>').join(''); });
     h += '</div>';
   }
+  h += foodAddSheet();
   // the week's targets
   if (!lw) return h;
   h += '<details class="wk"' + (S.wkOpen ? ' open' : '') + '><summary>This week’s targets · ' + SOMA[somaKey()].en + ' · ' + wShow(lw.kg) + ' (' + wSrc(lw) + ')</summary><div style="overflow-x:auto"><table class="hist"><thead><tr><th>Day</th><th>Type</th><th>Carbs</th><th>Protein</th><th>Fat</th><th>Fiber</th><th>kcal</th></tr></thead><tbody>' +
     WK_ORDER.map(d => { const k = dayKind(wIso[d]), t = targetsFor(k, lw.kg); return '<tr' + (wIso[d] === S.foodDay ? ' class="on"' : '') + '><td>' + WEEKDAYS[d].slice(0, 3) + ' ' + shortUs(wIso[d]) + '</td><td>' + DAYTYPE[k].zh + '</td><td>' + Math.round(t.c) + '</td><td>' + Math.round(t.p) + '</td><td>' + Math.round(t.f) + '</td><td>' + Math.round(t.fib) + '</td><td>' + Math.round(t.kcal) + '</td></tr>'; }).join('') +
-    '</tbody></table></div>';
+    '</tbody></table></div><p class="wlegend"><i class="wl ok"></i>on target ±10% <i class="wl over"></i>over <i class="wl under"></i>under <span class="wl-note">(dots under the days: calories)</span></p>';
   const counts = WK_ORDER.map(d => dayKind(wIso[d])).reduce((a, k) => (a[k] = (a[k] || 0) + 1, a), {});
   if (counts.high !== 2 || counts.mid !== 3 || counts.low !== 2) h += '<p class="hint">The method plans 2 high, 3 mid and 2 low days a week (Settings › Carb week); this week has ' + (counts.high || 0) + ' / ' + (counts.mid || 0) + ' / ' + (counts.low || 0) + '.</p>';
   { const so = SOMA[somaKey()]; h += '<p class="hint">' + so.en + ': carbs ' + so.carb + ' g/kg and fat ' + so.fat.toFixed(1) + ' g/kg a day over the week, protein ' + CYC.prot + ' g/kg. Reference numbers from the carb-cycling method, not medical or dietitian advice.</p></details>'; }
   return h;
 }
 function foodFuture() { return !!S.foodDay && S.foodDay > todayIso(); }
-const FOOD_EDIT_ACTS = new Set(['f-est', 'fa-manual', 'fa-save', 'madj-open', 'madj-save', 'f-save', 'qf-pick', 'qf-open', 'f-clear', 'f-del', 'plan-one', 'plan-all']);
+const FOOD_EDIT_ACTS = new Set(['fadd-open', 'f-est', 'fa-manual', 'fa-save', 'madj-open', 'madj-save', 'f-save', 'qf-pick', 'qf-open', 'f-clear', 'f-del', 'plan-one', 'plan-all']);
 function fmt1(v) { return (Math.round(v * 10) / 10).toFixed(1); }
 function shortUs(iso) { return esc(usOf(iso).replace(/\/\d{4}$/, '')); }
 function wSrc(lw) {
@@ -6107,13 +6116,6 @@ function wSrc(lw) {
   return 'Renpho ' + shortUs(lw.iso);
 }
 // Food tab top row: Weight | Body type | Carb day, each opens a bottom sheet
-function foodSetRow(lw, kind, wd) {
-  const it = (k, lab, val, sub, need) => '<button class="fset-it' + (need ? ' need' : '') + '" data-act="fs-open" data-k="' + k + '" aria-haspopup="listbox"><span class="fset-l">' + lab + '<span class="fset-go" aria-hidden="true">▾</span></span><span class="fset-v"><b>' + val + '</b>' + (sub ? '<span class="fset-s">' + sub + '</span>' : '') + '</span></button>';   /* source next to the value */
-  return '<div class="fset">' +
-    it('w', 'Weight', lw ? wShow(lw.kg) : 'Not set', lw ? esc(wSrc(lw).replace('7-day avg', '7d avg')) : 'Tap to enter', !lw) +
-    it('b', 'Body type', SOMA[somaKey()].en, '') +
-    it('c', 'Carb day', DAYTYPE[kind].zh, '') + '</div>';
-}
 function foodSetSheet(lw, kind, wd) {
   if (!S.foodSetOpen) return '';
   const it = (act, k, name, sub, on) => '<button class="sheet-it' + (on ? ' on' : '') + '" role="option" aria-selected="' + on + '" data-act="' + act + '"' + (k ? ' data-k="' + k + '"' : '') + '>' + (on ? '✓ ' : '') + esc(name) + (sub ? '<span class="pp-sub">' + esc(sub) + '</span>' : '') + '</button>';
@@ -6513,6 +6515,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3s.19', '11212026', 'Matches the full app Ver 0.3s.19 (its 0.3s.9 to 0.3s.19). Food tab: the week is 7 round day buttons you slide with your finger to the next or previous week; calories left are a ring with the Carbs, Protein, Fat and Fiber bars beside it; Carb day · Weight · Body type is one tappable line; then what you ate. Add food is a gold bowl button on the right of the bottom strip and opens a sheet with My foods (tap a chosen group again for all foods), Enter myself and Manual adjustment; a tapped food tile stays readable; the Food tab opens about 3 times faster. Settings › Appearance › Color theme: one split colour circle per theme, 4 to a row. Home › Muscles worked: clearer grid, bigger names, a larger web and a fairer scale so muscles with fewer sets show further out. One set of page moves: another tab grows as a circle from what you tapped, a page deeper in slides in from the right, going back slides from the left. Add to Home Screen guide: made for your phone; on Android one tap adds it; on iPhone it shows the 3 taps; on a computer it gives the link to open on your phone; Settings › About › Get the full-screen app opens it again. Owner: Share the app sends the link with a short note. Test mode: New user: whole first open walks through the loading screen, Sign in with Google (pretend), Create my folder (pretend), Get started and the first Home without saving anything. Code tidy. Removed: the second week bar on the Food tab, the Weight / Body type / Carb day tiles, the theme tiles, the All chip in My foods, the big Add food bar.'],
   ['0.3s.8.1', '11212026', 'Web-only update on Ver 0.3s.8: tidy-up. The privacy page explains the anonymous once-a-day usage count and the Delete all my data button. Unused parts taken out: leftover code from the Renpho CSV import (the Body tab is in the full app only) and a few unused styles and values. Removed: the Usage count section in Settings › About.'],
   ['0.3s.8', '11212026', 'Matches the full app Ver 0.3s.8 (its 0.3s.1 to 0.3s.8): one type scale (a handful of text sizes) with rounded, same-width numbers; every tab starts with a large title that turns into a slim bar at the top when you scroll; one shape for small exercise pictures, and tapping a picture opens it full screen with a Still / Moving switch, the muscles and a few form cues; Home: workouts this week is one big ring with kcal and protein beside it, the Start workout button shows the day’s exercises as small round pictures, the Last workout tile shows at most four muscles and Home fits on one screen; cards sit on a soft shadow instead of a border, dark mode cards are a step lighter, muscle-group colours on Start workout cards and Muscles worked, a set row pops when you fill it in; code tidy; dark mode (and the rest of your look) is kept: each look choice carries its time and the newest copy wins. Removed: the grey card borders, the “N exercises planned” text on the Start workout button, the old picture box.'],
 ['0.3s', '11212026', 'Matches the full app Ver 0.3s (its 0.3r.9 to 0.3r.88; 0.3r.1 to 0.3r.8 were already here): the whole app uses the Apple system font; new colour themes Blue + Purple and Black + Gold, every theme has its own page colour, and Studio shows both theme colours; softer buttons; Settings › Appearance has Auto as a third picture next to Light and Dark; Home: the Start workout button is lighter and reads in lines (Start workout, day type, exercises planned), a Shortcuts tile with Week and Food buttons, bigger muscle names on Muscles worked; the loading screen no longer flashes the Go Blue colours; Plan my week: workday templates can have their own names, exercises show their picture and muscles while picking, the picked ones sit in a light row at the top; Carb week: at most 2 high and 2 low days; pictures for 40 more exercises and better Front Squat, Stair Climber, Elliptical, Stationary Bike, Dead Hang, Cable Serratus Punch and Preacher Curl pictures; ready-made profile pictures (gym, animals, cars, aircraft); Library opens tidy: tap a muscle group to see its exercises around the body; Progress chart: the exercise name is a small picker in the corner of the graph, a pin makes it the one shown when the tab opens, a small 3M / 6M / 1Y / All switch and a Show body weight toggle on the chart; rest timer changes colour as it runs out, shrinks into a small timer when you tap Finished, and two taps on it stop the rest; Start workout: the “not saved yet” notice no longer comes back after Discard; Food: a future day can be looked at but not edited, and fiber is never counted as over; Profile › Week plan: one row per plan with Edit, Use and Delete; an Add to Home Screen guide for people who open the link in a browser; Settings › About › Delete all my data (moves your Workout Lite folder to the Drive Trash and clears this phone); Test mode screens have Back to tests. Removed: the Next up tile on Home, the Automatic switch row, the big Measure and Exercise cards above the charts, the Google web fonts.'],
@@ -6723,12 +6726,82 @@ async function delEverything() {
   Object.keys(MEM).forEach(k => delete MEM[k]); Object.keys(SESS).forEach(k => delete SESS[k]);
   location.reload();
 }
+/* Ver 0.3s.19 (user): owner only, one tap shares the GitHub version with a short message */
+const SHARE_URL = 'https://sqiangqi.github.io/workout-lite/';
+const SHARE_TEXT = 'Try Workout Lite, a free workout and food app. Open the link on your phone and add it to your Home Screen for the full-screen app. ' +
+  'You sign in with Google; your data stays in your own Google Drive, private to you. Delete all my data in Settings removes it anytime.';
+function shareCard() {
+  if (!S.isOwner) return '';
+  return '<div class="subcard"><p class="sub-h">Share the app</p><button class="tm-it" data-act="share-app"><b>Send the app to a friend</b><span>Opens your share sheet with the link and a short note</span></button>' +
+    '<details class="wk"><summary>The message</summary><p class="share-msg">' + esc(SHARE_TEXT).replace(/\n/g, '<br>') + '<br><br>' + esc(SHARE_URL) + '</p></details></div>';
+}
+async function shareApp() {
+  let framed = true; try { framed = window.top !== window.self; } catch (e) {}
+  const all = SHARE_TEXT + '\n\n' + SHARE_URL;
+  if (!framed && navigator.share) { try { await navigator.share({ title: 'Workout Lite', text: SHARE_TEXT, url: SHARE_URL }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+  try { await navigator.clipboard.writeText(all); toast('Copied the message and link. Paste it into a text or chat.'); }
+  catch (e) { const m = document.querySelector('.share-msg'); if (m) { const d = m.closest('details'); if (d) d.open = true; try { const r = document.createRange(); r.selectNodeContents(m); const sl = getSelection(); sl.removeAllRanges(); sl.addRange(r); } catch (x) {} m.scrollIntoView({ block: 'center' }); }
+    toast('The message is selected below: tap Copy, then paste it into a text or chat.'); }
+}
+function a2hsCard() {   /* Ver 0.3s.18: the guide can be opened again from About */
+  let framed = true; try { framed = window.top !== window.self; } catch (e) {}
+  if (framed || a2hsStandalone()) return '';
+  return '<div class="subcard"><p class="sub-h">Get the full-screen app</p><button class="tm-it" data-act="a2hs-open"><b>Add to Home Screen</b><span>Made for phones: it opens full screen like any other app</span></button></div>';
+}
 function testCard() {   /* Ver 0.3o.20: Settings › Test mode (turn on by tapping the version line 5 times). Every test is a preview: nothing is saved. */
   /* Ver 0.3o.22: always shown in About (no 5-tap switch); Ver 0.3o.23: to the owner only */
   if (!S.isOwner) return '';
   const b = (act, lab, sub) => '<button class="tm-it" data-act="' + act + '"><b>' + lab + '</b><span>' + sub + '</span></button>';
   /* Ver 0.3o.25: About only has the way in; the tests are on the Test mode page (viewTest) */
   return '<div class="subcard tm"><p class="sub-h">Test mode</p>' + b('tm-enter', 'Enter test mode', 'New-user screens, problems and animations. Nothing changes your data.') + '</div>';
+}
+/* Ver 0.3s.14 (user: "see exactly how a new user would first open the app ... all the way to the home page"): Test mode ›
+   New user: whole first open. A pretend new account: the plain first loading screen, the first-open screen where
+   Create my folder pretends to work, Get started with blank answers, then Home as a new person sees it (starter exercises
+   and foods, nothing logged). Nothing is saved; Exit or Tests puts everything back. */
+function nuStart() {
+  if (NU) return;
+  let go; const wait = new Promise(r => { go = r; });
+  NU = { s: Object.assign({}, S), mem: Object.assign({}, MEM), go, wait };
+  try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (/^wlite\./.test(k)) MEM[k] = null; } } catch (e) {}
+  MEM[K_SPLASH] = null;
+  setData((window.__wweb && window.__wweb.starterEx) || [], []);
+  Object.assign(S, { food: [], body: [], draft: null, problem: null, foodDay: null, isOwner: false, ownerKnown: true, ob: null, acct: null,
+    wp: { plans: [], favs: new Set(), state: 'ok', err: '' }, est: null, tmHome: null, tmLook: false, tmWb: false, tmPics: false, setPage: null,
+    initState: 'ready', setupBusy: null, setupMsg: '', setupTabs: null, email: 'new.person@gmail.com',   /* web: a pretend signed-in account */
+    qf: ((window.__wweb && window.__wweb.starterFoods) || []).map(r => ({ name: String(r[0]), unit: qfUnit(r[1]), per: num(r[2]) || (String(r[1]).toLowerCase() === 'each' ? 1 : 100), kcal: num(r[3]) || 0, c: num(r[4]) || 0, p: num(r[5]) || 0, f: num(r[6]) || 0, usual: num(r[7]) || '', note: r[8] || '', max: num(r[9]) || '', fib: num(r[10]) || 0 })),
+    setup: { state: 'ask' }, tab: 'setup' });
+  applyTheme(); applyPal(); applyStyle();
+  playSplash(true); render(); window.scrollTo(0, 0); nuGate();
+}
+function nuGate() {   /* Web 0.3s.19: the Sign in with Google screen a new person sees first; here the sign-in only pretends */
+  const old = document.getElementById('nuGate'); if (old) old.remove();
+  const g = document.createElement('div'); g.id = 'nuGate';
+  g.style.cssText = 'position:fixed;inset:0;z-index:100;background:#14284b;color:#fff;display:grid;place-items:center;padding:24px;font-family:var(--font-body,system-ui)';
+  g.innerHTML = '<div style="max-width:360px;width:100%;display:grid;gap:14px;justify-items:center;text-align:center"><div style="width:84px;height:84px;background:center/contain no-repeat url(&quot;' + esc(iconSrc()) + '&quot;)"></div>' +
+    '<h1 style="margin:0;font-family:var(--font-display,system-ui);font-size:30px;letter-spacing:.03em;text-transform:uppercase;color:#d8b072">Workout Lite</h1>' +
+    '<p style="margin:0;color:#c9d3e0;font-size:15px;line-height:1.45">Sign in with your Google account to open your workout log.</p>' +
+    '<button type="button" data-act="nu-signin" style="width:100%;padding:15px;border-radius:12px;border:0;background:#d8b072;color:#14284b;font-size:17px;font-weight:700">Sign in with Google</button>' +
+    '<p style="margin:0;font-size:12.5px;color:#9fb0c6">Your workouts stay in your own Google Sheet. Signing in lasts about an hour; the app asks again after that.</p>' +
+    '<p style="margin:0;font-size:12.5px;color:#f2b33d">Test: the sign-in only pretends; no Google window opens.</p></div>';
+  document.body.appendChild(g);
+}
+function nuSignIn() { const g = document.getElementById('nuGate'); if (g) g.remove(); toast('Pretend sign-in: new.person@gmail.com'); }
+function nuCreate() {   /* Create my folder pretends to work, with the same steps a real setup shows */
+  const steps = ['Making your Workout Lite folder…', 'Making Workout Lite log…', 'Making Workout Lite food…', 'Opening your log…'];
+  let i = 0; const next = () => { if (!NU) return; if (i < steps.length) { S.setupBusy = 'new'; i++; render(); setTimeout(next, 700); return; }
+    S.setupBusy = null; S.tab = 'home'; S.hmAnim = false; setSync('ok', 'Synced'); render(); window.scrollTo(0, 0);
+    setTimeout(() => { if (!NU || S.ob) return; obStart(); if (S.ob) { Object.assign(S.ob.a, { name: '', kg: '', goal: '', exp: '', build: '', trend: '' }); renderOb(); } }, 900); };
+  next();
+}
+function nuEnd() {
+  if (!NU) return; const n = NU;
+  Object.keys(S).forEach(k => { delete S[k]; }); Object.assign(S, n.s);
+  Object.keys(MEM).forEach(k => { delete MEM[k]; }); Object.assign(MEM, n.mem);
+  NU = null; n.go();
+  const sp = document.getElementById('splash'); if (sp) sp.remove(); const ng = document.getElementById('nuGate'); if (ng) ng.remove();
+  S.ob = null; renderOb(); applyTheme(); applyPal(); applyStyle();
+  S.tab = 'test'; render(); window.scrollTo(0, 0); toast('Walkthrough ended: your own data is back.');
 }
 function tmList() {
   const b = (act, lab, sub) => '<button class="tm-it" data-act="' + act + '"><b>' + lab + '</b><span>' + sub + '</span></button>';
@@ -6738,6 +6811,7 @@ function tmList() {
     b('tm-look', 'Look and loading screen', 'Try styles and colors on one page and play the loading screen in them') +
     b('tm-a2hs', 'New user: Add to Home Screen guide', 'The hint people see when they open the shared link in a browser') +
     b('tm-ob', 'New user: Get started', 'The setup questions with blank answers; finishing saves nothing') +
+    b('tm-newuser', 'New user: whole first open', 'A pretend new account from the loading screen through Sign in with Google, Create my folder and Get started to their first Home; nothing is saved') +
     b('tm-setup', 'New user: first open', 'The Create my folder screen; its buttons do nothing in a test') +
     b('prob-test', 'Show a problem', 'Red pill and the problem sheet; Retry clears it') +
     b('tm-notsaved', 'Show Not saved', 'The save-failed version of the problem') +
@@ -7262,7 +7336,7 @@ function viewSettings() {
     // Web 0.3j.1: check GitHub for a newer version and load it
     '<div class="row-acts">' + (S.upd && S.upd.newer ? '<button class="btn primary" data-act="upd-go">Update now to Ver ' + esc(S.upd.newer) + '</button>' :
       '<button class="btn primary" data-act="upd-check"' + (S.upd && S.upd.busy ? ' disabled' : '') + '>' + (S.upd && S.upd.busy ? 'Checking…' : 'Check for updates') + '</button>') + '</div>' +
-    (S.upd && S.upd.msg ? '<p class="hint upd-msg' + (S.upd.ok ? ' ok' : '') + '">' + esc(S.upd.msg) + '</p>' : '') + '</div>' + testCard() + delCard() + '</div>';
+    (S.upd && S.upd.msg ? '<p class="hint upd-msg' + (S.upd.ok ? ' ok' : '') + '">' + esc(S.upd.msg) + '</p>' : '') + '</div>' + shareCard() + a2hsCard() + testCard() + delCard() + '</div>';
   return h;
 }
 // First open: make a Sheet, or point the app at one that already exists.
@@ -7650,7 +7724,7 @@ let snapT = 0;
 function snapSoon() {
   clearTimeout(snapT);
   snapT = setTimeout(() => {
-    if (S.tab !== 'home' || S.ob || LOOK_PV || document.body.classList.contains('wheel-on')) return;
+    if (NU || S.tab !== 'home' || S.ob || LOOK_PV || document.body.classList.contains('wheel-on')) return;   /* 0.3s.14: not the walkthrough's pretend Home */
     const r = document.documentElement, attr = {};
     ['data-theme', 'data-pal', 'data-style'].forEach(a => { const x = r.getAttribute(a); if (x) attr[a] = x; });
     try { localStorage.setItem(K_SNAP, JSON.stringify({ at: Date.now(), attr, css: r.getAttribute('style') || '', body: document.body.className,
@@ -7662,6 +7736,9 @@ function snapSoon() {
 // Ver 0.3o.2: Last workout tile: muscle names step down in size until each fits its column (a wider font, e.g. while Barlow is not loaded, used to push the second column out of the card)
 /* Ver 0.3s.6 (user: Home was a bit taller than one screen): if the page still scrolls, shrink the Muscles worked chart
    (down to 160 px wide) until everything fits above the bottom strip. Runs after Home renders and when the window size changes. */
+function mxFit() {   /* Ver 0.3s.16: the chart's frame is cut to its grid and labels, so the web is as large as the card allows */
+  document.querySelectorAll('.mx-card svg').forEach(svg => { try { const b = svg.getBBox(); if (b.width > 50) svg.setAttribute('viewBox', [b.x - 3, b.y - 3, b.width + 6, b.height + 6].map(x => x.toFixed(1)).join(' ')); } catch (e) {} });
+}
 function hmFitScreen() {
   const svg = document.querySelector('body.home .mx-card svg'); if (!svg || S.tab !== 'home') return;
   svg.style.maxWidth = '';
@@ -7686,14 +7763,21 @@ try { document.fonts && document.fonts.ready.then(() => hmFitMus()); window.addE
    search cleared, the Food tab on today and the Today exercise page closed (sets typed stay). */
 function tabFresh() {
   ['setPage', 'libSel', 'tidySel', 'foodSetOpen', 'meDay', 'wpArm', 'phDelArm', 'iconSheet', 'wuPick', 'puEdit', 'qfEdit', 'wpEdit', 'wpDay', 'foodDay'].forEach(k => { S[k] = null; });
-  ['wkOpen', 'pickOpen', 'metricOpen', 'ppOpen', 'nameOpen', 'faOpen', 'addOpen', 'tidyOpen', 'probOpen', 'newExOpen', 'madjOpen', 'qfAll', 'wpAsk', 'wbOpen'].forEach(k => { S[k] = false; });
+  ['wkOpen', 'pickOpen', 'metricOpen', 'ppOpen', 'nameOpen', 'faOpen', 'addOpen', 'tidyOpen', 'probOpen', 'fAddOpen', 'newExOpen', 'madjOpen', 'qfAll', 'wpAsk', 'wbOpen'].forEach(k => { S[k] = false; });
   S.azQ = ''; S.libGrp = ''; S.libQ = ''; if (S.wb && S.wb.real) S.wb = null;
   { const d = chDef(); if (d.pick) S.pick = d.pick; if (d.metric) S.metric = d.metric; }   /* 0.3r.82: starred chart defaults */   /* 0.3r.39: the Library opens with no group chosen */
   try { if (Object.keys(store.get(K_SETOPEN) || {}).length) store.set(K_SETOPEN, {}); } catch (e) {}
   if (S.draft && S.draft.items) S.draft.items.forEach(x => { x.open = false; });
 }
-function goTab(t, from) {
-  const go = () => { closeWheel(); if (t !== S.tab) tabFresh(); S.tab = t; render(); window.scrollTo(0, 0); };
+/* Ver 0.3s.15 (user: transitions were mixed): 'in' = a page deeper in slides in from the right, 'back' = from the left */
+function pageAnim(dir) {
+  const v = $('#view'); if (!v || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+  v.classList.remove('tab-in', 'sl-l', 'sl-r'); void v.offsetWidth; v.classList.add(dir === 'back' ? 'sl-r' : 'sl-l');
+  v.addEventListener('animationend', () => v.classList.remove('sl-l', 'sl-r'), { once: true });
+}
+function goTab(t, from, how) {
+  const go = () => { closeWheel(); if (t !== S.tab) tabFresh(); S.tab = t; if (t === 'photos') S.stripToEnd = true; render(); window.scrollTo(0, 0); };
+  if (how) { go(); pageAnim(how); return; }
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (from && from.getBoundingClientRect && document.startViewTransition && !reduce) { themeSwap(go, from, 520); return; }
   go();
@@ -7720,20 +7804,24 @@ function muscleSets(days) {
 }
 function muscleCard() {
   S.mxDays = mxDaysNow(); const days = S.mxDays, v = muscleSets(days), max = Math.max.apply(null, MX_AXES.map(m => v[m])), total = MX_AXES.reduce((a, m) => a + v[m], 0);
-  const cx = 160, cy = 132, R = 86, n = MX_AXES.length, ang = i => (-90 + i * 360 / n) * Math.PI / 180, pt = (i, r) => [cx + r * Math.cos(ang(i)), cy + r * Math.sin(ang(i))];
+  const cx = 160, cy = 132, R = 100, n = MX_AXES.length, ang = i => (-90 + i * 360 / n) * Math.PI / 180, pt = (i, r) => [cx + r * Math.cos(ang(i)), cy + r * Math.sin(ang(i))];
   const poly = f => MX_AXES.map((m, i) => pt(i, f(m, i)).map(x => x.toFixed(1)).join(',')).join(' ');
   let svg = '<svg viewBox="-16 -4 352 276" role="img" aria-label="Sets per muscle in the last ' + days + ' days: ' + MX_AXES.map(m => m + ' ' + v[m]).join(', ') + '">';
-  [.25, .5, .75, 1].forEach(k => { svg += '<polygon class="mx-grid" points="' + poly(() => R * k) + '"/>'; });
+  /* Ver 0.3s.16 (user: the grid could not be seen, the chart should feel bigger): stronger grid, larger web, and a square-root
+     scale (sc) so muscles with fewer sets sit further out; the most-worked muscle still reaches the edge */
+  const sc = x => max ? Math.sqrt(x / max) : 0;
+  [.25, .5, .75, 1].forEach(k => { svg += '<polygon class="mx-grid' + (k === 1 ? ' out' : '') + '" points="' + poly(() => R * k) + '"/>'; });
   MX_AXES.forEach((m, i) => { const [x, y] = pt(i, R); svg += '<line class="mx-grid" x1="' + cx + '" y1="' + cy + '" x2="' + x.toFixed(1) + '" y2="' + y.toFixed(1) + '"/>'; });
   const SMP = [9, 6, 8, 3, 9, 5, 11];   /* Ver 0.3m: sample shape when nothing is saved yet */
   if (!total) svg += '<polygon class="mx-area" points="' + poly((m, i) => R * SMP[i] / 11) + '"/>';
   if (total) {
-    const anim = !S.hmAnim, to = poly(m => R * Math.max(.04, v[m] / max));   /* Ver 0.3o.18: on Home open each point travels out from the centre */
+    const anim = !S.hmAnim, to = poly(m => R * Math.max(.04, sc(v[m])));   /* Ver 0.3o.18: on Home open each point travels out from the centre */
     svg += '<polygon class="mx-area" data-to="' + to + '" points="' + (anim ? MX_AXES.map(() => cx + ',' + cy).join(' ') : to) + '"/>';
-    MX_AXES.forEach((m, i) => { if (v[m]) { const [x, y] = pt(i, R * v[m] / max); svg += '<circle class="mx-dot mg-' + (MX_GRP[m] || 'core') + '" data-i="' + i + '" data-x="' + x.toFixed(1) + '" data-y="' + y.toFixed(1) + '" cx="' + (anim ? cx : x.toFixed(1)) + '" cy="' + (anim ? cy : y.toFixed(1)) + '" r="4"' + (anim ? ' opacity="0"' : '') + '/>'; } });
+    MX_AXES.forEach((m, i) => { if (v[m]) { const [x, y] = pt(i, R * sc(v[m])); svg += '<circle class="mx-dot mg-' + (MX_GRP[m] || 'core') + '" data-i="' + i + '" data-x="' + x.toFixed(1) + '" data-y="' + y.toFixed(1) + '" cx="' + (anim ? cx : x.toFixed(1)) + '" cy="' + (anim ? cy : y.toFixed(1)) + '" r="4"' + (anim ? ' opacity="0"' : '') + '/>'; } });
   }
+  if (total) { const a = (-90 + 180 / n) * Math.PI / 180, rr = R * .5 * Math.cos(Math.PI / n); svg += '<text class="mx-ring" text-anchor="middle" x="' + (cx + rr * Math.cos(a)).toFixed(1) + '" y="' + (cy + rr * Math.sin(a) + 4).toFixed(1) + '">' + Math.round(max / 4) + '</text>'; }   /* the half ring = a quarter of the top count (square-root scale), shown between the first two spokes */
   MX_AXES.forEach((m, i) => {   /* axis name with its set count under it */
-    const [x, y] = pt(i, R + 20), c = Math.cos(ang(i)), an = Math.abs(c) < .2 ? 'middle' : c > 0 ? 'start' : 'end', dy = Math.sin(ang(i)) < -.5 ? -8 : 0;
+    const [x, y] = pt(i, R + 16), c = Math.cos(ang(i)), an = Math.abs(c) < .2 ? 'middle' : c > 0 ? 'start' : 'end', dy = Math.sin(ang(i)) < -.5 ? -8 : 0;
     svg += '<text class="mx-lab' + (total && v[m] === max ? ' top' : '') + '" x="' + x.toFixed(1) + '" y="' + (y + dy).toFixed(1) + '" text-anchor="' + an + '">' + m + '</text>' +
       '<text class="mx-num" data-n="' + v[m] + '" x="' + x.toFixed(1) + '" y="' + (y + dy + 17).toFixed(1) + '" text-anchor="' + an + '">' + v[m] + ' set' + (v[m] === 1 ? '' : 's') + '</text>';
   });
@@ -7922,9 +8010,9 @@ const ACTIONS = {
   ...WU_ACTIONS,   /* Ver 0.3q.19: warm-up choices */   /* Ver 0.3q.11: Week builder (Test mode) */
   'start'(b, it, e, act) {
     if (it) { S.draft.items.forEach(x => { if (x !== it && x.open) { x.open = false; if (filledSets(x).length) x.done = true; } }); it.open = true;
-      { const items = S.draft.items, done = items.filter(x => x.done && !x.open); if (done.length) { const rest = items.filter(x => !(x.done && !x.open)); items.splice(0, items.length, ...rest, ...done); } } saveDraft(); render(); window.scrollTo(0, 0); }
+      { const items = S.draft.items, done = items.filter(x => x.done && !x.open); if (done.length) { const rest = items.filter(x => !(x.done && !x.open)); items.splice(0, items.length, ...rest, ...done); } } saveDraft(); render(); window.scrollTo(0, 0); pageAnim('in'); }
   },
-  'focus-back'(b, it, e, act) { if (it) { it.sets.forEach(swStop); it.open = false; if (S.active && S.active.id === it.id) S.active = null; saveDraft(); render(); revealCard(it.id); } },   /* back to the list; what was typed stays, the card is not marked finished */
+  'focus-back'(b, it, e, act) { if (it) { it.sets.forEach(swStop); it.open = false; if (S.active && S.active.id === it.id) S.active = null; saveDraft(); render(); pageAnim('back'); revealCard(it.id); } },   /* back to the list; what was typed stays, the card is not marked finished */
   'sw'(b, it, e, act) {
     if (it) { const st = it.sets[+b.dataset.i]; if (!st) return;
       if (!swStop(st)) { it.sets.forEach(swStop); st.t0 = Date.now(); }
@@ -7988,7 +8076,7 @@ const ACTIONS = {
   'nx-unit'(b, it, e, act) { if (S.newEx) { S.newEx.unit = b.dataset.v; render(); } },
   'nx-save'(b, it, e, act) { addExercise(); },
   // Workout Lite: first-open setup, Sheets and Google account
-  'cfg-new'(b, it, e, act) { if (S.setupTest) { toast('Test: nothing is created.'); return; } setupRun('new', () => gs('api_create', (Intl.DateTimeFormat().resolvedOptions() || {}).timeZone || '')); return; },
+  'cfg-new'(b, it, e, act) { if (NU) { nuCreate(); return; } if (S.setupTest) { toast('Test: nothing is created.'); return; } setupRun('new', () => gs('api_create', (Intl.DateTimeFormat().resolvedOptions() || {}).timeZone || '')); return; },
   'cfg-use'(b, it, e, act) { if (S.setupTest) { toast('Test: nothing is created.'); return; } { const l = ($('#cfgLink') || {}).value || ''; S.setupLink = l; S.setupOpen = true; if (!l.trim()) { S.setupMsg = 'Paste the link of the Sheet first.'; render(); return; } setupRun('use', () => gs('api_useExisting', l, '')); return; } },
   'cfg-tab'(b, it, e, act) { if (S.setupTest) { toast('Test: nothing is created.'); return; } { const l = S.setupLink || (($('#cfgLink') || {}).value || ''); setupRun('use', () => gs('api_useExisting', l, b.dataset.tab)); return; } },
   'cfg-switch'(b, it, e, act) { if (!S.cfgArmed) { S.cfgArmed = true; render(); setTimeout(() => { if (S.cfgArmed) { S.cfgArmed = false; render(); } }, 4000); return; }
@@ -8034,8 +8122,8 @@ const ACTIONS = {
   'tm-pics'() { S.tmPics = true; render(); window.scrollTo(0, 0); },
   'pic-ok'(b) { const n = picNewName(b.dataset.name), a = picOkList(); if (!a.includes(n)) a.push(n); store.set(K_PICOK, a); if (!$('#lightbox').hidden) openPic(b.dataset.name); render(); toast(n + ': looks good.'); },
   'pic-undo'(b) { const k = picKeyLc(b.dataset.name); store.set(K_PICOK, picOkList().filter(n => n.toLowerCase() !== k)); if (!$('#lightbox').hidden) openPic(b.dataset.name); render(); },
-  'tm-list'(b, it, e, act) { S.tmLook = false; S.tmWb = false; S.tmPics = false; S.delAll = null; if (S.a2hs) { S.a2hs = null; renderA2hs(); } S.tmHome = null; if (S.setupTest) { S.setupTest = null; S.setup = null; } if (S.obTest) { S.obTest = false; S.ob = null; renderOb(); } goTab('test'); },
-  'tm-exit'(b, it, e, act) { S.testMode = false; if (S.problem && S.problem.act === 'prob-test-end') S.problem = null; if (S.obTest) { S.obTest = false; S.ob = null; renderOb(); }
+  'tm-list'(b, it, e, act) { if (NU) { nuEnd(); return; } S.tmLook = false; S.tmWb = false; S.tmPics = false; S.delAll = null; if (S.a2hs) { S.a2hs = null; renderA2hs(); } S.tmHome = null; if (S.setupTest) { S.setupTest = null; S.setup = null; } if (S.obTest) { S.obTest = false; S.ob = null; renderOb(); } goTab('test'); },
+  'tm-exit'(b, it, e, act) { if (NU) nuEnd(); S.testMode = false; if (S.problem && S.problem.act === 'prob-test-end') S.problem = null; if (S.obTest) { S.obTest = false; S.ob = null; renderOb(); }
     if (S.setupTest) { S.setupTest = null; S.setup = null; } goTab('settings'); S.setPage = 'About'; render(); toast('Back to the app.'); },
   'tm-home'(b, it, e, act) { S.tmHome = b.dataset.v; S.hmAnim = false; goTab('home', b); },
   'tm-anim'(b, it, e, act) { S.tmHome = null; S.hmAnim = false; goTab('home', b); },
@@ -8046,8 +8134,13 @@ const ACTIONS = {
   'tm-a2hs'(b, it, e, act) { S.a2hs = { test: true }; renderA2hs(); renderTestBanner(); },
   'a2hs-close'(b, it, e, act) { S.a2hs = null; renderA2hs(); try { renderTestBanner(); } catch (x) {} },
   'a2hs-never'(b, it, e, act) { if (!(S.a2hs && S.a2hs.test)) store.set(K_A2HS, Date.now()); S.a2hs = null; renderA2hs(); },
+  'share-app'(b, it, e, act) { shareApp(); },
+  'a2hs-copy'(b, it, e, act) { const u = location.href.split('#')[0]; try { navigator.clipboard.writeText(u).then(() => toast('Link copied. Open it on your phone.'), () => toast(u)); } catch (x) { toast(u); } },
+  'a2hs-open'(b, it, e, act) { const E = a2hsEnv(); S.a2hs = { test: false, desk: !(E.ios || E.android) }; renderA2hs(); },
   'a2hs-install'(b, it, e, act) { const p = S.a2hsPrompt; if (p) { p.prompt(); p.userChoice.finally(() => { S.a2hsPrompt = null; S.a2hs = null; renderA2hs(); }); } },
   'tm-ob'(b, it, e, act) { S.obTest = true; obStart(); if (S.ob) { Object.assign(S.ob.a, { name: '', kg: '', goal: '', exp: '', build: '', trend: '', days: ['Mon', 'Wed', 'Fri'], plan: true }); renderOb(); } },
+  'tm-newuser'(b, it, e, act) { nuStart(); },
+  'nu-signin'(b, it, e, act) { nuSignIn(); },
   'tm-setup'(b, it, e, act) { S.setupTest = { tab: S.tab }; S.tab = 'setup'; render(); window.scrollTo(0, 0); },
   'tm-setup-end'(b, it, e, act) { const t = S.setupTest; S.setupTest = null; S.tab = (t && t.tab) || 'settings'; render(); },
   'prob-open'(b, it, e, act) { S.probOpen = true; render(); },
@@ -8060,7 +8153,9 @@ const ACTIONS = {
   'pic-mode'(b, it, e, act) { openPic(b.dataset.name, b.dataset.m); },   /* Ver 0.3s.3 */
   'close-pic'(b, it, e, act) { $('#lightbox').hidden = true; S.lightboxId = null; },
   'fd-go'(b, it, e, act) { S.foodDay = b.dataset.iso; render(); },
-  'fd-today'(b, it, e, act) { wsGoToday(); },
+  'fd-today'(b, it, e, act) { S.foodDay = todayIso(); render(); },
+  'fadd-open'(b, it, e, act) { S.fAddOpen = true; render(); },
+  'fadd-close'(b, it, e, act) { const t = $('#foodText'); if (t) S.foodText = t.value; S.fAddOpen = false; render(); },
   'fd-step'(b, it, e, act) { { const d = new Date(S.foodDay + 'T12:00:00'); d.setDate(d.getDate() + +b.dataset.d); S.foodDay = isoOf(d); render(); return; } },
   'fs-open'(b, it, e, act) { S.foodSetOpen = b.dataset.k; S.fkgDraft = ''; render(); if (S.foodSetOpen === 'w' && !(store.get(K_MKG) || {}).kg) setTimeout(() => { const i = $('#fkg'); if (i) i.focus(); }, 50); },
   'fs-close'(b, it, e, act) { S.foodSetOpen = null; render(); },
@@ -8071,11 +8166,11 @@ const ACTIONS = {
   'home-go'(b, it, e, act) { goTab(b.dataset.k, b); },
   'hm-sc'(b, it, e, act) { const sel = b.dataset.sel; goTab(b.dataset.k, b); setTimeout(() => { const el = document.querySelector(sel); if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 450); },
   'wheel-open'(b, it, e, act) { openWheel(); },
-  'dock-back'(b, it, e, act) { if (S.tab === 'settings' && S.setPage) { S.setPage = null; render(); window.scrollTo(0, 0); return; }   /* 0.3p.35 */
-    if (S.tab === 'me' && S.planFrom !== 'today' && S.meFrom) { const t = S.meFrom; S.meFrom = null; S.wpEdit = null; S.wpDay = null; S.wpArm = null; S.wpAsk = false; goTab(t); return; }   /* 0.3p.33: Me goes back where it was opened from */
-    if (S.tab === 'me' && S.planFrom === 'today') { S.planFrom = null; S.wpEdit = null; S.wpDay = null; S.wpArm = null; S.wpAsk = false; goTab('today'); return; } const o = S.draft && S.draft.items.find(x => x.open); if (o) { S.sp = null; ACTIONS['focus-back'](b, o, e, act); } },
+  'dock-back'(b, it, e, act) { if (S.tab === 'settings' && S.setPage) { S.setPage = null; render(); window.scrollTo(0, 0); pageAnim('back'); return; }   /* 0.3p.35 */
+    if (S.tab === 'me' && S.planFrom !== 'today' && S.meFrom) { const t = S.meFrom; S.meFrom = null; S.wpEdit = null; S.wpDay = null; S.wpArm = null; S.wpAsk = false; goTab(t, null, 'back'); return; }   /* 0.3p.33: Me goes back where it was opened from */
+    if (S.tab === 'me' && S.planFrom === 'today') { S.planFrom = null; S.wpEdit = null; S.wpDay = null; S.wpArm = null; S.wpAsk = false; goTab('today', null, 'back'); return; } const o = S.draft && S.draft.items.find(x => x.open); if (o) { S.sp = null; ACTIONS['focus-back'](b, o, e, act); } },
   'name-edit'(b, it, e, act) { S.nameOpen = true; renderNameSheet(); },
-  'me-open'(b, it, e, act) { if (S.tab !== 'me') S.meFrom = S.tab; S.meDay = null; S.wpEdit = null; S.wpDay = null; goTab('me', b); },   /* 0.3p.33: remember where Me was opened from */   /* Ver 0.3p.15: the logo and Settings › Me */
+  'me-open'(b, it, e, act) { if (S.tab !== 'me') S.meFrom = S.tab; S.meDay = null; S.wpEdit = null; S.wpDay = null; goTab('me', null, 'in'); },   /* 0.3p.33: remember where Me was opened from */   /* Ver 0.3p.15: the logo and Settings › Me */
   'me-day'(b, it, e, act) { S.meDay = b.dataset.iso; render(); },
   'me-day-close'(b, it, e, act) { S.meDay = null; render(); },
   'me-rep'(b, it, e) { const p = activePlan(); if (!p) return; p.once = !p.once; if (p.once && !p.start) p.start = mondayOf(todayIso()); p.updated = stampNow(); todayFollowPlan(); render(); savePlans('Repeat'); },   /* 0.3q.23 */
@@ -8151,14 +8246,15 @@ const ACTIONS = {
       store.set(K_WEEK, w); render(); saveFoodSet();
       toast(k === 'std' ? 'Carb week: standard 2-3-2.' : k === 'gym' ? 'Carb week matches your workouts.' : 'Carb week: all mid.'); return; }
   },
+
   'fa-hide'(b, it, e, act) {
     if (!S.faBusy) { S.faOpen = false; render(); }                  // typed values are kept until Cancel or Add
   },
   'fa-cancel'(b, it, e, act) { if (!S.faBusy) { S.addFood = null; S.faOpen = false; S.faMsg = ''; render(); } },
   'fa-save'(b, it, e, act) { addFoodManual(); },
-  'fa-manual'(b, it, e, act) { { const t = $('#foodText'); if (t) S.foodText = t.value; if (!S.addFood) S.addFood = faBlank(S.foodText.trim().slice(0, 120)); else if (!S.addFood.name) S.addFood.name = S.foodText.trim().slice(0, 120); S.faOpen = true; S.faMsg = ''; S.faFocus = S.addFood.name ? 'fa-kcal' : 'fa-name'; render(); return; } },
+  'fa-manual'(b, it, e, act) { { const t = $('#foodText'); if (t) S.foodText = t.value; S.fAddOpen = false; if (!S.addFood) S.addFood = faBlank(S.foodText.trim().slice(0, 120)); else if (!S.addFood.name) S.addFood.name = S.foodText.trim().slice(0, 120); S.faOpen = true; S.faMsg = ''; S.faFocus = S.addFood.name ? 'fa-kcal' : 'fa-name'; render(); return; } },
   'f-cancel'(b, it, e, act) { S.est = null; render(); },
-  'madj-open'(b, it, e, act) { S.madjOpen = true; if (!S.manualAdj) S.manualAdj = madjBlank(); render(); },
+  'madj-open'(b, it, e, act) { S.madjOpen = true; S.fAddOpen = false; if (!S.manualAdj) S.manualAdj = madjBlank(); render(); },
   'madj-hide'(b, it, e, act) { S.madjOpen = false; render(); },
   'madj-cancel'(b, it, e, act) { S.madjOpen = false; S.manualAdj = null; render(); },
   'madj-step'(b, it, e, act) { { const m = S.manualAdj || (S.manualAdj = madjBlank()); m[b.dataset.k] = Math.round(((+m[b.dataset.k] || 0) + (+b.dataset.d)) * 10) / 10; render(); return; } },
@@ -8189,7 +8285,7 @@ const ACTIONS = {
   },
   'pp-new'(b, it, e, act) { S.ppOpen = false; if (S.wp.plans.length >= MAX_PLANS) { toast('You can keep up to 3 plans. Delete one first.'); return; } S.planFrom = S.tab === 'today' ? 'today' : null; S.tab = 'me'; wbOpenPlan(null); render(); window.scrollTo(0, 0); },   /* 0.3q.28: the builder */
   'go-plan'(b, it, e, act) {   /* Ver 0.3l: Settings › Week plan, with the plan in use open for editing */
-    const ap = activePlan(); S.ppOpen = false; S.planFrom = S.tab === 'today' ? 'today' : null; S.tab = 'me'; S.wpArm = null; if (ap) wbOpenPlan(ap); render(); window.scrollTo(0, 0); },   /* 0.3q.28: the plan in use opens in the builder */
+    const ap = activePlan(); S.ppOpen = false; S.planFrom = S.tab === 'today' ? 'today' : null; S.tab = 'me'; S.wpArm = null; if (ap) wbOpenPlan(ap); render(); window.scrollTo(0, 0); pageAnim('in'); },   /* 0.3q.28: the plan in use opens in the builder */
   'wp-new'(b, it, e, act) { S.wpArm = null; if (S.wp.plans.length >= MAX_PLANS) { toast('You can keep up to 3 plans. Delete one first.'); return; } wbOpenPlan(null); render(); window.scrollTo(0, 0); },   /* 0.3q.24: the builder */
   'wp-ask-cancel'(b, it, e, act) { S.wpAsk = false; render(); },
   'wp-ask'(b, it, e, act) {
@@ -8241,7 +8337,7 @@ const ACTIONS = {
   'lm-turn'(b, it, e, act) { lmSet(S.lmSide === 'back' ? 'front' : 'back'); },
   'lib-close'(b, it, e, act) { S.libSel = null; S.libSeq = null; render(); },
   'lib-grp'(b, it, e, act) { S.libGrp = S.libGrp === b.dataset.k ? '' : b.dataset.k; S.libQ = ''; render(); },
-  'set-page'(b, it, e, act) { S.setPage = b.dataset.k; render(); window.scrollTo(0, 0); },   /* Ver 0.3p.35 */
+  'set-page'(b, it, e, act) { S.setPage = b.dataset.k; render(); window.scrollTo(0, 0); pageAnim('in'); },   /* Ver 0.3p.35 */
   'set-tog'(b, it, e, act) {
     { const o = store.get(K_SETOPEN) || {}, k = b.dataset.k, open = !o[k]; const n = {}; if (open) n[k] = 1; store.set(K_SETOPEN, n); render();   /* one section open at a time */
       if (open) { const r = [...document.querySelectorAll('.setrow')].find(x => x.dataset.k === k); if (r) { const top = r.getBoundingClientRect().top; if (top < 60) window.scrollBy(0, top - 70); } } return; }
@@ -8263,7 +8359,7 @@ const ACTIONS = {
   'qf-new'(b, it, e, act) { S.foodCard = { i: -1, edit: true, d: qfBlank() }; render(); },
   'qf-starter'(b, it, e, act) { qfAddStarter(); },
   'qf-all'(b, it, e, act) { S.qfAll = !S.qfAll; render(); },
-  'qf-grp'(b, it, e, act) { S.qfGrp = b.dataset.g || ''; render(); },
+  'qf-grp'(b, it, e, act) { const g = b.dataset.g || ''; S.qfGrp = S.qfGrp === g ? '' : g; render(); },   /* 0.3s.10: no All chip; tap the chosen group again for all */
   'qf-table'(b, it, e, act) { S.qfTable = true; render(); },
   'qt-close'(b, it, e, act) { S.qfTable = false; render(); },
   'qt-row'(b, it, e, act) { S.qfTable = false; S.foodCard = { i: +b.dataset.i, edit: false }; render(); },
@@ -8670,7 +8766,7 @@ let tabSw = null;
 function sideScroller(el) { for (let n = el; n && n !== document.body; n = n.parentElement) { if (n.scrollWidth > n.clientWidth + 2 && /(auto|scroll)/.test(getComputedStyle(n).overflowX)) return true; } return false; }
 document.addEventListener('touchstart', e => {
   const t = e.target; tabSw = null;
-  if (e.touches.length !== 1 || drag || wdrag || t.closest('#bigPh, #lightbox, input, textarea, select, .slider-box, .tabbar, .wveil, .sheet-bg, .fweek') || sideScroller(t)) return;
+  if (e.touches.length !== 1 || drag || wdrag || t.closest('#bigPh, #lightbox, input, textarea, select, .slider-box, .tabbar, .wveil, .sheet-bg, .fweeks') || sideScroller(t)) return;
   tabSw = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() };
 }, { passive: true });
 document.addEventListener('touchend', e => {
@@ -8679,8 +8775,7 @@ document.addEventListener('touchend', e => {
   if (Math.abs(dx) < 70 || Math.abs(dx) < 2 * Math.abs(dy) || dt > 800) return;
   const tabs = navList().map(t => t[0]), i = tabs.indexOf(S.tab);   /* Home is not part of the swipe order */
   const j = i + (dx < 0 ? 1 : -1); if (i < 0 || j < 0 || j >= tabs.length) return;
-  goTab(tabs[j]);
-  const v = $('#view'); v.classList.remove('sl-l', 'sl-r'); void v.offsetWidth; v.classList.add(dx < 0 ? 'sl-l' : 'sl-r');
+  goTab(tabs[j], null, dx < 0 ? 'in' : 'back');
 }, { passive: true });
 // big photo: a short tap closes it, holding 0.5 s opens it full screen
 // Drag the big photo left / right to go to the next / previous one: the photo follows the finger,
@@ -8803,7 +8898,7 @@ function splashLook() {
 }
 function splashSave() {
   clearTimeout(splashSaveT);
-  splashSaveT = setTimeout(() => { if (LOOK_PV) return; try { localStorage.setItem(K_SPLASH, JSON.stringify(splashLook())); } catch (e) {} }, 0);
+  splashSaveT = setTimeout(() => { if (LOOK_PV || NU) return; try { localStorage.setItem(K_SPLASH, JSON.stringify(splashLook())); } catch (e) {} }, 0);
 }
 function lookTry(k, v, from) {   /* change one part of the look being tried, with the circle reveal from the tapped button */
   if (!LOOK_PV) return; if (LOOK_PV[k] === v) return;
@@ -8819,17 +8914,25 @@ function lookEnd(keep) {   /* keep = save the look being tried; otherwise go bac
   LOOK_PV = null; applyLook();
 }
 function lookStyles() { const sty = styleOf(); return '<div class="stylerow">' + STYLES.map(s => '<button class="stybtn sty-' + s.k + (s.k === sty ? ' on' : '') + '" data-act="lk-sty" data-k="' + s.k + '" aria-pressed="' + (s.k === sty) + '"><span class="sty-pv" aria-hidden="true"><b>Today</b><i></i><i></i></span>' + esc(s.n) + '</button>').join('') + '</div>'; }
-function lookPals() { const cur = palOf().k; return '<div class="palrow">' + PALS.map(p => '<button class="palbtn' + (p.k === cur ? ' on' : '') + '" data-act="lk-pal" data-k="' + p.k + '" aria-pressed="' + (p.k === cur) + '"><span class="sw2" aria-hidden="true"><i style="background:' + p.b + '"></i><i style="background:' + p.g + '"></i></span>' + esc(p.n) + '</button>').join('') + '</div>'; }
+/* Ver 0.3s.13 (user picked idea A): each colour theme is one circle split in its two colours, 4 to a row; the chosen one has
+   a gold ring and a tick, and its name shows by the heading (was 8 big tiles in 4 rows, about 310 px tall) */
+function palDots(cur, act) {
+  return '<div class="paldots" role="radiogroup" aria-label="Color theme">' + PALS.map(p => '<button class="paldot' + (p.k === cur ? ' on' : '') + '" role="radio" data-act="' + act + '" data-k="' + p.k + '" aria-checked="' + (p.k === cur) + '" aria-label="' + esc(p.n) + '" title="' + esc(p.n) + '"><i style="background:linear-gradient(135deg, ' + p.b + ' 50%, ' + p.g + ' 50%)"></i></button>').join('') + '</div>' +
+    (act === 'pal' ? '' : '<p class="paldot-n">' + esc((PALS.find(p => p.k === cur) || PALS[0]).n) + '</p>');
+}
+function lookPals() { const cur = palOf().k; return palDots(cur, 'lk-pal'); }
 function lookPicker(withTheme) {   /* style cards and colour themes, the same as Settings › Appearance; taps only try the look */
   const sty = styleOf(), cur = palOf().k, dark = document.documentElement.getAttribute('data-theme') === 'dark';
   return '<p class="setlab">Style</p><div class="stylerow">' + STYLES.map(s => '<button class="stybtn sty-' + s.k + (s.k === sty ? ' on' : '') + '" data-act="lk-sty" data-k="' + s.k + '" aria-pressed="' + (s.k === sty) + '"><span class="sty-pv" aria-hidden="true"><b>Today</b><i></i><i></i></span>' + esc(s.n) + '</button>').join('') + '</div>' +
-    '<p class="setlab">Color theme</p><div class="palrow">' + PALS.map(p => '<button class="palbtn' + (p.k === cur ? ' on' : '') + '" data-act="lk-pal" data-k="' + p.k + '" aria-pressed="' + (p.k === cur) + '"><span class="sw2" aria-hidden="true"><i style="background:' + p.b + '"></i><i style="background:' + p.g + '"></i></span>' + esc(p.n) + '</button>').join('') + '</div>' +
+    '<p class="setlab">Color theme</p>' + palDots(cur, 'lk-pal') +
     (withTheme ? '<p class="setlab">Light or dark</p><div class="seg lk-seg" role="group" aria-label="Light or dark">' + [['light', 'Light'], ['dark', 'Dark']].map(([k, n]) => '<button class="btn' + ((k === 'dark') === dark ? ' on' : '') + '" data-act="lk-th" data-k="' + k + '">' + n + '</button>').join('') + '</div>' : '');
 }
 // play the loading screen once, in the look on screen now (Test mode › Look and loading screen)
-function playSplash() {
+function playSplash(fresh) {
   const old = document.getElementById('splash'); if (old) old.remove();
-  const L = splashLook(), n = new Date(), hr = n.getHours(), hi = hr < 5 ? 'Good evening' : hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
+  const L = splashLook();
+  if (fresh) { const dk = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches; Object.assign(L, { bg: dk ? '#000000' : '#f2f2f7', ink: dk ? '#c7c7cc' : '#6e6e73', ring: dk ? '#c7c7cc' : '#6e6e73', style: 'go', user: '' }); }
+  const n = new Date(), hr = n.getHours(), hi = hr < 5 ? 'Good evening' : hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
   const d = document.createElement('div'); d.id = 'splash'; d.className = L.style === 'studio' ? 'studio' : 'go'; d.setAttribute('aria-hidden', 'true'); d.dataset.act = 'noop';
   d.style.cssText = 'position:fixed;inset:0;z-index:9999;background:' + L.bg + ';color:' + L.ink + ';font:15px -apple-system,BlinkMacSystemFont,sans-serif;transition:opacity .35s ease,visibility .35s;';
   d.innerHTML = '<div class="sp-mark" style="position:absolute;left:50%;top:calc(50% - 56px);width:128px;height:128px;margin:-64px 0 0 -64px"><svg viewBox="0 0 128 128" width="128" height="128" style="position:absolute;inset:0"><circle cx="64" cy="64" r="60" fill="none" stroke="currentColor" stroke-opacity=".18" stroke-width="3"/><circle id="splashRing" cx="64" cy="64" r="60" fill="none" stroke="' + esc(L.ring) + '" stroke-width="3" stroke-linecap="round" stroke-dasharray="94 283"/></svg>' +
@@ -8942,7 +9045,7 @@ function appearanceExtra() {   /* Ver 0.3q.10: iPhone Settings style: small grey
     '<p class="ios-h">Appearance</p><div class="ios-card"><div class="xp-opts" role="radiogroup" aria-label="Light or dark">' +
     [['light', 'Light'], ['dark', 'Dark'], ['auto', 'Auto']].map(([k, n]) => xpOpt('mode', k, auto ? k === 'auto' : k !== 'auto' && (k === 'dark') === dark, phonePv(k === 'dark', sty === 'studio', cur.b, cur.g, k === 'auto'), n)).join('') + '</div></div>' +   /* Ver 0.3r.50 (user): Auto is a third picture (half light, half dark); the Automatic switch row is gone */
     '<p class="ios-h">Style</p><div class="ios-card"><div class="stylerow">' + STYLES.map(s => '<button class="stybtn sty-' + s.k + (s.k === sty ? ' on' : '') + '" data-act="sty" data-k="' + s.k + '" aria-pressed="' + (s.k === sty) + '"><span class="sty-pv" aria-hidden="true"><b>Today</b><i></i><i></i></span>' + esc(s.n) + '</button>').join('') + '</div></div>' +
-    '<p class="ios-h">Color theme</p><div class="ios-card"><div class="palrow">' + PALS.map(p => '<button class="palbtn' + (p.k === cur.k ? ' on' : '') + '" data-act="pal" data-k="' + p.k + '" aria-pressed="' + (p.k === cur.k) + '"><span class="sw2" aria-hidden="true"><i style="background:' + p.b + '"></i><i style="background:' + p.g + '"></i></span>' + esc(p.n) + '</button>').join('') + '</div></div></div>' +
+    '<p class="ios-h pal-h">Color theme <b>' + esc(cur.n) + '</b></p><div class="ios-card">' + palDots(cur.k, 'pal') + '</div></div>' +
     xpSection();
 }
 function openIconSheet() {
@@ -8965,8 +9068,8 @@ function a2hsStandalone() { try { return navigator.standalone === true || matchM
 function a2hsAuto() {
   let framed = true; try { framed = window.top !== window.self; } catch (e) {}
   const E = a2hsEnv();
-  if (framed || a2hsStandalone() || !(E.ios || E.android) || store.get(K_A2HS) || S.a2hs || S.ob) return;
-  S.a2hs = { test: false }; renderA2hs();
+  if (framed || a2hsStandalone() || store.get(K_A2HS) || S.a2hs || S.ob) return;
+  S.a2hs = { test: false, desk: !(E.ios || E.android) }; renderA2hs();   /* 0.3s.18: computers get the made-for-phones note */
 }
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); S.a2hsPrompt = e; if (S.a2hs) renderA2hs(); });   /* Android Chrome: a real Install button */
 const A2_SHARE = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 11H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
@@ -8977,7 +9080,7 @@ const A2_SAFARI = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="
 function renderA2hs() {
   const box = $('#a2hsSheet'); if (!box) return;
   const A = S.a2hs; if (!A) { if (box.innerHTML) box.innerHTML = ''; return; }
-  const E = a2hsEnv(), step = (ic, t, sub) => '<li><span class="a2-ic">' + ic + '</span><span><b>' + t + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</span></li>';
+  const E = a2hsEnv(), desk = !!A.desk, step = (ic, t, sub) => '<li><span class="a2-ic">' + ic + '</span><span><b>' + t + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</span></li>';
   let steps = '';
   if (E.inApp) steps += step(A2_SAFARI, 'Open this page in ' + (E.ios ? 'Safari' : 'Chrome'), 'Tap ' + (E.ios ? '•••' : '⋮') + ' or the compass in this app’s browser, then “Open in ' + (E.ios ? 'Safari' : 'browser') + '”.');
   else if (E.otherIos) steps += step(A2_SAFARI, 'Best in Safari', 'Copy this link and open it in Safari, then follow the steps below.');
@@ -8989,10 +9092,19 @@ function renderA2hs() {
     steps += step(A2_ADD, 'Scroll down and tap “Add to Home Screen”', '');
   }
   steps += step('<b class="a2-ok">✓</b>', 'Tap Add, then open it from your Home Screen', 'It opens full screen like an app, and your settings stay put.');
+  const one = !!S.a2hsPrompt;   /* Android Chrome offers a real one-tap install */
+  if (desk) {   /* Ver 0.3s.18: on a computer: made for phones, open the link there */
+    box.innerHTML = '<div class="sheet-bg" data-act="a2hs-close"><div class="sheet a2hs" role="dialog" aria-label="Made for phones" data-act="noop">' +
+      '<div class="a2-hero"><img src="' + esc(iconSrc()) + '" alt=""><div><b>Made for your phone</b><small>This app is built for phone screens. It works here too, but it is best as a full-screen app on your phone.</small></div></div>' +
+      '<div class="a2-link"><span>' + esc(location.href.split('#')[0]) + '</span><button class="btn sm" data-act="a2hs-copy">Copy link</button></div>' +
+      '<p class="hint">Open this link on your phone, then add it to your Home Screen (the app shows you how).</p>' +
+      '<div class="a2-acts"><button class="btn primary" data-act="a2hs-close">Use it here</button><button class="btn" data-act="a2hs-never">Don’t show again</button></div></div></div>';
+    return;
+  }
   box.innerHTML = '<div class="sheet-bg" data-act="a2hs-close"><div class="sheet a2hs" role="dialog" aria-label="Add to Home Screen" data-act="noop">' +
-    '<div class="a2-hero"><img src="' + esc(iconSrc()) + '" alt=""><div><b>Get the full-screen app</b><small>Add it to your Home Screen. It takes 10 seconds.</small></div></div>' +
+    '<div class="a2-hero"><img src="' + esc(iconSrc()) + '" alt=""><div><b>Made for your phone</b><small>It works best as a full-screen app on your Home Screen, like any other app. ' + (one ? 'One tap adds it.' : 'Adding it takes about 10 seconds.') + '</small></div></div>' +
+    (one ? '<button class="btn primary a2-go" data-act="a2hs-install">Add to Home Screen</button><p class="a2-or">or do it by hand:</p>' : (E.ios && !E.inApp && !E.otherIos ? '<p class="a2-or">iPhone does not let a web page add itself, so it is 3 taps:</p>' : '')) +
     '<ol class="a2-steps">' + steps + '</ol>' +
-    (S.a2hsPrompt ? '<button class="btn primary a2-go" data-act="a2hs-install">Install the app</button>' : '') +
     '<div class="a2-acts"><button class="btn primary" data-act="a2hs-close">Got it</button><button class="btn" data-act="a2hs-never">Don’t show again</button></div>' +
     (A.test ? '<p class="hint">Test mode: on this device it would show as ' + (E.inApp ? 'an in-app browser' : E.android ? 'Android Chrome' : E.otherIos ? 'another iPhone browser' : E.ios ? 'Safari on iPhone' : 'a computer (the iPhone steps are shown)') + '.</p>' : '') +
     '</div></div>';
