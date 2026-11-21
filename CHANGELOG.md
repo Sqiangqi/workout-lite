@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3s.8.1 · 11/21/2026
+
+Web-only update on Ver 0.3s.8: tidy-up. The privacy page explains the anonymous once-a-day usage count and the Delete all my data button. Unused parts taken out: leftover code from the Renpho CSV import (the Body tab is in the full app only) and a few unused styles and values. Removed: the Usage count section in Settings › About.
+
 ## 0.3s.8 · 11/21/2026
 
 Matches the full app Ver 0.3s.8 (its 0.3s.1 to 0.3s.8): one type scale (a handful of text sizes) with rounded, same-width numbers; every tab starts with a large title that turns into a slim bar at the top when you scroll; one shape for small exercise pictures, and tapping a picture opens it full screen with a Still / Moving switch, the muscles and a few form cues; Home: workouts this week is one big ring with kcal and protein beside it, the Start workout button shows the day’s exercises as small round pictures, the Last workout tile shows at most four muscles and Home fits on one screen; cards sit on a soft shadow instead of a border, dark mode cards are a step lighter, muscle-group colours on Start workout cards and Muscles worked, a set row pops when you fill it in; code tidy; dark mode (and the rest of your look) is kept: each look choice carries its time and the newest copy wins. Removed: the grey card borders, the “N exercises planned” text on the Start workout button, the old picture box.
