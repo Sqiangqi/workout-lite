@@ -453,7 +453,7 @@ details.wk summary { cursor: pointer; font-size: 13px; color: var(--muted); padd
 
 .pickbtn { position: relative; width: 100%; text-align: left; padding: 11px 40px 11px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font-family: var(--font-display); font-weight: 600; font-size: 17px; line-height: 1.15; }
 .pickbtn::after { content: ""; position: absolute; right: 16px; top: 50%; width: 9px; height: 9px; border-right: 2.5px solid var(--accent); border-bottom: 2.5px solid var(--accent); transform: translateY(-70%) rotate(45deg); }
-.sheet-bg { position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,.45); display: flex; align-items: flex-end; justify-content: center; }
+.sheet-bg { overscroll-behavior: contain; position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,.45); display: flex; align-items: flex-end; justify-content: center; }
 .sheet { width: min(640px, 100%); background: var(--surface); border-radius: 18px 18px 0 0; padding: 10px 12px calc(12px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 8px; box-shadow: 0 -8px 24px rgba(0,0,0,.25); }
 .sheet-h { display: flex; justify-content: space-between; align-items: center; padding: 2px 4px; }
 .sheet-h b { font-family: var(--font-display); font-size: 17px; letter-spacing: .03em; }
@@ -1209,6 +1209,8 @@ label.sheet-it { display: block; cursor: pointer; }
 #view .card[data-id].focus > * { flex: none; }
 #view .card[data-id].focus > .pic { flex: 1 1 0; min-height: 150px; max-height: calc((min(100vw, 640px) - 32px) / 1.5); width: 100%; max-width: none; aspect-ratio: auto; align-self: stretch; border-radius: 10px; box-shadow: 0 0 0 1px var(--line); }   /* full width; full 3:2 height when there is room, otherwise shorter (cropped a little at top and bottom); tap to enlarge */
 #view .card[data-id].focus > .pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#view .card[data-id].focus > .pic.fxs { background: #f7f9fd; }
+#view .card[data-id].focus > .pic.fxs img { object-fit: contain; }   /* Ver 0.3s.21: a shortened picture shows the whole START | END picture */
 #view .card[data-id].focus .fx-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
 
 #view .card[data-id].focus .last { font-size: 13px; padding: 4px 8px; }
@@ -1228,6 +1230,18 @@ label.sheet-it { display: block; cursor: pointer; }
 #view .card[data-id].focus .fx-row.one { grid-template-columns: 1fr; }
 #view .card[data-id].focus .fx-row .add-set { justify-self: stretch; padding: 11px 4px; font-size: 15px; }
 #view .card[data-id].focus .fx-fin { padding: 11px; font-size: 17px; border-radius: 9px; }
+/* Ver 0.3s.22: Workout complete page on Today */
+.wdone { display: grid; justify-items: center; gap: 8px; text-align: center; background: var(--surface); border-radius: var(--r); box-shadow: 0 0 0 1px var(--line); padding: 26px 16px 18px; margin-top: 6px; }
+.wd-badge { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: var(--gold); color: var(--brand); box-shadow: 0 4px 14px rgba(var(--gold-rgb), .45); animation: okPop .5s cubic-bezier(.2,1.6,.4,1) both; }
+.wd-h { margin: 6px 0 0; font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--ink); }
+.wd-sub { margin: 0; color: var(--muted); font-size: 15px; }
+.wd-list { width: 100%; display: grid; gap: 0; margin-top: 8px; text-align: left; border-top: 1px solid var(--line); }
+.wd-it { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 9px 2px; border-bottom: 1px solid var(--line); font-size: 15px; }
+.wd-it b { color: var(--ink); font-weight: 600; min-width: 0; }
+.wd-it span { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; flex: none; max-width: 55%; }
+.wd-note { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+.wdone .acts { margin-top: 4px; }
+@media (prefers-reduced-motion: reduce) { .wd-badge { animation: none; } }
 #view.today-view:has(> .card.focus) { min-height: 0; padding-top: 8px; padding-bottom: 0; }   /* no spare space under the page */
 /* on Today the strip under the rest timer is filled, so the page does not show through around the round button */
 /* The header (logo, day, date, sync badge) shows on the Home page only; tab pages start at the top of the screen */
@@ -3946,6 +3960,40 @@ function archiveNamesOn(iso) {   /* exercise names in the Sheet's block for that
   }
   return out;
 }
+/* Ver 0.3s.22: the Sheet's rows for one date, grouped per exercise (warm-up and headers left out), for the Workout complete page */
+function archiveDayOn(iso) {
+  const key = keyOfIso(iso), rows = S.archive || [], out = [], by = new Map();
+  const isHeader = r => r[0] === UPPER || r[0] === LOWER, keyOf = r => { const i = parseUS(r[2]); return i ? keyOfIso(i) : ''; };
+  let on = false;
+  for (const r of rows) {
+    if (isHeader(r)) { on = keyOf(r) === key; continue; }
+    if (r[0] === END) { on = false; continue; }
+    if (!on || !r[0] || NOT_EX.test(r[0]) || /warm.?up/i.test(r[0])) continue;
+    if (!by.has(r[0])) { const g = { name: r[0], rows: [] }; by.set(r[0], g); out.push(g); }
+    by.get(r[0]).rows.push(r);
+  }
+  return out;
+}
+function wdLine(g) {   /* one exercise as a short line: 105 lbs × 9/7/6, 7 · 12 · 11 reps, 62 s */
+  const u = String((g.rows[0] || [])[2] || unitOf(g.name) || '').toLowerCase(), far = isFarmer(g.name);
+  if (u === 'reps') { const r = g.rows.map(x => splitReps(x[3]).join('/')).filter(Boolean); return r.length ? r.join(' · ') + ' reps' : g.rows.length + ' sets'; }
+  if (/sec/.test(u)) return g.rows.map(x => x[1]).filter(Boolean).join(' · ') + ' s';
+  if (/min/.test(u)) return g.rows.map(x => x[1]).filter(Boolean).join(' · ') + ' min';
+  return g.rows.map(x => { const r = splitReps(x[3], far); return (x[1] === '' ? '–' : x[1]) + ' lbs' + (r.length ? ' × ' + r.join('/') : ''); }).join(', ');
+}
+function todayDone() {   /* Ver 0.3s.22: today's workout is saved and nothing new is typed (Log more today turns it off for the day) */
+  const d = S.draft, t = todayIso(); if (!d || d.date !== t || draftHasWork(d) || S.moreDate === t) return false;
+  return !!((d.done && !d.items.length) || archiveDayOn(t).length);
+}
+function viewDone(d) {
+  const day = archiveDayOn(d.date), LS = S.lastSave && S.lastSave.date === d.date ? S.lastSave : null;
+  const wd = WEEKDAYS[new Date(d.date + 'T12:00:00').getDay()];
+  let h = '<section class="wdone"><span class="wd-badge" aria-hidden="true"><svg viewBox="0 0 24 24" width="34" height="34"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+    '<h2 class="wd-h">Workout complete</h2><p class="wd-sub">' + esc(wd) + ' ' + esc(usOf(d.date).replace(/\/\d{4}$/, '')) + (LS ? ' · saved at ' + esc(clock12(LS.at)) : ' · saved in the Sheet') + '</p>';
+  if (day.length) h += '<div class="wd-list">' + day.map(g => '<div class="wd-it"><b>' + esc(bareName(g.name)) + '</b><span>' + esc(wdLine(g)) + '</span></div>').join('') + '</div>';
+  else if (LS) h += '<p class="wd-sub">' + LS.n + ' entr' + (LS.n === 1 ? 'y' : 'ies') + ' saved.</p>';
+  return h + '<p class="wd-note">Rest well. Tomorrow’s plan shows here tomorrow.</p><div class="acts"><button class="btn" data-act="wd-more">Log more today</button></div></section>';
+}
 function draftHasWork(d) { return !!(d && d.items.some(it => filledSets(it).length && !isWu(it))); }
 
 // ---------- Google (Apps Script) ----------
@@ -4823,13 +4871,13 @@ function render0() {
   if (S.tab !== 'today' && S.sp) renderSetPick();   /* Ver 0.3b: the set picker closes when you leave Today */
   const v = $('#view');
   // Today fills the screen so "Add an exercise" and "Save session" sit at the bottom, with or without exercises
-  v.classList.toggle('today-view', S.tab === 'today');
+  v.classList.toggle('today-view', S.tab === 'today'); v.style.paddingBottom = '';   /* Ver 0.3s.21: fxFit's scroll room only on the exercise page */
   { const hd = document.querySelector('header.top'); if (hd) document.documentElement.style.setProperty('--hdr-h', hd.offsetHeight + 'px'); }
   document.body.classList.toggle('setup', S.tab === 'setup');
   if (S.tab === 'setup') { v.classList.remove('today-view'); v.innerHTML = viewSetup(); return; }   /* Workout Lite: first open, no Sheet yet */
   if (S.tab !== 'home') S.hmAnim = false;
   if (S.tab === 'home') { v.innerHTML = viewHome(); hmFitMus(); mxFit(); hmFitScreen(); if (!S.hmAnim) hmStart(); setTimeout(obAuto, 400); setTimeout(a2hsAuto, 1600); snapSoon(); }
-  else if (S.tab === 'today') { v.innerHTML = viewToday() + wuSheet(); renderTimer(); renderSetPick(); tcFit(); setPop(); }
+  else if (S.tab === 'today') { v.innerHTML = viewToday() + wuSheet(); renderTimer(); renderSetPick(); tcFit(); setPop(); fxFit(); }
   else if (S.tab === 'progress') v.innerHTML = viewProgress();
   else if (S.tab === 'food') { v.innerHTML = viewFood() + addFoodSheet() + qfSheet() + qfTableSheet(); qfFilter(); qfFitNames(); const fi = S.faFocus && document.getElementById(S.faFocus); if (fi) { fi.focus(); S.faFocus = null; } }
 
@@ -5140,7 +5188,7 @@ function ltTitle(v) {
   let bar = document.getElementById('ltBar');
   if (!bar) { bar = document.createElement('div'); bar.id = 'ltBar'; bar.setAttribute('aria-hidden', 'true'); document.body.appendChild(bar); window.addEventListener('scroll', ltScroll, { passive: true }); }
   const t = S.tab, sub = (t === 'today' && S.draft && S.draft.items.some(x => x.open)) || (t === 'settings' && S.setPage) || (t === 'me' && S.wbOpen);
-  const name = t === 'home' ? $('#dayName').textContent : LT_NAME[t];
+  const name = t === 'home' ? $('#dayName').textContent : t === 'today' && !sub && todayDone() ? 'Today' : LT_NAME[t];   /* Ver 0.3s.22 */
   if (name && !sub && t !== 'home' && !v.querySelector(':scope > .lt')) v.insertAdjacentHTML('afterbegin', '<h1 class="lt">' + esc(name) + '</h1>');
   bar.innerHTML = name ? (t === 'home' ? '<img src="' + esc(iconSrc()) + '" alt="">' : '') + '<span>' + esc(name) + '</span>' : '';
   ltScroll();
@@ -5209,6 +5257,10 @@ function viewToday() {
   }
   // A started exercise gets the page to itself: its picture, name, sets and buttons. The X or Finished brings the list back.
   { const fo = d.items.find(x => x.open); if (fo) return problemBox() + cardToday(fo, d.items.indexOf(fo)); }
+  /* Ver 0.3s.22 (user: "if a workout is finished, it should show a different page indicating workout is completed"): once
+     today's session is in the Sheet and nothing new is typed, Today shows Workout complete instead of the plan again.
+     Log more today (wd-more) goes back to an empty list with Add an exercise. */
+  if (todayDone()) return h + viewDone(d);
   if (d.done && !d.items.length) {
     h += '<div class="empty grow">Session saved. Add an exercise below if you want to log more today; it will be added to today\'s blocks in the sheet.</div>';
   } else if (!d.items.length) {
@@ -5430,6 +5482,26 @@ function tcFit() {
   job.forEach(j => { while (j.f > j.lo && j.e.scrollWidth > j.e.clientWidth + 1) { j.f = Math.max(j.lo, j.f - .5); j.e.style.fontSize = j.f + 'px'; } });
 }
 try { if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (S.tab === 'today') tcFit(); }); window.addEventListener('resize', () => { if (S.tab === 'today') tcFit(); }); } catch (e) {}
+/* Ver 0.3s.21: the exercise page always fits above the bottom bar. With the body weight / band rows (reps exercises such as
+   the Australian Pull-up) and 4 or more sets, + set / - set / Finished slid under the bottom bar and could not be reached.
+   Now: 1) the set rows get shorter (down to 34 px), 2) then the picture (down to 80 px), 3) if it still does not fit, the
+   page gets room under it so it scrolls past the bottom bar. */
+function fxFit() {
+  const v = document.getElementById('view'); if (v) v.style.paddingBottom = '';
+  const c = document.querySelector('#view .card.focus'); if (!c || S.tab !== 'today') return;
+  const pic = c.querySelector(':scope > .pic'), row = c.querySelector('.fx-row'); if (!row) return;
+  c.style.removeProperty('--fx-h'); if (pic) { pic.style.minHeight = ''; pic.classList.remove('fxs'); }
+  const tb = document.querySelector('.tabbar'), tr = tb ? tb.getBoundingClientRect() : null;
+  const lim = (tr && tr.height ? tr.top : window.innerHeight) - 6;
+  const over = () => row.getBoundingClientRect().bottom + window.scrollY - lim;
+  let o = over(); if (o <= 1) return;
+  const rows = c.querySelectorAll('.set.sprow');
+  if (rows.length) { const h = rows[0].getBoundingClientRect().height, nh = Math.max(34, Math.floor(h - o / rows.length));
+    if (nh < h) { c.style.setProperty('--fx-h', nh + 'px'); o = over(); } }
+  if (o > 1 && pic) { const ph = pic.getBoundingClientRect().height; pic.style.minHeight = Math.max(80, Math.floor(ph - o)) + 'px'; pic.classList.add('fxs'); o = over(); }
+  if (o > 1 && v) v.style.paddingBottom = 'calc(var(--tabbar-h) + 10px)';
+}
+try { window.addEventListener('resize', () => { clearTimeout(window.__fxf); window.__fxf = setTimeout(fxFit, 150); }); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fxFit); } catch (e) {}
 // Ver 0.3s.5 (look idea 15): a set row that was empty and now has a number pops once, with a short tick on phones that can vibrate.
 let setPopSeen = null;
 function setPop() {
@@ -6008,14 +6080,14 @@ function viewPlan(T, got, mid, info) {
     bar('c', 'Carbs', T.c, got.c, pend.c, 'g') + bar('p', 'Protein', T.p, got.p, pend.p, 'g') +
     bar('f', 'Fat', T.f, got.f, pend.f, 'g') + bar('fib', 'Fiber', T.fib || 0, got.fib || 0, pend.fib, 'g') +
     '</div></div>' + (info || '') + (mid || '');
-  if (room.kcal < 50 && room.p < 5) return h + '<p class="hint">You have reached the day’s targets.</p>';
-  if (!S.qf.length) return h + '<p class="hint">Add foods to My foods to get suggestions.</p>';
+  if (room.kcal < 50 && room.p < 5) return h + '<p class="hint">You have reached the day’s targets.</p>' + madjButton();   /* Ver 0.3s.25 */
+  if (!S.qf.length) return h + '<p class="hint">Add foods to My foods to get suggestions.</p>' + madjButton();
   if (foodFuture()) return h;   /* Ver 0.3r.53: nothing to add on a future day */
   const sug = planFill(room, T, 2);   // at most 2 different foods (was 3 since 2026-11-06)
-  if (!sug.length) return h + '<p class="hint">Nothing from your Quick foods fits the room left' + (room.p > 5 ? '; a lean protein would help most' : '') + '.</p>';
+  if (!sug.length) return h + '<p class="hint">Nothing from your Quick foods fits the room left' + (room.p > 5 ? '; a lean protein would help most' : '') + '.</p>' + madjButton();
   // Suggestions as tiles like Quick add (one tap adds; no total line; no empty space on the right)
   h += '<p class="section-sub">Suggested to fill the day</p><div class="qfl sugl">' + sug.map((x, i) => { const q = S.qf.find(f => f.name === x.qf);
-    return qfTile(x, q ? q.name : x.name, q ? qfAmtLabel(q, x.amt) : '', 'sugt', 'data-act="plan-one" data-i="' + i + '"'); }).join('') + '</div>';
+    return qfTile(x, q ? q.name : x.name, q ? qfAmtLabel(q, x.amt) : '', 'sugt', 'data-act="plan-one" data-i="' + i + '"'); }).join('') + '</div>' + madjButton();
   S.planSug = sug;
   return h;
 }
@@ -6056,7 +6128,7 @@ function foodAddSheet() {
   return '<div class="sheet-bg" data-act="fadd-close"><div class="sheet fadd-sheet" role="dialog" aria-label="Add food" data-act="noop"><div class="sheet-h"><b>Add food</b><button class="btn sm" data-act="fadd-close">' + (n ? 'Done' : 'Close') + '</button></div><div class="fadd-body">' +
     '<div class="hrow"><p class="section-h">My foods</p><button class="btn sm" data-act="qf-table">Full list</button></div><div class="panel">' + viewQuick() + '</div>' +
     '<p class="section-h">Add food</p><div class="panel"><div class="row-acts"><button class="btn glowbtn" data-act="fa-manual">Enter myself</button><span class="hint">Type the name, calories and macros of a food</span></div></div>' +
-    madjButton() + '</div>' +
+    '</div>' +   /* Ver 0.3s.25: Manual adjustment moved back under Suggested to fill the day */
     (n ? '<button class="btn primary fadd-done" data-act="fadd-close">Review ' + n + ' to add ›</button>' : '') + '</div></div>';
 }
 function viewFood() {
@@ -6515,6 +6587,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3s.25', '11232026', 'Matches the full app Ver 0.3s.25 (its 0.3s.21 to 0.3s.25). Exercise page fits the screen: with the body weight and band rows and 4 or more sets, the set rows and then the picture get a little shorter so + set, − set and Finished stay above the bottom bar (the page scrolls if it still does not fit). Workout complete page: once today’s workout is saved to the Sheet, Today shows what you did (each exercise with its sets) instead of the plan again; Log more today brings back Add an exercise. Bottom sheets no longer move the page behind them; only the sheet’s own list scrolls. Food tab: Manual adjustment is back under Suggested to fill the day (it was inside the Add food sheet). Removed: Manual adjustment from the Add food sheet.'],
   ['0.3s.20', '11222026', 'Matches the full app Ver 0.3s.20. Two new pull exercises on the way to a first pull-up: Negative Pull-up (jump up, hold the top 2 s, lower for 3 s) and Australian Pull-up (inverted row under a hip-high bar). Both have a Start | End picture, a moving picture (the Negative Pull-up plays at its real pace, with each step named at the top) and form cues, and are in the Add an exercise suggestions.'],
   ['0.3s.19', '11212026', 'Matches the full app Ver 0.3s.19 (its 0.3s.9 to 0.3s.19). Food tab: the week is 7 round day buttons you slide with your finger to the next or previous week; calories left are a ring with the Carbs, Protein, Fat and Fiber bars beside it; Carb day · Weight · Body type is one tappable line; then what you ate. Add food is a gold bowl button on the right of the bottom strip and opens a sheet with My foods (tap a chosen group again for all foods), Enter myself and Manual adjustment; a tapped food tile stays readable; the Food tab opens about 3 times faster. Settings › Appearance › Color theme: one split colour circle per theme, 4 to a row. Home › Muscles worked: clearer grid, bigger names, a larger web and a fairer scale so muscles with fewer sets show further out. One set of page moves: another tab grows as a circle from what you tapped, a page deeper in slides in from the right, going back slides from the left. Add to Home Screen guide: made for your phone; on Android one tap adds it; on iPhone it shows the 3 taps; on a computer it gives the link to open on your phone; Settings › About › Get the full-screen app opens it again. Owner: Share the app sends the link with a short note. Test mode: New user: whole first open walks through the loading screen, Sign in with Google (pretend), Create my folder (pretend), Get started and the first Home without saving anything. Code tidy. Removed: the second week bar on the Food tab, the Weight / Body type / Carb day tiles, the theme tiles, the All chip in My foods, the big Add food bar.'],
   ['0.3s.8.1', '11212026', 'Web-only update on Ver 0.3s.8: tidy-up. The privacy page explains the anonymous once-a-day usage count and the Delete all my data button. Unused parts taken out: leftover code from the Renpho CSV import (the Body tab is in the full app only) and a few unused styles and values. Removed: the Usage count section in Settings › About.'],
@@ -7958,8 +8031,9 @@ function viewHome() {
   // Start workout, pinned above the bottom strip
   const all = S.draft && S.draft.date === today ? S.draft.items : null, n = all ? all.length : planNames(today).length;
   /* Ver 0.3r.79 (user): three lines: Start workout / the day type / "N exercises planned", left-aligned */
-  const label = S.draft && S.draft.date === today && S.draft.done ? 'Workout saved ✓' : all && draftHasWork(S.draft) ? 'Continue workout' : 'Start workout';
-  const nTxt = n ? n + ' exercise' + (n === 1 ? '' : 's') + ' planned' : '';
+  const wdn = todayDone(), wdN = wdn ? archiveDayOn(today).length : 0;   /* Ver 0.3s.22 */
+  const label = wdn ? 'Workout done ✓' : S.draft && S.draft.date === today && S.draft.done ? 'Workout saved ✓' : all && draftHasWork(S.draft) ? 'Continue workout' : 'Start workout';
+  const nTxt = wdn && wdN ? wdN + ' exercise' + (wdN === 1 ? '' : 's') : n ? n + ' exercise' + (n === 1 ? '' : 's') + ' planned' : '';
   const pn = (all ? all.map(x => x.name) : planNames(today)).filter(Boolean), pics = pn.length ? hmStPics(pn) : '';   /* Ver 0.3s.4 */
   let dty = '';   /* Ver 0.3p.23: the day type (Upper body, Push day, Rest day...) moved here from the Home header */
   if (planOn()) { const ap = activePlan(), dd = ap ? planDay(ap, today) : null; dty = dd ? pdLabel(dd) : 'No plan today'; }
@@ -8052,6 +8126,7 @@ const ACTIONS = {
   'add-close'(b, it, e, act) { S.addOpen = false; render(); },
   'add-ex'(b, it, e, act) { S.addOpen = false; S.draft.items.push(newItem(b.dataset.name)); saveDraft(); render(); toast(bareName(b.dataset.name) + ' added.'); },
   'save'(b, it, e, act) { S.confirm = true; render(); },
+  'wd-more'(b, it, e, act) { S.moreDate = todayIso(); if (S.draft && !draftHasWork(S.draft)) { S.draft = { date: todayIso(), items: [], done: true }; saveDraft(); } render(); },   /* Ver 0.3s.22 */
   'save-no'(b, it, e, act) { S.confirm = false; render(); },
   'save-yes'(b, it, e, act) { saveSession(); },
   'discard'(b, it, e, act) { S.draft = freshDraft(todayIso()); S.draftClearPend = true; saveDraft(true); if (S.mcp && !draftRemoteReady) pushDraft(); render(); },   /* Ver 0.3r.52: clear the backup copy at once, or it came back next time */
@@ -8676,6 +8751,26 @@ document.addEventListener('touchmove', e => {
   let el = e.target; while (el && el !== document.body) { if (el.scrollHeight > el.clientHeight + 1 && /(auto|scroll)/.test(getComputedStyle(el).overflowY)) return; el = el.parentElement; }
   if (e.cancelable) e.preventDefault();
 }, { passive: false });
+// Ver 0.3s.23 (user 2026-11-23: "the scroll of food tab after search, I mistakenly scroll the background rather than the search
+// page"): while a finger moves on any bottom sheet, only a scrollable part of that sheet may move. When the sheet's list is
+// short (e.g. after a search) or already at its top / bottom, the iPhone passed the drag on to the page behind; now it is
+// cancelled. Sideways moves are left alone (swipes, sideways strips).
+{ let sg = null;
+  document.addEventListener('touchstart', e => { const bg = e.touches.length === 1 && e.target.closest && e.target.closest('.sheet-bg');
+    sg = bg ? { bg, x: e.touches[0].clientX, y: e.touches[0].clientY } : null; }, { passive: true });
+  document.addEventListener('touchmove', e => {
+    if (!sg || !e.cancelable || e.touches.length !== 1) return;
+    const t = e.touches[0], dx = t.clientX - sg.x, dy = t.clientY - sg.y; sg.x = t.clientX; sg.y = t.clientY;
+    if (Math.abs(dx) > Math.abs(dy)) return;
+    for (let el = e.target; el && el !== sg.bg; el = el.parentElement) {
+      if (el.scrollHeight > el.clientHeight + 1 && /(auto|scroll)/.test(getComputedStyle(el).overflowY)) {
+        if (dy > 0 ? el.scrollTop > 0 : el.scrollTop + el.clientHeight < el.scrollHeight - 1) return;   /* this part can still scroll that way */
+      }
+    }
+    e.preventDefault();
+  }, { passive: false });
+  document.addEventListener('touchend', () => { sg = null; }, { passive: true });
+}
 // Ver 0.3p.36: swipe the Library exercise card left / right for the next / previous exercise
 { let ls = null;
   document.addEventListener('touchstart', e => { const sh = e.target.closest && e.target.closest('.lib-sheet'); ls = sh && e.touches.length === 1 ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : null; }, { passive: true });

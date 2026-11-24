@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3s.25 · 11/23/2026
+
+Matches the full app Ver 0.3s.25 (its 0.3s.21 to 0.3s.25). Exercise page fits the screen: with the body weight and band rows and 4 or more sets, the set rows and then the picture get a little shorter so + set, − set and Finished stay above the bottom bar (the page scrolls if it still does not fit). Workout complete page: once today’s workout is saved to the Sheet, Today shows what you did (each exercise with its sets) instead of the plan again; Log more today brings back Add an exercise. Bottom sheets no longer move the page behind them; only the sheet’s own list scrolls. Food tab: Manual adjustment is back under Suggested to fill the day (it was inside the Add food sheet). Removed: Manual adjustment from the Add food sheet.
+
 ## 0.3s.20 · 11/22/2026
 
 Matches the full app Ver 0.3s.20. Two new pull exercises on the way to a first pull-up: Negative Pull-up (jump up, hold the top 2 s, lower for 3 s) and Australian Pull-up (inverted row under a hip-high bar). Both have a Start | End picture, a moving picture (the Negative Pull-up plays at its real pace, with each step named at the top) and form cues, and are in the Add an exercise suggestions.
