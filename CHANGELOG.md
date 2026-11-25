@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3t.2 · 11/25/2026
+
+Matches the full app Ver 0.3t.2 (its 0.3t.1 and 0.3t.2). Bottom sheets: the page behind is pinned in place while a sheet is open, so a drag on the sheet can no longer scroll the page underneath; when the sheet closes the page is back exactly where it was. Add food search (and any sheet you type in): while the keyboard is up the sheet moves to the top of the screen, so the search box and the matching foods sit above the keyboard and can be tapped without putting the keyboard away first.
+
 ## 0.3t · 11/23/2026
 
 Matches the full app Ver 0.3t, which gathers its 0.3s.1 to 0.3s.25 updates into one version (here they came as Web 0.3s.8, 0.3s.8.1, 0.3s.19, 0.3s.20 and 0.3s.25 below): one type scale with rounded, same-width numbers; every tab starts with a large title that turns into a slim bar when you scroll; one set of page moves (tabs grow as a circle from what you tapped, deeper pages slide in); softer look with shadows and muscle-group colour edges on Start workout cards; Home: one big workouts ring with kcal and protein rings, fits one screen, clearer Muscles worked chart; exercise pictures open full screen with Still / Moving, muscles and form cues; Food tab redone (7 round day buttons that slide a week at a time, calories ring with the Carbs, Protein, Fat and Fiber bars, Add food in the bottom strip, Manual adjustment under Suggested to fill the day); colour themes as round two-colour circles; dark mode and the rest of your look are kept when the app opens; Test mode: New user walkthrough; Add to Home Screen guide; Negative Pull-up and Australian Pull-up; the exercise page always fits above the bottom bar; Workout complete page on Today; bottom sheets no longer scroll the page behind; code tidy.

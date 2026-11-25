@@ -922,6 +922,7 @@ body.no-timer main .wrap { padding-bottom: calc(var(--tabbar-h) + 24px); }
 .lib-body { display: grid; gap: 8px; min-width: 0; }
 #view { overflow-x: clip; }   /* Ver 0.3p.46: no page is ever wider than the screen */
 .setgroup { min-width: 0; overflow: hidden; }
+html.sheetpin { overscroll-behavior: none; }   /* Ver 0.3t.1 */
 html.lockscroll, html.lockscroll body { overflow: hidden; overscroll-behavior: none; }   /* Ver 0.3p.40: page still while the card is open */
 .lib-nav { flex: none; display: inline-flex; align-items: center; gap: 0; margin-right: -4px; color: var(--lighter, var(--muted)); }
 .lib-st { width: 26px; height: 24px; padding: 0; border: 0; background: none; color: inherit; display: grid; place-items: center; border-radius: 8px; -webkit-tap-highlight-color: transparent; }
@@ -1177,6 +1178,10 @@ label.sheet-it { display: block; cursor: pointer; }
 .dock-add .da-c { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--gold); color: var(--gold-ink); box-shadow: 0 2px 6px rgba(var(--gold-rgb), .35); transition: transform .12s; }
 .dock-add .da-t { font-size: 10px; font-weight: 600; letter-spacing: .01em; line-height: 1.2; }
 .dock-add:active .da-c { transform: scale(.92); }
+/* Ver 0.3t.2: a sheet with the keyboard up sits at the top, above the keyboard */
+html.sheet-kb .sheet-bg { align-items: flex-start; top: var(--vv-t, 0px); bottom: auto; height: var(--vv-h, 100%); }
+html.sheet-kb .sheet-bg > .sheet { border-radius: 0 0 18px 18px; max-height: calc(var(--vv-h, 100dvh) - 6px); overflow-y: auto; padding-bottom: 12px; }
+html.sheet-kb .sheet-bg > .fadd-sheet { max-height: min(88vh, calc(var(--vv-h, 100dvh) - 6px)); overflow-y: visible; }
 .fadd-sheet { max-height: 88vh; grid-template-rows: auto minmax(0, 1fr) auto; }
 .fadd-body { overflow-y: auto; display: grid; gap: 10px; padding: 2px; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
 .fadd-body .section-h { margin-top: 4px; }
@@ -6587,6 +6592,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3t.2', '11252026', 'Matches the full app Ver 0.3t.2 (its 0.3t.1 and 0.3t.2). Bottom sheets: the page behind is pinned in place while a sheet is open, so a drag on the sheet can no longer scroll the page underneath; when the sheet closes the page is back exactly where it was. Add food search (and any sheet you type in): while the keyboard is up the sheet moves to the top of the screen, so the search box and the matching foods sit above the keyboard and can be tapped without putting the keyboard away first.'],
   ['0.3t', '11232026', 'Matches the full app Ver 0.3t, which gathers its 0.3s.1 to 0.3s.25 updates into one version (here they came as Web 0.3s.8, 0.3s.8.1, 0.3s.19, 0.3s.20 and 0.3s.25 below): one type scale with rounded, same-width numbers; every tab starts with a large title that turns into a slim bar when you scroll; one set of page moves (tabs grow as a circle from what you tapped, deeper pages slide in); softer look with shadows and muscle-group colour edges on Start workout cards; Home: one big workouts ring with kcal and protein rings, fits one screen, clearer Muscles worked chart; exercise pictures open full screen with Still / Moving, muscles and form cues; Food tab redone (7 round day buttons that slide a week at a time, calories ring with the Carbs, Protein, Fat and Fiber bars, Add food in the bottom strip, Manual adjustment under Suggested to fill the day); colour themes as round two-colour circles; dark mode and the rest of your look are kept when the app opens; Test mode: New user walkthrough; Add to Home Screen guide; Negative Pull-up and Australian Pull-up; the exercise page always fits above the bottom bar; Workout complete page on Today; bottom sheets no longer scroll the page behind; code tidy.'],
   ['0.3s.25', '11232026', 'Matches the full app Ver 0.3s.25 (its 0.3s.21 to 0.3s.25). Exercise page fits the screen: with the body weight and band rows and 4 or more sets, the set rows and then the picture get a little shorter so + set, − set and Finished stay above the bottom bar (the page scrolls if it still does not fit). Workout complete page: once today’s workout is saved to the Sheet, Today shows what you did (each exercise with its sets) instead of the plan again; Log more today brings back Add an exercise. Bottom sheets no longer move the page behind them; only the sheet’s own list scrolls. Food tab: Manual adjustment is back under Suggested to fill the day (it was inside the Add food sheet). Removed: Manual adjustment from the Add food sheet.'],
   ['0.3s.20', '11222026', 'Matches the full app Ver 0.3s.20. Two new pull exercises on the way to a first pull-up: Negative Pull-up (jump up, hold the top 2 s, lower for 3 s) and Australian Pull-up (inverted row under a hip-high bar). Both have a Start | End picture, a moving picture (the Negative Pull-up plays at its real pace, with each step named at the top) and form cues, and are in the Add an exercise suggestions.'],
@@ -8771,6 +8777,38 @@ document.addEventListener('touchmove', e => {
     e.preventDefault();
   }, { passive: false });
   document.addEventListener('touchend', () => { sg = null; }, { passive: true });
+}
+// Ver 0.3t.1 (user 2026-11-24: "the good scroll when search the food is no longer working again"): the touch guard above was
+// not enough on the iPhone, so while any bottom sheet is on screen the page behind is pinned in place (body position fixed at
+// its scroll spot, the only lock iOS always obeys) and put back exactly where it was when the last sheet closes.
+// A MutationObserver watches for sheets appearing / leaving, so every sheet is covered without touching each one.
+{ let pinY = null, raf = 0;
+  const open = () => [...document.querySelectorAll('.sheet-bg')].some(x => !x.hidden && x.getClientRects().length && getComputedStyle(x).display !== 'none');
+  const sync = () => { raf = 0;
+    const b = document.body, on = open();
+    if (on && pinY === null) {
+      pinY = window.scrollY || 0;
+      Object.assign(b.style, { position: 'fixed', top: -pinY + 'px', left: '0', right: '0', width: '100%' });
+      document.documentElement.classList.add('sheetpin');
+    } else if (!on && pinY !== null) {
+      const y = pinY; pinY = null;
+      Object.assign(b.style, { position: '', top: '', left: '', right: '', width: '' });
+      document.documentElement.classList.remove('sheetpin');
+      window.scrollTo(0, y);
+    }
+  };
+  new MutationObserver(() => { if (!raf) raf = requestAnimationFrame(sync); }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden', 'class', 'style'] });
+}
+// Ver 0.3t.2 (user 2026-11-24, screenshot: with the keyboard up, the Add food results were hidden behind it and could not be
+// tapped until the keyboard was put away): while a text box inside a bottom sheet has focus, the sheet moves to the TOP of the
+// screen (html class sheet-kb), so the search box and the first rows of results sit above the keyboard. When the phone reports
+// the keyboard through visualViewport, the sheet is also cut to the space above it (--vv-h, --vv-t) and its list scrolls there.
+{ const root = document.documentElement, vv = window.visualViewport;
+  const vvSync = () => { if (!vv) return; root.style.setProperty('--vv-h', vv.height + 'px'); root.style.setProperty('--vv-t', vv.offsetTop + 'px'); };
+  if (vv) { vv.addEventListener('resize', vvSync); vv.addEventListener('scroll', vvSync); vvSync(); }
+  const inSheetBox = el => !!(el && el.matches && el.matches('input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]), textarea') && el.closest('.sheet-bg'));
+  document.addEventListener('focusin', e => { if (inSheetBox(e.target)) { vvSync(); root.classList.add('sheet-kb'); } });
+  document.addEventListener('focusout', () => { setTimeout(() => { if (!inSheetBox(document.activeElement)) root.classList.remove('sheet-kb'); }, 60); });
 }
 // Ver 0.3p.36: swipe the Library exercise card left / right for the next / previous exercise
 { let ls = null;
