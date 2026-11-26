@@ -1178,6 +1178,7 @@ label.sheet-it { display: block; cursor: pointer; }
 .dock-add .da-c { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--gold); color: var(--gold-ink); box-shadow: 0 2px 6px rgba(var(--gold-rgb), .35); transition: transform .12s; }
 .dock-add .da-t { font-size: 10px; font-weight: 600; letter-spacing: .01em; line-height: 1.2; }
 .dock-add:active .da-c { transform: scale(.92); }
+.sheet-it .az-fav { font-style: normal; color: var(--gold, #c9a227); font-size: .8em; margin-left: 4px; }   /* Ver 0.3t.3 */
 /* Ver 0.3t.2: a sheet with the keyboard up sits at the top, above the keyboard */
 html.sheet-kb .sheet-bg { align-items: flex-start; top: var(--vv-t, 0px); bottom: auto; height: var(--vv-h, 100%); }
 html.sheet-kb .sheet-bg > .sheet { border-radius: 0 0 18px 18px; max-height: calc(var(--vv-h, 100dvh) - 6px); overflow-y: auto; padding-bottom: 12px; }
@@ -3545,6 +3546,9 @@ function unitOf(name) {
 }
 function isTimed(name) { return unitOf(name) !== 'lbs'; }
 function isCount(name) { return unitOf(name) === 'reps'; }
+/* Ver 0.3t.4 (user: "Australia pull ups do not use band as assistant, lets remove it. Also, make default set 3"): reps
+   exercises with no Band switch, and 3 sets to start instead of 1 */
+function noBand(name) { return /australian/i.test(String(name || '')); }
 /* Pull Up band + body weight. The Sheet gets one row per set: Weight = band help in lbs (0 = no band), Reps = that set's reps.
  Body weight never goes to the workout Sheet; the chart works out weight pulled = body weight on that date - band help. */
 function bwFor(iso) {   /* kg nearest to the date: Renpho readings and the weight typed on the Food tab or the Pull Up card */
@@ -3709,6 +3713,7 @@ function lastTime(name) {
 // Values from the last session are shown as grey placeholders (pw, pr); only what is typed (w, r) is saved.
 function newItem(name) {
   // warm-up (treadmill walk, minutes) and Battle Ropes (seconds): one entry, last session's time as the placeholder
+  if (isCount(name) && noBand(name)) { const pw = lastTime(name); return { id: 'i' + (uid++), name, band: { on: false, lbs: '' }, sets: [0, 1, 2].map(() => ({ w: '', r: '', pw, pr: '' })) }; }
   if (isCount(name)) { const lb = lastBand(name); return { id: 'i' + (uid++), name, band: { on: lb > 0, lbs: lb > 0 ? String(lb) : '' }, sets: [{ w: '', r: '', pw: lastTime(name), pr: '' }] }; }
   if (isTimed(name)) return { id: 'i' + (uid++), name, sets: [{ w: '', r: '', pw: lastTime(name), pr: '' }] };
   // three sets to start; every box hints the top weight ever and its reps
@@ -5279,10 +5284,12 @@ function viewToday() {
   h += '<div class="ctlcard"><span class="ctl-lab">Add an exercise</span><button class="pickbtn" data-act="add-open" aria-haspopup="listbox">Choose exercise…</button></div>';
   if (S.addOpen) {
     const names = pickable().map(e => e.name).filter((n, i, a) => a.indexOf(n) === i);
-    const item = n => '<button class="sheet-it" role="option" data-act="add-ex" data-name="' + esc(n) + '">' + esc(bareName(n)) + '</button>';
-    const favs = names.filter(isFav).sort((a, b) => bareName(a).localeCompare(bareName(b))), plan = [], other = names.filter(n => !isFav(n)).sort((a, b) => bareName(a).localeCompare(bareName(b)));
+    /* Ver 0.3t.3 (user: "Make them favorite should not take them out from the corresponding letter group"): favourites are
+       listed under ★ Favourites AND in their own letter (Pull Up under P), marked with a small ★ there. */
+    const item = n => '<button class="sheet-it" role="option" data-act="add-ex" data-name="' + esc(n) + '">' + esc(bareName(n)) + (isFav(n) ? ' <i class="az-fav" aria-label="favourite">★</i>' : '') + '</button>';
+    const favs = names.filter(isFav).sort((a, b) => bareName(a).localeCompare(bareName(b))), other = names.slice();
     h += '<div class="sheet-bg" data-act="add-close"><div class="sheet" role="listbox" aria-label="Add an exercise" data-act="noop"><div class="sheet-h"><b>Add an exercise</b><button class="btn sm" data-act="add-close">Close</button></div>' +
-      azBlock(other, item, favs) + '</div></div>';
+      azBlock(other, item) + '</div></div>';   /* Ver 0.3t.4: no ★ Favourites block on top (user: you had to scroll past it to reach A); favourites keep their ★ in their letter */
   }
   const n = buildEntries(d).length;
   const LS = S.lastSave && !n ? S.lastSave : null, fresh = LS && Date.now() - LS.at < 2600;
@@ -5616,6 +5623,7 @@ function pullTop(it) {
     h += '<div class="pu-row"><span class="pu-lab">Body weight</span><b class="pu-val">' + esc(fmt(bw.kg * LB)) + ' lbs</b>' +
       '<span class="pu-src">' + (bw.src === 'renpho' ? 'Renpho' : 'entered') + ' ' + esc(usOf(bw.iso).replace(/\/\d{4}$/, '')) + '</span><button class="btn sm" data-act="pu-bw-edit">Edit</button></div>';
   }
+  if (noBand(it.name)) { b.on = false; return h + '</div>'; }   /* Ver 0.3t.4: no Band row */
   h += '<div class="pu-row pu-band' + (bw ? '' : ' pu-off') + '"><label class="switch"><span>Band</span><input type="checkbox" role="switch" data-puband="1"' + (b.on ? ' checked' : '') + (bw ? '' : ' disabled') + '><i aria-hidden="true"></i></label>' +
     (b.on ? '<label class="field' + (b.lbs === '' ? ' ghost' : '') + '"><input data-pulbs="1" inputmode="decimal" placeholder="band help" value="' + esc(b.lbs) + '"' + (bw ? '' : ' disabled') + '><span>lbs</span></label>' : '<span class="pu-src">No band: full pull-ups</span>') + '</div>';
   return h + '</div>';
@@ -6592,6 +6600,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3t.4', '11252026', 'Matches the full app Ver 0.3t.4 (its 0.3t.3 and 0.3t.4). Start workout › Add an exercise: favourites are listed in their own letter with a small ★ (Pull Up is under P), so the list starts at A and the A–Z strip finds them. Australian Pull-up: no Band switch (it is done without a band) and it starts with 3 sets like most exercises. Removed: the ★ Favourites group at the top of Add an exercise; the Band switch and Band help row on Australian Pull-up.'],
   ['0.3t.2', '11252026', 'Matches the full app Ver 0.3t.2 (its 0.3t.1 and 0.3t.2). Bottom sheets: the page behind is pinned in place while a sheet is open, so a drag on the sheet can no longer scroll the page underneath; when the sheet closes the page is back exactly where it was. Add food search (and any sheet you type in): while the keyboard is up the sheet moves to the top of the screen, so the search box and the matching foods sit above the keyboard and can be tapped without putting the keyboard away first.'],
   ['0.3t', '11232026', 'Matches the full app Ver 0.3t, which gathers its 0.3s.1 to 0.3s.25 updates into one version (here they came as Web 0.3s.8, 0.3s.8.1, 0.3s.19, 0.3s.20 and 0.3s.25 below): one type scale with rounded, same-width numbers; every tab starts with a large title that turns into a slim bar when you scroll; one set of page moves (tabs grow as a circle from what you tapped, deeper pages slide in); softer look with shadows and muscle-group colour edges on Start workout cards; Home: one big workouts ring with kcal and protein rings, fits one screen, clearer Muscles worked chart; exercise pictures open full screen with Still / Moving, muscles and form cues; Food tab redone (7 round day buttons that slide a week at a time, calories ring with the Carbs, Protein, Fat and Fiber bars, Add food in the bottom strip, Manual adjustment under Suggested to fill the day); colour themes as round two-colour circles; dark mode and the rest of your look are kept when the app opens; Test mode: New user walkthrough; Add to Home Screen guide; Negative Pull-up and Australian Pull-up; the exercise page always fits above the bottom bar; Workout complete page on Today; bottom sheets no longer scroll the page behind; code tidy.'],
   ['0.3s.25', '11232026', 'Matches the full app Ver 0.3s.25 (its 0.3s.21 to 0.3s.25). Exercise page fits the screen: with the body weight and band rows and 4 or more sets, the set rows and then the picture get a little shorter so + set, − set and Finished stay above the bottom bar (the page scrolls if it still does not fit). Workout complete page: once today’s workout is saved to the Sheet, Today shows what you did (each exercise with its sets) instead of the plan again; Log more today brings back Add an exercise. Bottom sheets no longer move the page behind them; only the sheet’s own list scrolls. Food tab: Manual adjustment is back under Suggested to fill the day (it was inside the Add food sheet). Removed: Manual adjustment from the Add food sheet.'],
@@ -7706,7 +7715,7 @@ function rtFly(from) {
 // Pull Up: one reps strip, and a Band toggle at the top that adds a band-help strip.
 const SP_W = 60;
 function spItem() { return S.sp && S.draft ? S.draft.items.find(x => x.id === S.sp.id && x.open) : null; }
-function spRows(it) { return isCount(it.name) ? [['w', 'Reps']].concat(it.band && it.band.on ? [['b', 'Band help · lbs']] : []) : [['w', 'Weight · ' + unitOf(it.name)], ['r', 'Reps']]; }
+function spRows(it) { return isCount(it.name) ? [['w', 'Reps']].concat(it.band && it.band.on && !noBand(it.name) ? [['b', 'Band help · lbs']] : []) : [['w', 'Weight · ' + unitOf(it.name)], ['r', 'Reps']]; }
 function spGet(it, i, k) { return k === 'b' ? ((it.band && it.band.lbs) || '') : it.sets[i][k]; }
 function spGuess(it, i, k) {
   const cur = spGet(it, i, k); if (cur !== '') return cur;
@@ -7742,7 +7751,7 @@ function renderSetPick() {
   let h = '<div class="sheet-bg" data-act="sp-close"><div class="sheet sp" role="dialog" aria-label="Set ' + (i + 1) + '" data-act="noop">' +
     '<div class="sp-h"><button class="sp-nav" data-act="sp-go" data-d="-1" aria-label="Set before"' + (i ? '' : ' disabled') + '>‹</button><b>Set ' + (i + 1) + '</b>' +
     '<button class="sp-nav" data-act="sp-go" data-d="1" aria-label="Next set"' + (i < it.sets.length - 1 ? '' : ' disabled') + '>›</button><span class="sp-gap"></span>' +
-    (cnt ? '<button class="sp-band' + (it.band && it.band.on ? ' on' : '') + '" data-act="sp-band" aria-pressed="' + !!(it.band && it.band.on) + '">Band</button>' : '') +
+    (cnt && !noBand(it.name) ? '<button class="sp-band' + (it.band && it.band.on ? ' on' : '') + '" data-act="sp-band" aria-pressed="' + !!(it.band && it.band.on) + '">Band</button>' : '') +
     '<button class="btn sm primary" data-act="sp-close">Done</button></div>' +
     '<div class="sp-sum" id="spSum" aria-live="polite">' + spSum(it, i) + '</div>';
   spRows(it).forEach(([k, lab]) => {

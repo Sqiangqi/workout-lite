@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3t.4 · 11/25/2026
+
+Matches the full app Ver 0.3t.4 (its 0.3t.3 and 0.3t.4). Start workout › Add an exercise: favourites are listed in their own letter with a small ★ (Pull Up is under P), so the list starts at A and the A–Z strip finds them. Australian Pull-up: no Band switch (it is done without a band) and it starts with 3 sets like most exercises. Removed: the ★ Favourites group at the top of Add an exercise; the Band switch and Band help row on Australian Pull-up.
+
 ## 0.3t.2 · 11/25/2026
 
 Matches the full app Ver 0.3t.2 (its 0.3t.1 and 0.3t.2). Bottom sheets: the page behind is pinned in place while a sheet is open, so a drag on the sheet can no longer scroll the page underneath; when the sheet closes the page is back exactly where it was. Add food search (and any sheet you type in): while the keyboard is up the sheet moves to the top of the screen, so the search box and the matching foods sit above the keyboard and can be tapped without putting the keyboard away first.
