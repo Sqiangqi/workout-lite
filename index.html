@@ -606,15 +606,8 @@ body.lib main .wrap { padding-bottom: calc(var(--tabbar-h) + 96px); }
 .qft-m { grid-column: 3; grid-row: 1 / 3; align-self: center; display: grid; gap: 0; justify-items: end; font-size: 11px; font-weight: 600; line-height: 1.15; font-variant-numeric: tabular-nums; white-space: nowrap; padding-left: 7px; border-left: 1px solid var(--line); }
 .qft-m b { font-size: 13px; font-weight: 700; }
 .qft-a { grid-column: 1; grid-row: 2; align-self: center; justify-self: start; font-size: 11px; font-weight: 600; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
-/* Paint texture on the food tiles (like a painting, short dabs and brush strokes). The texture is a separate
- see-through layer (faint white and dark dabs drawn by an SVG filter) between the tile colour and the text. No blend mode: the first try used
- soft-light and on the iPhone the tiles turned grey and black. If the texture cannot be drawn, the tile simply looks as before. */
-
+/* Ver 0.3u.1: no paint texture; the macro colours are blended a little with the theme colour (qfBg) and a soft highlight runs along the top */
 .qft { position: relative; isolation: isolate; }
-.qft::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background-image: var(--qpaint); background-size: 240px 160px; pointer-events: none; }
-.qft.on::before { display: none; }
-/* Dark mode: light strokes only (dark dabs on a dark tile looked dirty), small, few and faint so they read as a lighter shade of the colour, not white paint */
-
 .qft.pressing { transform: scale(.96); }
 .qft.on { background: var(--gold) !important; border-color: var(--gold); }   /* 0.3s.10: was navy with gold text, which some themes turned gold on gold */
 /* Ver 0.3o.4: amount and kcal share one flex row, so the amount pill shrinks (ends in …) instead of running under the kcal on the iPhone */
@@ -2314,8 +2307,8 @@ body.home .hm-rings > .hm-ring:not(:first-child) span { align-self: start; }
 :root[data-style] .hm-start .hm-st-t { min-width: 0; }
 .hm-st-sub { min-width: 0; } .hm-st-sub small { overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 /* ===== Ver 0.3s.5 look: soft shadows instead of borders, lighter dark cards, muscle-group colours, set pop ===== */
-:root { --qbg-a: 22%; --qpaint: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='160'%3E%3Cfilter id='p' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.03 0.055' numOctaves='3' seed='7' stitchTiles='stitch' result='dab'/%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.045 0.45' numOctaves='2' seed='3' stitchTiles='stitch' result='hair'/%3E%3CfeComposite in='dab' in2='hair' operator='arithmetic' k1='0' k2='0.8' k3='0.3' k4='-0.05' result='mix'/%3E%3CfeComponentTransfer in='mix' result='n'%3E%3CfeFuncR type='linear' slope='1.5' intercept='-0.25'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='n' type='matrix' result='dark' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.45 0 0 0 0.225'/%3E%3CfeColorMatrix in='n' type='matrix' result='light' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1.1 0 0 0 -0.55'/%3E%3CfeMerge%3E%3CfeMergeNode in='dark'/%3E%3CfeMergeNode in='light'/%3E%3C/feMerge%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E"); --dock-pad: max(30px, calc(env(safe-area-inset-bottom, 0px) + 8px)); --tabbar-h: calc(54px + var(--dock-pad)); --soft-c: var(--pal-b, var(--brand)); --font-num: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif; --card-sh: 0 1px 2px rgba(15, 29, 46, .05), 0 4px 16px rgba(15, 29, 46, .07); }
-:root[data-theme="dark"] { --qbg-a: 38%; --qpaint: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='160'%3E%3Cfilter id='p' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.06 0.11' numOctaves='3' seed='7' stitchTiles='stitch' result='dab'/%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.06 0.6' numOctaves='2' seed='3' stitchTiles='stitch' result='hair'/%3E%3CfeComposite in='dab' in2='hair' operator='arithmetic' k1='0' k2='0.8' k3='0.3' k4='-0.05' result='mix'/%3E%3CfeComponentTransfer in='mix' result='n'%3E%3CfeFuncR type='linear' slope='1.5' intercept='-0.25'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.4 0 0 0 -0.24'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E"); --soft-c: var(--pal-g, var(--gold)); --card-sh: 0 1px 0 rgba(255, 255, 255, .04) inset; }
+:root { --qbg-a: 22%; --dock-pad: max(30px, calc(env(safe-area-inset-bottom, 0px) + 8px)); --tabbar-h: calc(54px + var(--dock-pad)); --soft-c: var(--pal-b, var(--brand)); --font-num: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif; --card-sh: 0 1px 2px rgba(15, 29, 46, .05), 0 4px 16px rgba(15, 29, 46, .07); }
+:root[data-theme="dark"] { --qbg-a: 38%; --soft-c: var(--pal-g, var(--gold)); --card-sh: 0 1px 0 rgba(255, 255, 255, .04) inset; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --card-sh: 0 1px 0 rgba(255, 255, 255, .04) inset; } }
 :root[data-style][data-style][data-theme="dark"][data-theme="dark"] { --bg: var(--pg-d, #000000); --line: color-mix(in srgb, var(--pg-d, #000000) 60%, #4a4a4e); --surface: color-mix(in srgb, var(--pg-d, #000000) 74%, #4a4a50); }
 :root[data-style] :is(.card:not(.open), .panel:not(.ap-page), .tile, .chartbox, .flog, .savebox, .hm-rings, .hm-mx, .ios-card, .me-link) { border-color: transparent; }
@@ -4586,15 +4579,16 @@ async function saveQuickList(list, okMsg) {
 function qfAmtLabel(q, a) { return q.unit === 'each' ? fmt2(+a) + (+a === 1 ? ' pc' : ' pcs') : qfAmtText(q, a); }   /* short on the tiles so the calories have room */
 // Tile background (no donut; the card itself is tinted, each macro's share of the width = its share of the GRAMS
 // of carbs + protein + fat, always in the order carbs → protein → fat, with soft blends between the colours).
-function qfBg(x) {
+function qfBg(x) {   /* Ver 0.3u.1: theme-tuned: each macro colour is mixed 28% toward the theme colour (--brand), a little stronger, with a top highlight */
   const g = DN_COL.map(([k]) => Math.max(0, +x[k] || 0)), t = g.reduce((a, b) => a + b, 0);
   if (!t) return '';
-  const parts = DN_COL.map(([, , col], i) => ({ col: 'color-mix(in srgb, ' + col + ' var(--qbg-a), transparent)', w: g[i] / t * 100 })).filter(p => p.w > 0);
-  if (parts.length === 1) return 'background:' + parts[0].col;
+  const hi = 'linear-gradient(180deg, color-mix(in srgb, #fff 18%, transparent), transparent 45%), ';
+  const parts = DN_COL.map(([, , col], i) => ({ col: 'color-mix(in srgb, color-mix(in oklab, ' + col + ' 72%, var(--brand)) calc(var(--qbg-a) + 6%), transparent)', w: g[i] / t * 100 })).filter(p => p.w > 0);
+  if (parts.length === 1) return 'background:' + hi + 'linear-gradient(' + parts[0].col + ', ' + parts[0].col + ')';
   let at = 0; const st = [];
   parts.forEach((p, k) => { const b0 = k ? Math.min(7, p.w / 2, parts[k - 1].w / 2) : 0, b1 = k < parts.length - 1 ? Math.min(7, p.w / 2, parts[k + 1].w / 2) : 0;
     st.push(p.col + ' ' + (at + b0).toFixed(1) + '%', p.col + ' ' + (at + p.w - b1).toFixed(1) + '%'); at += p.w; });
-  return 'background:linear-gradient(100deg, ' + st.join(', ') + ')';
+  return 'background:' + hi + 'linear-gradient(100deg, ' + st.join(', ') + ')';
 }
 function qfTile(x, name, amtTxt, cls, attrs) {
   return '<button class="qft ' + cls + '" ' + attrs + ' style="' + qfBg(x) + '" aria-label="Add ' + esc(name) + ', ' + esc(amtTxt) + '">' +
@@ -6809,6 +6803,7 @@ async function addExercise() {
 // add a sub-version: 0.2d.1, 0.2d.2, ... until the artifact moves to 0.2e, then GitHub takes 0.2e (then 0.2e.1, ...).
 // CHANGELOG.md in the repo is generated from this list (Settings links to it): regenerate it whenever an entry changes.
 const APP_VERSIONS = [
+  ['0.3u.1', '11262026', 'Matches the full app Ver 0.3u.1. Food tab, My foods tiles: the colours now suit the colour theme. Each macro colour (amber carbs, green protein, coral fat) is blended a little with the theme’s own colour and shown slightly stronger, with a soft highlight along the top, so the tiles look like part of Navy, Forest, Steel and the other themes; you still see at a glance whether a food is mostly carbs, protein or fat. Removed: the painted texture (brush dabs) on the tiles.'],
   ['0.3u', '11262026', 'New version letter, matching the full app Ver 0.3u, which gathers its 0.3t.1 to 0.3t.41 updates into one version (here they came as Web 0.3t.2, 0.3t.4 and 0.3t.41 below): a lighter, faster start; Start workout: ticked-off sets, finished exercises fold to a slim line, warm-up first and Dead Hang last, simpler saving; Home: gold week ring opening the month of workouts with each day’s summary and record trophies, bigger Muscles worked chart with glowing points and a vs last 7 days compare, Continue workout progress; mouse support; new exercise pictures; Test mode updates.'],
   ['0.3t.41', '11262026', 'Matches the full app Ver 0.3t.41 (its 0.3t.5 to 0.3t.41). Faster and lighter: exercise pictures load from their own file after the start; every button answers your touch at once. Start workout: ticked-off sets, bigger last 3 seconds of rest, finished exercises fold to a slim line; warm-up always first and Dead Hang last; Save session just says Saving… then Saved. Home: the week ring shows the 7 days in gold, tap it for the month of workouts (calendar with each day’s summary and record trophies); Last workout opens that day; Muscles worked is bigger with glowing points by sets, ▲▼ changes and a vs last 7 days compare button; Continue workout shows your progress; the Week shortcut is gone. Mouse works for swipe-to-remove and hold-to-move. New pictures for Pull Up, Dead Hang, Negative Pull-up and Leg Press. Test mode: one New user first open walkthrough, Save session (pretend) and the water meter preview. Removed: the Week shortcut; entry counts when saving; the separate first-open tests.'],
   ['0.3t.4', '11252026', 'Matches the full app Ver 0.3t.4 (its 0.3t.3 and 0.3t.4). Start workout › Add an exercise: favourites are listed in their own letter with a small ★ (Pull Up is under P), so the list starts at A and the A–Z strip finds them. Australian Pull-up: no Band switch (it is done without a band) and it starts with 3 sets like most exercises. Removed: the ★ Favourites group at the top of Add an exercise; the Band switch and Band help row on Australian Pull-up.'],

@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3u.1 · 11/26/2026
+
+Matches the full app Ver 0.3u.1. Food tab, My foods tiles: the colours now suit the colour theme. Each macro colour (amber carbs, green protein, coral fat) is blended a little with the theme’s own colour and shown slightly stronger, with a soft highlight along the top, so the tiles look like part of Navy, Forest, Steel and the other themes; you still see at a glance whether a food is mostly carbs, protein or fat. Removed: the painted texture (brush dabs) on the tiles.
+
 ## 0.3u · 11/26/2026
 
 New version letter, matching the full app Ver 0.3u, which gathers its 0.3t.1 to 0.3t.41 updates into one version (here they came as Web 0.3t.2, 0.3t.4 and 0.3t.41 below): a lighter, faster start; Start workout: ticked-off sets, finished exercises fold to a slim line, warm-up first and Dead Hang last, simpler saving; Home: gold week ring opening the month of workouts with each day’s summary and record trophies, bigger Muscles worked chart with glowing points and a vs last 7 days compare, Continue workout progress; mouse support; new exercise pictures; Test mode updates.
