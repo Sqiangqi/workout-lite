@@ -2,6 +2,10 @@
 
 Newest first. The version number matches the full claude.ai app version at the time of each update; web-only updates in between add a sub-version (e.g. 0.2d.1). Generated from `APP_VERSIONS` in `index.html`.
 
+## 0.3u · 11/26/2026
+
+New version letter, matching the full app Ver 0.3u, which gathers its 0.3t.1 to 0.3t.41 updates into one version (here they came as Web 0.3t.2, 0.3t.4 and 0.3t.41 below): a lighter, faster start; Start workout: ticked-off sets, finished exercises fold to a slim line, warm-up first and Dead Hang last, simpler saving; Home: gold week ring opening the month of workouts with each day’s summary and record trophies, bigger Muscles worked chart with glowing points and a vs last 7 days compare, Continue workout progress; mouse support; new exercise pictures; Test mode updates.
+
 ## 0.3t.41 · 11/26/2026
 
 Matches the full app Ver 0.3t.41 (its 0.3t.5 to 0.3t.41). Faster and lighter: exercise pictures load from their own file after the start; every button answers your touch at once. Start workout: ticked-off sets, bigger last 3 seconds of rest, finished exercises fold to a slim line; warm-up always first and Dead Hang last; Save session just says Saving… then Saved. Home: the week ring shows the 7 days in gold, tap it for the month of workouts (calendar with each day’s summary and record trophies); Last workout opens that day; Muscles worked is bigger with glowing points by sets, ▲▼ changes and a vs last 7 days compare button; Continue workout shows your progress; the Week shortcut is gone. Mouse works for swipe-to-remove and hold-to-move. New pictures for Pull Up, Dead Hang, Negative Pull-up and Leg Press. Test mode: one New user first open walkthrough, Save session (pretend) and the water meter preview. Removed: the Week shortcut; entry counts when saving; the separate first-open tests.
